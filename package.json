@@ -4,6 +4,10 @@
   "engines": {
     "node": "0.10.x"
   },
+  "scripts": {
+    "start": "node node_modules/.bin/gulp",
+    "postinstall": "node node_modules/bower/bin/bower install"
+  },
   "dependencies": {
     "node-sass": "~0.9.3",
     "gulp": "^3.8.10",
