@@ -29,4 +29,4 @@ venv/
 node_modules
 
 mtp_cashbook/assets-src/bower_components
-
+mtp_cashbook/assets/
