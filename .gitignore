@@ -28,4 +28,5 @@ venv/
 # Node Stuff
 node_modules
 
-assets-src/bower
+mtp_cashbook/assets-src/bower_components
+

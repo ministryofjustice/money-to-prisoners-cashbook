@@ -1,15 +1,15 @@
 django:
   build: .
   command: python manage.py runserver 0.0.0.0:8001
-  volumes: 
+  volumes:
     - .:/app
   ports:
     - "8001:8001"
 
 djangogulpserve:
   build: .
-  command: /bin/bash -c "gulp serve --host=$DJANGO_1_PORT_8000_TCP_ADDR --port=$TESTMOJDJANGO_DJANGO_1_PORT_8000_TCP_PORT"
-  volumes: 
+  command: /bin/bash -c "gulp serve --host=$DJANGO_1_PORT_8001_TCP_ADDR --port=$TESTMOJDJANGO_DJANGO_1_PORT_8001_TCP_PORT"
+  volumes:
     - .:/app
   ports:
     - "3000:3000"
