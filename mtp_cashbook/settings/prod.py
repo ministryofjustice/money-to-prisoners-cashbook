@@ -16,6 +16,6 @@ DEBUG = False
 
 ALLOWED_HOSTS = [
     'localhost',
-    '*.dsd.io',
-    '*.service.gov.uk'
+    '.dsd.io',
+    '.service.gov.uk'
 ]
