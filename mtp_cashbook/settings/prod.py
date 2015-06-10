@@ -16,15 +16,7 @@ DEBUG = False
 
 # TODO: Set your ALLOWED_HOSTS
 
-ALLOWED_HOSTS = []
-
-
-
-# TODO: Configure production database
-DATABASES = {}
-
-
-SECRET_KEY = os.environ['SECRET_KEY']
-
-DEBUG = False
-TEMPLATE_DEBUG = DEUBG
+ALLOWED_HOSTS = [
+    '*.dsd.io',
+    '*.service.gov.uk'
+]
