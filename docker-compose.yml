@@ -8,7 +8,7 @@ django:
 
 djangogulpserve:
   build: .
-  command: /bin/bash -c "gulp serve --host=$DJANGO_1_PORT_8001_TCP_ADDR --port=$TESTMOJDJANGO_DJANGO_1_PORT_8001_TCP_PORT"
+  command: /bin/bash -c "npm install --unsafe-perm && gulp serve --host=$DJANGO_1_PORT_8001_TCP_ADDR --port=$TESTMOJDJANGO_DJANGO_1_PORT_8001_TCP_PORT"
   volumes:
     - .:/app
   ports:

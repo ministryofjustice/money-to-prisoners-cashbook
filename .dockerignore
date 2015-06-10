@@ -1,0 +1,29 @@
+*.pyc
+include/
+lib/
+staticfiles/
+media/
+.build
+
+# sqlite3 db
+*.db
+*.sqlite3
+
+# sublime stuff
+*.sublime-workspace
+*.sublime-project
+
+# Virtual env
+venv/
+
+# Mac crap
+*.DS_Store
+
+# Node Stuff
+node_modules
+
+mtp_cashbook/assets-src/bower_components
+mtp_cashbook/assets/
+
+# Sass-cache
+.sass-cache
