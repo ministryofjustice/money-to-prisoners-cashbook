@@ -4,6 +4,13 @@
   "engines": {
     "node": "0.10.x"
   },
+  "config": {
+    "unsafe-perm": true
+  },
+  "scripts": {
+    "start": "./node_modules/.bin/gulp serve",
+    "postinstall": "./node_modules/.bin/bower --allow-root install"
+  },
   "dependencies": {
     "node-sass": "~0.9.3",
     "gulp": "^3.8.10",
