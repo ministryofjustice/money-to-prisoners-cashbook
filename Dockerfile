@@ -25,7 +25,10 @@ ADD ./requirements/ /app/requirements/
 RUN pip3 install -r requirements/prod.txt
 
 ADD . /app
-RUN bower install --allow-root
+
+RUN npm install --unsafe-perm
+RUN gulp
+RUN ./manage.py collectstatic --noinput
 
 EXPOSE 8080
 CMD ["/usr/local/bin/uwsgi", "--ini", "/etc/uwsgi/magiclantern.ini"]
