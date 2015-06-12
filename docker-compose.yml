@@ -1,16 +1,23 @@
 django:
   build: .
-  command: python manage.py runserver 0.0.0.0:8001
+  command: >
+    /bin/bash -c "
+    pip install -r requirements/dev.txt &&
+    python manage.py runserver 0.0.0.0:8001"
   volumes:
     - .:/app
+    - /tmp/pip_download_cache/:/tmp/pip_download_cache
   ports:
     - "8001:8001"
+  environment:
+    PIP_DOWNLOAD_CACHE: /tmp/pip_download_cache/
 
 djangogulpserve:
   build: .
   command: /bin/bash -c "npm install --unsafe-perm && gulp serve --host=$DJANGO_1_PORT_8001_TCP_ADDR --port=$TESTMOJDJANGO_DJANGO_1_PORT_8001_TCP_PORT"
   volumes:
     - .:/app
+    - /tmp/npm/:/root/.npm/
   ports:
     - "3000:3000"
   links:
