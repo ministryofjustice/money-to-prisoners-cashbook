@@ -13,9 +13,16 @@ and if you're planning to deploy then you'll need the [deployment repository](ht
 
 ## Development Server
 ### Boot2Docker
-> If you're developing on a Mac then Docker won't run natively, you'll be running 
-> a single VM with linux installed where your Docker containers run. To start the vm 
-> run the following first before continuing:
+> If you're developing on a Mac then Docker won't run natively, you'll be 
+> running a single virtual machine with linux installed where your Docker 
+> containers run. The first time you will need to create the virtual machine.
+>
+> ```
+> $ boot2docker init
+> ```
+>
+> Run the virtual machine:
+>
 > ```
 > $ boot2docker up
 > $ eval "$(boot2docker shellinit)"
