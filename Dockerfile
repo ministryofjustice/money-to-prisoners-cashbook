@@ -1,7 +1,5 @@
 FROM ubuntu:trusty
 
-RUN echo "Europe/London" > /etc/timezone  &&  dpkg-reconfigure -f noninteractive tzdata
-
 RUN apt-get update && \
     apt-get install -y software-properties-common python-software-properties
 
