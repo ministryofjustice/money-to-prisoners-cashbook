@@ -1,2 +1,3 @@
 # Place your development dependencies here
 -r base.txt
+mock==1.0.1
