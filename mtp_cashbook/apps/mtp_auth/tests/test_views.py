@@ -16,17 +16,17 @@ class LoginViewTestCase(SimpleTestCase):
     Tests that the login flow works as expected.
     """
 
-    @mock.patch('mtp_auth.backends.get_auth_connection')
+    @mock.patch('mtp_auth.backends.get_raw_connection')
     def __call__(
         self, result,
-        mocked_get_auth_connection,
+        mocked_get_raw_connection,
         *args, **kwargs
     ):
         """
         Mocks the connection with the api so that we can control it
         everywhere in our test methods.
         """
-        self.mocked_get_auth_connection = mocked_get_auth_connection
+        self.mocked_get_raw_connection = mocked_get_raw_connection
         super(LoginViewTestCase, self).__call__(result, *args, **kwargs)
 
     def setUp(self, *args, **kwargs):
@@ -49,7 +49,7 @@ class LoginViewTestCase(SimpleTestCase):
         connection.oauth2.token.post.return_value = {
             'access_token': token
         }
-        self.mocked_get_auth_connection.return_value = connection
+        self.mocked_get_raw_connection.return_value = connection
 
         # login
         response = self.client.post(
@@ -73,7 +73,7 @@ class LoginViewTestCase(SimpleTestCase):
         The User submits invalid credentials
         """
         # mocking the connection so that it returns invalid credentials
-        self.mocked_get_auth_connection().oauth2.token.post.side_effect = HttpClientError(
+        self.mocked_get_raw_connection().oauth2.token.post.side_effect = HttpClientError(
             content=b'{"description": "invalid credentials"}'
         )
 
@@ -97,7 +97,7 @@ class LoginViewTestCase(SimpleTestCase):
         The app cannot connect to the api server.
         """
         # mocking the connection so that it raises ConnectionError
-        self.mocked_get_auth_connection().oauth2.token.post.side_effect = ConnectionError()
+        self.mocked_get_raw_connection().oauth2.token.post.side_effect = ConnectionError()
 
         response = self.client.post(
             self.login_url, data=self.credentials, follow=True

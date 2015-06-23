@@ -6,7 +6,7 @@ from slumber.exceptions import HttpClientError
 
 from django.conf import settings
 
-from .api_client import get_auth_connection
+from .api_client import get_raw_connection
 from .models import MtpUser
 from .exceptions import ConnectionError
 
@@ -28,7 +28,7 @@ class MtpBackend(object):
         It raises `mtp_auth.exceptions.ConnetionError` in case of
         problems connecting to the api server.
         """
-        connection = get_auth_connection()
+        connection = get_raw_connection(serializer='form')
         try:
             response = connection.oauth2.token.post({
                 'client_id': settings.API_CLIENT_ID,
