@@ -5,9 +5,13 @@ class MtpUser(object):
     The built-in Django `AbstractBaseUser` sadly depends on a few tables and
     cannot be used without a datbase so we had to create a custom one.
     """
-    def __init__(self, token):
-        self.pk = token
+
+    def __init__(self, username, token={}):
+        self.pk = username
+        self.username = username
         self.is_active = True
+
+        self.token = token
 
     def save(self, *args, **kwargs):
         pass

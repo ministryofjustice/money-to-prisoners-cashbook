@@ -3,8 +3,6 @@ from django.contrib.auth import authenticate
 
 from django.utils.translation import ugettext_lazy as _
 
-from .exceptions import ConnectionError
-
 
 class AuthenticationForm(forms.Form):
     """

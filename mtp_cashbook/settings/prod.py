@@ -19,3 +19,6 @@ ALLOWED_HOSTS = [
     '.dsd.io',
     '.service.gov.uk'
 ]
+
+# make sure that we are using secure transport during oauth2
+OAUTHLIB_INSECURE_TRANSPORT = False

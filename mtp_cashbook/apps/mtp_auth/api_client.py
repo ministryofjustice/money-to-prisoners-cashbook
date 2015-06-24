@@ -1,76 +1,56 @@
+import os
 import slumber
-from slumber.serialize import Serializer, JsonSerializer
-from requests.auth import AuthBase
+from requests.exceptions import HTTPError
+from functools import partial
+
+from requests_oauthlib import OAuth2Session
+from oauthlib.oauth2 import LegacyApplicationClient
 
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
-from django.utils.http import urlencode
+
+from . import update_token_in_session
 
 
-class BearerTokenAuth(AuthBase):
+# set insecure transport depending on settings val
+if settings.OAUTHLIB_INSECURE_TRANSPORT:
+    os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+
+
+REQUEST_TOKEN_URL = '{base_url}/oauth2/token/'.format(
+    base_url=settings.API_URL
+)
+
+
+def authenticate(username, password):
     """
-    Attaches the Bearer token to the request.
+    Returns:
+        token as dict containing all the data from the api
+            (access_token, refresh_token, expires_at etc.)
+            if the authentication succeeds
+        None if the authentication fails
     """
-    def __init__(self, token):
-        self.token = token
-
-    def get_header(self):
-        return ('Authorization', 'Bearer %s' % self.token)
-
-    def __call__(self, request):
-        key, token = self.get_header()
-        request.headers[key] = token
-        return request
-
-
-class FormSerializer(slumber.serialize.JsonSerializer):
-    """
-    This FormSerializer has to be used during the authentication
-    process as the `django-oauth-toolkit` version that the api app
-    is using does not support json format yet (currently in master
-    so expected soon).
-    """
-    key = "form"
-    content_types = ["application/x-www-form-urlencoded"]
-
-    def dumps(self, data):
-        return urlencode(data)
-
-
-def get_raw_connection(token=None, serializer='json'):
-    """
-    Returns a slumber connection configured so that it can be easily
-    used to query the API server.
-
-    If you have a token:
-        conn = get_raw_connection(token='your-token')
-        conn.my_endpoint.get()
-
-    If you want to authenticate as you don't have a token:
-        conn = get_raw_connection(serializer='form')
-        conn.connection.oauth2.token.post({
-            'client_id': 'client-id',
-            'client_secret': 'client-secret',
-            'grant_type': 'password',
-            'username': 'my-username',
-            'password': 'my-password'
-        })
-
-    If you have a request object and a logged-in user, you might want to use
-    this other shortcut function instead:
-        get_connection(request).my_endpoint.get()
-    """
-    auth = BearerTokenAuth(token) if token else None
-
-    s = Serializer(
-        default=serializer,
-        serializers=[
-            FormSerializer(),
-            JsonSerializer()
-        ]
+    oauth = OAuth2Session(
+        client=LegacyApplicationClient(
+            client_id=settings.API_CLIENT_ID
+        )
     )
 
-    return slumber.API(settings.API_URL, serializer=s, auth=auth)
+    try:
+        return oauth.fetch_token(
+            token_url=REQUEST_TOKEN_URL,
+            username=username,
+            password=password,
+            client_id=settings.API_CLIENT_ID,
+            client_secret=settings.API_CLIENT_SECRET
+        )
+    except HTTPError as e:
+        # return None if response.status_code == 401
+        #   => invalid credentials
+        if hasattr(e, 'response') and e.response.status_code == 401:
+            return None
+        raise(e)
+    return None
 
 
 def get_connection(request):
@@ -84,8 +64,24 @@ def get_connection(request):
         response = get_connection(request).my_endpoint.get()
     """
     user = request.user
-
     if not user:
         raise PermissionDenied(u'no such user')
 
-    return get_raw_connection(user.pk)
+    def token_saver(token, request, user):
+        user.token = token
+        update_token_in_session(request, token)
+
+    session = OAuth2Session(
+        settings.API_CLIENT_ID,
+        token=user.token,
+        auto_refresh_url=REQUEST_TOKEN_URL,
+        auto_refresh_kwargs={
+            'client_id': settings.API_CLIENT_ID,
+            'client_secret': settings.API_CLIENT_SECRET
+        },
+        token_updater=partial(token_saver, request=request, user=user)
+    )
+
+    return slumber.API(
+        base_url=settings.API_URL, session=session
+    )
