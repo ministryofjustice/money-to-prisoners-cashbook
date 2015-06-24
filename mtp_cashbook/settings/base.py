@@ -9,11 +9,13 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+import sys
 import os
 
 from django.conf import global_settings
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
+sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
@@ -29,21 +31,23 @@ SECRET_KEY = 'CHANGE_ME'
 # Application definition
 
 INSTALLED_APPS = (
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'mtp_cashbook.apps.core',
 )
+
+PROJECT_APPS = (
+    'core',
+    'mtp_auth'
+)
+
+INSTALLED_APPS += PROJECT_APPS
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+    'mtp_auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -123,6 +127,22 @@ TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + (
 
 DATABASES = {}
 
+
+# AUTH
+SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
+
+AUTH_USER_MODEL = 'mtp_auth.MtpUser'
+
+AUTHENTICATION_BACKENDS = (
+    'mtp_auth.backends.MtpBackend',
+)
+
+API_CLIENT_ID = 'cashbook'
+API_CLIENT_SECRET = os.environ.get('API_CLIENT_SECRET', 'cashbook')
+API_URL = os.environ.get('API_URL', 'http://localhost:8000')
+
+LOGIN_URL = 'auth:login'
+LOGIN_REDIRECT_URL = 'index'
 
 
 try:

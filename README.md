@@ -43,3 +43,13 @@ you should be able to point your browser at
 [http://localhost:3000](http://localhost:3000)
 if you're using *boot2docker* then it'll be at the IP of the boot2docker virtual machine.
 You can find it by typing `boot2docker ip` in a terminal. Then visit http://**boot2docker ip**:3000/
+
+## Login
+
+Make sure you have a version of the [API](https://github.com/ministryofjustice/money-to-prisoners-api) server
+running on port 8000.
+
+You should be able to log into the cash book app using following credentials:
+
+- *test_prison_1 / test_prison_1* for Prison 1
+- *test_prison_2 / test_prison_2* for Prison 2
