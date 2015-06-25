@@ -11,6 +11,7 @@ django:
     - "8001:8001"
   environment:
     PIP_DOWNLOAD_CACHE: /tmp/pip_download_cache/
+    API_URL:
 
 djangogulpserve:
   build: .
