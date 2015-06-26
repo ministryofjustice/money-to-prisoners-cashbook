@@ -144,6 +144,7 @@ API_URL = os.environ.get('API_URL', 'http://localhost:8000')
 LOGIN_URL = 'auth:login'
 LOGIN_REDIRECT_URL = 'index'
 
+OAUTHLIB_INSECURE_TRANSPORT = True
 
 try:
     from .local import *

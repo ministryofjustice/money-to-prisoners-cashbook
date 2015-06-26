@@ -1,16 +1,5 @@
-import json
-import logging
-
-from requests import ConnectionError as RequestsConnectionError
-from slumber.exceptions import HttpClientError
-
-from django.conf import settings
-
-from .api_client import get_raw_connection
+from . import api_client
 from .models import MtpUser
-from .exceptions import ConnectionError
-
-logger = logging.getLogger(__name__)
 
 
 class MtpBackend(object):
@@ -20,33 +9,23 @@ class MtpBackend(object):
 
     Client Id and Secret can be changed in settings.
     """
+
     def authenticate(self, username=None, password=None):
         """
         Returns a valid `MtpUser` if the authentication is successful
         or None if the credentials were wrong.
-
-        It raises `mtp_auth.exceptions.ConnetionError` in case of
-        problems connecting to the api server.
         """
-        connection = get_raw_connection(serializer='form')
-        try:
-            response = connection.oauth2.token.post({
-                'client_id': settings.API_CLIENT_ID,
-                'client_secret': settings.API_CLIENT_SECRET,
-                'grant_type': 'password',
-                'username': username,
-                'password': password
-            })
-        except RequestsConnectionError as e:
-            logger.error('Cannot connect with the API')
-            raise ConnectionError(e)
-        except HttpClientError as hcerr:
-            error = json.loads(hcerr.content.decode())
-            logger.error(error.get('description'))
+        token = api_client.authenticate(username, password)
+        if not token:
             return
 
-        user = MtpUser(response['access_token'])
-        return user
+        return MtpUser(
+            username=username,
+            token=token
+        )
 
-    def get_user(self, token):
-        return MtpUser(token)
+    def get_user(self, username, token):
+        return MtpUser(
+            username=username,
+            token=token
+        )
