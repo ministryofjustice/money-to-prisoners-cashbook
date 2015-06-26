@@ -68,7 +68,7 @@ class AuthenticateTestCase(SimpleTestCase):
             )
 
 
-class GetConnetionTestCase(SimpleTestCase):
+class GetConnectionTestCase(SimpleTestCase):
 
     def setUp(self):
         """
@@ -78,7 +78,7 @@ class GetConnetionTestCase(SimpleTestCase):
         It also defines the {base_url}/test/ endpoint which will be
         used by all the test methods.
         """
-        super(GetConnetionTestCase, self).setUp()
+        super(GetConnectionTestCase, self).setUp()
         self.request = mock.MagicMock(
             user=mock.MagicMock(
                 token=generate_tokens()

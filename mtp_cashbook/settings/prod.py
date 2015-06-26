@@ -12,7 +12,7 @@ from mtp_cashbook.settings.base import *
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.environ.get('DEBUG', False)
 
 ALLOWED_HOSTS = [
     'localhost',
@@ -20,5 +20,6 @@ ALLOWED_HOSTS = [
     '.service.gov.uk'
 ]
 
-# make sure that we are using secure transport during oauth2
-OAUTHLIB_INSECURE_TRANSPORT = False
+OAUTHLIB_INSECURE_TRANSPORT = os.environ.get(
+    'OAUTHLIB_INSECURE_TRANSPORT', False
+)
