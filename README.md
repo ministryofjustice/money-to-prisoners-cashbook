@@ -33,6 +33,13 @@ In a terminal `cd` into the directory you checked this project out into, then
 $ docker-compose build && docker-compose up
 ```
 
+If running under boot2docker, be sure to pass the `API_URL` to
+`docker-compose` when starting the containers:
+
+```
+$ docker-compose build && API_URL=http://`boot2docker ip`:8000 docker-compose up
+```
+
 Wait while Docker does it's stuff and you'll soon see something like:
 ```
 djangogulpserve_1 | [BS] Now you can access your site through the following addresses:
