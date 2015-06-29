@@ -92,7 +92,7 @@ STATICFILES_DIRS = [
 
 TEMPLATE_DIRS = [
     root('templates'),
-    bower_dir('mojular', 'templates')
+    bower_dir('mojular')
 ]
 
 # Sane logging defaults
