@@ -123,6 +123,7 @@ LOGGING = {
 
 TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + (
     'mtp_cashbook.apps.core.context_processors.debug',
+    'django.core.context_processors.request'
 )
 
 DATABASES = {}
