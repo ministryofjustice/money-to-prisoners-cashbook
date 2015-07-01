@@ -8,14 +8,21 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.7/ref/settings/
 """
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+# Build paths inside the project like this: os.path.join(APP_ROOT, ...)
 import sys
 import os
+import json
+
+from os.path import abspath, join, dirname
 
 from django.conf import global_settings
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
+here = lambda *x: join(abspath(dirname(__file__)), *x)
+PROJECT_ROOT = here("..")
+root = lambda *x: join(abspath(PROJECT_ROOT), *x)
+bower_dir = lambda *x: join(json.load(open(root('..', '.bowerrc')))['directory'], *x)
+
+sys.path.insert(0, os.path.join(root(), 'apps'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
@@ -77,11 +84,15 @@ USE_TZ = True
 STATIC_ROOT = 'static'
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'assets')
+    root('assets'),
+    bower_dir(),
+    bower_dir('mojular', 'assets'),
+    bower_dir('govuk-template', 'assets')
 ]
 
 TEMPLATE_DIRS = [
-    os.path.join(BASE_DIR, 'templates')
+    root('templates'),
+    bower_dir('mojular')
 ]
 
 # Sane logging defaults
