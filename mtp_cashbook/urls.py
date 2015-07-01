@@ -11,5 +11,10 @@ urlpatterns = patterns('',
         ), name='index'
     ),
 
+    url(r'^batch/$', login_required(
+            TemplateView.as_view(template_name='core/batch.html')
+        ), name='batch'
+    ),
+
     url(r'^auth/', include('mtp_auth.urls', namespace='auth',)),
 )
