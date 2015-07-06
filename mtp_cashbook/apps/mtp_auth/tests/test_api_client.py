@@ -33,8 +33,16 @@ class AuthenticateTestCase(SimpleTestCase):
 
     @responses.activate
     def test_success(self):
+        username = 'my-username'
+
         # mock the response, return token
         expected_token = generate_tokens()
+        expected_user_data = {
+            'pk': 1,
+            'first_name': 'My First Name',
+            'last_name': 'My last name',
+            'prisons': ['prison1']
+        }
 
         responses.add(
             responses.POST,
@@ -44,12 +52,23 @@ class AuthenticateTestCase(SimpleTestCase):
             content_type='application/json'
         )
 
-        # authenticate, should return same generated token
-        token = authenticate(
-            'my-username', 'my-password'
+        responses.add(
+            responses.GET,
+            '{base_url}/users/{username}/'.format(
+                base_url=settings.API_URL,
+                username=username
+            ),
+            body=json.dumps(expected_user_data),
+            status=200,
+            content_type='application/json'
         )
 
-        self.assertDictEqual(token, expected_token)
+        # authenticate, should return authentication data
+        data = authenticate(username, 'my-password')
+
+        self.assertEqual(data['pk'], expected_user_data.get('pk'))
+        self.assertDictEqual(data['token'], expected_token)
+        self.assertDictEqual(data['user_data'], expected_user_data)
 
     def test_error_if_http_instead_of_https(self):
         """

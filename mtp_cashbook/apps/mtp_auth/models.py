@@ -6,18 +6,40 @@ class MtpUser(object):
     cannot be used without a datbase so we had to create a custom one.
     """
 
-    def __init__(self, username, token={}):
-        self.pk = username
-        self.username = username
+    def __init__(self, pk, token, user_data):
+        self.pk = pk
         self.is_active = True
 
         self.token = token
+        self.user_data = user_data
 
     def save(self, *args, **kwargs):
         pass
 
     def is_authenticated(self, *args, **kwargs):
         return True
+
+    @property
+    def username(self):
+        return self.user_data.get('username')
+
+    @property
+    def get_full_name(self):
+        if not hasattr(self, '_full_name'):
+            name_parts = [
+                self.user_data.get('first_name'),
+                self.user_data.get('last_name')
+            ]
+            self._full_name = ' '.join(filter(None, name_parts))
+        return self._full_name
+
+    @property
+    def prison(self):
+        try:
+            return self.user_data.get('prisons', [])[0]
+        except IndexError:
+            pass
+        return None
 
 
 class MtpAnonymousUser(object):

@@ -3,6 +3,7 @@ from .models import MtpUser
 
 
 class MtpBackend(object):
+
     """
     Django authentication backend which authenticates against the api
     server using oauth2.
@@ -15,17 +16,13 @@ class MtpBackend(object):
         Returns a valid `MtpUser` if the authentication is successful
         or None if the credentials were wrong.
         """
-        token = api_client.authenticate(username, password)
-        if not token:
+        data = api_client.authenticate(username, password)
+        if not data:
             return
 
         return MtpUser(
-            username=username,
-            token=token
+            data.get('pk'), data.get('token'), data.get('user_data')
         )
 
-    def get_user(self, username, token):
-        return MtpUser(
-            username=username,
-            token=token
-        )
+    def get_user(self, pk, token, user_data):
+        return MtpUser(pk, token, user_data)

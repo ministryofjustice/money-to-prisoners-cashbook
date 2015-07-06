@@ -10,6 +10,7 @@ from .models import MtpAnonymousUser
 
 SESSION_KEY = '_auth_user_id'
 AUTH_TOKEN_SESSION_KEY = '_auth_user_auth_token'
+USER_DATA_SESSION_KEY = '_auth_user_data'
 BACKEND_SESSION_KEY = '_auth_user_backend'
 HASH_SESSION_KEY = '_auth_user_hash'
 
@@ -43,6 +44,7 @@ def login(request, user):
         request.session.cycle_key()
     request.session[SESSION_KEY] = user.pk
     request.session[BACKEND_SESSION_KEY] = user.backend
+    request.session[USER_DATA_SESSION_KEY] = user.user_data
     request.session[HASH_SESSION_KEY] = session_auth_hash
 
     update_token_in_session(request, user.token)
@@ -62,13 +64,14 @@ def get_user(request):
     try:
         user_id = request.session[SESSION_KEY]
         token = request.session[AUTH_TOKEN_SESSION_KEY]
+        user_data = request.session[USER_DATA_SESSION_KEY]
         backend_path = request.session[BACKEND_SESSION_KEY]
     except KeyError:
         pass
     else:
         if backend_path in settings.AUTHENTICATION_BACKENDS:
             backend = load_backend(backend_path)
-            user = backend.get_user(user_id, token)
+            user = backend.get_user(user_id, token, user_data)
             # Verify the session
             if hasattr(user, 'get_session_auth_hash'):
                 session_hash = request.session.get(HASH_SESSION_KEY)

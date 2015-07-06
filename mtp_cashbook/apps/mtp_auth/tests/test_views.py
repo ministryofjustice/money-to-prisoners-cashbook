@@ -6,7 +6,7 @@ from django.test import SimpleTestCase
 from django.utils.encoding import force_text
 
 from mtp_auth import SESSION_KEY, BACKEND_SESSION_KEY, \
-    AUTH_TOKEN_SESSION_KEY
+    AUTH_TOKEN_SESSION_KEY, USER_DATA_SESSION_KEY
 
 from .utils import generate_tokens
 
@@ -20,10 +20,6 @@ class LoginViewTestCase(SimpleTestCase):
     def setUp(self, *args, **kwargs):
         super(LoginViewTestCase, self).setUp(*args, **kwargs)
 
-        self.credentials = {
-            'username': 'my-username',
-            'password': 'my-password'
-        }
         self.login_url = reverse(u'auth:login')
         self.logout_url = reverse(u'auth:logout')
 
@@ -31,26 +27,43 @@ class LoginViewTestCase(SimpleTestCase):
         """
         Successful authentication.
         """
+
+        user_pk = 100
+        credentials = {
+            'username': 'my-username',
+            'password': 'my-password'
+        }
         token = generate_tokens()
-        mocked_api_client.authenticate.return_value = token
+        user_data = {
+            'first_name': 'My First Name',
+            'last_name': 'My Last Name',
+            'username': credentials['username'],
+            'prisons': ['prison1']
+        }
+        mocked_api_client.authenticate.return_value = {
+            'pk': user_pk,
+            'token': token,
+            'user_data': user_data
+        }
 
         # login
         response = self.client.post(
-            self.login_url, data=self.credentials, follow=True
+            self.login_url, data=credentials, follow=True
         )
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
-            self.client.session[SESSION_KEY],
-            self.credentials['username']
+            self.client.session[SESSION_KEY], user_pk
         )
         self.assertEqual(
             self.client.session[BACKEND_SESSION_KEY],
             settings.AUTHENTICATION_BACKENDS[0]
         )
         self.assertDictEqual(
-            self.client.session[AUTH_TOKEN_SESSION_KEY],
-            token
+            self.client.session[AUTH_TOKEN_SESSION_KEY], token
+        )
+        self.assertDictEqual(
+            self.client.session[USER_DATA_SESSION_KEY], user_data
         )
 
         # logout
