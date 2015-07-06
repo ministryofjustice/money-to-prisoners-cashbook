@@ -14,13 +14,11 @@ class TransactionBatchListView(ListView):
         return super(TransactionBatchListView, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
-        user_data = self.client.users(self.request.user.pk).get()
-        prison_id = user_data['prisons'][0]
-        user_id = user_data['pk']
+        user = self.request.user
 
-        resp = self.client.transactions(prison_id)(user_id).get(status='pending')
+        resp = self.client.transactions(user.prison)(user.pk).get(status='pending')
         if resp.get('count') == 0:
-            resp = self.client.transactions(prison_id)(user_id).take.post()
+            resp = self.client.transactions(user.prison)(user.pk).take.post()
         return resp.get('results', [])
 
     def get_context_data(self, **kwargs):
