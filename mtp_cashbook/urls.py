@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.contrib.auth.decorators import login_required
 from django.views.generic.base import TemplateView
+from mtp_cashbook.apps.cashbook.views import TransactionBatchListView
 
 urlpatterns = patterns('',
     # Examples:
@@ -11,9 +12,8 @@ urlpatterns = patterns('',
         ), name='index'
     ),
 
-    url(r'^batch/$', login_required(
-            TemplateView.as_view(template_name='core/batch.html')
-        ), name='batch'
+    url(r'^batch/$',
+            TransactionBatchListView.as_view(), name='transaction-list'
     ),
 
     url(r'^auth/', include('mtp_auth.urls', namespace='auth',)),
