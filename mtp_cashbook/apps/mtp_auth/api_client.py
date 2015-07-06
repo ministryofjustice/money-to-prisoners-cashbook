@@ -25,25 +25,38 @@ REQUEST_TOKEN_URL = '{base_url}/oauth2/token/'.format(
 def authenticate(username, password):
     """
     Returns:
-        token as dict containing all the data from the api
-            (access_token, refresh_token, expires_at etc.)
-            if the authentication succeeds
+        a dict with:
+            pk: the pk of the user
+            token: dict containing all the data from the api
+                (access_token, refresh_token, expires_at etc.)
+            user_data: dict containing user data such as
+                first_name, last_name, prisons etc.
+        if the authentication succeeds
         None if the authentication fails
     """
-    oauth = OAuth2Session(
+    session = OAuth2Session(
         client=LegacyApplicationClient(
             client_id=settings.API_CLIENT_ID
         )
     )
 
     try:
-        return oauth.fetch_token(
+        token = session.fetch_token(
             token_url=REQUEST_TOKEN_URL,
             username=username,
             password=password,
             client_id=settings.API_CLIENT_ID,
             client_secret=settings.API_CLIENT_SECRET
         )
+
+        conn = _get_slumber_connection(session)
+        user_data = conn.users(username).get()
+
+        return {
+            'pk': user_data.get('pk'),
+            'token': token,
+            'user_data': user_data
+        }
     except HTTPError as e:
         # return None if response.status_code == 401
         #   => invalid credentials
@@ -82,6 +95,10 @@ def get_connection(request):
         token_updater=partial(token_saver, request=request, user=user)
     )
 
+    return _get_slumber_connection(session)
+
+
+def _get_slumber_connection(session):
     return slumber.API(
         base_url=settings.API_URL, session=session
     )
