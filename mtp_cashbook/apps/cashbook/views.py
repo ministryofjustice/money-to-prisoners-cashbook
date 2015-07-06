@@ -23,3 +23,8 @@ class TransactionBatchListView(ListView):
         if resp.get('count') == 0:
             resp = self.client.transactions(PRISON)(USER_ID).take.post()
         return resp.get('results', [])
+
+    def get_context_data(self, **kwargs):
+        context = super(TransactionBatchListView, self).get_context_data(**kwargs)
+        context['total'] = sum([x['amount'] for x in context['object_list']])
+        return context
