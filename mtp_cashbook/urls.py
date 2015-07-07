@@ -13,7 +13,7 @@ urlpatterns = patterns('',
     ),
 
     url(r'^batch/$',
-            TransactionBatchListView.as_view(), name='transaction-list'
+        TransactionBatchListView.as_view(), name='transaction-list'
     ),
 
     url(r'^auth/', include('mtp_auth.urls', namespace='auth',)),
