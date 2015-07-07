@@ -2,15 +2,19 @@
 {% load currency i18n %}
 
 {% block content %}
+  <form method="post" action="">
+  {% csrf_token %}
   <div class="totals">
     <p>Control total: <strong>&pound;{{ total|currency }}</strong></p>
     <p>Total payments credited: &pound;60</p>
   </div>
 
   <input type="submit" value="I've credited ticked payments in NOMIS" class="button">
-  <button class="button button-secondary">Discard</button>
+  <button class="button button-secondary" name="discard" value="1">Discard</button>
 
   {% if object_list %}
+  {{ form.errors }}
+
   <div class="batch">
     <table>
       <thead>
@@ -30,13 +34,13 @@
       </tfoot>
 
       <tbody>
-      {% for transaction in object_list %}
+      {% for transaction_pk, transaction in object_list %}
         <tr {% if forloop.counter|divisibleby:2 %}{% else %}class="odd"{% endif %}>
           <td>{{ transaction.prisoner_number }}</td>
           <td>??? ???</td>
           <td class="numeric">&pound;{{ transaction.amount|currency }}</td>
           <td>{{ transaction.sender }}</td>
-          <td class="check"><input type="checkbox" {% if transaction.credited %}checked{% endif %}></td>
+          <td class="check"><input type="checkbox" name="{{ form.transactions.html_name }}" value="{{ transaction_pk }}" {% if transaction.credited %}checked{% endif %}></td>
         </tr>
       {% endfor %}
       </tbody>
@@ -49,7 +53,6 @@
 
   <input type="submit" value="I've credited ticked payments in NOMIS" class="button">
   <button class="button button-secondary">Discard</button>
-
-
+  </form>
 
 {% endblock content %}
