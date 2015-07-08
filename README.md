@@ -9,7 +9,7 @@ To run this project locally you need to have
 
 ### Other Repositories
 Alongside this repository you'll need the [API server](https://github.com/ministryofjustice/money-to-prisoners-api)
-and if you're planning to deploy then you'll need the [deployment repository](https://github.com/ministryofjustice/money-to-prisoners-deploy)
+and if you're planning to deploy then you'll need the [deployment repository](https://github.com/ministryofjustice/money-to-prisoners-deploy) (private repository)
 
 ## Development Server
 ### Boot2Docker
