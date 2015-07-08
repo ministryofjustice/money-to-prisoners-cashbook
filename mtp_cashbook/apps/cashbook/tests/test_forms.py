@@ -86,6 +86,37 @@ class ProcessTransactionBatchFormTestCase(SimpleTestCase):
             sorted(['1', '4'])
         )
 
+    def test_credit_all(self):
+        """
+        Tests that all the transactions get credited.
+        """
+        self.mocked_get_connection().\
+            transactions()().\
+            get.return_value = self.pending_transactions_response
+
+        to_credit = [t['id'] for t in self.pending_transactions_response['results']]
+        form = ProcessTransactionBatchForm(
+            self.request,
+            data={
+                'transactions': to_credit
+            }
+        )
+        self.assertTrue(form.is_valid())
+        form.save()
+
+        # checking call to patch
+        mocked_patch = form.client.transactions()().patch
+        self.assertEqual(mocked_patch.call_count, 1)
+        credited_transactions = mocked_patch.call_args[0][0]
+        self.assertListEqual(
+            sorted([int(t['id']) for t in credited_transactions]),
+            sorted(to_credit)
+        )
+
+        # checking that no call to release has been made
+        mocked_release = form.client.transactions()().release.post
+        self.assertEqual(mocked_release.call_count, 0)
+
     def test_discard_all(self):
         """
         Tests that the form discards all transactions, also the ones
