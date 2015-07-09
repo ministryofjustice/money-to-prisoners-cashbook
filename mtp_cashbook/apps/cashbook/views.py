@@ -3,16 +3,24 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
-from django.views.generic import FormView
+from django.views.generic import FormView, TemplateView
 
 from .forms import ProcessTransactionBatchForm
+
+
+class DashboardView(TemplateView):
+    template_name = 'cashbook/dashboard.html'
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(DashboardView, self).dispatch(request, *args, **kwargs)
 
 
 class TransactionBatchListView(FormView):
 
     form_class = ProcessTransactionBatchForm
     template_name = 'cashbook/transaction_batch_list.html'
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('dashboard')
 
     def get_form_kwargs(self):
         form_kwargs = super(TransactionBatchListView, self).get_form_kwargs()

@@ -155,7 +155,7 @@ API_CLIENT_SECRET = os.environ.get('API_CLIENT_SECRET', 'cashbook')
 API_URL = os.environ.get('API_URL', 'http://localhost:8000')
 
 LOGIN_URL = 'auth:login'
-LOGIN_REDIRECT_URL = 'index'
+LOGIN_REDIRECT_URL = 'dashboard'
 
 OAUTHLIB_INSECURE_TRANSPORT = True
 
