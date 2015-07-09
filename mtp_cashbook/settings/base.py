@@ -45,7 +45,8 @@ INSTALLED_APPS = (
 
 PROJECT_APPS = (
     'core',
-    'mtp_auth'
+    'mtp_auth',
+    'cashbook'
 )
 
 INSTALLED_APPS += PROJECT_APPS
