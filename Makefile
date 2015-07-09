@@ -39,7 +39,9 @@ endif
 
 endif
 
-.dev_django_container: $(boot2docker_up) $(boot2docker_shellinit) .
+.dev_django_container: $(boot2docker_up) $(boot2docker_shellinit) \
+  Dockerfile docker-compose.yml \
+  requirements/base.txt requirements/prod.txt
 	docker-compose build
 	@docker inspect -f '{{.Id}}' moneytoprisonerscashbook_django > .dev_django_container
 
