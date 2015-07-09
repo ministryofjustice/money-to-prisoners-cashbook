@@ -1,13 +1,41 @@
-ifneq ($(shell command -v boot2docker),)
-API_ENDPOINT=API_URL=http://`boot2docker ip`:8000
-endif
+ERROR=\033[0;31m   # Red
+WARNING=\033[0;33m # Yellow
+RESET=\033[0m
+err=echo "$(ERROR)$(1)$(RESET)"
+warn=echo "$(WARNING)$(1)$(RESET)"
 
 run: build
 	$(API_ENDPOINT) docker-compose up
 
 build: .dev_django_container
 
-.dev_django_container: .
+ifneq ($(shell command -v boot2docker),)
+API_ENDPOINT=API_URL=http://`boot2docker ip`:8000
+
+b2d_status=$(shell boot2docker status)
+
+ifneq ($(b2d_status),running)
+boot2docker_up=boot2docker_up
+boot2docker_up:
+	boot2docker init
+	boot2docker up
+endif
+
+ifndef DOCKER_HOST
+boot2docker_shellinit=boot2docker_shellinit
+boot2docker_shellinit: $(boot2docker_up)
+	@$(call warn,Setting boot2docker environment variables)
+	@$(call warn,Run this to avoid doing setting them every time:)
+	@$(call warn,$$ eval "\$$\(boot2docker shellinit\)")
+	$(foreach line, $(shell boot2docker shellinit), $(eval $(line)))
+else
+# Always ensure we have a VM
+boot2docker_shellinit=boot2docker_up
+endif
+
+endif
+
+.dev_django_container: $(boot2docker_shellinit) .
 	docker-compose build
 	@docker inspect -f '{{.Id}}' moneytoprisonerscashbook_django > .dev_django_container
 
@@ -16,4 +44,4 @@ clean:
 	docker-compose stop
 	docker-compose rm -f
 
-.PHONY: run build clean
+.PHONY: run build boot2docker_up boot2docker_shellinit clean
