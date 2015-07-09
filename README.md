@@ -15,6 +15,14 @@ and if you're planning to deploy then you'll need the [deployment
 repository](https://github.com/ministryofjustice/money-to-prisoners-deploy)
 (private repository).
 
+## Run the tests
+
+In a terminal `cd` into the directory you checked this project out into, then
+
+```
+$ make test
+```
+
 ## Development Server
 
 In a terminal `cd` into the directory you checked this project out into, then

@@ -4,6 +4,13 @@ RESET=\033[0m
 err=echo "$(ERROR)$(1)$(RESET)"
 warn=echo "$(WARNING)$(1)$(RESET)"
 
+all: test run
+
+test: build
+	$(API_ENDPOINT) docker-compose run django bash -c \
+	    "pip install --quiet -r requirements/dev.txt && \
+	     /app/manage.py test"
+
 run: build
 	$(API_ENDPOINT) docker-compose up
 
@@ -41,4 +48,4 @@ clean:
 	docker-compose stop
 	docker-compose rm -f
 
-.PHONY: run build boot2docker_up boot2docker_shellinit clean
+.PHONY: all test run build boot2docker_up boot2docker_shellinit clean
