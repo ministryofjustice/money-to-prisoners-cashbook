@@ -14,8 +14,13 @@ django:
     API_URL:
 
 djangogulpserve:
-  build: .
-  command: /bin/bash -c "npm install --unsafe-perm && gulp serve --host=$DJANGO_1_PORT_8001_TCP_ADDR --port=$TESTMOJDJANGO_DJANGO_1_PORT_8001_TCP_PORT"
+  image: moneytoprisonerscashbook_django
+  command: >
+    /bin/bash -c "
+      npm install --unsafe-perm &&
+      gulp serve --host=$DJANGO_1_PORT_8001_TCP_ADDR \
+                 --port=$DJANGO_1_PORT_8001_TCP_PORT
+    "
   volumes:
     - .:/app
     - /tmp/npm/:/root/.npm/
