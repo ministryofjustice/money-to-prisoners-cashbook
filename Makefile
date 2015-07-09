@@ -9,7 +9,7 @@ all: test run
 test: build
 	$(API_ENDPOINT) docker-compose run django bash -c \
 	    "pip install --quiet -r requirements/dev.txt && \
-	     /app/manage.py test"
+	     /app/manage.py test $(TEST)"
 
 run: build
 	$(API_ENDPOINT) docker-compose up

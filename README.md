@@ -23,6 +23,12 @@ In a terminal `cd` into the directory you checked this project out into, then
 $ make test
 ```
 
+To run a specific test, or set of tests, run:
+
+```
+$ make test TEST=[testname]
+```
+
 ## Development Server
 
 In a terminal `cd` into the directory you checked this project out into, then
