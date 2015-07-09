@@ -15,9 +15,11 @@ and if you're planning to deploy then you'll need the [deployment
 repository](https://github.com/ministryofjustice/money-to-prisoners-deploy)
 (private repository).
 
-## Run the tests
+## Working with the code
 
-In a terminal `cd` into the directory you checked this project out into, then
+### Run the tests
+
+In a terminal `cd` into the directory you checked this project out into, then:
 
 ```
 $ make test
@@ -29,7 +31,15 @@ To run a specific test, or set of tests, run:
 $ make test TEST=[testname]
 ```
 
-## Development Server
+### Validate code style
+
+In a terminal `cd` into the directory you checked this project out into, then:
+
+```
+$ make lint
+```
+
+### Run a development Server
 
 In a terminal `cd` into the directory you checked this project out into, then
 
@@ -49,7 +59,7 @@ You should be able to point your browser at
 machine. You can find it by typing `boot2docker ip` in a terminal. Then
 visit http://**boot2docker ip**:3000/
 
-## Login
+### Log in to the application
 
 Make sure you have a version of the [API](https://github.com/ministryofjustice/money-to-prisoners-api) server
 running on port 8000.
