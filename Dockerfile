@@ -22,9 +22,10 @@ ADD ./conf/uwsgi /etc/uwsgi
 ADD ./requirements/ /app/requirements/
 RUN pip3 install -r requirements/prod.txt
 
-ADD . /app
-
+ADD .bowerrc bower.json package.json README.md /app/
 RUN npm install --unsafe-perm
+
+ADD . /app
 RUN gulp
 RUN ./manage.py collectstatic --noinput
 
