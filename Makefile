@@ -28,14 +28,11 @@ boot2docker_shellinit: $(boot2docker_up)
 	@$(call warn,Run this to avoid doing setting them every time:)
 	@$(call warn,$$ eval "\$$\(boot2docker shellinit\)")
 	$(foreach line, $(shell boot2docker shellinit), $(eval $(line)))
-else
-# Always ensure we have a VM
-boot2docker_shellinit=boot2docker_up
 endif
 
 endif
 
-.dev_django_container: $(boot2docker_shellinit) .
+.dev_django_container: $(boot2docker_up) $(boot2docker_shellinit) .
 	docker-compose build
 	@docker inspect -f '{{.Id}}' moneytoprisonerscashbook_django > .dev_django_container
 
