@@ -41,9 +41,9 @@ class AuthenticationForm(forms.Form):
             except ConnectionError:
                 # in case of problems connecting to the api server
                 raise forms.ValidationError(
-                        self.error_messages['connection_error'],
-                        code='connection_error',
-                    )
+                    self.error_messages['connection_error'],
+                    code='connection_error',
+                )
 
         return self.cleaned_data
 
