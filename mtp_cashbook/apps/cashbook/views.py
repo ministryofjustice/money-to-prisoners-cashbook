@@ -5,7 +5,7 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import FormView, TemplateView
 
-from mtp_cashbook.apps.mtp_auth.api_client import get_connection
+from mtp_cashbook.apps.mtp_auth import api_client
 
 from .forms import ProcessTransactionBatchForm
 
@@ -15,7 +15,7 @@ class DashboardView(TemplateView):
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
-        self.client = get_connection(request)
+        self.client = api_client.get_connection(request)
         return super(DashboardView, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):

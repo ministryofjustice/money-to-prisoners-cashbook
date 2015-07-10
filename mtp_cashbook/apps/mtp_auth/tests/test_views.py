@@ -48,10 +48,10 @@ class LoginViewTestCase(SimpleTestCase):
 
         # login
         response = self.client.post(
-            self.login_url, data=credentials, follow=True
+            self.login_url, data=credentials
         )
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
         self.assertEqual(
             self.client.session[SESSION_KEY], user_pk
         )
