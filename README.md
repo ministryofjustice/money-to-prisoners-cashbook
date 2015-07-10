@@ -39,6 +39,13 @@ In a terminal `cd` into the directory you checked this project out into, then:
 $ make lint
 ```
 
+To check for a [specific class of style
+violation](http://flake8.readthedocs.org/en/latest/warnings.html), run:
+
+```
+$ make lint LINT_OPTS="--select [lint-rules]"
+```
+
 ### Run a development Server
 
 In a terminal `cd` into the directory you checked this project out into, then
