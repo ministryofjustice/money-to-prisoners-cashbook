@@ -9,7 +9,7 @@ all: lint test run
 lint: build
 	docker-compose run django bash -c \
 	    "pip install --quiet -r requirements/dev.txt && \
-	     flake8 ."
+	     flake8 $(LINT_OPTS) ."
 
 test: build
 	$(API_ENDPOINT) docker-compose run django bash -c \
