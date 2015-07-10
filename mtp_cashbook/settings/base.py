@@ -161,6 +161,6 @@ LOGIN_REDIRECT_URL = 'dashboard'
 OAUTHLIB_INSECURE_TRANSPORT = True
 
 try:
-    from .local import *
+    from .local import *  # noqa
 except ImportError:
     pass

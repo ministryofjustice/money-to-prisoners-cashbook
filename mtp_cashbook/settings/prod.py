@@ -6,7 +6,7 @@ See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 import os
 
 
-from mtp_cashbook.settings.base import *
+from mtp_cashbook.settings.base import *  # noqa
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
