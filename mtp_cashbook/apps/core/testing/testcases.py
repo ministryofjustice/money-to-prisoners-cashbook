@@ -7,7 +7,7 @@ from django.utils.functional import cached_property
 from mtp_auth.tests.utils import generate_tokens
 
 
-class MTPTestCase(SimpleTestCase):
+class MTPBaseTestCase(SimpleTestCase):
 
     @property
     def login_url(self):
