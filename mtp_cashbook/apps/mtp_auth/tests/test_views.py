@@ -69,7 +69,8 @@ class LoginViewTestCase(SimpleTestCase):
         # logout
         response = self.client.post(self.logout_url, follow=True)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(self.client.session.items()), 0)  # nothing in the session
+        # nothing in the session
+        self.assertEqual(len(self.client.session.items()), 0)
 
     def test_invalid_credentials(self, mocked_api_client):
         """
@@ -91,4 +92,5 @@ class LoginViewTestCase(SimpleTestCase):
             form.errors['__all__'],
             [force_text(form.error_messages['invalid_login'])]
         )
-        self.assertEqual(len(self.client.session.items()), 0)  # nothing in the session
+        # nothing in the session
+        self.assertEqual(len(self.client.session.items()), 0)

@@ -14,7 +14,8 @@ class AuthenticationForm(forms.Form):
     error_messages = {
         'invalid_login': _("Please enter a correct username and password. "
                            "Note that both fields may be case-sensitive."),
-        'connection_error': _("The API Server seems down, please try again later."),
+        'connection_error': _("The API Server seems down, "
+                              "please try again later."),
     }
 
     def __init__(self, request=None, *args, **kwargs):
@@ -41,9 +42,9 @@ class AuthenticationForm(forms.Form):
             except ConnectionError:
                 # in case of problems connecting to the api server
                 raise forms.ValidationError(
-                        self.error_messages['connection_error'],
-                        code='connection_error',
-                    )
+                    self.error_messages['connection_error'],
+                    code='connection_error',
+                )
 
         return self.cleaned_data
 
