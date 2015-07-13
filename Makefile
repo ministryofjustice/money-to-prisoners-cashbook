@@ -9,7 +9,16 @@ all: lint test run
 lint: build
 	docker-compose run django bash -c \
 	    "pip install --quiet -r requirements/dev.txt && \
-	     flake8 $(LINT_OPTS) ."
+	     flake8 $(LINT_OPTS) . && \
+	     find . \( -path ./node_modules -o \
+	               -path ./mtp_cashbook/assets-src/bower_components -o \
+	               -path ./requirements \
+	            \) \
+	            -prune -o \( \
+	               -name '*.html' -or \
+	               -name '*.txt' \
+	            \) -print | \
+	     xargs django-template-i18n-lint"
 
 test: build
 	$(API_ENDPOINT) docker-compose run django bash -c \
