@@ -38,9 +38,9 @@ ifneq ($(shell command -v boot2docker),)
   endif
 endif
 
-.dev_django_container: $(boot2docker_up) $(boot2docker_shellinit) \
-  Dockerfile docker-compose.yml \
-  requirements/base.txt requirements/prod.txt
+.dev_django_container: Dockerfile docker-compose.yml \
+  requirements/base.txt requirements/prod.txt \
+  | $(boot2docker_up) $(boot2docker_shellinit)
 	docker-compose build
 	@docker inspect -f '{{.Id}}' moneytoprisonerscashbook_django > .dev_django_container
 
