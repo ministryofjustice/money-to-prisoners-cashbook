@@ -3,16 +3,38 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
-from django.views.generic import FormView
+from django.views.generic import FormView, TemplateView
+
+from mtp_cashbook.apps.mtp_auth import api_client
 
 from .forms import ProcessTransactionBatchForm
+
+
+class DashboardView(TemplateView):
+    template_name = 'cashbook/dashboard.html'
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        self.client = api_client.get_connection(request)
+        return super(DashboardView, self).dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context_data = super(DashboardView, self).get_context_data(**kwargs)
+
+        # new transactions == available + my pending
+        user = self.request.user
+        transaction_client = self.client.transactions(user.prison)
+        available = transaction_client.get(status='available')
+        my_pending = transaction_client(user.pk).get(status='pending')
+        context_data['new_transactions'] = available['count'] + my_pending['count']
+        return context_data
 
 
 class TransactionBatchListView(FormView):
 
     form_class = ProcessTransactionBatchForm
     template_name = 'cashbook/transaction_batch_list.html'
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('dashboard')
 
     def get_form_kwargs(self):
         form_kwargs = super(TransactionBatchListView, self).get_form_kwargs()
