@@ -1,7 +1,7 @@
 $assets-prefix: '/static';
 
 @import 'govuk';
-@import 'moj';
+@import 'moj-internal';
 
 @import 'base';
 
@@ -10,10 +10,11 @@ $assets-prefix: '/static';
 @import 'components/buttons';
 @import 'components/forms';
 @import 'components/table';
+@import 'components/subheader';
 
 // App elements
-@import 'components/subheader';
-@import 'components/summary_boxes';
+@import 'components/user-details';
+@import 'components/summary-boxes';
 
 // Page specific styles
 @import 'pages/batch'

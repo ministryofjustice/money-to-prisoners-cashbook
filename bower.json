@@ -11,6 +11,6 @@
   ],
   "dependencies": {
     "lodash": "~2.4.1",
-    "mojular": "matharden/mojular#internal"
+    "mojular": "matharden/mojular#internal2"
   }
 }
