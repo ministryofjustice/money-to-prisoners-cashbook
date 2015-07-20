@@ -43,7 +43,7 @@ class ProcessTransactionBatchForm(forms.Form):
         transactions = resp.get('results', [])
 
         return [
-           (t['id'], t) for t in transactions
+            (t['id'], t) for t in transactions
         ]
 
     def save(self):

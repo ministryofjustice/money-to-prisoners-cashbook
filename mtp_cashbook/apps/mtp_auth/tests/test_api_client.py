@@ -157,8 +157,8 @@ class GetConnectionTestCase(SimpleTestCase):
         now = datetime.datetime.now()
         one_day_delta = datetime.timedelta(days=1)
 
-        expired_yesterday = build_expires_at(now-one_day_delta)
-        expires_tomorrow = build_expires_at(now+one_day_delta)
+        expired_yesterday = build_expires_at(now - one_day_delta)
+        expires_tomorrow = build_expires_at(now + one_day_delta)
 
         # set access_token.expires_at to yesterday
         self.request.user.token['expires_at'] = expired_yesterday
