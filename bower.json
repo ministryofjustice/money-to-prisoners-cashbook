@@ -11,6 +11,6 @@
   ],
   "dependencies": {
     "lodash": "~2.4.1",
-    "mojular": "ministryofjustice/mojular#internal"
+    "mojular": "ministryofjustice/mojular#0.3.1"
   }
 }
