@@ -1,37 +1,10 @@
-class MtpUser(object):
+from moj_auth.models import MojUser
+
+
+class MtpUser(MojUser):
     """
-    Authenticated user, similar to the Django one.
-
-    The built-in Django `AbstractBaseUser` sadly depends on a few tables and
-    cannot be used without a datbase so we had to create a custom one.
+    MTP specialisation of the MojUser OAuth user
     """
-
-    def __init__(self, pk, token, user_data):
-        self.pk = pk
-        self.is_active = True
-
-        self.token = token
-        self.user_data = user_data
-
-    def save(self, *args, **kwargs):
-        pass
-
-    def is_authenticated(self, *args, **kwargs):
-        return True
-
-    @property
-    def username(self):
-        return self.user_data.get('username')
-
-    @property
-    def get_full_name(self):
-        if not hasattr(self, '_full_name'):
-            name_parts = [
-                self.user_data.get('first_name'),
-                self.user_data.get('last_name')
-            ]
-            self._full_name = ' '.join(filter(None, name_parts))
-        return self._full_name
 
     @property
     def prison(self):
@@ -40,16 +13,3 @@ class MtpUser(object):
         except IndexError:
             pass
         return None
-
-
-class MtpAnonymousUser(object):
-    """
-    Anonymous non-authenticated user, similar to the Django one.
-
-    The built-in Django `AnonymousUser` sadly depends on a few tables and
-    gives several warnings when used without a database so we had to create a
-    custom one.
-    """
-
-    def is_authenticated(self, *args, **kwargs):
-        return False

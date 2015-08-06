@@ -10,9 +10,9 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 
-from . import login as auth_login
-from . import logout as auth_logout
-from .forms import AuthenticationForm
+from moj_auth import login as auth_login
+from moj_auth import logout as auth_logout
+from moj_auth.forms import AuthenticationForm
 
 
 @sensitive_post_parameters()
@@ -62,8 +62,8 @@ def login(request, template_name='mtp_auth/login.html',
     return TemplateResponse(request, template_name, context)
 
 
-def logout(request, next_page=None,
-           template_name='mtp_auth/login.html',
+def logout(request, template_name='mtp_auth/login.html',
+           next_page=None,
            redirect_field_name=REDIRECT_FIELD_NAME,
            current_app=None, extra_context=None):
     """

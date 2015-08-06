@@ -5,13 +5,13 @@ from django.core.urlresolvers import reverse
 from django.test import SimpleTestCase
 from django.utils.encoding import force_text
 
-from mtp_auth import SESSION_KEY, BACKEND_SESSION_KEY, \
+from moj_auth import SESSION_KEY, BACKEND_SESSION_KEY, \
     AUTH_TOKEN_SESSION_KEY, USER_DATA_SESSION_KEY
 
-from .utils import generate_tokens
+from moj_auth.tests.utils import generate_tokens
 
 
-@mock.patch('mtp_auth.backends.api_client')
+@mock.patch('moj_auth.backends.api_client')
 class LoginViewTestCase(SimpleTestCase):
     """
     Tests that the login flow works as expected.
