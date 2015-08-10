@@ -5,7 +5,7 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import FormView, TemplateView
 
-from mtp_cashbook.apps.mtp_auth import api_client
+from moj_auth import api_client
 
 from .forms import ProcessTransactionBatchForm
 

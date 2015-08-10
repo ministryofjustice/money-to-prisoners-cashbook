@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse
 from django.test import SimpleTestCase
 from django.utils.functional import cached_property
 
-from mtp_auth.tests.utils import generate_tokens
+from moj_auth.tests.utils import generate_tokens
 
 
 class MTPBaseTestCase(SimpleTestCase):
@@ -39,7 +39,7 @@ class MTPBaseTestCase(SimpleTestCase):
             'user_pk': user_pk
         }
 
-    @mock.patch('mtp_auth.backends.api_client')
+    @mock.patch('moj_auth.backends.api_client')
     def login(self, mocked_auth_client, login_data=None):
         if not login_data:
             login_data = self._default_login_data

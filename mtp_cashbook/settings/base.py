@@ -55,7 +55,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'mtp_auth.middleware.AuthenticationMiddleware',
+    'moj_auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -146,9 +146,10 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
 AUTH_USER_MODEL = 'mtp_auth.MtpUser'
+MOJ_USER_MODEL = 'mtp_auth.models.MtpUser'
 
 AUTHENTICATION_BACKENDS = (
-    'mtp_auth.backends.MtpBackend',
+    'moj_auth.backends.MojBackend',
 )
 
 API_CLIENT_ID = 'cashbook'

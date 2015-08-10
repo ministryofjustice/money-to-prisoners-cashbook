@@ -1,7 +1,7 @@
 from django import forms
 from django.utils.functional import cached_property
 
-from mtp_cashbook.apps.mtp_auth.api_client import get_connection
+from moj_auth.api_client import get_connection
 
 
 class ProcessTransactionBatchForm(forms.Form):
