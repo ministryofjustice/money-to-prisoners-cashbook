@@ -26,7 +26,7 @@ ADD .bowerrc bower.json package.json README.md /app/
 RUN npm install --unsafe-perm
 
 ADD . /app
-RUN gulp
+RUN LC_CTYPE=en_US.UTF-8 gulp
 RUN ./manage.py collectstatic --noinput
 
 EXPOSE 8080
