@@ -69,3 +69,42 @@ class ProcessTransactionBatchForm(forms.Form):
             })
 
         return (to_credit, to_discard)
+
+
+
+class DiscardPendingTransactionsForm(forms.Form):
+    transactions = forms.MultipleChoiceField(choices=(), required=False)
+
+    def __init__(self, request, *args, **kwargs):
+        super(DiscardPendingTransactionsForm, self).__init__(*args, **kwargs)
+        self.user = request.user
+        self.client = get_connection(request)
+
+        self.fields['transactions'].choices = self.transaction_choices
+
+    def _request_pending_transactions(self):
+        return self.client.cashbook().transactions(self.user.prison).get(status='pending')
+
+    @cached_property
+    def transaction_choices(self):
+        """
+        Gets the transactions currently locked by all users for prison
+        """
+        resp = self._request_pending_transactions()
+        transactions = resp.get('results', [])
+
+        return [
+            (t['id'], t) for t in transactions
+        ]
+
+    def save(self):
+        all_ids = {str(t[0]) for t in self.transaction_choices}
+        to_discard = set(self.cleaned_data['transactions'])
+
+        # discard
+        if to_discard:
+            self.client.cashbook().transactions(self.user.prison).release.post({
+                'transaction_ids': list(to_discard)
+            })
+
+        return to_discard

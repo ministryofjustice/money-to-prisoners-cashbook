@@ -7,7 +7,7 @@ from django.views.generic import FormView, TemplateView
 
 from moj_auth import api_client
 
-from .forms import ProcessTransactionBatchForm
+from .forms import ProcessTransactionBatchForm, DiscardPendingTransactionsForm
 
 
 class DashboardView(TemplateView):
@@ -26,7 +26,9 @@ class DashboardView(TemplateView):
         transaction_client = self.client.cashbook().transactions(user.prison)
         available = transaction_client.get(status='available')
         my_pending = transaction_client(user.pk).get(status='pending')
+        locked = transaction_client.get(status='pending')
         context_data['new_transactions'] = available['count'] + my_pending['count']
+        context_data['locked_transactions'] = locked['count']
         return context_data
 
 
@@ -67,3 +69,39 @@ class TransactionBatchListView(FormView):
             }
         )
         return super(TransactionBatchListView, self).form_valid(form)
+
+
+class TransactionsLockedView(FormView):
+
+    form_class = DiscardPendingTransactionsForm
+    template_name = 'cashbook/transactions_locked.html'
+    success_url = reverse_lazy('dashboard')
+
+    def get_form_kwargs(self):
+        form_kwargs = super(TransactionsLockedView, self).get_form_kwargs()
+        form_kwargs['request'] = self.request
+        return form_kwargs
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(TransactionsLockedView, self).dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(TransactionsLockedView, self).get_context_data(**kwargs)
+
+        context['object_list'] = context['form'].transaction_choices
+        return context
+
+    def form_valid(self, form):
+        discarded = form.save()
+
+        messages.success(
+            self.request,
+            _(
+                '%(discarded)s transaction%(plural)s unlocked successfully.'
+            ) % {
+                'discarded': len(discarded),
+                'plural': '' if len(discarded) == 1 else 's'
+            }
+        )
+        return super(TransactionsLockedView, self).form_valid(form)
