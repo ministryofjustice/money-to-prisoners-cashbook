@@ -2,7 +2,7 @@ import mock
 
 from django.test.testcases import SimpleTestCase
 
-from cashbook.forms import ProcessTransactionBatchForm
+from cashbook.forms import ProcessTransactionBatchForm, DiscardPendingTransactionsForm
 
 
 class ProcessTransactionBatchFormTestCase(SimpleTestCase):
@@ -156,4 +156,50 @@ class ProcessTransactionBatchFormTestCase(SimpleTestCase):
             sorted(
                 [str(t['id']) for t in self.pending_transactions_response['results']]
             )
+        )
+
+
+class DiscardPendingTranscationsFormTestCase(SimpleTestCase):
+
+    def setUp(self):
+        super(DiscardPendingTranscationsFormTestCase, self).setUp()
+        self.user = mock.MagicMock()
+        self.request = mock.MagicMock()
+
+        self.pending_transactions_response = {
+            'count': 4,
+            'results': [{'id': i} for i in range(1, 5)]
+        }
+
+    @mock.patch('cashbook.forms.get_connection')
+    def __call__(self, result, mocked_get_connection, *args, **kwargs):
+        self.mocked_get_connection = mocked_get_connection
+        super(DiscardPendingTranscationsFormTestCase, self).__call__(result, *args, **kwargs)
+
+    def test_discard_some(self):
+        """
+        Tests that the form discards all transactions, also the ones
+        selected to be credited.
+        """
+        self.mocked_get_connection().\
+            transactions().\
+            get.return_value = self.pending_transactions_response
+
+        to_discard = ['2', '3']
+        form = DiscardPendingTransactionsForm(
+            self.request,
+            data={
+                'transactions': to_discard
+            }
+        )
+        self.assertTrue(form.is_valid())
+        form.save()
+
+        # checking call to release
+        mocked_release = form.client.transactions().release.post
+        self.assertEqual(mocked_release.call_count, 1)
+        discarded_transactions = mocked_release.call_args[0][0]
+        self.assertListEqual(
+            sorted(discarded_transactions['transaction_ids']),
+            sorted(to_discard)
         )
