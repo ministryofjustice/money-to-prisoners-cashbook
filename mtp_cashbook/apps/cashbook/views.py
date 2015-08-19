@@ -23,7 +23,7 @@ class DashboardView(TemplateView):
 
         # new transactions == available + my pending
         user = self.request.user
-        transaction_client = self.client.transactions(user.prison)
+        transaction_client = self.client.cashbook().transactions(user.prison)
         available = transaction_client.get(status='available')
         my_pending = transaction_client(user.pk).get(status='pending')
         context_data['new_transactions'] = available['count'] + my_pending['count']
