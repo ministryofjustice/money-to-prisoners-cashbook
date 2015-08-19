@@ -15,10 +15,10 @@ class ProcessTransactionBatchForm(forms.Form):
         self.fields['transactions'].choices = self.transaction_choices
 
     def _request_pending_transactions(self):
-        return self.client.transactions(self.user.prison)(self.user.pk).get(status='pending')
+        return self.client.cashbook().transactions(self.user.prison)(self.user.pk).get(status='pending')
 
     def _take_transactions(self):
-        self.client.transactions(self.user.prison)(self.user.pk).take.post()
+        self.client.cashbook().transactions(self.user.prison)(self.user.pk).take.post()
 
     def clean_transactions(self):
         """
@@ -58,13 +58,13 @@ class ProcessTransactionBatchForm(forms.Form):
 
         # credit
         if to_credit:
-            self.client.transactions(self.user.prison)(self.user.pk).patch(
+            self.client.cashbook().transactions(self.user.prison)(self.user.pk).patch(
                 [{'id': t_id, 'credited': True} for t_id in to_credit]
             )
 
         # discard
         if to_discard:
-            self.client.transactions(self.user.prison)(self.user.pk).release.post({
+            self.client.cashbook().transactions(self.user.prison)(self.user.pk).release.post({
                 'transaction_ids': list(to_discard)
             })
 

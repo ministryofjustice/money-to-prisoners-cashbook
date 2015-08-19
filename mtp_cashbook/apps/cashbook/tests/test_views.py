@@ -29,7 +29,7 @@ class DashboardViewTestCase(MTPBaseTestCase):
     def test_0_available_0_pending_gives_correct_new_count(self):
         self.login()
 
-        conn = self.mocked_api_client.get_connection().transactions()
+        conn = self.mocked_api_client.get_connection().cashbook().transactions()
         conn.get.return_value = {'count': 0}  # available
         conn().get.return_value = {'count': 0}  # pending
 
@@ -40,7 +40,7 @@ class DashboardViewTestCase(MTPBaseTestCase):
     def test_some_available_0_pending_gives_correct_new_count(self):
         self.login()
 
-        conn = self.mocked_api_client.get_connection().transactions()
+        conn = self.mocked_api_client.get_connection().cashbook().transactions()
         conn.get.return_value = {'count': 21}  # available
         conn().get.return_value = {'count': 0}  # pending
 
@@ -51,7 +51,7 @@ class DashboardViewTestCase(MTPBaseTestCase):
     def test_0_available_some_pending_gives_correct_new_count(self):
         self.login()
 
-        conn = self.mocked_api_client.get_connection().transactions()
+        conn = self.mocked_api_client.get_connection().cashbook().transactions()
         conn.get.return_value = {'count': 0}  # available
         conn().get.return_value = {'count': 3}  # pending
 
@@ -62,7 +62,7 @@ class DashboardViewTestCase(MTPBaseTestCase):
     def some_available_some_pending_gives_correct_new_count(self):
         self.login()
 
-        conn = self.mocked_api_client.get_connection().transactions()
+        conn = self.mocked_api_client.get_connection().cashbook().transactions()
         conn.get.return_value = {'count': 21}  # available
         conn().get.return_value = {'count': 3}  # pending
 

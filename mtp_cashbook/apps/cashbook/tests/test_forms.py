@@ -24,6 +24,7 @@ class ProcessTransactionBatchFormTestCase(SimpleTestCase):
 
     def test_init_form_with_already_locked_transactions(self):
         self.mocked_get_connection().\
+            cashbook().\
             transactions()().\
             get.return_value = self.pending_transactions_response
 
@@ -36,7 +37,9 @@ class ProcessTransactionBatchFormTestCase(SimpleTestCase):
         self.assertEqual(form.fields['transactions'].choices, expected_choices)
 
     def test_init_form_with_no_locked_transactions(self):
-        self.mocked_get_connection().transactions()().get.side_effect = [
+        self.mocked_get_connection().\
+            cashbook().\
+            transactions()().get.side_effect = [
             {
                 'count': 0,
                 'results': 0
@@ -55,6 +58,7 @@ class ProcessTransactionBatchFormTestCase(SimpleTestCase):
         Tests that [2, 3] gets credited and [1, 4] discarded
         """
         self.mocked_get_connection().\
+            cashbook().\
             transactions()().\
             get.return_value = self.pending_transactions_response
 
@@ -69,7 +73,7 @@ class ProcessTransactionBatchFormTestCase(SimpleTestCase):
         form.save()
 
         # checking call to patch
-        mocked_patch = form.client.transactions()().patch
+        mocked_patch = form.client.cashbook().transactions()().patch
         self.assertEqual(mocked_patch.call_count, 1)
         credited_transactions = mocked_patch.call_args[0][0]
         self.assertListEqual(
@@ -78,7 +82,7 @@ class ProcessTransactionBatchFormTestCase(SimpleTestCase):
         )
 
         # checking call to release
-        mocked_release = form.client.transactions()().release.post
+        mocked_release = form.client.cashbook().transactions()().release.post
         self.assertEqual(mocked_release.call_count, 1)
         discarded_transactions = mocked_release.call_args[0][0]
         self.assertListEqual(
@@ -91,6 +95,7 @@ class ProcessTransactionBatchFormTestCase(SimpleTestCase):
         Tests that all the transactions get credited.
         """
         self.mocked_get_connection().\
+            cashbook().\
             transactions()().\
             get.return_value = self.pending_transactions_response
 
@@ -105,7 +110,7 @@ class ProcessTransactionBatchFormTestCase(SimpleTestCase):
         form.save()
 
         # checking call to patch
-        mocked_patch = form.client.transactions()().patch
+        mocked_patch = form.client.cashbook().transactions()().patch
         self.assertEqual(mocked_patch.call_count, 1)
         credited_transactions = mocked_patch.call_args[0][0]
         self.assertListEqual(
@@ -114,7 +119,7 @@ class ProcessTransactionBatchFormTestCase(SimpleTestCase):
         )
 
         # checking that no call to release has been made
-        mocked_release = form.client.transactions()().release.post
+        mocked_release = form.client.cashbook().transactions()().release.post
         self.assertEqual(mocked_release.call_count, 0)
 
     def test_discard_all(self):
@@ -123,6 +128,7 @@ class ProcessTransactionBatchFormTestCase(SimpleTestCase):
         selected to be credited.
         """
         self.mocked_get_connection().\
+            cashbook().\
             transactions()().\
             get.return_value = self.pending_transactions_response
 
@@ -138,11 +144,11 @@ class ProcessTransactionBatchFormTestCase(SimpleTestCase):
         form.save()
 
         # checking that no call to patch has been made
-        mocked_patch = form.client.transactions()().patch
+        mocked_patch = form.client.cashbook().transactions()().patch
         self.assertEqual(mocked_patch.call_count, 0)
 
         # checking call to release with all transactions
-        mocked_release = form.client.transactions()().release.post
+        mocked_release = form.client.cashbook().transactions()().release.post
         self.assertEqual(mocked_release.call_count, 1)
         discarded_transactions = mocked_release.call_args[0][0]
         self.assertListEqual(
