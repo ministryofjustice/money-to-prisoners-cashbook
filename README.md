@@ -75,3 +75,5 @@ You should be able to log into the cash book app using following credentials:
 
 - *test_prison_1 / test_prison_1* for Prison 1
 - *test_prison_2 / test_prison_2* for Prison 2
+
+Testing the build process.
