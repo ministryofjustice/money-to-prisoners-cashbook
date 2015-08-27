@@ -7,7 +7,7 @@ from django.views.generic import FormView, TemplateView
 
 from moj_auth import api_client
 
-from .forms import ProcessTransactionBatchForm, DiscardPendingTransactionsForm
+from .forms import ProcessTransactionBatchForm, DiscardLockedTransactionsForm
 
 
 class DashboardView(TemplateView):
@@ -21,13 +21,12 @@ class DashboardView(TemplateView):
     def get_context_data(self, **kwargs):
         context_data = super(DashboardView, self).get_context_data(**kwargs)
 
-        # new transactions == available + my pending
-        user = self.request.user
-        transaction_client = self.client.cashbook().transactions(user.prison)
+        # new transactions == available + my locked
+        transaction_client = self.client.cashbook.transactions
         available = transaction_client.get(status='available')
-        my_pending = transaction_client(user.pk).get(status='pending')
-        locked = transaction_client.get(status='pending')
-        context_data['new_transactions'] = available['count'] + my_pending['count']
+        my_locked = transaction_client.get(user=self.request.user.pk, status='locked')
+        locked = transaction_client.get(status='locked')
+        context_data['new_transactions'] = available['count'] + my_locked['count']
         context_data['locked_transactions'] = locked['count']
         return context_data
 
@@ -73,7 +72,7 @@ class TransactionBatchListView(FormView):
 
 class TransactionsLockedView(FormView):
 
-    form_class = DiscardPendingTransactionsForm
+    form_class = DiscardLockedTransactionsForm
     template_name = 'cashbook/transactions_locked.html'
     success_url = reverse_lazy('dashboard')
 
