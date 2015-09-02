@@ -45,6 +45,7 @@ INSTALLED_APPS = (
 
 PROJECT_APPS = (
     'core',
+    'widget_tweaks',
     'mtp_auth',
     'cashbook'
 )
