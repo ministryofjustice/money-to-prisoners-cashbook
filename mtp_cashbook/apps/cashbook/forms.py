@@ -14,11 +14,11 @@ class ProcessTransactionBatchForm(forms.Form):
 
         self.fields['transactions'].choices = self.transaction_choices
 
-    def _request_pending_transactions(self):
-        return self.client.cashbook().transactions(self.user.prison)(self.user.pk).get(status='pending')
+    def _request_locked_transactions(self):
+        return self.client.cashbook.transactions.get(status='locked')
 
     def _take_transactions(self):
-        self.client.cashbook().transactions(self.user.prison)(self.user.pk).take.post()
+        self.client.cashbook.transactions.actions.lock.post()
 
     def clean_transactions(self):
         """
@@ -36,10 +36,10 @@ class ProcessTransactionBatchForm(forms.Form):
         Gets the transactions currently locked by the user if they exist
         or locks some and returns them if not.
         """
-        resp = self._request_pending_transactions()
-        if resp.get('count') == 0:
+        resp = self._request_locked_transactions()
+        if not self.is_bound and resp.get('count') == 0:
             self._take_transactions()
-            resp = self._request_pending_transactions()
+            resp = self._request_locked_transactions()
         transactions = resp.get('results', [])
 
         return [
@@ -58,14 +58,51 @@ class ProcessTransactionBatchForm(forms.Form):
 
         # credit
         if to_credit:
-            self.client.cashbook().transactions(self.user.prison)(self.user.pk).patch(
+            self.client.cashbook.transactions.patch(
                 [{'id': t_id, 'credited': True} for t_id in to_credit]
             )
 
         # discard
         if to_discard:
-            self.client.cashbook().transactions(self.user.prison)(self.user.pk).release.post({
+            self.client.cashbook.transactions.actions.unlock.post({
                 'transaction_ids': list(to_discard)
             })
 
         return (to_credit, to_discard)
+
+
+class DiscardLockedTransactionsForm(forms.Form):
+    transactions = forms.MultipleChoiceField(choices=(), required=False)
+
+    def __init__(self, request, *args, **kwargs):
+        super(DiscardLockedTransactionsForm, self).__init__(*args, **kwargs)
+        self.user = request.user
+        self.client = get_connection(request)
+
+        self.fields['transactions'].choices = self.transaction_choices
+
+    def _request_locked_transactions(self):
+        return self.client.cashbook.transactions.get(status='locked')
+
+    @cached_property
+    def transaction_choices(self):
+        """
+        Gets the transactions currently locked by all users for prison
+        """
+        resp = self._request_locked_transactions()
+        transactions = resp.get('results', [])
+
+        return [
+            (t['id'], t) for t in transactions
+        ]
+
+    def save(self):
+        to_discard = set(self.cleaned_data['transactions'])
+
+        # discard
+        if to_discard:
+            self.client.cashbook.transactions.actions.unlock.post({
+                'transaction_ids': list(to_discard)
+            })
+
+        return to_discard
