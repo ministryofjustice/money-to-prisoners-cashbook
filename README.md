@@ -1,4 +1,8 @@
 # Money to Prisoners Cashbook
+
+[![Dependency Status](https://img.shields.io/david/ministryofjustice/money-to-prisoners-cashbook.svg?style=flat-square&label=NPM%20deps)](https://david-dm.org/ministryofjustice/money-to-prisoners-cashbook)
+[![devDependency Status](https://img.shields.io/david/dev/ministryofjustice/money-to-prisoners-cashbook.svg?style=flat-square&label=NPM%20devDeps)](https://david-dm.org/ministryofjustice/money-to-prisoners-cashbook#info=devDependencies)
+
 The Cashbook UI for the Money to Prisoners Project
 
 ## Dependencies

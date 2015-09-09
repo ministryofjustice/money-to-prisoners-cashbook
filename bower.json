@@ -1,6 +1,6 @@
 {
-  "name": "mtp_cashbook",
-  "version": "0.0.0",
+  "name": "money-to-prisoners-cashbook",
+  "version": "0.1.0",
   "ignore": [
     "**/.*",
     "node_modules",
