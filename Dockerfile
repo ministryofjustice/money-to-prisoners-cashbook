@@ -17,7 +17,6 @@ RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 10
 
 WORKDIR /app
 
-RUN gem install sass --no-rdoc --no-ri
 RUN npm install -g bower gulp
 
 ADD ./conf/uwsgi /etc/uwsgi
