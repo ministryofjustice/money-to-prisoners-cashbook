@@ -57,16 +57,16 @@ class TransactionBatchListView(FormView):
     def form_valid(self, form):
         credited, discarded = form.save()
 
-        messages.success(
-            self.request,
-            _(
-                'Batch processed successfully. \
-                %(credited)s credited, %(discarded)s discarded.'
-            ) % {
-                'credited': len(credited),
-                'discarded': len(discarded)
-            }
-        )
+        if credited:
+            messages.success(
+                self.request,
+                _(
+                    'You\'ve credited %(credited)s payment%(plural)s to NOMIS.'
+                ) % {
+                    'credited': len(credited),
+                    'plural': '' if len(credited) == 1 else 's'
+                }
+            )
         return super(TransactionBatchListView, self).form_valid(form)
 
 
