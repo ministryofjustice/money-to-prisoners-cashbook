@@ -15,7 +15,9 @@ class ProcessTransactionBatchForm(forms.Form):
         self.fields['transactions'].choices = self.transaction_choices
 
     def _request_locked_transactions(self):
-        return self.client.cashbook.transactions.get(status='locked')
+        return self.client.cashbook.transactions.get(
+            status='locked', user=self.user.pk
+        )
 
     def _take_transactions(self):
         self.client.cashbook.transactions.actions.lock.post()
