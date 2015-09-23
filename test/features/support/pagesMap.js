@@ -4,10 +4,14 @@
 
 var globule = require('globule');
 var path = require('path');
-
 var pages = globule.find('./test/features/pages/**/*.js');
+var pageMap = {};
 
 for (var i = 0; i < pages.length; i++) {
-  var page = require(path.resolve(pages[i]));
-  module.exports[page.name] = page.class;
+  var pagePath = path.resolve(pages[i]);
+  var page = require(pagePath);
+
+  pageMap[page.name] = page.class;
 }
+
+module.exports = pageMap;

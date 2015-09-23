@@ -104,7 +104,8 @@ gulp.task('scripts', ['clean:js'], getTask('concat-scripts', {
 gulp.task('lint', getTask('lint', {
   src: [
     src + 'javascripts/**/*.js',
-    'gulpfile.js'
+    'gulpfile.js',
+    'test/**/*.js'
   ]
 }));
 

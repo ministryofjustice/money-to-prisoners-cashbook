@@ -2,41 +2,41 @@
 
 'use strict';
 
+/*
+ * signin.js
+ *
+ * Sign in page object
+ * Detaches UI interactions from step definitions
+ *
+ */
+
 var testUsername = 'test_prison_1';
 var testPassword = 'test_prison_1';
 
-var SigninPage = function (World) {
-  this.usernameLocator = { name: 'username' };
-  this.passwordLocator = { name: 'password' };
-  this.submitLocator = { name: 'signin' };
-  this.signoutLocator = { linkText: 'Sign out' };
+var SigninPage = function () {
+  this.usernameField = '#id_username';
+  this.passwordField = '#id_password';
+  this.signinForm = '#login-form';
 
   this.get = function (callback) {
-    World.visit('auth/login/', callback);
+    browser
+      .url('/auth/login/')
+      .call(callback);
   };
 
   this.fillForm = function (username, password, callback) {
-    World.driver
-      .findElement(this.usernameLocator)
-      .sendKeys(username);
-
-    World.driver
-      .findElement(this.passwordLocator)
-      .sendKeys(password);
-
-    World.driver
-      .findElement(this.submitLocator)
-      .click()
-      .then(function() {
-        callback();
-      });
+    browser
+      .setValue(this.usernameField, username)
+      .setValue(this.passwordField, password)
+      .submitForm(this.signinForm)
+      .call(callback);
   };
 
   this.signin = function (callback) {
-    var _this = this;
+    var that = this;
 
-    _this.get(function () {
-      _this.fillForm(testUsername, testPassword, callback);
+    this.get(function () {
+      that.fillForm(testUsername, testPassword, callback);
     });
   };
 
@@ -45,7 +45,9 @@ var SigninPage = function (World) {
   };
 
   this.signout = function (callback) {
-    World.visit('auth/logout/', callback);
+    browser
+      .url('/auth/logout/')
+      .call(callback);
   };
 
 };

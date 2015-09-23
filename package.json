@@ -16,9 +16,9 @@
   },
   "scripts": {
     "start": "./node_modules/gulp/bin/gulp.js serve",
-    "test": "./node_modules/.bin/cucumber.js test/features -f progress",
-    "test-chrome": "SELENIUM_BROWSER=chrome npm test",
-    "test-firefox": "SELENIUM_BROWSER=firefox npm test",
+    "test": "./node_modules/.bin/wdio test/wdio.conf.js",
+    "test-headless": "./node_modules/.bin/wdio test/wdio.headless.conf.js",
+    "test-wip": "./node_modules/.bin/wdio test/wdio.wip.conf.js",
     "postinstall": "./node_modules/.bin/bower --allow-root install"
   },
   "license": "MIT",
@@ -32,12 +32,15 @@
   "devDependencies": {
     "browser-sync": "^2.9.3",
     "chai": "^3.2.0",
-    "chromedriver": "^2.19.0",
+    "chai-as-promised": "^5.1.0",
     "cucumber": "^0.5.3",
     "globule": "^0.2.0",
-    "yargs": "^3.24.0",
+    "q": "^1.4.1",
+    "request": "^2.63.0",
+    "require-dir": "^0.3.0",
     "sanitize-filename": "^1.4.3",
-    "selenium-webdriver": "^2.46.1",
+    "selenium-standalone": "^4.6.0",
+    "webdriverio": "^3.2.4",
     "yargs": "^3.24.0"
   }
 }

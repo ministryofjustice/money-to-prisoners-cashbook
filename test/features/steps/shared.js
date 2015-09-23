@@ -2,8 +2,6 @@
 
 'use strict';
 
-var expect = require('chai').expect;
-
 /*
  * shared.js
  *
@@ -11,7 +9,6 @@ var expect = require('chai').expect;
  *
  */
 var sharedSteps = function(){
-  this.World = require('../support/world').World;
 
   /**
    * Go to a url of a page object
@@ -23,11 +20,11 @@ var sharedSteps = function(){
    * @params {function} next The callback function of the scenario
    */
   this.Given(/^I (?:am on|go to) the "([^"]*)" page$/, function(pageName, next) {
-    if (!this.pageObjects[pageName]) {
+    if (!browser.pages[pageName]) {
       throw new Error('Could not find page with name "' + pageName + '" in the PageObjectMap, did you remember to add it?');
     }
 
-    var page = new this.pageObjects[pageName](this);
+    var page = new browser.pages[pageName](browser);
     page.get(next);
   });
 
@@ -41,13 +38,10 @@ var sharedSteps = function(){
    * @params {function} next The callback function of the scenario
    */
   this.Then(/^I should see "([^"]*)"$/, function(text, next) {
-    this.driver
-      .findElement({css: 'body'})
-      .getText()
-      .then(function (result) {
-        expect(result).to.contain(text);
-        next();
-      });
+    browser
+      .getText('body')
+      .should.eventually.contain(text)
+      .and.notify(next);
   });
 
   /**
@@ -60,13 +54,10 @@ var sharedSteps = function(){
    * @params {function} next The callback function of the scenario
    */
   this.Then(/^I should not see "([^"]*)"$/, function(text, next) {
-    this.driver
-      .findElement({css: 'body'})
-      .getText()
-      .then(function (result) {
-        expect(result).not.to.contain(text);
-        next();
-      });
+    browser
+      .getText('body')
+      .should.eventually.not.contain(text)
+      .and.notify(next);
   });
 
   /**
@@ -79,13 +70,12 @@ var sharedSteps = function(){
    * @params {function} next The callback function of the scenario
    */
   this.Then(/^I should see "([^"]*)" as the page title$/, function(title, next) {
-    this.driver
+    browser
       .getTitle()
-      .then(function(result) {
-        expect(result).to.equal(title);
-        next();
-      });
+      .should.eventually.equal(title)
+      .and.notify(next);
   });
+
 };
 
 module.exports = sharedSteps;
