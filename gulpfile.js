@@ -1,4 +1,4 @@
-/* jshint unused: false, node: true */
+/* jshint node: true */
 
 'use strict';
 
@@ -8,10 +8,9 @@ var requireDir = require('require-dir');
 requireDir('./tasks');
 
 gulp.task('build', [
-    'minify-css',
-    'minify-scripts',
-    'images'
-  ]
-);
+  'minify-css',
+  'minify-scripts',
+  'images'
+]);
 
 gulp.task('default', ['build']);

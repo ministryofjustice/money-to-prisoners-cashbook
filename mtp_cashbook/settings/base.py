@@ -89,12 +89,14 @@ STATICFILES_DIRS = [
     root('assets'),
     bower_dir(),
     bower_dir('mojular', 'assets'),
-    bower_dir('govuk-template', 'assets')
+    bower_dir('govuk-template', 'assets'),
+    bower_dir('money-to-prisoners-common', 'assets')
 ]
 
 TEMPLATE_DIRS = [
     root('templates'),
-    bower_dir('mojular', 'templates')
+    bower_dir('mojular', 'templates'),
+    bower_dir('money-to-prisoners-common', 'templates')
 ]
 
 # Sane logging defaults
