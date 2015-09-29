@@ -11,11 +11,11 @@ class MTPBaseTestCase(SimpleTestCase):
 
     @property
     def login_url(self):
-        return reverse('auth:login')
+        return reverse('login')
 
     @property
     def logout_url(self):
-        return reverse('auth:logout')
+        return reverse('logout')
 
     @cached_property
     def _default_login_data(self):

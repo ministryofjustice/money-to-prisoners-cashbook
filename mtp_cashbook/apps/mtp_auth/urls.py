@@ -10,7 +10,7 @@ urlpatterns = patterns('',
     url(
         r'^logout/$', views.logout, {
             'template_name': 'mtp_auth/login.html',
-            'next_page': reverse_lazy('auth:login'),
+            'next_page': reverse_lazy('login'),
         }, name='logout'
     ),
 )
