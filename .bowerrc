@@ -1,6 +1,3 @@
 {
-  "directory": "mtp_cashbook/assets-src/bower_components",
-  "scripts": {
-    "postinstall": "./.bower-postinstall.sh mtp_cashbook/assets-src/bower_components"
-  }
+  "directory": "mtp_cashbook/assets-src/bower_components"
 }

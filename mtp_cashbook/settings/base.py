@@ -44,7 +44,7 @@ INSTALLED_APPS = (
 )
 
 PROJECT_APPS = (
-    'core',
+    'moj_utils',
     'widget_tweaks',
     'mtp_auth',
     'cashbook'
@@ -137,7 +137,7 @@ LOGGING = {
 }
 
 TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + (
-    'mtp_cashbook.apps.core.context_processors.debug',
+    'moj_utils.context_processors.debug',
     'django.core.context_processors.request'
 )
 

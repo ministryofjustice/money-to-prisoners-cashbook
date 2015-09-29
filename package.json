@@ -15,27 +15,18 @@
     "unsafe-perm": true
   },
   "scripts": {
-    "start": "./node_modules/.bin/gulp serve",
+    "start": "./node_modules/gulp/bin/gulp.js serve",
     "postinstall": "./node_modules/.bin/bower --allow-root install"
   },
+  "license": "MIT",
   "dependencies": {},
   "devDependencies": {
     "bower": "latest",
     "browser-sync": "^2.9.3",
-    "del": "^2.0.2",
     "gulp": "^3.9.0",
-    "gulp-concat": "^2.6.0",
-    "gulp-filter": "^3.0.1",
-    "gulp-imagemin": "^2.3.0",
-    "gulp-jshint": "^1.11.2",
-    "gulp-minify-css": "^1.2.1",
-    "gulp-rename": "^1.2.2",
-    "gulp-sass": "^2.0.4",
-    "gulp-uglify": "^1.4.0",
-    "jshint-stylish": "^2.0.1",
     "main-bower-files": "^2.9.0",
     "nconf": "^0.7.2",
-    "require-dir": "^0.3.0",
-    "yargs": "^3.24.0"
+    "yargs": "^3.24.0",
+    "money-to-prisoners-gulp-tasks": "ministryofjustice/money-to-prisoners-gulp-tasks#0.1.0"
   }
 }
