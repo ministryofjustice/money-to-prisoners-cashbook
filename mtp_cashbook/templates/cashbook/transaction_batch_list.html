@@ -22,10 +22,10 @@
       </div>
     </div>
 
-    {% include "cashbook/includes/batch_buttons.html" %}
-
     {% if object_list %}
     {{ form.errors }}
+
+    {% include "cashbook/includes/batch_buttons.html" %}
 
     <div class="batch">
       <table id="tour-step1">
