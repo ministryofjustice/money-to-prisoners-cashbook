@@ -17,6 +17,8 @@ RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 10
 
 WORKDIR /app
 
+RUN npm install npm -g
+RUN npm config set python python2.7
 RUN npm install -g bower gulp
 
 ADD ./conf/uwsgi /etc/uwsgi
