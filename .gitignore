@@ -33,4 +33,3 @@ mtp_cashbook/assets/
 
 # Docker make targets
 .dev_django_container
-mtp_cashbook/assets-src/stylesheets/vendor/
