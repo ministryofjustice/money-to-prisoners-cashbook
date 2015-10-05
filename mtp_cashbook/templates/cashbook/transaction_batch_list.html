@@ -12,62 +12,83 @@
     data-unload-msg="{% trans "You are leaving this page, but have ticked payments. &#10;&#10;You must click &#8216;I&#8217;ve credited payments in NOMIS&#8217; if payments have been credited." %}">
     {% csrf_token %}
 
-    <div class="totals js-StickyHeader"  id="tour-step-total">
-      <div class="container js-RunningTotal" data-label="{% trans 'Total payments you have credited: ' %}">
-        <p>
-          {% blocktrans with total=total|currency highlight="<strong>&pound;" highlightend="</strong>" %}
-            Control total: {{ highlight }}{{ total }}{{ highlightend }}
-          {% endblocktrans %}
-        </p>
-      </div>
-    </div>
 
     {% if object_list %}
-    {{ form.errors }}
+      {% if form.errors or form.non_field_errors %}
+        <div class="error-summary" aria-labelledby="error-summary-heading" tabindex="-1" role="alert">
+          <h1 class="error-summary-heading heading-medium" id="error-summary-heading">{% trans 'There was a problem submitting the form' %}</h1>
+          <p>{% trans 'Because of the following problems:' %}</p>
 
-    {% include "cashbook/includes/batch_buttons.html" %}
+          <ol class="error-summary-list">
+            {% for field, errors in form.errors.items %}
+              {% with field_obj=form|field_from_name:field %}
+              <li><a href="#{{ field_obj.auto_id }}-label">
+                {% for error in errors %}
+                  {% if not forloop.first  %}
+                    {% trans 'and' %}
+                  {% endif %}
+                  {{ error }}
+                {% endfor %}
+              </a></li>
+              {% endwith %}
+            {% endfor %}
+          </ol>
+        </div>
+      {% endif %}
 
-    <div class="batch">
-      <table id="tour-step1">
-        <thead>
-          {% include "cashbook/includes/table_actions.html" with location='header' field_name=form.transactions.html_name %}
+      <div class="totals js-StickyHeader"  id="tour-step-total">
+        <div class="container js-RunningTotal" data-label="{% trans 'Total payments you have credited: ' %}">
+          <p>
+            {% blocktrans with total=total|currency highlight="<strong>&pound;" highlightend="</strong>" %}
+              Control total: {{ highlight }}{{ total }}{{ highlightend }}
+            {% endblocktrans %}
+          </p>
+        </div>
+      </div>
 
-          <tr>
-            <th id="tour-step2">{% trans "Prisoner no" %}</th>
-            <th id="tour-step3">{% trans "Prisoner name" %}</th>
-            <th id="tour-step4">{% trans "Amount" %}</th>
-            <th>{% trans "Sender" %}</th>
-            <th id="tour-step5">{% trans "Credited?" %}</th>
-          </tr>
-        </thead>
+      {% include "cashbook/includes/batch_buttons.html" %}
 
-        <tbody>
-        {% for transaction_pk, transaction in object_list %}
-          <tr {% if forloop.counter|divisibleby:2 %}{% else %}class="odd"{% endif %}>
-            <td>{{ transaction.prisoner_number }}</td>
-            <td>{{ transaction.prisoner_name }}</td>
-            <td class="numeric">&pound;{{ transaction.amount|currency }}</td>
-            <td>{{ transaction.sender }}</td>
-            <td class="check">
-              <input
-                type="checkbox"
-                name="{{ form.transactions.html_name }}"
-                value="{{ transaction_pk }}"
-                id="check-{{ transaction.id }}"
-                {% if transaction_pk|to_string in form.transactions.value %}checked{% endif %}
-                class="js-RunningTotal-item"
-                data-amount="{{ transaction.amount|currency }}">
-              <label for="check-{{ transaction.id }}">{% trans "Credited" %}</label>
-            </td>
-          </tr>
-        {% endfor %}
-        </tbody>
+      <div class="batch">
+        <table id="tour-step1">
+          <thead>
+            {% include "cashbook/includes/table_actions.html" with location='header' field_name=form.transactions.html_name %}
 
-        <tfoot>
-          {% include "cashbook/includes/table_actions.html" with location='footer' field_name=form.transactions.html_name %}
-        </tfoot>
-      </table>
-    </div>
+            <tr>
+              <th id="tour-step2">{% trans "Prisoner no" %}</th>
+              <th id="tour-step3">{% trans "Prisoner name" %}</th>
+              <th id="tour-step4">{% trans "Amount" %}</th>
+              <th>{% trans "Sender" %}</th>
+              <th id="tour-step5"><span id="id_transactions-label">{% trans "Credited?" %}</span></th>
+            </tr>
+          </thead>
+
+          <tbody>
+          {% for transaction_pk, transaction in object_list %}
+            <tr {% if forloop.counter|divisibleby:2 %}{% else %}class="odd"{% endif %}>
+              <td>{{ transaction.prisoner_number }}</td>
+              <td>{{ transaction.prisoner_name }}</td>
+              <td class="numeric">&pound;{{ transaction.amount|currency }}</td>
+              <td>{{ transaction.sender }}</td>
+              <td class="check">
+                <input
+                  type="checkbox"
+                  name="{{ form.transactions.html_name }}"
+                  value="{{ transaction_pk }}"
+                  id="check-{{ transaction.id }}"
+                  {% if transaction_pk|to_string in form.transactions.value %}checked{% endif %}
+                  class="js-RunningTotal-item"
+                  data-amount="{{ transaction.amount|currency }}">
+                <label for="check-{{ transaction.id }}">{% trans "Credited" %}</label>
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+
+          <tfoot>
+            {% include "cashbook/includes/table_actions.html" with location='footer' field_name=form.transactions.html_name %}
+          </tfoot>
+        </table>
+      </div>
     {% else %}
       <p>{% trans "No transactions found" %}</p>
     {% endif %}

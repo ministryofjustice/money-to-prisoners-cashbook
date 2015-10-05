@@ -64,17 +64,7 @@
         return;
       }
 
-      if (numChecked === 0) {
-        e.preventDefault();
-        moj.Events.trigger({
-          type: 'Dialog.render',
-          target: e.target,
-          targetSelector: '#empty-selection-dialog'
-        });
-        return;
-      }
-
-      if (!checkedValid) {
+      if (!checkedValid && numChecked > 0) {
         e.preventDefault();
         moj.Events.trigger({
           type: 'Dialog.render',
