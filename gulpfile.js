@@ -8,13 +8,20 @@
 
 'use strict';
 
-var browserSync = require('browser-sync');
 var gulp = require('gulp');
 var path = require('path');
 var nconf = require('nconf');
 var argv = require('yargs').argv;
 var mainBowerFiles = require('main-bower-files');
 var getTask = require('money-to-prisoners-gulp-tasks');
+
+var production = argv.production;
+
+if (!production) {
+  var browserSync = require('browser-sync');
+}
+
+
 
 // paths
 var vendorFiles = mainBowerFiles();
@@ -77,7 +84,7 @@ gulp.task('sass', ['clean:css'], getTask('scss', {
   src: src + 'stylesheets/**/*.scss',
   dest: dest + 'stylesheets/',
   includePaths: getLoadPaths(),
-  browserSync: browserSync
+  browserSync: production ? browserSync : false
 }));
 
 gulp.task('minify-css', ['sass'], getTask('minify-css', {
@@ -122,30 +129,30 @@ gulp.task('build', [
   'images'
 ]);
 
+if (!production) {
+  gulp.task('serve', ['build'], function () {
+    var host = argv.host || 'localhost';
+    var port = argv.port || 8001;
+    var browsersyncPort = argv.browsersyncport || 3000;
+    var browsersyncUIPort = argv.browsersyncuiport || 3001;
 
-gulp.task('serve', ['build'], function () {
-  var host = argv.host || 'localhost';
-  var port = argv.port || 8001;
-  var browsersyncPort = argv.browsersyncport || 3000;
-  var browsersyncUIPort = argv.browsersyncuiport || 3001;
+    browserSync.init({
+      proxy: host + ':' + port,
+      open: false,
+      port: browsersyncPort,
+      ui: {
+        port: browsersyncUIPort
+      }
+    });
 
-  browserSync.init({
-    proxy: host + ':' + port,
-    open: false,
-    port: browsersyncPort,
-    ui: {
-      port: browsersyncUIPort
-    }
+    gulp.watch('**/templates/**/*').on('change', browserSync.reload);
+    gulp.watch(src + 'stylesheets/**/*', ['sass']);
+    gulp.watch(src + 'images/**', ['img-watch']);
+    gulp.watch(src + 'javascripts/**/*.js', ['js-watch']);
   });
 
-  gulp.watch('**/templates/**/*').on('change', browserSync.reload);
-  gulp.watch(src + 'stylesheets/**/*', ['sass']);
-  gulp.watch(src + 'images/**', ['img-watch']);
-  gulp.watch(src + 'javascripts/**/*.js', ['js-watch']);
-});
-
-gulp.task('img-watch', ['images'], browserSync.reload);
-gulp.task('js-watch', ['scripts'], browserSync.reload);
-
+  gulp.task('img-watch', ['images'], browserSync.reload);
+  gulp.task('js-watch', ['scripts'], browserSync.reload);
+}
 
 gulp.task('default', ['build']);

@@ -27,10 +27,10 @@ ADD ./requirements/ /app/requirements/
 RUN pip3 install -r requirements/prod.txt
 
 ADD .bowerrc bower.json package.json README.md /app/
-RUN npm install --unsafe-perm
+RUN npm install --production --unsafe-perm
 
 ADD . /app
-RUN gulp
+RUN gulp --production
 RUN ./manage.py collectstatic --noinput
 
 EXPOSE 8080
