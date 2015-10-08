@@ -1,5 +1,6 @@
 from django import forms
 from django.utils.functional import cached_property
+from django.utils.translation import ugettext as _
 
 from moj_auth.api_client import get_connection
 
@@ -28,7 +29,10 @@ class ProcessTransactionBatchForm(forms.Form):
         have been ticked.
         """
         transactions = self.cleaned_data.get('transactions', [])
-        if self.data.get('discard') == '1':
+        discard = self.data.get('discard') == '1'
+        if not transactions and not discard:
+            raise forms.ValidationError(_('Please select the payments which you have credited to NOMIS'))
+        if discard:
             transactions = []
         return transactions
 
