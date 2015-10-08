@@ -19,14 +19,15 @@
     "postinstall": "./node_modules/.bin/bower --allow-root install"
   },
   "license": "MIT",
-  "dependencies": {},
-  "devDependencies": {
+  "dependencies": {
     "bower": "latest",
-    "browser-sync": "^2.9.3",
     "gulp": "^3.9.0",
     "main-bower-files": "^2.9.0",
     "nconf": "^0.7.2",
-    "yargs": "^3.24.0",
     "money-to-prisoners-gulp-tasks": "ministryofjustice/money-to-prisoners-gulp-tasks#0.1.0"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.9.3",
+    "yargs": "^3.24.0"
   }
 }
