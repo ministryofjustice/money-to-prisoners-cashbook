@@ -20,7 +20,7 @@ var SigninPage = function () {
 
   this.get = function (callback) {
     browser
-      .url('/auth/login/')
+      .url('/login/')
       .call(callback);
   };
 
@@ -46,7 +46,7 @@ var SigninPage = function () {
 
   this.signout = function (callback) {
     browser
-      .url('/auth/logout/')
+      .url('/logout/')
       .call(callback);
   };
 
