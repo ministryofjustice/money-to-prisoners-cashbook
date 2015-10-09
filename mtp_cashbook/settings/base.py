@@ -138,6 +138,7 @@ LOGGING = {
 
 TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + (
     'moj_utils.context_processors.debug',
+    'moj_utils.context_processors.analytics',
     'django.core.context_processors.request'
 )
 
@@ -163,6 +164,9 @@ LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'dashboard'
 
 OAUTHLIB_INSECURE_TRANSPORT = True
+
+
+GOOGLE_ANALYTICS_ID = os.environ.get('GOOGLE_ANALYTICS_ID', None)
 
 try:
     from .local import *  # noqa
