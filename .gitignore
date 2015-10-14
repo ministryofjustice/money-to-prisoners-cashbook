@@ -33,3 +33,6 @@ mtp_cashbook/assets/
 
 # Docker make targets
 .dev_django_container
+
+# failed test screenshots
+test/errorshots/

@@ -23,6 +23,8 @@ repository](https://github.com/ministryofjustice/money-to-prisoners-deploy)
 
 ### Run the tests
 
+#### Unit tests
+
 In a terminal `cd` into the directory you checked this project out into, then:
 
 ```
@@ -35,7 +37,36 @@ To run a specific test, or set of tests, run:
 $ make test TEST=[testname]
 ```
 
+#### Integration/functional tests
+
+Feature tests are run using a combination of [Cucumber.js](https://github.com/cucumber/cucumber-js) 
+and [WebdriverIO](http://webdriver.io/api.html). 
+
+Feature files are in `test/features/` and step definitions live in `test/features/steps/`.
+The WebdriverIO [testrunner](http://webdriver.io/guide/testrunner/gettingstarted.html) 
+is used to run the tests using a [standalone selenium server](https://www.npmjs.com/package/selenium-standalone).
+
+Config for the testrunner lives in `test/`.
+
+To run the tests against all currently selected browsers (Chrome, Firefox, PhantomJS), run:
+```
+$ npm test
+```
+
+To run the tests headlessly, run:
+```
+$ npm run test-headless
+```
+
+You can also [tag](https://github.com/cucumber/cucumber/wiki/Tags) scenarios with `@wip` 
+and run the following command to only run those scenarios:
+```
+$ npm run test-wip
+```
+
 ### Validate code style
+
+#### Python
 
 In a terminal `cd` into the directory you checked this project out into, then:
 
@@ -48,6 +79,13 @@ violation](http://flake8.readthedocs.org/en/latest/warnings.html), run:
 
 ```
 $ make lint LINT_OPTS="--select [lint-rules]"
+```
+
+#### JavaScript
+
+To lint javascript files using [JSHint](http://jshint.com/), run:
+```
+$ gulp lint
 ```
 
 ### Run a development Server

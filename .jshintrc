@@ -19,6 +19,7 @@
   "jquery": true,
   "globals": {
     "moj": true,
-    "_": true
+    "_": true,
+    "browser": true
   }
 }
