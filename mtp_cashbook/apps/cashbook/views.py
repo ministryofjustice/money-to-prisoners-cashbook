@@ -1,13 +1,17 @@
+import datetime
+
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy
 from django.utils.decorators import method_decorator
+from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import FormView, TemplateView
 
 from moj_auth import api_client
 
-from .forms import ProcessTransactionBatchForm, DiscardLockedTransactionsForm
+from .forms import ProcessTransactionBatchForm, DiscardLockedTransactionsForm, \
+    FilterTransactionHistoryForm
 
 
 class DashboardView(TemplateView):
@@ -104,3 +108,39 @@ class TransactionsLockedView(FormView):
             }
         )
         return super(TransactionsLockedView, self).form_valid(form)
+
+
+class TransactionHistoryView(FormView):
+    form_class = FilterTransactionHistoryForm
+    template_name = 'cashbook/transactions_history.html'
+    success_url = reverse_lazy('transaction-history')
+
+    def get_initial(self):
+        initial = super().get_initial()
+        today = now().date()
+        seven_days_ago = today - datetime.timedelta(days=7)
+        initial.update({
+            'received_at_0': seven_days_ago,
+            'received_at_1': today,
+        })
+        return initial
+
+    def get_form_kwargs(self):
+        form_kwargs = super().get_form_kwargs()
+        form_kwargs['request'] = self.request
+        return form_kwargs
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'object_list': context['form'].transaction_choices,
+            'transaction_owner_name': self.request.user.get_full_name,
+        })
+        return context
+
+    def form_valid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))

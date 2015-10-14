@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load currency format_string_date i18n %}
+
+{% block content %}
+  <header class="ContentHeader">
+    <a href="{% url 'dashboard' %}" class="ContentHeader-back">{% trans "Back to dashboard" %}</a>
+    <h1>{% trans "History" %}</h1>
+  </header>
+
+  <form method="post" action="">
+  {% csrf_token %}
+
+  {{ form.non_field_errors }}
+  {{ form.as_p }}
+  <input type="submit" value="Filter">
+
+  <p>
+    {% blocktrans %}Payments processed by {{ transaction_owner_name }}.{% endblocktrans %}
+  </p>
+
+  {% if object_list %}
+    <div class="batch">
+
+      <table>
+        <thead>
+          <tr>
+            <th>{% trans "Prisoner no" %}</th>
+            <th>{% trans "Prisoner name" %}</th>
+            <th>{% trans "Amount" %}</th>
+            <th>{% trans "Sender" %}</th>
+            <th>{% trans "Payment type" %}</th>
+            <th>{% trans "Received at" %}</th>
+            <th>{% trans "Credited at" %}</th>
+            <th>{% trans "Refunded at" %}</th>
+          </tr>
+        </thead>
+
+        <tbody>
+        {% for transaction_pk, transaction in object_list %}
+          <tr {% if not forloop.counter|divisibleby:2 %}class="odd"{% endif %}>
+            <td>{{ transaction.prisoner_number }}</td>
+            <td>{{ transaction.prisoner_name }}</td>
+            <td class="numeric">&pound;{{ transaction.amount|currency }}</td>
+            <td>{{ transaction.sender }}</td>
+            <td>{% trans "Bank transfer" %}</td>
+            <td>{{ transaction.received_at|format_string_date }}</td>
+            <td>
+              {% if transaction.credited %}
+                {{ transaction.credited_at|format_string_date }}
+              {% else %}
+                —
+              {% endif %}
+            </td>
+            <td>
+              {% if transaction.refunded %}
+                {{ transaction.refunded_at|format_string_date }}
+              {% else %}
+                —
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+
+        <tfoot>
+          {% include "cashbook/includes/table_actions.html" with location='footer' select_all=False %}
+        </tfoot>
+      </table>
+    </div>
+
+  {% else %}
+    <p>{% trans "No payment history found" %}</p>
+  {% endif %}
+  </form>
+
+  {% include "cashbook/includes/print_dialog.html" %}
+
+{% endblock content %}
