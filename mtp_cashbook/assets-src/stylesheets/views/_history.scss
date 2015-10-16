@@ -1,0 +1,48 @@
+.batch-history {
+  table {
+    margin-top: 0;
+
+    thead th {
+      border-top: 0;
+    }
+  }
+}
+
+.HistoryHeader {
+  position: relative;
+  margin: 0;
+  padding: 0.6em 1em;
+  background: $green-25;  // #cde2b7 in design
+  border-bottom: 1px solid $grey-1;
+  text-align: center;
+
+  a, span {
+    margin: 0;
+  }
+
+  .HistoryHeader-Aside {
+    position: absolute;
+    left: 1em;
+    top: 50%;
+    height: 1em;
+    margin-top: -0.5em;
+    font-size: 0.75em;
+    font-weight: normal;
+  }
+  .HistoryHeader-AsideRight {
+    left: auto;
+    right: 1em;
+  }
+
+  .ShowHide {
+    float: left;
+  }
+}
+
+.HistoryHeader-Refunded {
+  background: $mellow-red-25;
+}
+
+.inline .block-label {
+  margin-top: 0;
+}

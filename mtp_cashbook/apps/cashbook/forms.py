@@ -157,7 +157,4 @@ class FilterTransactionHistoryForm(forms.Form):
             return []
 
         response = self.client.cashbook.transactions.get(**filters)
-        transactions = response.get('results', [])
-        return [
-            (t['id'], t) for t in transactions
-        ]
+        return response.get('results', [])
