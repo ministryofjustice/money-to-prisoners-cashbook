@@ -118,6 +118,8 @@ class FilterTransactionHistoryForm(forms.Form):
     received_at_0 = forms.DateField(required=False, label=_('Received at start date'))
     received_at_1 = forms.DateField(required=False, label=_('Received at end date'))
     search = forms.CharField(required=False, label=_('Search prisoners and senders'))
+    owner = forms.ChoiceField(required=False, label=_('Payments processed by'), initial='',
+                              choices=[('', _('Me')), ('all', _('Anybody'))])
 
     def __init__(self, request, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -137,12 +139,14 @@ class FilterTransactionHistoryForm(forms.Form):
             'user': self.user.pk,
         }
 
-        fields = self.fields.keys()
+        fields = set(self.fields.keys()) - {'owner'}
         if self.is_valid():
             # valid form
             for field in fields:
                 if field in self.cleaned_data:
                     filters[field] = self.cleaned_data[field]
+            if self.cleaned_data['owner'] == 'all':
+                del filters['user']
         elif not self.is_bound:
             # no form submission
             for field in fields:
