@@ -3,6 +3,7 @@ from django.utils.functional import cached_property
 from django.utils.translation import ugettext as _
 
 from moj_auth.api_client import get_connection
+from .form_fields import MtpTextInput, MtpDateInput, MtpInlineRadioFieldRenderer
 
 
 class ProcessTransactionBatchForm(forms.Form):
@@ -115,14 +116,19 @@ class DiscardLockedTransactionsForm(forms.Form):
 
 
 class FilterTransactionHistoryForm(forms.Form):
-    received_at_0 = forms.DateField(required=False, label=_('Received at start date'))
-    received_at_1 = forms.DateField(required=False, label=_('Received at end date'))
-    search = forms.CharField(required=False, label=_('Search prisoners and senders'))
+    received_at_0 = forms.DateField(required=True, label=_('Received at start date'),
+                                    widget=MtpDateInput)
+    received_at_1 = forms.DateField(required=True, label=_('Received at end date'),
+                                    widget=MtpDateInput)
+    search = forms.CharField(required=False, label=_('Search prisoners, senders and payment amounts'),
+                             widget=MtpTextInput)
     owner = forms.ChoiceField(required=False, label=_('Payments processed by'), initial='',
-                              choices=[('', _('Me')), ('all', _('Anybody'))])
+                              choices=[('', _('Me')), ('all', _('Anybody'))],
+                              widget=forms.RadioSelect(renderer=MtpInlineRadioFieldRenderer))
 
     def __init__(self, request, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.label_suffix = ''
         self.user = request.user
         self.client = get_connection(request)
 
@@ -130,7 +136,7 @@ class FilterTransactionHistoryForm(forms.Form):
         received_at_0 = self.cleaned_data.get('received_at_0')
         received_at_1 = self.cleaned_data.get('received_at_1')
         if received_at_0 and received_at_1 and received_at_0 > received_at_1:
-            self.add_error('received_at_1', _('The end date must be after the start date'))
+            self.add_error('received_at_1', _('The end date must be after the start date.'))
         return super().clean()
 
     @cached_property

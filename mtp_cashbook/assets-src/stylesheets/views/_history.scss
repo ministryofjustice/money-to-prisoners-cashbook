@@ -1,6 +1,8 @@
 .batch-history {
   table {
+    width: 100%;
     margin-top: 0;
+    font-size: 0.7em;
 
     thead th {
       border-top: 0;
@@ -12,7 +14,7 @@
   position: relative;
   margin: 0;
   padding: 0.6em 1em;
-  background: $green-25;  // #cde2b7 in design
+  background: $green-25;
   border-bottom: 1px solid $grey-1;
   text-align: center;
 
@@ -37,6 +39,10 @@
   .ShowHide {
     float: left;
   }
+}
+
+.HistoryHeader-Uncredited {
+  background: $grey-3;
 }
 
 .HistoryHeader-Refunded {

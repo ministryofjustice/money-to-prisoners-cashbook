@@ -1,11 +1,12 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load currency format_string_date transactions %}
+{% load moj_utils %}
+{% load currency transactions %}
 
 {% block content %}
   <header class="ContentHeader">
-    <a href="{% url 'dashboard' %}" class="ContentHeader-back">{% trans "Back to dashboard" %}</a>
-    <h1>{% trans "History" %}</h1>
+    <a href="{% url 'dashboard' %}" class="ContentHeader-back">{% trans 'Back to dashboard' %}</a>
+    <h1>{% trans 'Payment history' %}</h1>
   </header>
 
   <form method="post" class="print-hidden" action="">
@@ -56,31 +57,30 @@
   </form>
 
   {% if object_list %}
+    {% for transaction_date, group in object_list|parse_date_fields|regroup_transactions %}
+      <h2>{{ transaction_date|date:'DATE_FORMAT' }}</h2>
 
-    {% for date, group in object_list|regroup_transactions %}
-
-      <h2>{{ date|format_string_date }}</h2>
-
-      {% for refunded_status, transactions in group %}
-
+      {% for transaction_status, transactions in group %}
         <div class="batch batch-history">
 
-          <h3 class="HistoryHeader {% if refunded_status %}HistoryHeader-Refunded{% endif %}">
-            {% if refunded_status %}
-              {% trans "Refunded" %}
+          <h3 class="HistoryHeader {% if transaction_status == 'uncredited' %}HistoryHeader-Uncredited{% elif transaction_status == 'refunded' %}HistoryHeader-Refunded{% endif %}">
+            {% if transaction_status == 'uncredited' %}
+              {% trans 'Uncredited' %}
+            {% elif transaction_status == 'refunded' %}
+              {% trans 'Refunded' %}
             {% else %}
-              {% trans "Credited" %}
+              {% trans 'Credited' %}
             {% endif %}
 
-            <span class="HistoryHeader-Aside HistoryHeader-AsideRight">{% trans "Total" %}: £{{ transactions|sum_transactions|currency }}</span>
+            <span class="HistoryHeader-Aside HistoryHeader-AsideRight">{% trans 'Total' %}: £{{ transactions|sum_transactions|currency }}</span>
 
-            <a class="u-nojs-hidden HistoryHeader-Aside ShowHide ShowHide-Visible js-ShowHide" href="#HistoryBatch-{{ forloop.parentloop.counter }}-{{ forloop.counter }}">
+            <a class="u-nojs-hidden print-hidden HistoryHeader-Aside ShowHide ShowHide-Visible js-ShowHide" href="#HistoryBatch-{{ forloop.parentloop.counter }}-{{ forloop.counter }}">
               <span class="ShowHide-Hide">
-                {% trans "Collapse" %}
+                {% trans 'Collapse' %}
                 <b>&minus;</b>
               </span>
               <span class="ShowHide-Show">
-                {% trans "Collapsed" %}
+                {% trans 'Collapsed' %}
                 <b>&plus;</b>
               </span>
             </a>
@@ -89,15 +89,15 @@
           <table id="HistoryBatch-{{ forloop.parentloop.counter }}-{{ forloop.counter }}">
             <thead>
               <tr>
-                <th>{% trans "Prisoner no" %}</th>
-                <th>{% trans "Prisoner name" %}</th>
-                <th>{% trans "Amount" %}</th>
-                <th>{% trans "Sender" %}</th>
-                <th>{% trans "Payment type" %}</th>
-                <th>{% trans "Received at" %}</th>
-                <th>{% trans "Credited at" %}</th>
-                <th>{% trans "Refunded at" %}</th>
-                <th>{% trans "Processed by" %}</th>
+                <th>{% trans 'Prisoner no' %}</th>
+                <th>{% trans 'Prisoner name' %}</th>
+                <th>{% trans 'Amount' %}</th>
+                <th>{% trans 'Sender' %}</th>
+                <th>{% trans 'Payment type' %}</th>
+                <th>{% trans 'Received at' %}</th>
+                <th>{% trans 'Credited at' %}</th>
+                <th>{% trans 'Refunded at' %}</th>
+                <th>{% trans 'Processed by' %}</th>
               </tr>
             </thead>
 
@@ -108,18 +108,18 @@
                 <td>{{ transaction.prisoner_name }}</td>
                 <td class="numeric">&pound;{{ transaction.amount|currency }}</td>
                 <td>{{ transaction.sender }}</td>
-                <td>{% trans "Bank transfer" %}</td>
-                <td>{{ transaction.received_at|format_string_date }}</td>
+                <td>{% trans 'Bank transfer' %}</td>
+                <td>{{ transaction.received_at|date:'m/d/Y H:i' }}</td>
                 <td>
                   {% if transaction.credited %}
-                    {{ transaction.credited_at|format_string_date }}
+                    {{ transaction.credited_at|date:'m/d/Y H:i' }}
                   {% else %}
                     —
                   {% endif %}
                 </td>
                 <td>
                   {% if transaction.refunded %}
-                    {{ transaction.refunded_at|format_string_date }}
+                    {{ transaction.refunded_at|date:'m/d/Y H:i' }}
                   {% else %}
                     —
                   {% endif %}
@@ -134,12 +134,19 @@
       {% endfor %}
     {% endfor %}
 
-  {% else %}
-    <p>{% trans "No payment history found" %}</p>
-  {% endif %}
-  </form>
+    <p><a href="#print-dialog" class="js-Dialog print-hidden">{% trans 'Print these payment' %}</a></p>
+    {% include 'cashbook/includes/print_dialog.html' %}
 
-  <p><a href="#print-dialog" class="js-Dialog">{% trans "Print these payments" %}</a></p>
-  {% include "cashbook/includes/print_dialog.html" %}
+  {% else %}
+
+    <table>
+      <thead>
+        <tr>
+          <th>{% trans 'No payment history found for given filters' %}</th>
+        </tr>
+      </thead>
+    </table>
+
+  {% endif %}
 
 {% endblock content %}
