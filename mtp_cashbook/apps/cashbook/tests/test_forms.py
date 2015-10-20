@@ -1,8 +1,10 @@
+import datetime
 import mock
 
 from django.test.testcases import SimpleTestCase
 
-from cashbook.forms import ProcessTransactionBatchForm, DiscardLockedTransactionsForm
+from cashbook.forms import ProcessTransactionBatchForm, DiscardLockedTransactionsForm, \
+    FilterTransactionHistoryForm
 
 
 class ProcessTransactionBatchFormTestCase(SimpleTestCase):
@@ -204,3 +206,81 @@ class DiscardLockedTranscationsFormTestCase(SimpleTestCase):
             sorted(discarded_transactions['transaction_ids']),
             sorted(to_discard)
         )
+
+
+class FilterTransactionHistoryFormTestCase(SimpleTestCase):
+    def setUp(self):
+        super().setUp()
+        self.user = mock.MagicMock(pk=100)
+        self.request = mock.MagicMock(user=self.user)
+
+        self.api_call = self.mocked_get_connection().cashbook.\
+            transactions.get
+        self.api_call.return_value = {
+            'count': 0,
+            'results': [],
+        }
+
+    @mock.patch('cashbook.forms.get_connection')
+    def __call__(self, result, mocked_get_connection):
+        self.mocked_get_connection = mocked_get_connection
+        super().__call__(result)
+
+    def fill_in_form(self, data):
+        return FilterTransactionHistoryForm(self.request, data=data)
+
+    def assertValidForm(self, data, api_called_with):
+        form = self.fill_in_form(data)
+        self.assertTrue(form.is_valid())
+        response = form.transaction_choices
+        self.api_call.assert_called_with(**api_called_with)
+
+    def assertInvalidForm(self, data):
+        form = self.fill_in_form(data)
+        self.assertFalse(form.is_valid())
+
+    def test_history_filter_form(self):
+        self.assertValidForm({
+            'received_at_0': '10/10/2015',
+            'received_at_1': '17/10/2015',
+            'owner': '',
+            'search': '',
+        }, {
+            'received_at_0': datetime.date(2015, 10, 10),
+            'received_at_1': datetime.date(2015, 10, 17),
+            'user': 100,
+            'search': '',
+        })
+        self.assertValidForm({
+            'received_at_0': '2015-10-10',
+            'received_at_1': '2015-10-17',
+            'owner': 'all',
+            'search': '',
+        }, {
+            'received_at_0': datetime.date(2015, 10, 10),
+            'received_at_1': datetime.date(2015, 10, 17),
+            'search': '',
+        })
+        self.assertValidForm({
+            'received_at_0': '10/10/2015',
+            'received_at_1': '17/10/2015',
+            'owner': 'all',
+            'search': 'John',
+        }, {
+            'received_at_0': datetime.date(2015, 10, 10),
+            'received_at_1': datetime.date(2015, 10, 17),
+            'search': 'John',
+        })
+
+        self.assertInvalidForm({
+            'received_at_0': '',
+            'received_at_1': '',
+            'owner': '',
+            'search': '',
+        })
+        self.assertInvalidForm({
+            'received_at_0': '11/10/2015',
+            'received_at_1': '10/10/2015',
+            'owner': '',
+            'search': '',
+        })
