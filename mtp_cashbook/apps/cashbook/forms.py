@@ -3,6 +3,7 @@ from django.utils.functional import cached_property
 from django.utils.translation import ugettext as _
 
 from moj_auth.api_client import get_connection
+from .form_fields import MtpTextInput, MtpDateInput, MtpInlineRadioFieldRenderer
 
 
 class ProcessTransactionBatchForm(forms.Form):
@@ -112,3 +113,54 @@ class DiscardLockedTransactionsForm(forms.Form):
             })
 
         return to_discard
+
+
+class FilterTransactionHistoryForm(forms.Form):
+    received_at_0 = forms.DateField(required=True, label=_('Received at start date'),
+                                    widget=MtpDateInput)
+    received_at_1 = forms.DateField(required=True, label=_('Received at end date'),
+                                    widget=MtpDateInput)
+    search = forms.CharField(required=False, label=_('Search prisoners, senders and payment amounts'),
+                             widget=MtpTextInput)
+    owner = forms.ChoiceField(required=False, label=_('Payments processed by'), initial='',
+                              choices=[('', _('Me')), ('all', _('Anybody'))],
+                              widget=forms.RadioSelect(renderer=MtpInlineRadioFieldRenderer))
+
+    def __init__(self, request, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.label_suffix = ''
+        self.user = request.user
+        self.client = get_connection(request)
+
+    def clean(self):
+        received_at_0 = self.cleaned_data.get('received_at_0')
+        received_at_1 = self.cleaned_data.get('received_at_1')
+        if received_at_0 and received_at_1 and received_at_0 > received_at_1:
+            self.add_error('received_at_1', _('The end date must be after the start date.'))
+        return super().clean()
+
+    @cached_property
+    def transaction_choices(self):
+        filters = {
+            'user': self.user.pk,
+        }
+
+        fields = set(self.fields.keys()) - {'owner'}
+        if self.is_valid():
+            # valid form
+            for field in fields:
+                if field in self.cleaned_data:
+                    filters[field] = self.cleaned_data[field]
+            if self.cleaned_data['owner'] == 'all':
+                del filters['user']
+        elif not self.is_bound:
+            # no form submission
+            for field in fields:
+                if field in self.initial:
+                    filters[field] = self.initial[field]
+        else:
+            # invalid form
+            return []
+
+        response = self.client.cashbook.transactions.get(**filters)
+        return response.get('results', [])

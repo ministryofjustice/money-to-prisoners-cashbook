@@ -36,7 +36,7 @@
         {% for transaction_pk, transaction in object_list %}
           <tr {% if forloop.counter|divisibleby:2 %}{% else %}class="odd"{% endif %}>
             <td>{{ transaction.prisoner_number }}</td>
-            <td>??? ???</td>
+            <td>{{ transaction.prisoner_name }}</td>
             <td class="numeric">&pound;{{ transaction.amount|currency }}</td>
             <td>{{ transaction.sender }}</td>
             <td class="check">
@@ -64,4 +64,5 @@
   {% else %}
     <p>{% trans "No locked transactions found" %}</p>
   {% endif %}
+  </form>
 {% endblock content %}

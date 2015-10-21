@@ -1,6 +1,8 @@
+import datetime
 import mock
 
 from django.core.urlresolvers import reverse
+from django.utils.timezone import now
 
 from core.testing.testcases import MTPBaseTestCase
 
@@ -87,3 +89,76 @@ class DashboardViewTestCase(MTPBaseTestCase):
         response = self.client.get(self.dashboard_url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['locked_transactions'], 19)
+
+
+class HistoryViewTestCase(MTPBaseTestCase):
+    @mock.patch('cashbook.views.api_client')
+    @mock.patch('cashbook.forms.get_connection')
+    def __call__(self, result, mocked_get_connection, mocked_api_client):
+        self.mocked_api_client = mocked_api_client
+        self.mocked_get_connection = mocked_get_connection
+        super().__call__(result)
+
+    @property
+    def history_url(self):
+        return reverse('transaction-history')
+
+    def test_history_view(self):
+        self.login()
+        login_data = self._default_login_data
+
+        today = now()
+
+        self.mocked_get_connection().cashbook.\
+            transactions.get.return_value = {
+            'count': 2,
+            'results': [
+                {
+                    'id': 142,
+                    'prisoner_name': 'John Smith',
+                    'prisoner_number': 'A1234BC',
+                    'amount': 5200,
+                    'formatted_amount': '£52.00',
+                    'sender': 'Fred Smith',
+                    'prison': 14,
+                    'owner': login_data['user_pk'],
+                    'owner_name': '%s %s' % (
+                        login_data['user_data']['first_name'],
+                        login_data['user_data']['last_name'],
+                    ),
+                    'received_at': today - datetime.timedelta(days=2),
+                    'credited': True,
+                    'credited_at': today - datetime.timedelta(days=1),
+                    'refunded': False,
+                    'refunded_at': None,
+                },
+                {
+                    'id': 183,
+                    'prisoner_name': 'John Smith',
+                    'prisoner_number': 'A1234BC',
+                    'amount': 2650,
+                    'formatted_amount': '£26.50',
+                    'sender': 'Mary Smith',
+                    'prison': 14,
+                    'owner': login_data['user_pk'],
+                    'owner_name': '%s %s' % (
+                        login_data['user_data']['first_name'],
+                        login_data['user_data']['last_name'],
+                    ),
+                    'received_at': today - datetime.timedelta(days=1),
+                    'credited': True,
+                    'credited_at': today - datetime.timedelta(hours=2),
+                    'refunded': False,
+                    'refunded_at': None,
+                },
+            ]
+        }
+
+        response = self.client.get(self.history_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context['object_list']), 2)
+        self.assertEqual(response.context['transaction_owner_name'], '%s %s' % (
+            login_data['user_data']['first_name'],
+            login_data['user_data']['last_name'],
+        ))
+        self.assertContains(response, text='Total:', count=2)  # indicates 2 groups of credited transactions
