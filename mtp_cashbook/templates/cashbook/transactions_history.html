@@ -63,7 +63,7 @@
       {% for transaction_status, transactions in group %}
         <div class="batch batch-history">
 
-          <h3 class="HistoryHeader {% if transaction_status == 'uncredited' %}HistoryHeader-Uncredited{% elif transaction_status == 'refunded' %}HistoryHeader-Refunded{% endif %}">
+          <h3 class="HistoryHeader {% if transaction_status == 'uncredited' %}HistoryHeader-uncredited{% elif transaction_status == 'refunded' %}HistoryHeader-refunded{% endif %}">
             {% if transaction_status == 'uncredited' %}
               {% trans 'Uncredited' %}
             {% elif transaction_status == 'refunded' %}
@@ -72,16 +72,16 @@
               {% trans 'Credited' %}
             {% endif %}
 
-            <span class="HistoryHeader-Aside HistoryHeader-AsideRight">{% trans 'Total' %}: £{{ transactions|sum_transactions|currency }}</span>
+            <span class="HistoryHeader-aside HistoryHeader-aside-right">{% trans 'Total' %}: £{{ transactions|sum_transactions|currency }}</span>
 
-            <a class="u-nojs-hidden print-hidden HistoryHeader-Aside ShowHide ShowHide-Visible js-ShowHide" href="#HistoryBatch-{{ forloop.parentloop.counter }}-{{ forloop.counter }}">
-              <span class="ShowHide-Hide">
+            <a class="u-nojs-hidden print-hidden HistoryHeader-aside ShowHide js-ShowHide" href="#HistoryBatch-{{ forloop.parentloop.counter }}-{{ forloop.counter }}">
+              <span class="ShowHide-hide">
                 {% trans 'Collapse' %}
-                <b>&minus;</b>
+                <span class="ShowHide-icon">&minus;</span>
               </span>
-              <span class="ShowHide-Show">
+              <span class="ShowHide-show">
                 {% trans 'Collapsed' %}
-                <b>&plus;</b>
+                <span class="ShowHide-icon">&plus;</span>
               </span>
             </a>
           </h3>

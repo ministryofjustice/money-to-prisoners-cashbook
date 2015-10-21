@@ -22,7 +22,7 @@
     margin: 0;
   }
 
-  .HistoryHeader-Aside {
+  .HistoryHeader-aside {
     position: absolute;
     left: 1em;
     top: 50%;
@@ -31,7 +31,7 @@
     font-size: 0.75em;
     font-weight: normal;
   }
-  .HistoryHeader-AsideRight {
+  .HistoryHeader-aside-right {
     left: auto;
     right: 1em;
   }
@@ -41,11 +41,11 @@
   }
 }
 
-.HistoryHeader-Uncredited {
+.HistoryHeader-uncredited {
   background: $grey-3;
 }
 
-.HistoryHeader-Refunded {
+.HistoryHeader-refunded {
   background: $mellow-red-25;
 }
 
