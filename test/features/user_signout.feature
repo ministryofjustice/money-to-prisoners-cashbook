@@ -6,4 +6,4 @@ Feature: Signing out
   Scenario: Successful sign out
     Given I am signed in
     When I sign out
-    Then I should see "Digital Cashbook" as the page title
+    Then I should see "Digital cashbook" as the page title
