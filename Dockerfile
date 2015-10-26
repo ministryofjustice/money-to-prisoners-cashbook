@@ -20,6 +20,8 @@ WORKDIR /app
 
 RUN npm install npm -g
 RUN npm config set python python2.7
+ENV NODE_PATH /usr/lib/node_modules/money-to-prisoners-cashbook/node_modules
+ENV NODE_PATH $NODE_PATH:/usr/lib/node_modules
 RUN npm install -g bower gulp
 
 ADD ./conf/uwsgi /etc/uwsgi
@@ -28,7 +30,7 @@ ADD ./requirements/ /app/requirements/
 RUN pip3 install -r requirements/prod.txt
 
 ADD .bowerrc bower.json package.json README.md /app/
-RUN npm install --production --unsafe-perm
+RUN npm install --production --unsafe-perm --global
 
 ADD . /app
 RUN gulp --production

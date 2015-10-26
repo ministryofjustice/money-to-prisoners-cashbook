@@ -35,7 +35,7 @@ function getBowerDir () {
     .file({ file: './.bowerrc' })
     .load();
 
-  return path.join(process.cwd(), nconf.get('directory'));
+  return path.join(nconf.get('cwd'), nconf.get('directory'));
 }
 
 function getModulePaths (module) {
