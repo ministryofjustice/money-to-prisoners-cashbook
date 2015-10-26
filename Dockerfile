@@ -4,14 +4,15 @@ RUN locale-gen "en_US.UTF-8"
 ENV LC_CTYPE=en_US.UTF-8
 
 RUN apt-get update && \
-    apt-get install -y software-properties-common python-software-properties
+    apt-get install -y \
+      curl software-properties-common python-software-properties
 
-RUN add-apt-repository -y ppa:chris-lea/node.js
+RUN curl -sL https://deb.nodesource.com/setup_4.x | bash -
 
 RUN apt-get update && \
     apt-get install -y \
         build-essential git python3-all python3-all-dev python3-setuptools \
-        curl libpq-dev ntp ruby ruby-dev nodejs python3-pip python-pip
+        libpq-dev ntp ruby ruby-dev nodejs python3-pip python-pip
 
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 10
 

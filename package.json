@@ -9,7 +9,7 @@
     "url": "https://github.com/ministryofjustice/money-to-prisoners-cashbook/issues"
   },
   "engines": {
-    "node": "0.10.x"
+    "node": "4.2.x"
   },
   "config": {
     "unsafe-perm": true
