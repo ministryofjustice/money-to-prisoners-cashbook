@@ -25,9 +25,8 @@ if (!production) {
 
 // paths
 var vendorFiles = mainBowerFiles();
-var appBase = 'mtp_cashbook/';
-var src = appBase + 'assets-src/';
-var dest = appBase + 'assets/';
+var src = 'mtp_cashbook/assets-src/';
+var dest = '/assets/';
 
 
 function getBowerDir () {

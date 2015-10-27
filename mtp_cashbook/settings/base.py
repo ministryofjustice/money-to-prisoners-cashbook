@@ -87,7 +87,7 @@ USE_TZ = True
 STATIC_ROOT = 'static'
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    root('assets'),
+    '/assets',
     bower_dir(),
     bower_dir('mojular', 'assets'),
     bower_dir('govuk-template', 'assets'),
