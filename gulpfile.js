@@ -137,7 +137,7 @@ if (!production) {
     var browsersyncPort = argv.browsersyncport || 3000;
     var browsersyncUIPort = argv.browsersyncuiport || 3001;
     var browsersyncReloadDelayed = function() {
-      setTimeout(browserSync.reload, 1000);
+      setTimeout(browserSync.reload, 3000);
     };
 
     browserSync.init({

@@ -17,12 +17,17 @@ djangogulpserve:
   image: moneytoprisonerscashbook_django
   command: >
     /bin/bash -c "
-      npm install --unsafe-perm &&
+      npm install --unsafe-perm --no-bin-links &&
+      npm rebuild node-sass --no-bin-links &&
+      cd /opt && bower --allow-root link &&
+      cd /app && bower --allow-root link money-to-prisoners-common &&
       gulp serve --host=$DJANGO_1_PORT_8001_TCP_ADDR \
-                 --port=$DJANGO_1_PORT_8001_TCP_PORT
+                 --port=$DJANGO_1_PORT_8001_TCP_PORT \
+                 --dirs=/opt
     "
   volumes:
     - .:/app
+    - ../money-to-prisoners-common:/opt
     - /tmp/npm/:/root/.npm/
   ports:
     - "3000:3000"
