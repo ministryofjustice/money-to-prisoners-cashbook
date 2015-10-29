@@ -39,7 +39,7 @@ function getBowerDir () {
 }
 
 function getModulePaths (module) {
-  var modulePath = path.join(getBowerDir(), module, 'paths.json');
+  var modulePath = path.resolve(getBowerDir(), module, 'paths.json');
   var obj = require(modulePath);
 
   /* jshint camelcase: false */
