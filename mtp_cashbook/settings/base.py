@@ -20,7 +20,9 @@ from django.conf import global_settings
 here = lambda *x: join(abspath(dirname(__file__)), *x)
 PROJECT_ROOT = here("..")
 root = lambda *x: join(abspath(PROJECT_ROOT), *x)
-bower_dir = lambda *x: join(json.load(open(root('..', '.bowerrc')))['directory'], *x)
+with open(root('..', '.bowerrc')) as _bowerrc:
+    _bower_path = json.load(_bowerrc)['directory']
+bower_dir = lambda *x: join(_bower_path, *x)
 
 sys.path.insert(0, os.path.join(root(), 'apps'))
 
