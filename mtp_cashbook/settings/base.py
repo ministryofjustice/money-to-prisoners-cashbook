@@ -58,12 +58,21 @@ MIDDLEWARE_CLASSES = (
     'moj_auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
 )
 
 ROOT_URLCONF = 'mtp_cashbook.urls'
 
 WSGI_APPLICATION = 'mtp_cashbook.wsgi.application'
 
+# security tightening
+# some overridden in prod/docker settings where SSL is ensured
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SECURE = False
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+CSRF_COOKIE_HTTPONLY = True
+CSRF_COOKIE_SECURE = False
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/

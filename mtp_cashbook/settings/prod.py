@@ -1,11 +1,7 @@
-""" Production settings
-
+"""
+Production/Docker settings
 See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 """
-
-import os
-
-
 from mtp_cashbook.settings.base import *  # noqa
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -23,3 +19,9 @@ ALLOWED_HOSTS = [
 OAUTHLIB_INSECURE_TRANSPORT = os.environ.get(
     'OAUTHLIB_INSECURE_TRANSPORT', False
 )
+
+# security tightening
+SECURE_SSL_REDIRECT = True  # also done at nginx level
+SECURE_HSTS_SECONDS = 300
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
