@@ -32,9 +32,6 @@ sys.path.insert(0, os.path.join(root(), 'apps'))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-TEMPLATE_DEBUG = True
-
-
 SECRET_KEY = 'CHANGE_ME'
 
 # Application definition
@@ -95,10 +92,26 @@ STATICFILES_DIRS = [
     bower_dir('money-to-prisoners-common', 'assets')
 ]
 
-TEMPLATE_DIRS = [
-    root('templates'),
-    bower_dir('mojular', 'templates'),
-    bower_dir('money-to-prisoners-common', 'templates')
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            root('templates'),
+            bower_dir('mojular', 'templates'),
+            bower_dir('money-to-prisoners-common', 'templates'),
+        ],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+                'moj_utils.context_processors.debug',
+                'moj_utils.context_processors.analytics',
+            ],
+        },
+    },
 ]
 
 # Sane logging defaults
@@ -137,12 +150,6 @@ LOGGING = {
         }
     }
 }
-
-TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + (
-    'moj_utils.context_processors.debug',
-    'moj_utils.context_processors.analytics',
-    'django.core.context_processors.request'
-)
 
 DATABASES = {}
 
