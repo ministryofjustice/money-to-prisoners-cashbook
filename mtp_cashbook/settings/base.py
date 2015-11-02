@@ -20,7 +20,9 @@ from django.conf import global_settings
 here = lambda *x: join(abspath(dirname(__file__)), *x)
 PROJECT_ROOT = here("..")
 root = lambda *x: join(abspath(PROJECT_ROOT), *x)
-bower_dir = lambda *x: join(json.load(open(root('..', '.bowerrc')))['directory'], *x)
+with open(root('..', '.bowerrc')) as _bowerrc:
+    _bower_path = json.load(_bowerrc)['directory']
+bower_dir = lambda *x: join(_bower_path, *x)
 
 sys.path.insert(0, os.path.join(root(), 'apps'))
 
@@ -29,9 +31,6 @@ sys.path.insert(0, os.path.join(root(), 'apps'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-TEMPLATE_DEBUG = True
-
 
 SECRET_KEY = 'CHANGE_ME'
 
@@ -93,10 +92,26 @@ STATICFILES_DIRS = [
     bower_dir('money-to-prisoners-common', 'assets')
 ]
 
-TEMPLATE_DIRS = [
-    root('templates'),
-    bower_dir('mojular', 'templates'),
-    bower_dir('money-to-prisoners-common', 'templates')
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            root('templates'),
+            bower_dir('mojular', 'templates'),
+            bower_dir('money-to-prisoners-common', 'templates'),
+        ],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+                'moj_utils.context_processors.debug',
+                'moj_utils.context_processors.analytics',
+            ],
+        },
+    },
 ]
 
 # Sane logging defaults
@@ -135,12 +150,6 @@ LOGGING = {
         }
     }
 }
-
-TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + (
-    'moj_utils.context_processors.debug',
-    'moj_utils.context_processors.analytics',
-    'django.core.context_processors.request'
-)
 
 DATABASES = {}
 
