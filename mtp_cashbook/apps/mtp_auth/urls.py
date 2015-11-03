@@ -1,9 +1,9 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from django.core.urlresolvers import reverse_lazy
 
 from moj_auth import views
 
-urlpatterns = patterns('',
+urlpatterns = [
     url(r'^login/$', views.login, {
         'template_name': 'mtp_auth/login.html',
         }, name='login'),
@@ -13,4 +13,4 @@ urlpatterns = patterns('',
             'next_page': reverse_lazy('login'),
         }, name='logout'
     ),
-)
+]

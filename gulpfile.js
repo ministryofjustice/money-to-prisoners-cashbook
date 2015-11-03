@@ -33,12 +33,11 @@ function getBowerDir () {
   nconf
     .file({ file: './.bowerrc' })
     .load();
-
-  return path.join(nconf.get('cwd'), nconf.get('directory'));
+  return path.resolve(nconf.get('cwd'), nconf.get('directory'));
 }
 
 function getModulePaths (module) {
-  var modulePath = path.join(getBowerDir(), module, 'paths.json');
+  var modulePath = path.resolve(getBowerDir(), module, 'paths.json');
   var obj = require(modulePath);
 
   /* jshint camelcase: false */
@@ -136,7 +135,7 @@ if (!production) {
     var browsersyncPort = argv.browsersyncport || 3000;
     var browsersyncUIPort = argv.browsersyncuiport || 3001;
     var browsersyncReloadDelayed = function() {
-      setTimeout(browserSync.reload, 1000);
+      setTimeout(browserSync.reload, 3000);
     };
 
     browserSync.init({

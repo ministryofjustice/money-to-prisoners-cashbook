@@ -1,4 +1,4 @@
 {
-  "cwd": "/usr/lib/node_modules/money-to-prisoners-cashbook",
-  "directory": "bower_components"
+  "cwd": ".",
+  "directory": "mtp_cashbook/assets-src/bower_components"
 }

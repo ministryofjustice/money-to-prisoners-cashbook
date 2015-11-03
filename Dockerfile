@@ -29,10 +29,10 @@ ADD ./conf/uwsgi /etc/uwsgi
 ADD ./requirements/ /app/requirements/
 RUN pip3 install -r requirements/prod.txt
 
-ADD .bowerrc bower.json package.json README.md /app/
-RUN npm install --production --unsafe-perm --global
-
 ADD . /app
+RUN echo '{"cwd": "/usr/lib/node_modules/money-to-prisoners-cashbook","directory": "mtp_cashbook/assets-src/bower_components"}' > .bowerrc
+
+RUN npm install --production --unsafe-perm --global
 RUN gulp --production
 RUN ./manage.py collectstatic --noinput
 

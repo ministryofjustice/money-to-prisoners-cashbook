@@ -5,7 +5,6 @@ django:
     pip install -r requirements/dev.txt &&
     python manage.py runserver 0.0.0.0:8001"
   volumes:
-    - .:/app
     - /tmp/pip_download_cache/:/tmp/pip_download_cache
   ports:
     - "8001:8001"
@@ -17,12 +16,18 @@ djangogulpserve:
   image: moneytoprisonerscashbook_django
   command: >
     /bin/bash -c "
-      npm install --unsafe-perm &&
+      export NODE_MODULES=/usr/lib/node_modules/money-to-prisoners-cashbook
+      rm -rf $NODE_MODULES
+      NODE_ENV=development npm install --unsafe-perm --global
+      cd /opt && bower --allow-root link
+      cd /app && bower --allow-root link money-to-prisoners-common
       gulp serve --host=$DJANGO_1_PORT_8001_TCP_ADDR \
-                 --port=$DJANGO_1_PORT_8001_TCP_PORT
+                 --port=$DJANGO_1_PORT_8001_TCP_PORT \
+                 --dirs=/opt
     "
   volumes:
     - .:/app
+    - ../money-to-prisoners-common:/opt
     - /tmp/npm/:/root/.npm/
   ports:
     - "3000:3000"
