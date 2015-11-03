@@ -10,6 +10,6 @@
     "tests"
   ],
   "dependencies": {
-    "money-to-prisoners-common": "ministryofjustice/money-to-prisoners-common#0.5.2"
+    "money-to-prisoners-common": "ministryofjustice/money-to-prisoners-common#0.5.3"
   }
 }
