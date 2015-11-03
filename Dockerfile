@@ -30,8 +30,8 @@ ADD ./requirements/ /app/requirements/
 RUN pip3 install -r requirements/prod.txt
 
 ADD . /app
-RUN rm -rf bower_components mtp_cashbook/assets-src/bower_components node_modules
-RUN echo '{"cwd": "/app","directory": "mtp_cashbook/assets-src/bower_components"}' > .bowerrc
+RUN echo '{"cwd": "/usr/lib/node_modules/money-to-prisoners-cashbook","directory": "mtp_cashbook/assets-src/bower_components"}' > .bowerrc
+
 RUN npm install --production --unsafe-perm --global
 RUN gulp --production
 RUN ./manage.py collectstatic --noinput
