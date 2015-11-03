@@ -1,7 +1,8 @@
 .v-batch {
   .totals {
-    margin-top: 3em;
+    margin-top: -3em;
     margin-bottom: 1em;
+    border-bottom: 2px solid $bg-color-alt;
 
     @include print {
       margin-top: 0;
@@ -10,16 +11,24 @@
     p {
       font-size: em(24);
       margin-top: 0;
-
-      @include breakpoint($desktop) {
-        display: inline;
-      }
+      margin-bottom: 1em;
 
       &:first-child {
         margin-top: 1em;
-        margin-right: .5em;
-        margin-bottom: 0;
+        margin-bottom: -.5em;
         font-size: em(36);
+      }
+
+      span {
+        display: inline-block;
+        &:first-child {
+          width: 270px;
+        }
+        &:nth-child(2) {
+          width: 40%;
+          text-align: right;
+          font-weight: bold;
+        }
       }
     }
 
@@ -31,12 +40,16 @@
       width: 100%;
       margin: 0;
       padding: em(12) 0;
+      border: 0;
       background: $grey-3;
 
       p {
         font-size: em(19);
         margin-top: 0;
         margin-bottom: 0;
+        span:nth-child(2) {
+          width: 20%;
+        }
       }
 
       .container {
@@ -46,13 +59,21 @@
     }
   }
 
+  .v-batch-title {
+    margin-bottom: 0;
+  }
+
   .batch {
-    margin: 1em 0 0;
+    margin: 0;
     display: inline-block;
 
     @include print {
       display: block;
     }
+  }
+
+  .batch-buttons span {
+    padding-right: 1em;
   }
 
   @include print {
