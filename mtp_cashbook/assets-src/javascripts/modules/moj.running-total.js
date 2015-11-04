@@ -23,7 +23,7 @@
       this.labelText = this.$totalsContainer.data('label');
 
       this.$label = $('<p>').addClass('print-hidden');
-      this.$total = $('<strong>').addClass('js-RunningTotal-total');
+      this.$total = $('<span>').addClass('js-RunningTotal-total');
     },
 
     bindEvents: function () {
@@ -56,7 +56,7 @@
       this.$label
         .attr('aria-live', 'polite')
         .attr('aria-atomic', 'false')
-        .text(this.labelText)
+        .html('<span>' + this.labelText + '</span>')
         .append(this.$total);
 
       this.$totalsContainer

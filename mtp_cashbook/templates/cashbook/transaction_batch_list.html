@@ -1,9 +1,16 @@
 {% extends "base.html" %}
 {% load currency moj_utils i18n %}
 
+{% block page_title %}{% trans "New credits - Digital cashbook" %}{% endblock %}
+
 {% block template_type %}v-batch{% endblock %}
 
 {% block content %}
+
+  <p><a href="{% url 'transaction-discard' %}" id="tour-step7">{% trans "Home" %}</a></p>
+
+  <h1 class="v-batch-title">{% trans "New credits" %}</h1>
+
   <form
     method="post"
     action=""
@@ -36,19 +43,19 @@
         </div>
       {% endif %}
 
-      <div class="totals js-StickyHeader"  id="tour-step-total">
-        <div class="container js-RunningTotal" data-label="{% trans 'Total payments you have credited: ' %}">
-          <p>
-            {% blocktrans with total=total|currency highlight="<strong>&pound;" highlightend="</strong>" %}
-              Control total: {{ highlight }}{{ total }}{{ highlightend }}
-            {% endblocktrans %}
-          </p>
-        </div>
-      </div>
-
-      {% include "cashbook/includes/batch_buttons.html" %}
 
       <div class="batch">
+        <div class="totals js-StickyHeader"  id="tour-step-total">
+          <div class="container js-RunningTotal" data-label="{% trans 'Total payments credited' %}">
+            <p>
+              <span>{% trans 'Control total' %}</span>
+              <span>&pound;{{total|currency}}</span>
+            </p>
+          </div>
+        </div>
+
+        {% include "cashbook/includes/batch_buttons.html" %}
+
         <table id="tour-step1">
           <thead>
             {% include "cashbook/includes/table_actions.html" with location='header' field_name=form.transactions.html_name %}
@@ -94,6 +101,8 @@
     {% endif %}
 
     {% include "cashbook/includes/batch_buttons.html" %}
+
+    </div>
 
     <dialog id="incomplete-batch-dialog" class="Dialog u-nojs-hidden" data-hide-close="true" data-disable-backdrop-close="true">
       <div class="Dialog-inner">

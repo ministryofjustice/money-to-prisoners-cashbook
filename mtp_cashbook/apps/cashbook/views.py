@@ -2,7 +2,8 @@ import datetime
 
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.core.urlresolvers import reverse_lazy
+from django.core.urlresolvers import reverse_lazy, reverse
+from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
@@ -72,6 +73,15 @@ class TransactionBatchListView(FormView):
                 }
             )
         return super(TransactionBatchListView, self).form_valid(form)
+
+
+def transaction_batch_discard(request):
+    form = ProcessTransactionBatchForm(request, data={
+        'discard': '1'
+    })
+    if form.is_valid():
+        form.save()
+    return redirect(reverse('dashboard'))
 
 
 class TransactionsLockedView(FormView):

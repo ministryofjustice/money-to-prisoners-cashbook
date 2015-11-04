@@ -1,7 +1,7 @@
 {% load i18n %}
-<div>
+<div class="batch-buttons">
   {% if object_list %}
-    <button type="submit" name="submit" value="submit" class="button" id="tour-step6">{% trans "I've credited ticked payments in NOMIS" %}</button>
+    <span>{% trans "All ticked payments processed in NOMIS" %}</span>
+    <button type="submit" name="submit" value="submit" class="button" id="tour-step6">{% trans "Done" %}</button>
   {% endif %}
-  <button type="submit" class="button button-secondary" name="discard" value="1" id="tour-step7">{% trans "Back to start" %}</button>
 </div>
