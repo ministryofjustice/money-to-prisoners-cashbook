@@ -116,14 +116,14 @@ class DiscardLockedTransactionsForm(forms.Form):
 
 
 class FilterTransactionHistoryForm(forms.Form):
-    received_at_0 = forms.DateField(required=True, label=_('Received at start date'),
+    received_at_0 = forms.DateField(required=True,
                                     widget=MtpDateInput)
-    received_at_1 = forms.DateField(required=True, label=_('Received at end date'),
+    received_at_1 = forms.DateField(required=True,
                                     widget=MtpDateInput)
-    search = forms.CharField(required=False, label=_('Search prisoners, senders and payment amounts'),
+    search = forms.CharField(required=False,
                              widget=MtpTextInput)
-    owner = forms.ChoiceField(required=False, label=_('Payments processed by'), initial='',
-                              choices=[('', _('Me')), ('all', _('Anybody'))],
+    owner = forms.ChoiceField(required=False, initial='',
+                              choices=[('', _('By me')), ('all', _('By anyone'))],
                               widget=forms.RadioSelect(renderer=MtpInlineRadioFieldRenderer))
 
     def __init__(self, request, *args, **kwargs):
