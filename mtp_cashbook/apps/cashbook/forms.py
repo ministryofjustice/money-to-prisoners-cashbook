@@ -32,7 +32,7 @@ class ProcessTransactionBatchForm(forms.Form):
         transactions = self.cleaned_data.get('transactions', [])
         discard = self.data.get('discard') == '1'
         if not transactions and not discard:
-            raise forms.ValidationError(_('Please select the payments which you have credited to NOMIS'))
+            raise forms.ValidationError(_('Only click ‘Done’ when you’ve selected credits processed in NOMIS'))
         if discard:
             transactions = []
         return transactions

@@ -29,6 +29,24 @@ var sharedSteps = function(){
   });
 
   /**
+   * Click on a button or link by label
+   *
+   * Usage: I click on the "Go" button
+   * Usage: I click on the "home" link
+   *
+   * @params {function} text The text of the button to click
+   * @params {function} next The callback function of the scenario
+   */
+  this.When(
+    /^I click on the "([^"]+)" (link|button)$/,
+    function(text, targetType, next) {
+      var selector = (targetType === 'link') ? 'a' : 'button';
+      browser.click(selector+'='+text, next);
+    }
+  );
+
+
+  /**
    * Check the current body content contains
    * supplied text
    *
