@@ -19,31 +19,10 @@
     "test": "./node_modules/.bin/wdio test/wdio.conf.js",
     "test-init": "./node_modules/.bin/selenium-standalone install",
     "test-headless": "./node_modules/.bin/wdio test/wdio.headless.conf.js",
-    "test-wip": "./node_modules/.bin/wdio test/wdio.wip.conf.js",
-    "postinstall": "./node_modules/.bin/bower --allow-root install"
+    "test-wip": "./node_modules/.bin/wdio test/wdio.wip.conf.js"
   },
   "license": "MIT",
   "dependencies": {
-    "bower": "latest",
-    "gulp": "^3.9.0",
-    "main-bower-files": "^2.9.0",
-    "money-to-prisoners-gulp-tasks": "ministryofjustice/money-to-prisoners-gulp-tasks#0.1.1",
-    "nconf": "^0.7.2"
-  },
-  "devDependencies": {
-    "browser-sync": "^2.9.3",
-    "chai": "^3.2.0",
-    "chai-as-promised": "^5.1.0",
-    "cucumber": "^0.5.3",
-    "del": "^2.0.2",
-    "globule": "^0.2.0",
-    "phantomjs": "^1.9.18",
-    "q": "^1.4.1",
-    "request": "^2.63.0",
-    "require-dir": "^0.3.0",
-    "sanitize-filename": "^1.4.3",
-    "selenium-standalone": "^4.6.0",
-    "webdriverio": "^3.2.4",
-    "yargs": "^3.24.0"
+    "money-to-prisoners-common": "ministryofjustice/money-to-prisoners-common#1.0.2"
   }
 }

@@ -11,7 +11,6 @@ lint: build
 	    "pip install --quiet -r requirements/dev.txt && \
 	     flake8 $(LINT_OPTS) . && \
 	     find . \( -path ./node_modules -o \
-	               -path ./mtp_cashbook/assets-src/bower_components -o \
 	               -path ./requirements \
 	            \) \
 	            -prune -o \( \
@@ -53,7 +52,7 @@ ifneq ($(shell command -v boot2docker),)
 endif
 
 .dev_django_container: Dockerfile docker-compose.yml \
-  .bowerrc bower.json package.json README.md \
+  package.json README.md \
   requirements/base.txt requirements/prod.txt \
   | $(boot2docker_up) $(boot2docker_shellinit)
 	docker-compose build

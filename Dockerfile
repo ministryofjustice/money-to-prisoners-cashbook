@@ -19,14 +19,14 @@ WORKDIR /app
 
 RUN npm install npm -g
 RUN npm config set python python2.7
-RUN npm install -g bower gulp
+RUN npm install -g gulp
 
 ADD ./conf/uwsgi /etc/uwsgi
 
 ADD ./requirements/ /app/requirements/
 RUN pip3 install -r requirements/prod.txt
 
-ADD .bowerrc bower.json package.json README.md /app/
+ADD package.json README.md /app/
 RUN npm install --production --unsafe-perm
 
 ADD . /app

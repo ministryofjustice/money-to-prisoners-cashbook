@@ -1,7 +1,5 @@
 .v-batch {
   .totals {
-    margin-top: -3em;
-    margin-bottom: 1em;
     border-bottom: 2px solid $bg-color-alt;
 
     @include print {
@@ -10,13 +8,11 @@
 
     p {
       font-size: em(24);
-      margin-top: 0;
       margin-bottom: 1em;
 
       &:first-child {
-        margin-top: 1em;
-        margin-bottom: -.5em;
         font-size: em(36);
+        margin-bottom: .1em;
       }
 
       span {
@@ -30,6 +26,10 @@
           font-weight: bold;
         }
       }
+    }
+
+    .container {
+      margin-top: 1.5em;
     }
 
     &.is-sticky {
@@ -53,22 +53,22 @@
       }
 
       .container {
+        margin-top: 0;
         padding-left: 15px;
         padding-right: 15px;
       }
     }
   }
 
-  .v-batch-title {
-    margin-bottom: 0;
-  }
-
   .batch {
     margin: 0;
-    display: inline-block;
+    width: 70%;
+  }
 
-    @include print {
-      display: block;
+  .batch-buttons {
+    margin: 1em 1em;
+    span {
+      padding-right: 1em;
     }
   }
 
@@ -92,7 +92,7 @@
 
 .batch-buttons {
   width: 65%;
-  padding: 0 0 .5em 1em;
+  padding: 10px 0 10px 10px;
   span {
     padding-right: 1em;
   }
