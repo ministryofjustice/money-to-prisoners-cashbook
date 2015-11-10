@@ -123,7 +123,7 @@
       id: 'batch',
       steps: [
         {
-          content: '{% blocktrans %}<p>The table shows payments to be credited to NOMIS.</p>{% endblocktrans %}',
+          content: '{% blocktrans %}<p>This table shows credits to be processed in NOMIS.</p>{% endblocktrans %}',
           target: 'tour-step1',
           padding: 10,
           placement: 'top',
@@ -131,7 +131,15 @@
           highlight: true
         },
         {
-          content: '{% blocktrans %}<p>Start by entering the prisoner number in NOMIS.</p>{% endblocktrans %}',
+          content: '{% blocktrans %}<p>Start by entering the control total in NOMIS then use the ‘misc receipt - private cash’ category as Transaction Type in NOMIS.</p><p>A running total of ticked credits will be displayed here.</p>{% endblocktrans %}',
+          target: 'tour-step-total',
+          padding: 10,
+          placement: 'bottom',
+          xOffset: 'center',
+          highlight: true
+        },
+        {
+          content: '{% blocktrans %}<p>Enter the prisoner number in NOMIS.</p>{% endblocktrans %}',
           target: 'tour-step2',
           padding: 10,
           placement: 'top',
@@ -140,7 +148,7 @@
           highlight: true
         },
         {
-          content: '{% blocktrans %}<p>Check it matches the prisoner name.</p>{% endblocktrans %}',
+          content: '{% blocktrans %}<p>Check prisoners names match.</p>{% endblocktrans %}',
           target: 'tour-step3',
           padding: 10,
           placement: 'top',
@@ -149,7 +157,7 @@
           highlight: true
         },
         {
-          content: '{% blocktrans %}<p>Add payment amount as usual.</p>{% endblocktrans %}',
+          content: '{% blocktrans %}<p>Add credit amount.</p>{% endblocktrans %}',
           target: 'tour-step4',
           padding: 10,
           placement: 'top',
@@ -158,7 +166,7 @@
           highlight: true
         },
         {
-          content: '{% blocktrans %}<p>Keep track by ticking payments you’ve credited.</p>{% endblocktrans %}',
+          content: '{% blocktrans %}<p>Keep track by ticking credits you\'ve processed in NOMIS.</p>{% endblocktrans %}',
           target: 'tour-step5',
           padding: 10,
           placement: 'top',
@@ -168,15 +176,7 @@
           highlight: true
         },
         {
-          content: '{% blocktrans %}<p>A running total of ticked payments will be displayed here.</p>{% endblocktrans %}',
-          target: 'tour-step-total',
-          padding: 10,
-          placement: 'bottom',
-          xOffset: 'center',
-          highlight: true
-        },
-        {
-          content: '{% blocktrans %}<p>Click this button when you’ve finished.</p><p>Any unticked payments will be released for other people in your team to work on. They won’t stay ‘checkout out’ to you.</p>{% endblocktrans %}',
+          content: '{% blocktrans %}<p>Click ‘Done’ when you\'ve processed credits to NOMIS.</p>{% endblocktrans %}',
           target: 'tour-step6',
           padding: 10,
           placement: 'bottom',
@@ -184,11 +184,12 @@
           highlight: true
         },
         {
-          content: '{% blocktrans %}<p>Click ‘Discard’ to stop crediting payments on this page. This will release them to be credited by other people in your team.</p>{% endblocktrans %}',
+          content: '{% blocktrans %}<p>Click ‘Home’ to return to the home page.</p>{% endblocktrans %}',
           target: 'tour-step7',
           padding: 10,
           placement: 'bottom',
-          xOffset: 'center',
+          xOffset: 0,
+          arrowOffset: 20,
           highlight: true
         }
       ]
