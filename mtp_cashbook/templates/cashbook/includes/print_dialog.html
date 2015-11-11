@@ -1,10 +1,14 @@
 {% load i18n %}
 <dialog id="print-dialog" class="Dialog">
   <div class="Dialog-inner">
-    <h3>{% trans "Before you print" %}</h3>
+    <h3>{% trans "Do you need to print?" %}</h3>
     {% blocktrans %}
-    <p>Have you tried changing the size of the window so you can see the payments and NOMIS at the same time?</p>
-    <p>You could also try using the ALT + TAB keys to switch between the windows.</p>
+    <p>Did you know:</p>
+    <ul>
+      <li>you can see the digital cashbook and NOMIS screens at the same time by changing the size of your windows</li>
+      <li>you can switch between windows using the ALT + TAB keys</li>
+      <li>you can copy and paste the prisoner number from one window to the other</li>
+    <ul>
     {% endblocktrans %}
 
     <p class="u-nojs-hidden">
@@ -12,6 +16,7 @@
       <label for="remove-print-prompt">{% trans "Don't show this message again" %}</label>
     </p>
 
-    <button type="button" class="button u-nojs-hidden js-Print">{% trans "Print now" %}</button>
+    <button type="button" class="button u-nojs-hidden js-Print">{% trans "Print" %}</button>
+    <button type="button" class="button u-nojs-hidden js-Dialog-close">{% trans "Cancel" %}</button>
   </div>
 </dialog>
