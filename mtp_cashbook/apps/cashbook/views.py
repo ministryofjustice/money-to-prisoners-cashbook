@@ -111,7 +111,7 @@ class TransactionsLockedView(FormView):
         messages.success(
             self.request,
             _(
-                '%(discarded)s transaction%(plural)s unlocked successfully.'
+                '%(discarded)s transaction%(plural)s returned to ‘New credits’.'
             ) % {
                 'discarded': len(discarded),
                 'plural': '' if len(discarded) == 1 else 's'

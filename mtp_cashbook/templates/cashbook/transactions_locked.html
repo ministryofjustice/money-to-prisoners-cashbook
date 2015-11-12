@@ -3,10 +3,10 @@
 
 {% block content %}
   <header class="ContentHeader">
-    <a href="{% url 'dashboard' %}" class="ContentHeader-back">{% trans "Back to dashboard" %}</a>
-    <h1>{% trans "Locked transactions" %}</h1>
+    <a href="{% url 'dashboard' %}" class="ContentHeader-back">{% trans 'Home' %}</a>
+    <h1>{% trans 'Credits being processed' %}</h1>
     {% if object_list %}
-    <p>{% trans "Select the ones you wish to unlock below" %}</p>
+    <p>{% trans 'These credits are being processed by other staff. Tick a credit to return it to ‘New credits’ if processing can’t be completed, eg due to staff absence.' %}</p>
     {% endif %}
   </header>
 
@@ -28,7 +28,7 @@
             <th>{% trans "Prisoner name" %}</th>
             <th>{% trans "Amount" %}</th>
             <th>{% trans "Sender" %}</th>
-            <th>{% trans "Unlock" %}</th>
+            <th>{% trans "Select" %}</th>
           </tr>
         </thead>
 
@@ -48,7 +48,7 @@
                 {% if transaction_pk|to_string in form.transactions.value %}checked{% endif %}
                 class="js-RunningTotal-item"
                 data-amount="{{ transaction.amount|currency }}">
-              <label for="check-{{ transaction.id }}">{% trans "Unlock" %}</label>
+              <label for="check-{{ transaction.id }}">{% trans "Select" %}</label>
             </td>
           </tr>
         {% endfor %}
@@ -62,7 +62,7 @@
 
     {% include "cashbook/includes/locked_buttons.html" %}
   {% else %}
-    <p>{% trans "No locked transactions found" %}</p>
+    <p>{% trans "No credits being processed" %}</p>
   {% endif %}
   </form>
 {% endblock content %}

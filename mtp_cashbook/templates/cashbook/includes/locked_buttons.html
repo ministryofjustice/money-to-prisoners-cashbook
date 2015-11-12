@@ -1,4 +1,7 @@
 {% load i18n %}
-<div>
-  <input type="submit" value="{% trans "I would like to unlock ticked payments" %}" class="button" id="tour-step6">
+<div class="batch-buttons" id="tour-step6">
+  {% if object_list %}
+    <span>{% trans "All ticked credits to be returned to ‘New credits’" %}</span>
+    <button type="submit" name="submit" value="submit" class="button">{% trans "Done" %}</button>
+  {% endif %}
 </div>
