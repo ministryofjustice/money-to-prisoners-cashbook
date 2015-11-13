@@ -27,8 +27,8 @@
     "bower": "latest",
     "gulp": "^3.9.0",
     "main-bower-files": "^2.9.0",
-    "nconf": "^0.7.2",
-    "money-to-prisoners-gulp-tasks": "ministryofjustice/money-to-prisoners-gulp-tasks#0.1.0"
+    "money-to-prisoners-gulp-tasks": "ministryofjustice/money-to-prisoners-gulp-tasks#0.1.1",
+    "nconf": "^0.7.2"
   },
   "devDependencies": {
     "browser-sync": "^2.9.3",
