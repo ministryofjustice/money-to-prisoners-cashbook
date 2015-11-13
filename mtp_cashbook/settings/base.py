@@ -1,56 +1,49 @@
 """
 Django settings for mtp_cashbook project.
 
-For more information on this file, see
-https://docs.djangoproject.com/en/1.7/topics/settings/
-
 For the full list of settings and their values, see
-https://docs.djangoproject.com/en/1.7/ref/settings/
+https://docs.djangoproject.com/en/1.8/ref/settings/
 """
-
-# Build paths inside the project like this: os.path.join(APP_ROOT, ...)
-import sys
-import os
+from functools import partial
 import json
+import os
+from os.path import abspath, dirname, join
+import sys
 
-from os.path import abspath, join, dirname
+BASE_DIR = dirname(dirname(abspath(__file__)))
+sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 
-from django.conf import global_settings
-
-here = lambda *x: join(abspath(dirname(__file__)), *x)
-PROJECT_ROOT = here("..")
-root = lambda *x: join(abspath(PROJECT_ROOT), *x)
-with open(root('..', '.bowerrc')) as _bowerrc:
+get_project_dir = partial(join, BASE_DIR)
+with open(get_project_dir('..', '.bowerrc')) as _bowerrc:
     _bower_path = json.load(_bowerrc)['directory']
-bower_dir = lambda *x: join(_bower_path, *x)
+get_bower_dir = partial(join, _bower_path)
 
-sys.path.insert(0, os.path.join(root(), 'apps'))
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
+ENVIRONMENT = os.environ.get('ENV', 'local')
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
 SECRET_KEY = 'CHANGE_ME'
+ALLOWED_HOSTS = []
+
 
 # Application definition
-
 INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
 )
-
 PROJECT_APPS = (
     'moj_utils',
     'widget_tweaks',
-    'mtp_auth',
-    'cashbook'
+    'cashbook',
 )
-
 INSTALLED_APPS += PROJECT_APPS
 
+
+WSGI_APPLICATION = 'mtp_cashbook.wsgi.application'
+ROOT_URLCONF = 'mtp_cashbook.urls'
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -61,9 +54,6 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.security.SecurityMiddleware',
 )
 
-ROOT_URLCONF = 'mtp_cashbook.urls'
-
-WSGI_APPLICATION = 'mtp_cashbook.wsgi.application'
 
 # security tightening
 # some overridden in prod/docker settings where SSL is ensured
@@ -74,40 +64,37 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 CSRF_COOKIE_HTTPONLY = True
 CSRF_COOKIE_SECURE = False
 
+
+# Database
+DATABASES = {}
+
+
 # Internationalization
-# https://docs.djangoproject.com/en/1.7/topics/i18n/
-
 LANGUAGE_CODE = 'en-gb'
-
-TIME_ZONE = 'UTC'
-
+TIME_ZONE = 'Europe/London'
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.7/howto/static-files/
-
 STATIC_ROOT = 'static'
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    root('assets'),
-    bower_dir(),
-    bower_dir('mojular', 'assets'),
-    bower_dir('govuk-template', 'assets'),
-    bower_dir('money-to-prisoners-common', 'assets')
+    get_project_dir('assets'),
+    get_bower_dir(),
+    get_bower_dir('mojular', 'assets'),
+    get_bower_dir('govuk-template', 'assets'),
+    get_bower_dir('money-to-prisoners-common', 'assets')
 ]
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            root('templates'),
-            bower_dir('mojular', 'templates'),
-            bower_dir('money-to-prisoners-common', 'templates'),
+            get_project_dir('templates'),
+            get_bower_dir('mojular', 'templates'),
+            get_bower_dir('money-to-prisoners-common', 'templates'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -123,47 +110,8 @@ TEMPLATES = [
     },
 ]
 
-# Sane logging defaults
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
-        },
-        'simple': {
-            'format': '%(levelname)s %(message)s'
-        },
-    },
-    'handlers': {
-        'console': {
-            'level': 'WARN',
-            'class': 'logging.StreamHandler',
-            'formatter': 'verbose'
-        },
-        'mail_admins': {
-            'level': 'ERROR',
-            'class': 'django.utils.log.AdminEmailHandler'
-        }
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['console'],
-            'propagate': True,
-            'level': 'WARN',
-        },
-        'django.request': {
-            'handlers': ['console'],
-            'level': 'ERROR',
-            'propagate': False,
-        }
-    }
-}
 
-DATABASES = {}
-
-
-# AUTH
+# authentication
 SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
@@ -180,6 +128,7 @@ API_URL = os.environ.get('API_URL', 'http://localhost:8000')
 
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'dashboard'
+LOGOUT_URL = 'logout'
 
 OAUTHLIB_INSECURE_TRANSPORT = True
 

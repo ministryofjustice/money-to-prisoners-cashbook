@@ -1,14 +1,13 @@
 """
 Production/Docker settings
-See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 """
-from mtp_cashbook.settings.base import *  # noqa
+from .base import *
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', False)
+DEBUG = os.environ.get('DEBUG') == 'True'
 
 ALLOWED_HOSTS = [
     'localhost',
@@ -17,8 +16,9 @@ ALLOWED_HOSTS = [
 ]
 
 OAUTHLIB_INSECURE_TRANSPORT = os.environ.get(
-    'OAUTHLIB_INSECURE_TRANSPORT', False
-)
+    'OAUTHLIB_INSECURE_TRANSPORT') == 'True'
+if not OAUTHLIB_INSECURE_TRANSPORT:
+    os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = ''
 
 # security tightening
 SECURE_SSL_REDIRECT = True  # also done at nginx level
