@@ -9,7 +9,7 @@
 
   <header class="ContentHeader">
     <a href="{% url 'transaction-discard' %}" class="ContentHeader-back" id="tour-step7">{% trans 'Home' %}</a>
-    <h1>{% trans "New credits" %}</h1>
+    <h1>{% trans 'New credits' %}</h1>
   </header>
 
   <form
@@ -95,12 +95,13 @@
             {% include "cashbook/includes/table_actions.html" with location='footer' field_name=form.transactions.html_name %}
           </tfoot>
         </table>
+
+        {% include "cashbook/includes/batch_buttons.html" %}
+
       </div>
     {% else %}
       <p>{% trans "No transactions found" %}</p>
     {% endif %}
-
-    {% include "cashbook/includes/batch_buttons.html" %}
 
     </div>
 
@@ -118,7 +119,7 @@
 
 {% endblock content %}
 
-{% block include_js %}
+{% block main_js %}
   <script>
     var tour = {
       id: 'batch',

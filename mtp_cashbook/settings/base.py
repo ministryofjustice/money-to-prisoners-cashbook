@@ -14,10 +14,6 @@ BASE_DIR = dirname(dirname(abspath(__file__)))
 sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 
 get_project_dir = partial(join, BASE_DIR)
-with open(get_project_dir('..', '.bowerrc')) as _bowerrc:
-    _bower_path = json.load(_bowerrc)['directory']
-get_bower_dir = partial(join, _bower_path)
-
 
 ENVIRONMENT = os.environ.get('ENV', 'local')
 
@@ -81,11 +77,7 @@ USE_TZ = True
 STATIC_ROOT = 'static'
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    get_project_dir('assets'),
-    get_bower_dir(),
-    get_bower_dir('mojular', 'assets'),
-    get_bower_dir('govuk-template', 'assets'),
-    get_bower_dir('money-to-prisoners-common', 'assets')
+    get_project_dir('assets')
 ]
 
 TEMPLATES = [
@@ -93,8 +85,9 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             get_project_dir('templates'),
-            get_bower_dir('mojular', 'templates'),
-            get_bower_dir('money-to-prisoners-common', 'templates'),
+            get_project_dir('node_modules'),
+            get_project_dir('../node_modules/mojular-templates'),
+            get_project_dir('../node_modules/money-to-prisoners-common/templates')
         ],
         'APP_DIRS': True,
         'OPTIONS': {

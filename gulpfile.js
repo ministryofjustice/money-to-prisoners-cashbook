@@ -9,11 +9,10 @@
 'use strict';
 
 var gulp = require('gulp');
-var path = require('path');
-var nconf = require('nconf');
 var argv = require('yargs').argv;
-var mainBowerFiles = require('main-bower-files');
 var getTask = require('money-to-prisoners-gulp-tasks');
+var webpack = require('webpack');
+var gutil = require('gulp-util');
 
 var production = argv.production;
 
@@ -24,53 +23,43 @@ if (!production) {
 
 
 // paths
-var vendorFiles = mainBowerFiles();
 var appBase = 'mtp_cashbook/';
-var src = appBase + 'assets-src/';
-var dest = appBase + 'assets/';
 
+var paths = {
+  src: appBase + 'assets-src/',
+  dest: appBase + 'assets/',
+  govukElements: 'node_modules/mojular-govuk-elements/',
+  common: 'node_modules/money-to-prisoners-common/assets/',
+  hopscotchHighlight: 'node_modules/hopscotch-highlight/src/'
+};
 
-function getBowerDir () {
-  nconf
-    .file({ file: './.bowerrc' })
-    .load();
-
-  return path.join(process.cwd(), nconf.get('directory'));
-}
-
-function getModulePaths (module) {
-  var modulePath = path.join(getBowerDir(), module, 'paths.json');
-  var obj = require(modulePath);
-
-  /* jshint camelcase: false */
-  return obj.import_paths;
-}
+var mojularLoadPaths = require('mojular/sass-paths')([
+  require('mojular-govuk-elements/package.json'),
+  require('mojular-moj-elements/package.json')
+]);
 
 function getLoadPaths () {
-  var bowerDir = getBowerDir();
-  var govukImportPaths = getModulePaths('govuk-template');
-  var mojularImportPaths = getModulePaths('mojular');
-  var mtpImportPaths = getModulePaths('money-to-prisoners-common');
-  var joined = govukImportPaths.concat(mojularImportPaths).concat(mtpImportPaths);
+  var paths = [
+   'node_modules/money-to-prisoners-common/assets/scss',
+   'node_modules/breakpoint-sass/stylesheets',
+   'node_modules/hopscotch/dist/css',
+   'node_modules/hopscotch-highlight/src/stylesheets'
+ ];
 
-  joined = joined.map(function(originalPath) {
-    return path.join(bowerDir, originalPath);
-  });
-
-  return joined.concat(bowerDir);
+ return paths;
 }
 
 
 gulp.task('clean:css', getTask('clean', {
-  src: dest + 'stylesheets'
+  src: paths.dest + 'stylesheets'
 }));
 
 gulp.task('clean:images', getTask('clean', {
-  src: dest + 'images'
+  src: paths.dest + 'images'
 }));
 
 gulp.task('clean:js', getTask('clean', {
-  src: dest + 'javascripts'
+  src: paths.dest + 'scripts'
 }));
 
 gulp.task('clean', [
@@ -81,46 +70,53 @@ gulp.task('clean', [
 
 
 gulp.task('sass', ['clean:css'], getTask('scss', {
-  src: src + 'stylesheets/**/*.scss',
-  dest: dest + 'stylesheets/',
-  includePaths: getLoadPaths(),
+  src: paths.src + 'stylesheets/**/*.scss',
+  dest: paths.dest + 'stylesheets/',
+  includePaths: mojularLoadPaths.concat(getLoadPaths()),
   browserSync: production ? browserSync : false
 }));
 
 gulp.task('minify-css', ['sass'], getTask('minify-css', {
-  src: dest + 'stylesheets/**/*.css',
-  dest: dest + 'stylesheets'
+  src: paths.dest + 'stylesheets/**/*.css',
+  dest: paths.dest + 'stylesheets'
 }));
 
-
-gulp.task('scripts', ['clean:js'], getTask('concat-scripts', {
-  src: vendorFiles.concat([
-    src + 'bower_components/checked-polyfill/checked-polyfill.js',
-    src + 'javascripts/**/*.js',
-  ]),
-  dest: dest + 'javascripts'
-}));
+gulp.task('scripts', ['clean:js'], function(callback) {
+  webpack(require('./webpack.config.js')).run(function(err, stats) {
+    if(err) {
+      throw new gutil.PluginError('webpack', err);
+    }
+    gutil.log('[webpack]', stats.toString({
+      colors: true,
+      modules: false,
+      chunkModules: false
+    }));
+    callback();
+  });
+});
 
 gulp.task('lint', getTask('lint', {
   src: [
-    src + 'javascripts/**/*.js',
+    paths.src + 'javascripts/**/*.js',
     'gulpfile.js',
     'test/**/*.js'
   ]
 }));
 
 gulp.task('minify-scripts', ['lint', 'scripts'], getTask('minify-scripts', {
-  src: dest + 'javascripts/*.js',
-  dest: dest + 'javascripts'
+  src: paths.dest + 'scripts/*.js',
+  dest: paths.dest + 'scripts'
 }));
 
 
 gulp.task('images', ['clean:images'], getTask('images', {
   src: [
-    src + 'images/**/*',
-    src + 'bower_components/hopscotch-highlight/src/images/**/*'
+    paths.src + 'images/**/*',
+    paths.govukElements + 'images/**/*',
+    paths.common + 'images/**/*',
+    paths.hopscotchHighlight + 'images/**/*'
   ],
-  dest: dest + 'images'
+  dest: paths.dest + 'images'
 }));
 
 
@@ -150,9 +146,10 @@ if (!production) {
     });
 
     gulp.watch('**/templates/**/*').on('change', browsersyncReloadDelayed);
-    gulp.watch(src + 'stylesheets/**/*', ['sass-reload']);
-    gulp.watch(src + 'images/**', ['img-reload']);
-    gulp.watch(src + 'javascripts/**/*.js', ['js-reload']);
+    gulp.watch(paths.src + 'stylesheets/**/*', ['sass-reload']);
+    gulp.watch(paths.src + 'images/**', ['img-reload']);
+    gulp.watch(paths.src + 'javascripts/**/*.js', ['js-reload']);
+    gulp.watch(paths.common + '/**/*.js', ['scripts']);
     if (argv.dirs) {
       argv.dirs.split(':').forEach(function(dir) {
         gulp.watch(dir + '/**/*', ['build-reload']);
