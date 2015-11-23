@@ -10,9 +10,7 @@
   </header>
 
 
-  <form method="post" class="print-hidden" action="">
-    {% csrf_token %}
-
+  <form method="get" class="print-hidden" action="">
     {% if form.errors %}
       <div class="error-summary" aria-labelledby="error-summary-heading" tabindex="-1" role="alert">
         <h1 class="error-summary-heading heading-medium" id="error-summary-heading">{% trans 'There was a problem submitting the form' %}</h1>
