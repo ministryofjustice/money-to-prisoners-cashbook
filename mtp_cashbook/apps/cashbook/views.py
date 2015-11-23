@@ -131,8 +131,8 @@ class TransactionHistoryView(FormView):
         today = now().date()
         seven_days_ago = today - datetime.timedelta(days=7)
         initial.update({
-            'received_at_0': seven_days_ago,
-            'received_at_1': today,
+            'start': seven_days_ago,
+            'end': today,
         })
         return initial
 
