@@ -239,10 +239,10 @@ class FilterTransactionHistoryFormTestCase(SimpleTestCase):
         form = self.fill_in_form(data)
         self.assertFalse(form.is_valid())
 
-    def test_history_filter_form(self):
+    def test_valid_history_filter_form(self):
         self.assertValidForm({
-            'received_at_0': '10/10/2015',
-            'received_at_1': '17/10/2015',
+            'start': '10/10/2015',
+            'end': '17/10/2015',
             'owner': '',
             'search': '',
         }, {
@@ -252,8 +252,8 @@ class FilterTransactionHistoryFormTestCase(SimpleTestCase):
             'search': '',
         })
         self.assertValidForm({
-            'received_at_0': '2015-10-10',
-            'received_at_1': '2015-10-17',
+            'start': '2015-10-10',
+            'end': '2015-10-17',
             'owner': 'all',
             'search': '',
         }, {
@@ -262,8 +262,8 @@ class FilterTransactionHistoryFormTestCase(SimpleTestCase):
             'search': '',
         })
         self.assertValidForm({
-            'received_at_0': '10/10/2015',
-            'received_at_1': '17/10/2015',
+            'start': '10/10/2015',
+            'end': '17/10/2015',
             'owner': 'all',
             'search': 'John',
         }, {
@@ -272,14 +272,21 @@ class FilterTransactionHistoryFormTestCase(SimpleTestCase):
             'search': 'John',
         })
 
+    def test_invalid_history_filter_form(self):
         self.assertInvalidForm({
-            'received_at_0': '',
-            'received_at_1': '',
+            'start': '',
+            'end': '',
             'owner': '',
             'search': '',
         })
         self.assertInvalidForm({
-            'received_at_0': '11/10/2015',
+            'start': '11/10/2015',
+            'end': '10/10/2015',
+            'owner': '',
+            'search': '',
+        })
+        self.assertInvalidForm({
+            'received_at_0': '01/10/2015',
             'received_at_1': '10/10/2015',
             'owner': '',
             'search': '',

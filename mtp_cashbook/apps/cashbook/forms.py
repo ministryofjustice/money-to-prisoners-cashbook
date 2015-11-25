@@ -116,10 +116,10 @@ class DiscardLockedTransactionsForm(forms.Form):
 
 
 class FilterTransactionHistoryForm(forms.Form):
-    received_at_0 = forms.DateField(required=True, label=_('Received at start date'),
-                                    widget=MtpDateInput)
-    received_at_1 = forms.DateField(required=True, label=_('Received at end date'),
-                                    widget=MtpDateInput)
+    start = forms.DateField(required=True, label=_('Received at start date'),
+                            widget=MtpDateInput)
+    end = forms.DateField(required=True, label=_('Received at end date'),
+                          widget=MtpDateInput)
     search = forms.CharField(required=False, label=_('Search prisoners, senders and payment amounts'),
                              widget=MtpTextInput)
     owner = forms.ChoiceField(required=False, label=_('Payments processed by'), initial='',
@@ -133,10 +133,10 @@ class FilterTransactionHistoryForm(forms.Form):
         self.client = get_connection(request)
 
     def clean(self):
-        received_at_0 = self.cleaned_data.get('received_at_0')
-        received_at_1 = self.cleaned_data.get('received_at_1')
-        if received_at_0 and received_at_1 and received_at_0 > received_at_1:
-            self.add_error('received_at_1', _('The end date must be after the start date.'))
+        start = self.cleaned_data.get('start')
+        end = self.cleaned_data.get('end')
+        if start and end and start > end:
+            self.add_error('end', _('The end date must be after the start date.'))
         return super().clean()
 
     @cached_property
@@ -161,6 +161,15 @@ class FilterTransactionHistoryForm(forms.Form):
         else:
             # invalid form
             return []
+
+        renames = (
+            ('start', 'received_at_0'),
+            ('end', 'received_at_1'),
+        )
+        for field_name, api_name in renames:
+            if field_name in filters:
+                filters[api_name] = filters[field_name]
+                del filters[field_name]
 
         response = self.client.cashbook.transactions.get(**filters)
         return response.get('results', [])

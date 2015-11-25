@@ -124,25 +124,43 @@ class TransactionHistoryView(FormView):
     form_class = FilterTransactionHistoryForm
     template_name = 'cashbook/transactions_history.html'
     success_url = reverse_lazy('transaction-history')
+    http_method_names = ['get', 'options']
 
     def get_initial(self):
         initial = super().get_initial()
         today = now().date()
         seven_days_ago = today - datetime.timedelta(days=7)
         initial.update({
-            'received_at_0': seven_days_ago,
-            'received_at_1': today,
+            'start': seven_days_ago,
+            'end': today,
         })
         return initial
 
     def get_form_kwargs(self):
-        form_kwargs = super().get_form_kwargs()
-        form_kwargs['request'] = self.request
+        form_kwargs = {
+            'request': self.request,
+            'initial': self.get_initial(),
+            'prefix': self.get_prefix(),
+        }
+        if 'search' in self.request.GET:
+            # use search field as a flag for form being submitted
+            form_kwargs.update({
+                'data': self.request.GET
+            })
         return form_kwargs
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        form = self.get_form()
+        if form.is_bound:
+            if form.is_valid():
+                return self.form_valid(form)
+            else:
+                return self.form_invalid(form)
+        return self.render_to_response(self.get_context_data(form=form))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
