@@ -41,15 +41,15 @@
     {% endif %}
 
     <div class="grid-row">
-    <div id="form-group-search" class="form-group ">
+    <div id="form-group-search" class="form-group {% if form.search.errors %}error{% endif %}">
         <div class="column-full">
           <label for="id_search" id="id_search-label" class="form-label">
             {% trans 'Prisoner name, prisoner number or sender name' %}
-            {% for error in field.errors %}
+            {% for error in form.search.errors %}
               <span class="error-message">{{ error }}</span>
             {% endfor %}
           </label>
-          <input class=" form-control" id="id_search" name="search" type="text" />
+          <input class="form-control" id="id_search" name="search" type="text" value="{{ form.search.value|default_if_none:'' }}" />
         </div>
       </div>
     </div>
@@ -57,25 +57,25 @@
     <div class="grid-row">
       <div class="column-full"><label>{% trans 'Date received' %}</label></div>
       <div class="column-half">
-        <div id="form-group-start" class="form-group ">
+        <div id="form-group-start" class="form-group {% if form.start.errors %}error{% endif %}">
           <label for="id_start" id="id_start-label" class="form-label">
             {% trans 'From' %}
-            {% for error in field.errors %}
+            {% for error in form.start.errors %}
               <span class="error-message">{{ error }}</span>
             {% endfor %}
           </label>
-          <input class=" form-control js-FormDateControl" id="id_start" name="start" type="text" value="19/11/2015" />
+          <input class="form-control js-FormDateControl" id="id_start" name="start" type="text" value="{{ form.start.value|date:'d/m/Y'|default:form.start.value }}" />
         </div>
       </div>
       <div class="column-half">
-        <div id="form-group-end" class="form-group ">
+        <div id="form-group-end" class="form-group {% if form.end.errors %}error{% endif %}">
           <label for="id_end" id="id_end-label" class="form-label">
             {% trans 'To' %}
-            {% for error in field.errors %}
+            {% for error in form.end.errors %}
               <span class="error-message">{{ error }}</span>
             {% endfor %}
           </label>
-          <input class=" form-control js-FormDateControl" id="id_end" name="end" type="text" value="26/11/2015" />
+          <input class="form-control js-FormDateControl" id="id_end" name="end" type="text" value="{{ form.end.value|date:'d/m/Y'|default:form.end.value }}" />
         </div>
       </div>
     </div>
