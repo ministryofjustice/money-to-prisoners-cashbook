@@ -145,15 +145,12 @@ class DiscardLockedTransactionsForm(forms.Form):
 
 
 class FilterTransactionHistoryForm(forms.Form):
-    start = forms.DateField(required=True, label=_('Received at start date'),
-                            widget=MtpDateInput)
-    end = forms.DateField(required=True, label=_('Received at end date'),
-                          widget=MtpDateInput)
-    search = forms.CharField(required=False, label=_('Search prisoners, senders and payment amounts'),
-                             widget=MtpTextInput)
-    owner = forms.ChoiceField(required=False, label=_('Payments processed by'), initial='',
-                              choices=[('', _('Me')), ('all', _('Anybody'))],
-                              widget=forms.RadioSelect(renderer=MtpInlineRadioFieldRenderer))
+    start = forms.DateField(label=_('From received date'),
+                            required=True, widget=MtpDateInput)
+    end = forms.DateField(label=_('To received date'),
+                          required=True, widget=MtpDateInput)
+    search = forms.CharField(label=_('Prisoner name, prisoner number or sender name'),
+                             required=False, widget=MtpTextInput)
 
     def __init__(self, request, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -170,18 +167,14 @@ class FilterTransactionHistoryForm(forms.Form):
 
     @cached_property
     def transaction_choices(self):
-        filters = {
-            'user': self.user.pk,
-        }
+        filters = {}
 
-        fields = set(self.fields.keys()) - {'owner'}
+        fields = set(self.fields.keys())
         if self.is_valid():
             # valid form
             for field in fields:
                 if field in self.cleaned_data:
                     filters[field] = self.cleaned_data[field]
-            if self.cleaned_data['owner'] == 'all':
-                del filters['user']
         elif not self.is_bound:
             # no form submission
             for field in fields:

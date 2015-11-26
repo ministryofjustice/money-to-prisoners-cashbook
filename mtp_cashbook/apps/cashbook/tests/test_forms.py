@@ -262,18 +262,15 @@ class FilterTransactionHistoryFormTestCase(SimpleTestCase):
         self.assertValidForm({
             'start': '10/10/2015',
             'end': '17/10/2015',
-            'owner': '',
             'search': '',
         }, {
             'received_at_0': datetime.date(2015, 10, 10),
             'received_at_1': datetime.date(2015, 10, 17),
-            'user': 100,
             'search': '',
         })
         self.assertValidForm({
             'start': '2015-10-10',
             'end': '2015-10-17',
-            'owner': 'all',
             'search': '',
         }, {
             'received_at_0': datetime.date(2015, 10, 10),
@@ -283,7 +280,6 @@ class FilterTransactionHistoryFormTestCase(SimpleTestCase):
         self.assertValidForm({
             'start': '10/10/2015',
             'end': '17/10/2015',
-            'owner': 'all',
             'search': 'John',
         }, {
             'received_at_0': datetime.date(2015, 10, 10),

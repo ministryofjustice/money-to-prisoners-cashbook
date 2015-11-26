@@ -40,8 +40,7 @@ var sharedSteps = function(){
   this.When(
     /^I click on the "([^"]+)" (link|button)$/,
     function(text, targetType, next) {
-      var selector = (targetType === 'link') ? 'a' : 'button';
-      browser.click(selector+'='+text, next);
+      browser.click('//a[text()="'+text+'"] | //button[text()="'+text+'"] | //input[@value="'+text+'"]', next);
     }
   );
 
@@ -82,7 +81,7 @@ var sharedSteps = function(){
    * Check the current page title matches
    * supplied title
    *
-   * Usage: Then I should "some title" as the page title
+   * Usage: Then I should see "some title" as the page title
    *
    * @params {string} text The title to check for
    * @params {function} next The callback function of the scenario
@@ -91,6 +90,22 @@ var sharedSteps = function(){
     browser
       .getTitle()
       .should.eventually.equal(title)
+      .and.notify(next);
+  });
+
+  /**
+   * Check the current page has a button with the
+   * supplied label
+   *
+   * Usage: Then I should see "some label" button
+   *
+   * @params {string} text The label of the button to check for
+   * @params {function} next The callback function of the scenario
+   */
+  this.Then(/^I should see a "([^"]*)" button$/, function(text, next) {
+    browser
+      .getValue('input[type=submit]')
+      .should.eventually.contain(text)
       .and.notify(next);
   });
 
