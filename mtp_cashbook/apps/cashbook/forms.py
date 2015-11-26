@@ -116,9 +116,12 @@ class DiscardLockedTransactionsForm(forms.Form):
 
 
 class FilterTransactionHistoryForm(forms.Form):
-    start = forms.DateField(required=True, widget=MtpDateInput)
-    end = forms.DateField(required=True, widget=MtpDateInput)
-    search = forms.CharField(required=False, widget=MtpTextInput)
+    start = forms.DateField(label=_('From received date'),
+                            required=True, widget=MtpDateInput)
+    end = forms.DateField(label=_('To received date'),
+                          required=True, widget=MtpDateInput)
+    search = forms.CharField(label=_('Prisoner name, prisoner number or sender name'),
+                             required=False, widget=MtpTextInput)
 
     def __init__(self, request, *args, **kwargs):
         super().__init__(*args, **kwargs)
