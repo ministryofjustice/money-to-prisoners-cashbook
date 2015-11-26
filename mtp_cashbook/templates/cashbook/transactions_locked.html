@@ -4,16 +4,16 @@
 {% block content %}
   <header class="ContentHeader">
     <a href="{% url 'dashboard' %}" class="ContentHeader-back">{% trans 'Home' %}</a>
-    <h1>{% trans 'Credits being processed' %}</h1>
-    {% if object_list %}
-    <p>{% trans 'These credits are being processed by other staff. Tick a credit to return it to ‘New credits’ if processing can’t be completed, eg due to staff absence.' %}</p>
-    {% endif %}
+    <h1>{% trans 'Credits in progress' %}</h1>
   </header>
 
-  <form method="post" action="">
+  <form method="post" action="" class="locked">
   {% csrf_token %}
 
   {% if object_list %}
+
+    <p>{% trans 'See the credits your team are working on. Click ‘unlock’ to move them back into ‘New credits’ to be processed by someone else' %}</p>
+
     {% include "cashbook/includes/locked_buttons.html" %}
 
     {{ form.errors }}
@@ -24,31 +24,29 @@
           {% include "cashbook/includes/table_actions.html" with location='header' field_name=form.transactions.html_name print=False %}
 
           <tr>
-            <th>{% trans "Prisoner no" %}</th>
-            <th>{% trans "Prisoner name" %}</th>
+            <th>{% trans "Staff name" %}</th>
+            <th>{% trans "Credits" %}</th>
             <th>{% trans "Amount" %}</th>
-            <th>{% trans "Sender" %}</th>
-            <th>{% trans "Select" %}</th>
+            <th>{% trans "Time in progress" %}</th>
+            <th>{% trans "Unlock" %}</th>
           </tr>
         </thead>
 
         <tbody>
-        {% for transaction_pk, transaction in object_list %}
+        {% for transaction_locked_ids, transaction_group in object_list %}
           <tr {% if forloop.counter|divisibleby:2 %}{% else %}class="odd"{% endif %}>
-            <td>{{ transaction.prisoner_number }}</td>
-            <td>{{ transaction.prisoner_name }}</td>
-            <td class="numeric">&pound;{{ transaction.amount|currency }}</td>
-            <td>{{ transaction.sender }}</td>
+            <td title="{{ transaction_group.owner_prison }}">{{ transaction_group.owner_name }}</td>
+            <td class="numeric">{{ transaction_group.locked_count }}</td>
+            <td class="numeric">£{{ transaction_group.locked_amount|currency }}</td>
+            <td>{{ transaction_group.locked_at_earliest|timesince }}</td>
             <td class="check">
               <input
                 type="checkbox"
                 name="{{ form.transactions.html_name }}"
-                value="{{ transaction_pk }}"
-                id="check-{{ transaction.id }}"
-                {% if transaction_pk|to_string in form.transactions.value %}checked{% endif %}
-                class="js-RunningTotal-item"
-                data-amount="{{ transaction.amount|currency }}">
-              <label for="check-{{ transaction.id }}">{% trans "Select" %}</label>
+                value="{{ transaction_locked_ids }}"
+                id="check-{{ transaction_group.owner }}"
+                {% if transaction_locked_ids in form.transactions.value %}checked{% endif %}>
+              <label for="check-{{ transaction_group.owner }}">{% trans "Unlock" %}</label>
             </td>
           </tr>
         {% endfor %}
@@ -62,7 +60,7 @@
 
     {% include "cashbook/includes/locked_buttons.html" %}
   {% else %}
-    <p>{% trans "No credits being processed" %}</p>
+    <p>{% trans "No credits in progress" %}</p>
   {% endif %}
   </form>
 {% endblock content %}

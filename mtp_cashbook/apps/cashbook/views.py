@@ -102,7 +102,7 @@ class TransactionsLockedView(FormView):
     def get_context_data(self, **kwargs):
         context = super(TransactionsLockedView, self).get_context_data(**kwargs)
 
-        context['object_list'] = context['form'].transaction_choices
+        context['object_list'] = context['form'].grouped_transaction_choices
         return context
 
     def form_valid(self, form):

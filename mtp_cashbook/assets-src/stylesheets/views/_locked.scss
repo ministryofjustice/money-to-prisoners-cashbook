@@ -1,0 +1,7 @@
+.locked {
+  width: 65%;
+
+  @include breakpoint($mobile) {
+    width: 100%;
+  }
+}

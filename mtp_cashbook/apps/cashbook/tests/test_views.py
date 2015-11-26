@@ -1,8 +1,8 @@
 import datetime
-import mock
+from unittest import mock
 
 from django.core.urlresolvers import reverse
-from django.utils.timezone import now
+from django.utils.timezone import now, utc
 
 from core.testing.testcases import MTPBaseTestCase
 
@@ -89,6 +89,103 @@ class DashboardViewTestCase(MTPBaseTestCase):
         response = self.client.get(self.dashboard_url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['locked_transactions'], 19)
+
+
+class LockedViewTestCase(MTPBaseTestCase):
+    @mock.patch('cashbook.views.api_client')
+    @mock.patch('cashbook.forms.get_connection')
+    def __call__(self, result, mocked_get_connection, mocked_api_client):
+        self.mocked_api_client = mocked_api_client
+        self.mocked_get_connection = mocked_get_connection
+        super().__call__(result)
+
+    @property
+    def locked_url(self):
+        return reverse('transactions-locked')
+
+    def test_cannot_access_if_not_logged_in(self):
+        response = self.client.get(self.locked_url)
+
+        redirect_url = '{login_url}?next={locked_url}'.format(
+            login_url=self.login_url,
+            locked_url=self.locked_url
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, redirect_url)
+
+    def test_no_locked_credits(self):
+        self.login()
+        api_endpoint = self.mocked_get_connection().cashbook.transactions.locked.get
+        api_endpoint.return_value = {
+            'count': 0,
+            'results': []
+        }
+        response = self.client.get(self.locked_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['object_list'], [])
+
+    def test_locked_credits_are_grouped(self):
+        api_responses = [
+            {
+                'count': 3,
+                'results': [{
+                    'id': 1,
+                    'owner': 1,
+                    'owner_name': 'Fred',
+                    'prison': 2,
+                    'amount': 1123,
+                    'locked_at': '2015-10-10T12:00:00Z',
+                }]
+            },
+            {
+                'count': 3,
+                'results': [{
+                    'id': 2,
+                    'owner': 2,
+                    'owner_name': 'Mary',
+                    'prison': 2,
+                    'amount': 1000,
+                    'locked_at': '2015-10-10T13:00:00Z',
+                }]
+            },
+            {
+                'count': 3,
+                'results': [{
+                    'id': 3,
+                    'owner': 1,
+                    'owner_name': 'Fred',
+                    'prison': 2,
+                    'amount': 5000,
+                    'locked_at': '2015-10-10T14:00:00Z',
+                }]
+            },
+        ]
+        expected_groups = [
+            ('1 3', {
+                'owner': 1,
+                'owner_name': 'Fred',
+                'owner_prison': 2,
+                'locked_count': 2,
+                'locked_amount': 6123,
+                'locked_at_earliest': utc.localize(datetime.datetime(2015, 10, 10, 12)),
+            }),
+            ('2', {
+                'owner': 2,
+                'owner_name': 'Mary',
+                'owner_prison': 2,
+                'locked_count': 1,
+                'locked_amount': 1000,
+                'locked_at_earliest': utc.localize(datetime.datetime(2015, 10, 10, 13)),
+            })
+        ]
+
+        self.login()
+        api_endpoint = self.mocked_get_connection().cashbook.transactions.locked.get
+        api_endpoint.side_effect = api_responses
+
+        response = self.client.get(self.locked_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['object_list'], expected_groups)
 
 
 class HistoryViewTestCase(MTPBaseTestCase):
