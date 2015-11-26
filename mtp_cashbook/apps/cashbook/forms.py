@@ -22,9 +22,8 @@ class ProcessTransactionBatchForm(forms.Form):
         self.fields['transactions'].choices = self.transaction_choices
 
     def _request_locked_transactions(self):
-        return self.client.cashbook.transactions.get(
-            status='locked', user=self.user.pk
-        )
+        return retrieve_all_pages(self.client.cashbook.transactions.get,
+                                  status='locked', user=self.user.pk)
 
     def _take_transactions(self):
         self.client.cashbook.transactions.actions.lock.post()
@@ -48,11 +47,10 @@ class ProcessTransactionBatchForm(forms.Form):
         Gets the transactions currently locked by the user if they exist
         or locks some and returns them if not.
         """
-        resp = self._request_locked_transactions()
-        if not self.is_bound and resp.get('count') == 0:
+        transactions = self._request_locked_transactions()
+        if not self.is_bound and len(transactions) == 0:
             self._take_transactions()
-            resp = self._request_locked_transactions()
-        transactions = resp.get('results', [])
+            transactions = self._request_locked_transactions()
 
         return [
             (t['id'], t) for t in transactions
@@ -202,5 +200,4 @@ class FilterTransactionHistoryForm(forms.Form):
                 filters[api_name] = filters[field_name]
                 del filters[field_name]
 
-        response = self.client.cashbook.transactions.get(**filters)
-        return response.get('results', [])
+        return retrieve_all_pages(self.client.cashbook.transactions.get, **filters)

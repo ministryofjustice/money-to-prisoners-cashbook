@@ -1,6 +1,7 @@
 import datetime
 import mock
 
+from django.conf import settings
 from django.test.testcases import SimpleTestCase
 
 from cashbook.forms import ProcessTransactionBatchForm, DiscardLockedTransactionsForm, \
@@ -44,7 +45,7 @@ class ProcessTransactionBatchFormTestCase(SimpleTestCase):
             transactions.get.side_effect = [
                 {
                     'count': 0,
-                    'results': 0
+                    'results': []
                 },
             ] + [self.locked_transactions_response]
 
@@ -246,6 +247,11 @@ class FilterTransactionHistoryFormTestCase(SimpleTestCase):
         form = self.fill_in_form(data)
         self.assertTrue(form.is_valid())
         response = form.transaction_choices
+        self.assertEqual(response, [])
+        api_called_with.update({
+            'limit': settings.REQUEST_PAGE_SIZE,
+            'offset': 0,
+        })
         self.api_call.assert_called_with(**api_called_with)
 
     def assertInvalidForm(self, data):
