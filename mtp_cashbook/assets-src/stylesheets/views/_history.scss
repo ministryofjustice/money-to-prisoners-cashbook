@@ -1,4 +1,13 @@
+form.HistorySearch {
+  width: 45%;
+  .grid-row input {
+    width: 100%;
+    margin-bottom: 1em;
+  }
+}
+
 .batch-history {
+  width: 80%;
   table {
     width: 100%;
     margin-top: 0;

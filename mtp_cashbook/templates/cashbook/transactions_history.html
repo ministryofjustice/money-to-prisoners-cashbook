@@ -6,11 +6,11 @@
 {% block content %}
   <header class="ContentHeader">
     <a href="{% url 'dashboard' %}" class="ContentHeader-back">{% trans 'Home' %}</a>
-    <h1>{% trans 'Payment history' %}</h1>
+    <h1>{% trans 'Credit history' %}</h1>
   </header>
 
 
-  <form method="get" class="print-hidden" action="">
+  <form method="get" class="print-hidden HistorySearch" action="">
     {% if form.errors %}
       <div class="error-summary" aria-labelledby="error-summary-heading" tabindex="-1" role="alert">
         <h1 class="error-summary-heading heading-medium" id="error-summary-heading">{% trans 'There was a problem submitting the form' %}</h1>
@@ -40,18 +40,45 @@
       </div>
     {% endif %}
 
-    {% for field in form %}
-      <div id="form-group-{{ field.html_name }}" class="form-group {% if field.errors %}error{% endif %}">
-        <label for="{{ field.id_for_label }}" id="{{ field.auto_id }}-label" class="form-label">
-          {{ field.label }}
-          {% for error in field.errors %}
-            <span class="error-message">{{ error }}</span>
-          {% endfor %}
-        </label>
-        {{ field }}
+    <div class="grid-row">
+    <div id="form-group-search" class="form-group ">
+        <div class="column-full">
+          <label for="id_search" id="id_search-label" class="form-label">
+            {% trans 'Prisoner name, prisoner number or sender name' %}
+            {% for error in field.errors %}
+              <span class="error-message">{{ error }}</span>
+            {% endfor %}
+          </label>
+          <input class=" form-control" id="id_search" name="search" type="text" />
+        </div>
       </div>
-    {% endfor %}
+    </div>
 
+    <div class="grid-row">
+      <div class="column-full"><label>Date received<label></div>
+      <div class="column-half">
+        <div id="form-group-start" class="form-group ">
+          <label for="id_start" id="id_start-label" class="form-label">
+            {% trans 'From' %}
+            {% for error in field.errors %}
+              <span class="error-message">{{ error }}</span>
+            {% endfor %}
+          </label>
+          <input class=" form-control js-FormDateControl" id="id_start" name="start" type="text" value="19/11/2015" />
+        </div>
+      </div>
+      <div class="column-half">
+        <div id="form-group-end" class="form-group ">
+          <label for="id_end" id="id_end-label" class="form-label">
+            {% trans 'To' %}
+            {% for error in field.errors %}
+              <span class="error-message">{{ error }}</span>
+            {% endfor %}
+          </label>
+          <input class=" form-control js-FormDateControl" id="id_end" name="end" type="text" value="26/11/2015" />
+        </div>
+      </div>
+    </div>
     <div><input class="button button-secondary" type="submit" value="{% trans 'Search' %}"></div>
   </form>
 
@@ -77,11 +104,11 @@
             <a class="u-nojs-hidden print-hidden HistoryHeader-aside ShowHide js-ShowHide" href="#HistoryBatch-{{ forloop.parentloop.counter }}-{{ forloop.counter }}">
               <span class="ShowHide-hide">
                 {% trans 'Collapse' %}
-                <span class="ShowHide-icon">&minus;</span>
+                <span class="ShowHide-icon">&ndash;</span>
               </span>
               <span class="ShowHide-show">
                 {% trans 'Collapsed' %}
-                <span class="ShowHide-icon">&plus;</span>
+                <span class="ShowHide-icon">+</span>
               </span>
             </a>
           </h3>
@@ -93,10 +120,6 @@
                 <th>{% trans 'Prisoner name' %}</th>
                 <th>{% trans 'Amount' %}</th>
                 <th>{% trans 'Sender' %}</th>
-                <th>{% trans 'Payment type' %}</th>
-                <th>{% trans 'Received at' %}</th>
-                <th>{% trans 'Credited at' %}</th>
-                <th>{% trans 'Refunded at' %}</th>
                 <th>{% trans 'Processed by' %}</th>
               </tr>
             </thead>
@@ -108,22 +131,6 @@
                 <td>{{ transaction.prisoner_name }}</td>
                 <td class="numeric">&pound;{{ transaction.amount|currency }}</td>
                 <td>{{ transaction.sender }}</td>
-                <td>{% trans 'Bank transfer' %}</td>
-                <td>{{ transaction.received_at|date:'m/d/Y H:i' }}</td>
-                <td>
-                  {% if transaction.credited %}
-                    {{ transaction.credited_at|date:'m/d/Y H:i' }}
-                  {% else %}
-                    —
-                  {% endif %}
-                </td>
-                <td>
-                  {% if transaction.refunded %}
-                    {{ transaction.refunded_at|date:'m/d/Y H:i' }}
-                  {% else %}
-                    —
-                  {% endif %}
-                </td>
                 <td>{{ transaction.owner_name|default_if_none:'—' }}</td>
               </tr>
             {% endfor %}
