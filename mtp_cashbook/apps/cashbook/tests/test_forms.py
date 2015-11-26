@@ -170,7 +170,17 @@ class DiscardLockedTranscationsFormTestCase(SimpleTestCase):
 
         self.locked_transactions_response = {
             'count': 4,
-            'results': [{'id': i} for i in range(1, 5)]
+            'results': [
+                {
+                    'id': i,
+                    'owner': 1 if i % 2 else 2,
+                    'owner_name': 'Fred' if i % 2 else 'Mary',
+                    'prison': 2,
+                    'amount': 123,
+                    'locked_at': '2015-10-10T12:00:00Z',
+                }
+                for i in range(1, 5)
+            ]
         }
 
     @mock.patch('cashbook.forms.get_connection')
@@ -186,13 +196,16 @@ class DiscardLockedTranscationsFormTestCase(SimpleTestCase):
         self.mocked_get_connection().\
             cashbook.\
             transactions.\
+            locked.\
             get.return_value = self.locked_transactions_response
 
-        to_discard = ['2', '3']
+        expected_to_discard = ['1', '3']
+        form_to_discard = ['1 3']
+
         form = DiscardLockedTransactionsForm(
             self.request,
             data={
-                'transactions': to_discard
+                'transactions': form_to_discard
             }
         )
         self.assertTrue(form.is_valid())
@@ -204,7 +217,7 @@ class DiscardLockedTranscationsFormTestCase(SimpleTestCase):
         discarded_transactions = mocked_unlock.call_args[0][0]
         self.assertListEqual(
             sorted(discarded_transactions['transaction_ids']),
-            sorted(to_discard)
+            expected_to_discard
         )
 
 

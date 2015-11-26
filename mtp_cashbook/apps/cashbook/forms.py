@@ -1,7 +1,12 @@
+from functools import reduce
+from itertools import groupby
+
 from django import forms
+from django.utils.dateparse import parse_datetime
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext as _
 
+from core.utils import retrieve_all_pages
 from moj_auth.api_client import get_connection
 from .form_fields import MtpTextInput, MtpDateInput, MtpInlineRadioFieldRenderer
 
@@ -86,25 +91,51 @@ class DiscardLockedTransactionsForm(forms.Form):
         self.user = request.user
         self.client = get_connection(request)
 
-        self.fields['transactions'].choices = self.transaction_choices
+        self.fields['transactions'].choices = self.grouped_transaction_choices
 
     def _request_locked_transactions(self):
-        return self.client.cashbook.transactions.get(status='locked')
+        return retrieve_all_pages(self.client.cashbook.transactions.locked.get)
 
     @cached_property
     def transaction_choices(self):
         """
         Gets the transactions currently locked by all users for prison
         """
-        resp = self._request_locked_transactions()
-        transactions = resp.get('results', [])
+        transactions = self._request_locked_transactions()
 
         return [
             (t['id'], t) for t in transactions
         ]
 
+    @cached_property
+    def grouped_transaction_choices(self):
+        """
+        Gets transactions grouped by prison clerk who currently has them locked
+        for current prison
+        """
+        transactions = self._request_locked_transactions()
+
+        # group by locking prison clerk (needs sort first)
+        transactions = sorted(transactions, key=lambda t: '%s%d' % (t['owner_name'], t['owner']))
+        grouped_transactions = []
+        for owner, group in groupby(transactions, key=lambda t: t['owner']):
+            group = list(group)
+
+            locked_ids = ' '.join(sorted(str(t['id']) for t in group))
+            grouped_transactions.append((locked_ids, {
+                'owner': group[0]['owner'],
+                'owner_name': group[0]['owner_name'],
+                'owner_prison': group[0]['prison'],
+                'locked_count': len(group),
+                'locked_amount': sum((t['amount'] for t in group)),
+                'locked_at_earliest': parse_datetime(min((t['locked_at'] for t in group))),
+            }))
+        return grouped_transactions
+
     def save(self):
-        to_discard = set(self.cleaned_data['transactions'])
+        transaction_ids = map(str.split, self.cleaned_data['transactions'])
+        transaction_ids = reduce(list.__add__, transaction_ids, [])
+        to_discard = set(transaction_ids)
 
         # discard
         if to_discard:

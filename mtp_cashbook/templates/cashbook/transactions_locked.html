@@ -33,22 +33,20 @@
         </thead>
 
         <tbody>
-        {% for transaction_pk, transaction in object_list %}
+        {% for transaction_locked_ids, transaction_group in object_list %}
           <tr {% if forloop.counter|divisibleby:2 %}{% else %}class="odd"{% endif %}>
-            <td>FIXME</td>
-            <td class="numeric">&pound;FIXME</td>
-            <td>FIXME</td>
-            <td>FIXME</td>
+            <td title="{{ transaction_group.owner_prison }}">{{ transaction_group.owner_name }}</td>
+            <td class="numeric">{{ transaction_group.locked_count }}</td>
+            <td class="numeric">£{{ transaction_group.locked_amount|currency }}</td>
+            <td>{{ transaction_group.locked_at_earliest|timesince }}</td>
             <td class="check">
               <input
                 type="checkbox"
                 name="{{ form.transactions.html_name }}"
-                value="{{ transaction_pk }}"
-                id="check-{{ transaction.id }}"
-                {% if transaction_pk|to_string in form.transactions.value %}checked{% endif %}
-                class="js-RunningTotal-item"
-                data-amount="{{ transaction.amount|currency }}">
-              <label for="check-{{ transaction.id }}">{% trans "Unlock" %}</label>
+                value="{{ transaction_locked_ids }}"
+                id="check-{{ transaction_group.owner }}"
+                {% if transaction_locked_ids in form.transactions.value %}checked{% endif %}>
+              <label for="check-{{ transaction_group.owner }}">{% trans "Unlock" %}</label>
             </td>
           </tr>
         {% endfor %}
