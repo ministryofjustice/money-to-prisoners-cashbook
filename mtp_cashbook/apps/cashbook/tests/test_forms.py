@@ -1,5 +1,5 @@
 import datetime
-import mock
+from unittest import mock
 
 from django.conf import settings
 from django.test.testcases import SimpleTestCase

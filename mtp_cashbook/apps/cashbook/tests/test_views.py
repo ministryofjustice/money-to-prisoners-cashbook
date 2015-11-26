@@ -1,5 +1,5 @@
 import datetime
-import mock
+from unittest import mock
 
 from django.core.urlresolvers import reverse
 from django.utils.timezone import now, utc
