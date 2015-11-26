@@ -1,4 +1,4 @@
-/* globals require, console */
+/* globals require */
 
 (function() {
   'use strict';
