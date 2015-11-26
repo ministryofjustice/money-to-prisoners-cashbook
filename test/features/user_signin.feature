@@ -5,7 +5,7 @@ Feature: Signing in
 
   Scenario: Successful sign in
     Given I am on the "Sign in" page
-    When I sign in with "test_prison_1" and "test_prison_1"
+    When I sign in with "test-prison-1" and "test-prison-1"
     Then I should see "Logged in as Prison 1 Clerk"
 
   Scenario: Unsuccessful sign in

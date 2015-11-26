@@ -115,5 +115,5 @@ running on port 8000.
 
 You should be able to log into the cash book app using following credentials:
 
-- *test_prison_1 / test_prison_1* for Prison 1
-- *test_prison_2 / test_prison_2* for Prison 2
+- *test-prison-1 / test-prison-1* for Prison 1
+- *test-prison-2 / test-prison-2* for Prison 2
