@@ -89,31 +89,18 @@
 
       {% for transaction_status, transactions in group %}
         <div class="batch batch-history">
-
-          <h3 class="HistoryHeader {% if transaction_status == 'uncredited' %}HistoryHeader-uncredited{% elif transaction_status == 'refunded' %}HistoryHeader-refunded{% endif %}">
-            {% if transaction_status == 'uncredited' %}
-              {% trans 'Uncredited' %}
-            {% elif transaction_status == 'refunded' %}
-              {% trans 'Refunded' %}
-            {% else %}
-              {% trans 'Credited' %}
-            {% endif %}
-
-            <span class="HistoryHeader-aside HistoryHeader-aside-right">{% trans 'Total' %}: £{{ transactions|sum_transactions|currency }}</span>
-
-            <a class="u-nojs-hidden print-hidden HistoryHeader-aside ShowHide js-ShowHide" href="#HistoryBatch-{{ forloop.parentloop.counter }}-{{ forloop.counter }}">
-              <span class="ShowHide-hide">
-                {% trans 'Collapse' %}
-                <span class="ShowHide-icon">&ndash;</span>
-              </span>
-              <span class="ShowHide-show">
-                {% trans 'Collapsed' %}
-                <span class="ShowHide-icon">+</span>
-              </span>
-            </a>
-          </h3>
-
           <table id="HistoryBatch-{{ forloop.parentloop.counter }}-{{ forloop.counter }}">
+            <caption
+              class="HistoryHeader {% if transaction_status == 'uncredited' %}HistoryHeader-uncredited{% elif transaction_status == 'refunded' %}HistoryHeader-refunded{% endif %}">
+                {% if transaction_status == 'uncredited' %}
+                  {% trans 'Uncredited' %}
+                {% elif transaction_status == 'refunded' %}
+                  {% trans 'Refunded' %}
+                {% else %}
+                  {% trans 'Credited' %}
+                {% endif %}
+              <span class="HistoryHeader-aside HistoryHeader-aside-right">{% trans 'Total' %}: £{{ transactions|sum_transactions|currency }}</span>
+            </caption>
             <thead>
               <tr>
                 <th>{% trans 'Prisoner no' %}</th>
@@ -123,7 +110,6 @@
                 <th>{% trans 'Processed by' %}</th>
               </tr>
             </thead>
-
             <tbody>
             {% for transaction in transactions %}
               <tr {% if not forloop.counter|divisibleby:2 %}class="odd"{% endif %}>
