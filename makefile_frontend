@@ -1,0 +1,73 @@
+SHELL = /bin/bash
+PATH = ./node_modules/.bin:/usr/local/bin:/bin:/usr/bin
+MTP_COMMON = ./node_modules/money-to-prisoners-common
+GOVUK_ELEMENTS = ./node_modules/mojular-govuk-elements
+MOJ_ELEMENTS = ./node_modules/mojular-moj-elements
+TESTS = test
+
+ASSETS_TARGET = ./mtp_cashbook/assets
+ASSETS_SOURCE = ./mtp_cashbook/assets-src
+
+JS_TARGET = $(ASSETS_TARGET)/scripts/app.bundle.js
+JS_SOURCE := $(shell find -L $(ASSETS_SOURCE)/javascripts $(MTP_COMMON)/assets/javascripts -name \*.js)
+TEST_JS := $(shell find $(TESTS) -name \*.js)
+
+CSS_TARGET = $(ASSETS_TARGET)/stylesheets/app.css
+CSS_MINIFIED_TARGET = $(ASSETS_TARGET)/stylesheets/app.min.css
+
+CSS_SOURCE := $(shell find -L $(ASSETS_SOURCE) $(GOVUK_ELEMENTS) $(MOJ_ELEMENTS) $(MTP_COMMON) -name \*.scss)
+CSS_LOAD_PATH = --include-path ./node_modules/hopscotch-highlight/src/stylesheets --include-path ./node_modules/hopscotch/dist/css --include-path ./node_modules/breakpoint-sass/stylesheets --include-path ./node_modules/include-media/dist --include-path ./node_modules/bourbon/app/assets/stylesheets --include-path ./node_modules/susy/sass --include-path $(ASSETS_SOURCE)/stylesheets --include-path $(GOVUK_ELEMENTS)/sass --include-path $(MOJ_ELEMENTS)/sass --include-path $(MTP_COMMON)/assets/scss --include-path ./node_modules
+
+WATCHLIST := $(TESTS) $(ASSETS_SOURCE) $(MTP_COMMON) $(GOVUK_ELEMENTS) $(MOJ_ELEMENTS)
+
+
+#################
+#### RECIPES ####
+#################
+
+.PHONY: all watch clean serve sync start help collect_assets
+
+# if no arguments passed, print help message
+help:
+	@echo "run as: $0 [watch clean serve sync start all]"
+
+# start the server normally
+start: collect_assets
+	./run.sh start
+
+# compile all the things
+all: collect_assets node_modules $(JS_TARGET) $(CSS_MINIFIED_TARGET)
+
+# remove all the things
+clean:
+	rm -rf $(ASSETS_TARGET)
+
+# run normally but monitor assets and recompile them when they change
+watch: collect_assets
+	./run.sh watch $(WATCHLIST)
+
+# as above but also run browser-sync for dynamic browser reload
+serve: collect_assets
+	./run.sh serve $(WATCHLIST)
+
+collect_assets:
+	mkdir -p $(MTP_COMMON)/mtp_cashbook/assets/images
+	cp $(MTP_COMMON)/assets/images/* ./mtp_cashbook/assets/images
+
+######################
+#### FILE TARGETS ####
+######################
+
+$(JS_TARGET): $(JS_SOURCE) $(TEST_JS)
+	jshint $<
+	webpack
+
+$(CSS_TARGET): $(CSS_SOURCE)
+	node-sass $(CSS_LOAD_PATH) $(ASSETS_SOURCE)/stylesheets/app.scss $@ > /dev/null
+
+$(CSS_MINIFIED_TARGET): $(CSS_TARGET)
+	cleancss -o $@ $<
+
+node_modules:
+	npm install
+	#npm link ...
