@@ -43,7 +43,7 @@ ROOT_URLCONF = 'mtp_cashbook.urls'
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    'moj_auth.csrf.CsrfViewMiddleware',
     'moj_auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -59,6 +59,7 @@ SESSION_COOKIE_SECURE = False
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 CSRF_COOKIE_HTTPONLY = True
 CSRF_COOKIE_SECURE = False
+CSRF_FAILURE_VIEW = 'moj_auth.csrf.csrf_failure'
 
 
 # Database
