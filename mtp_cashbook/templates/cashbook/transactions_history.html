@@ -85,7 +85,7 @@
 
   {% if object_list %}
     {% for transaction_date, group in object_list|parse_date_fields|regroup_transactions %}
-      <h2>{{ transaction_date|date:'DATE_FORMAT' }}</h2>
+      <h3>{{ transaction_date|date:'DATE_FORMAT' }}</h3>
 
       {% for transaction_status, transactions in group %}
         <div class="batch batch-history">

@@ -10,7 +10,7 @@ form.HistorySearch {
   width: 80%;
   table {
     width: 100%;
-    margin-top: 0;
+    margin-bottom: 1.5em;
     font-size: 0.7em;
 
     thead th {
@@ -20,12 +20,12 @@ form.HistorySearch {
 }
 
 .HistoryHeader {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: bold;
   position: relative;
   margin: 0;
   padding: 0.6em .5em;
-  background: $green-25;
+  background: #CDE2B7;
   border-bottom: 1px solid $grey-1;
   text-align: center;
   line-height: 1.2em;
@@ -38,11 +38,13 @@ form.HistorySearch {
     position: absolute;
     left: 1em;
     top: 40%;
-    height: 1.5em;
+    height: 1.7em;
     margin-top: -0.5em;
     font-size: 0.75em;
     font-weight: normal;
+    line-height: 1.9em;
   }
+
   .HistoryHeader-aside-right {
     left: auto;
     right: 1em;
@@ -58,7 +60,7 @@ form.HistorySearch {
 }
 
 .HistoryHeader-refunded {
-  background: $mellow-red-25;
+  background: #FFD9D9;
 }
 
 .inline .block-label {
