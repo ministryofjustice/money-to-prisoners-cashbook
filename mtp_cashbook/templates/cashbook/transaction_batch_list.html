@@ -56,6 +56,10 @@
 
         {% include "cashbook/includes/batch_buttons.html" %}
 
+        <div class="print-box">
+          {% trans "Remember to click 'Done' in the digital cashbook when you’ve processed credits in NOMIS." %}
+        </div>
+
         <table id="tour-step1">
           <thead>
             {% include "cashbook/includes/table_actions.html" with location='header' field_name=form.transactions.html_name %}
