@@ -4,6 +4,7 @@
 
     @include print {
       margin-top: 0;
+      border-bottom: 0;
     }
 
     p {
@@ -63,6 +64,10 @@
   .batch {
     margin: 0;
     width: 70%;
+    @include print {
+      width: 100%;
+      margin-bottom: 2em;
+    }
   }
 
   .batch-buttons {
@@ -95,5 +100,8 @@
   padding: 10px 0 10px 10px;
   span {
     padding-right: 1em;
+  }
+  @include print {
+    display: none;
   }
 }
