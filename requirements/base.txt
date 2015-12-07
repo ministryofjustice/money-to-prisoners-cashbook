@@ -3,4 +3,5 @@ slumber==0.7.1
 django-widget-tweaks==1.4.1
 git+git://github.com/ministryofjustice/django-moj-auth.git
 git+git://github.com/ministryofjustice/django-utils.git
+git+git://github.com/ministryofjustice/django-zendesk-tickets.git
 pytz>=2015.7

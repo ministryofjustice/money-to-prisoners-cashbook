@@ -34,6 +34,7 @@ PROJECT_APPS = (
     'moj_utils',
     'widget_tweaks',
     'cashbook',
+    'zendesk_tickets'
 )
 INSTALLED_APPS += PROJECT_APPS
 
@@ -129,6 +130,17 @@ OAUTHLIB_INSECURE_TRANSPORT = True
 REQUEST_PAGE_SIZE = 100
 
 GOOGLE_ANALYTICS_ID = os.environ.get('GOOGLE_ANALYTICS_ID', None)
+
+ZENDESK_BASE_URL = 'https://ministryofjustice.zendesk.com'
+ZENDESK_API_USERNAME = os.environ.get('ZENDESK_API_USERNAME', '')
+ZENDESK_API_TOKEN = os.environ.get('ZENDESK_API_TOKEN', '')
+ZENDESK_REQUESTER_ID = os.environ.get('ZENDESK_REQUESTER_ID', '')
+ZENDESK_GROUP_ID = 26417927
+ZENDESK_CUSTOM_FIELDS = {
+    'referer': 26047167,
+    'username': 29241738,
+    'user_agent': 23791776
+}
 
 try:
     from .local import *  # noqa
