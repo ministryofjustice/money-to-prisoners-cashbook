@@ -11,6 +11,7 @@ IMAGES_DST_DIR=./mtp_cashbook/assets/images
 # restarts
 function clean_up {
   echo "Killing all spawned processes."
+  echo kill -- -$(ps -o pgid= $PID | grep -o [0-9]*)
   kill -- -$(ps -o pgid= $PID | grep -o [0-9]*)
   exit 1
 }
@@ -18,6 +19,7 @@ function clean_up {
 # Activate and run the django application
 function start {
   source venv/bin/activate
+  pip install -r requirements/dev.txt
   ./manage.py runserver 8001
 }
 
@@ -30,18 +32,20 @@ case "$1" in
     # run normally but monitor assets and recompile
     # them when they change
     trap clean_up INT
-    start & PID=$!
+    start > /dev/null 2>&1 & PID=$!
     shift
-    fswatch -o $@ | xargs  -n1 -I{} make -f makefile_frontend all
+    fswatch -o $@ | xargs  -n1 -I{} sh -c 'echo "---- Change detected ----"; make -f makefile_frontend all'
     ;;
   serve)
     # as above but also run browser-sync for dynamic
     # browser reload
     trap clean_up INT
-    start & PID=$!
+    start > /dev/null 2>&1  & PID=$!
+    echo Starting Browser-Sync
     browser-sync start --host=localhost --port=3000 --proxy=localhost:8001 --no-open --ui-port=3001 &
     shift
-    fswatch -o $@ | xargs  -n1 -I{} sh -c 'make -f makefile_frontend all; browser-sync reload'
+    echo "Watching changes"
+    fswatch -o $@ | xargs -n1 -I{} sh -c 'echo "---- Change detected ----"; make -f makefile_frontend all; browser-sync reload'
     ;;
   *)
     echo "Usage: $0 [start|watch|serve] <args>"

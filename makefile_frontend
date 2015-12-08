@@ -16,7 +16,7 @@ CSS_TARGET = $(ASSETS_TARGET)/stylesheets/app.css
 CSS_MINIFIED_TARGET = $(ASSETS_TARGET)/stylesheets/app.min.css
 
 CSS_SOURCE := $(shell find -L $(ASSETS_SOURCE) $(GOVUK_ELEMENTS) $(MOJ_ELEMENTS) $(MTP_COMMON) -name \*.scss)
-CSS_LOAD_PATH = --include-path ./node_modules/hopscotch-highlight/src/stylesheets --include-path ./node_modules/hopscotch/dist/css --include-path ./node_modules/breakpoint-sass/stylesheets --include-path ./node_modules/include-media/dist --include-path ./node_modules/bourbon/app/assets/stylesheets --include-path ./node_modules/susy/sass --include-path $(ASSETS_SOURCE)/stylesheets --include-path $(GOVUK_ELEMENTS)/sass --include-path $(MOJ_ELEMENTS)/sass --include-path $(MTP_COMMON)/assets/scss --include-path ./node_modules
+CSS_LOAD_PATH = --include-path ./node_modules/hopscotch-highlight/src/stylesheets --include-path ./node_modules/hopscotch/dist/css --include-path ./node_modules/breakpoint-sass/stylesheets --include-path ./node_modules/include-media/dist --include-path ./node_modules/bourbon/app/assets/stylesheets --include-path ./node_modules/susy/sass --include-path $(ASSETS_SOURCE)/stylesheets --include-path $(GOVUK_ELEMENTS)/sass --include-path $(MOJ_ELEMENTS)/sass --include-path $(MTP_COMMON)/assets/scss --include-path $(MTP_COMMON)/assets/scss/elements --include-path ./node_modules
 
 WATCHLIST := $(TESTS) $(ASSETS_SOURCE) $(MTP_COMMON) $(GOVUK_ELEMENTS) $(MOJ_ELEMENTS)
 
@@ -33,7 +33,8 @@ help:
 
 # start the server normally
 start: collect_assets
-	./run.sh start
+	@echo Starting the Django server
+	@./run.sh start > /dev/null
 
 # compile all the things
 all: collect_assets node_modules $(JS_TARGET) $(CSS_MINIFIED_TARGET)
@@ -44,29 +45,34 @@ clean:
 
 # run normally but monitor assets and recompile them when they change
 watch: collect_assets
+	@echo Monitoring changes
 	./run.sh watch $(WATCHLIST)
 
 # as above but also run browser-sync for dynamic browser reload
 serve: collect_assets
-	./run.sh serve $(WATCHLIST)
+	@./run.sh serve $(WATCHLIST)
 
 collect_assets:
-	mkdir -p $(MTP_COMMON)/mtp_cashbook/assets/images
-	cp $(MTP_COMMON)/assets/images/* ./mtp_cashbook/assets/images
+	@echo Collecting Assets
+	@mkdir -p $(MTP_COMMON)/mtp_cashbook/assets/images
+	@cp $(MTP_COMMON)/assets/images/* ./mtp_cashbook/assets/images
 
 ######################
 #### FILE TARGETS ####
 ######################
 
 $(JS_TARGET): $(JS_SOURCE) $(TEST_JS)
-	jshint $<
-	webpack
+	@echo Generating JS
+	@jshint $<
+	@webpack
 
 $(CSS_TARGET): $(CSS_SOURCE)
-	node-sass $(CSS_LOAD_PATH) $(ASSETS_SOURCE)/stylesheets/app.scss $@ > /dev/null
+	@echo Generating CSS
+	@node-sass $(CSS_LOAD_PATH) $(ASSETS_SOURCE)/stylesheets/app.scss $@ > /dev/null 2>&1
 
 $(CSS_MINIFIED_TARGET): $(CSS_TARGET)
-	cleancss -o $@ $<
+	@echo "Minifying CSS"
+	@cleancss -o $@ $<
 
 node_modules:
 	npm install
