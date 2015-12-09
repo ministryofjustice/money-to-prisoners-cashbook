@@ -1,7 +1,15 @@
 from django.conf.urls import include, url
 
+from moj_utils.views import PingJsonView
+
 urlpatterns = [
     url(r'^', include('mtp_auth.urls')),
     url(r'^', include('cashbook.urls')),
     url(r'^', include('feedback.urls')),
+
+    url(r'^ping.json$', PingJsonView.as_view(
+        build_date_key='APP_BUILD_DATE',
+        commit_id_key='APP_GIT_COMMIT',
+        version_number_key='APP_BUILD_TAG',
+    ), name='ping_json'),
 ]
