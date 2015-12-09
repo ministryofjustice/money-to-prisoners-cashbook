@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+{% trans "Send feedback" as form_title %}
+{% trans "Submit feedback" as submit_text %}
+{% include "forms/generic.html" %}
+{% endblock %}
