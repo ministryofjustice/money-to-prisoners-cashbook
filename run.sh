@@ -40,6 +40,7 @@ case "$1" in
     # as above but also run browser-sync for dynamic
     # browser reload
     trap clean_up INT
+    echo Starting Django dev server
     start > /dev/null 2>&1  & PID=$!
     echo Starting Browser-Sync
     browser-sync start --host=localhost --port=3000 --proxy=localhost:8001 --no-open --ui-port=3001 &

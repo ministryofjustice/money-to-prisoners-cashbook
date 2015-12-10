@@ -12,50 +12,54 @@ JS_TARGET = $(ASSETS_TARGET)/scripts/app.bundle.js
 JS_SOURCE := $(shell find -L $(ASSETS_SOURCE)/javascripts $(MTP_COMMON)/assets/javascripts -name \*.js)
 TEST_JS := $(shell find $(TESTS) -name \*.js)
 
-CSS_TARGET = $(ASSETS_TARGET)/stylesheets/app.css
-CSS_MINIFIED_TARGET = $(ASSETS_TARGET)/stylesheets/app.min.css
+CSS_TARGET = $(ASSETS_TARGET)/stylesheets/app.css $(ASSETS_TARGET)/stylesheets/app-print.css
+CSS_MIN_TARGET = $(ASSETS_TARGET)/stylesheets/app.min.css $(ASSETS_TARGET)/stylesheets/app-print.min.css
 
 CSS_SOURCE := $(shell find -L $(ASSETS_SOURCE) $(GOVUK_ELEMENTS) $(MOJ_ELEMENTS) $(MTP_COMMON) -name \*.scss)
 CSS_LOAD_PATH = --include-path ./node_modules/hopscotch-highlight/src/stylesheets --include-path ./node_modules/hopscotch/dist/css --include-path ./node_modules/breakpoint-sass/stylesheets --include-path ./node_modules/include-media/dist --include-path ./node_modules/bourbon/app/assets/stylesheets --include-path ./node_modules/susy/sass --include-path $(ASSETS_SOURCE)/stylesheets --include-path $(GOVUK_ELEMENTS)/sass --include-path $(MOJ_ELEMENTS)/sass --include-path $(MTP_COMMON)/assets/scss --include-path $(MTP_COMMON)/assets/scss/elements --include-path ./node_modules
 
 WATCHLIST := $(TESTS) $(ASSETS_SOURCE) $(MTP_COMMON) $(GOVUK_ELEMENTS) $(MOJ_ELEMENTS)
 
-
 #################
 #### RECIPES ####
 #################
 
-.PHONY: all watch clean serve sync start help collect_assets
+.PHONY: all watch clean serve sync start help collect_assets scripts stylesheets
 
 # if no arguments passed, print help message
 help:
-	@echo "run as: $0 [watch clean serve sync start all]"
+	@echo "run as: make [watch clean serve sync start all]"
+
+scripts: $(JS_TARGET)
+stylesheets: $(CSS_MIN_TARGET)
 
 # start the server normally
-start: collect_assets
+start: images stylesheets scripts
 	@echo Starting the Django server
 	@./run.sh start > /dev/null
 
+
 # compile all the things
-all: collect_assets node_modules $(JS_TARGET) $(CSS_MINIFIED_TARGET)
+all: node_modules scripts stylesheets images
 
 # remove all the things
 clean:
 	rm -rf $(ASSETS_TARGET)
 
 # run normally but monitor assets and recompile them when they change
-watch: collect_assets
+watch: all
 	@echo Monitoring changes
 	./run.sh watch $(WATCHLIST)
 
 # as above but also run browser-sync for dynamic browser reload
-serve: collect_assets
+serve: all
 	@./run.sh serve $(WATCHLIST)
 
-collect_assets:
-	@echo Collecting Assets
-	@mkdir -p $(MTP_COMMON)/mtp_cashbook/assets/images
-	@cp $(MTP_COMMON)/assets/images/* ./mtp_cashbook/assets/images
+images:
+#	@echo Collecting images
+	@mkdir -p ./mtp_cashbook/assets/images
+	@cp $(MTP_COMMON)/assets/images/* $(GOVUK_ELEMENTS)/images/* ./mtp_cashbook/assets/images
+
 
 ######################
 #### FILE TARGETS ####
@@ -63,17 +67,17 @@ collect_assets:
 
 $(JS_TARGET): $(JS_SOURCE) $(TEST_JS)
 	@echo Generating JS
-	@jshint $<
-	@webpack
+	-@jshint $<
+	@webpack > /dev/null
 
 $(CSS_TARGET): $(CSS_SOURCE)
-	@echo Generating CSS
+	@echo Generating $@
 	@node-sass $(CSS_LOAD_PATH) $(ASSETS_SOURCE)/stylesheets/app.scss $@ > /dev/null 2>&1
 
-$(CSS_MINIFIED_TARGET): $(CSS_TARGET)
-	@echo "Minifying CSS"
+%.min.css: %.css
+	@echo Generating $@
 	@cleancss -o $@ $<
 
 node_modules:
 	npm install
-	#npm link ...
+	@echo node_modules installed. Don't forget to link to local modules as needed (eg npm link money-to-prisoners-common)
