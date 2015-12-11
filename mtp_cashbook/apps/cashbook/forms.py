@@ -5,9 +5,9 @@ from django import forms
 from django.utils.dateparse import parse_datetime
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext as _
-
-from core.utils import retrieve_all_pages
+from moj_utils.rest import retrieve_all_pages
 from moj_auth.api_client import get_connection
+
 from .form_fields import MtpTextInput, MtpDateInput, MtpInlineRadioFieldRenderer
 
 
