@@ -1,5 +1,11 @@
 {% extends 'mtp_base.html' %}
 {% load i18n %}
+{% load moj_utils %}
+
+{% block main_js %}
+  {{ block.super }}
+  {% sentry_js %}
+{% endblock %}
 
 {% block page_title %}{% trans "Digital cashbook" %}{% endblock %}
 
