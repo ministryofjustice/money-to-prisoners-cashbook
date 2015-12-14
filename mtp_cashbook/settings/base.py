@@ -15,6 +15,7 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 
 get_project_dir = partial(join, BASE_DIR)
 
+APP = 'cashbook'
 ENVIRONMENT = os.environ.get('ENV', 'local')
 
 
@@ -98,8 +99,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'moj_utils.context_processors.debug',
                 'moj_utils.context_processors.analytics',
+                'moj_utils.context_processors.app_environment',
             ],
         },
     },
