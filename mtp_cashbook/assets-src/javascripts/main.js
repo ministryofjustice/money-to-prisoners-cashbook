@@ -16,10 +16,11 @@
       require('messages'),
       require('print'),
       require('polyfills'),
-      require('running-total'),
       require('select-all'),
+      require('unload'),
+
       require('sticky-header'),
-      require('unload')
+      require('running-total')
     ])
     .init();
 }());
