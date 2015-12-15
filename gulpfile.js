@@ -76,11 +76,6 @@ gulp.task('sass', ['clean:css'], getTask('scss', {
   browserSync: production ? browserSync : false
 }));
 
-gulp.task('minify-css', ['sass'], getTask('minify-css', {
-  src: paths.dest + 'stylesheets/**/*.css',
-  dest: paths.dest + 'stylesheets'
-}));
-
 gulp.task('scripts', ['clean:js'], function(callback) {
   webpack(require('./webpack.config.js')).run(function(err, stats) {
     if(err) {
@@ -121,7 +116,7 @@ gulp.task('images', ['clean:images'], getTask('images', {
 
 
 gulp.task('build', [
-  'minify-css',
+  'sass',
   'minify-scripts',
   'images'
 ]);
