@@ -4,7 +4,6 @@ var webpack = require('webpack');
 
 module.exports = {
   entry: {
-//    app: './node_modules/money-to-prisoners-common/assets/javascripts/moj-main.js',
     app: './mtp_cashbook/assets-src/javascripts/main.js',
     polyfills: ['JSON2', 'html5shiv']
   },
@@ -18,7 +17,7 @@ module.exports = {
     ],
     noParse: [
       /\.\/node_modules\/checked-polyfill\/checked-polyfill\.js$/
-   ]
+    ]
   },
   resolve: {
     root: [
@@ -26,6 +25,7 @@ module.exports = {
       __dirname + '/node_modules/mojular-moj-elements/node_modules'
     ],
     modulesDirectories: [
+      './mtp_cashbook/assets-src/javascripts/modules',
       'node_modules',
       'node_modules/money-to-prisoners-common/assets/javascripts/modules'
     ],
@@ -37,5 +37,6 @@ module.exports = {
       $: 'jquery',
       jQuery: 'jquery'
     })
-  ]
+  ],
+  devtool: 'source-map'
 };
