@@ -3,8 +3,12 @@
 # This script runs the application in various ways depending on the params
 # passed. It's normally run from the makefile
 
+APP_PATH=./mtp_cashbook
+APP_PORT=8001
+
+
 IMAGES_SRC_DIR=./node_modules/money-to-prisoners-common/assets/images
-IMAGES_DST_DIR=./mtp_cashbook/assets/images
+IMAGES_DST_DIR=./${APP_PATH}/assets/images
 
 # kill all processes spawned by this script in the
 # background when it stops, in particular django
@@ -18,9 +22,9 @@ function clean_up {
 
 # Activate and run the django application
 function start {
-  source venv/bin/activate
-  pip install -r requirements/dev.txt
-  ./manage.py runserver 8001
+  source venv/bin/activate > /dev/null
+  pip install -r requirements/dev.txt > /dev/null
+  ./manage.py runserver 0.0.0.0:${APP_PORT}
 }
 
 case "$1" in
@@ -32,7 +36,7 @@ case "$1" in
     # run normally but monitor assets and recompile
     # them when they change
     trap clean_up INT
-    start > /dev/null 2>&1 & PID=$!
+    start & PID=$!
     shift
     fswatch -o $@ | xargs  -n1 -I{} sh -c 'echo "---- Change detected ----"; make -f makefile_frontend all'
     ;;
@@ -41,9 +45,9 @@ case "$1" in
     # browser reload
     trap clean_up INT
     echo Starting Django dev server
-    start > /dev/null 2>&1  & PID=$!
+    start & PID=$!
     echo Starting Browser-Sync
-    browser-sync start --host=localhost --port=3000 --proxy=localhost:8001 --no-open --ui-port=3001 &
+    browser-sync start --host=localhost --port=3000 --proxy=localhost:${APP_PORT} --no-open --ui-port=3001 &
     shift
     echo "Watching changes"
     fswatch -o $@ | xargs -n1 -I{} sh -c 'echo "---- Change detected ----"; make -f makefile_frontend all; browser-sync reload'

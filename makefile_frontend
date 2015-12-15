@@ -5,20 +5,21 @@ GOVUK_ELEMENTS = ./node_modules/mojular-govuk-elements
 MOJ_ELEMENTS = ./node_modules/mojular-moj-elements
 TESTS = test
 
-ASSETS_TARGET = ./mtp_cashbook/assets
-ASSETS_SOURCE = ./mtp_cashbook/assets-src
+MTP_APP = ./mtp_cashbook
 
-JS_TARGET = $(ASSETS_TARGET)/scripts/app.bundle.js
-JS_SOURCE := $(shell find -L $(ASSETS_SOURCE)/javascripts $(MTP_COMMON)/assets/javascripts -name \*.js)
-TEST_JS := $(shell find $(TESTS) -name \*.js)
+ASSETS_TARGET = ./$(MTP_APP)/assets
+ASSETS_SOURCE = ./$(MTP_APP)/assets-src
+TEMPLATES = ./$(MTP_APP)/templates
 
-CSS_TARGET = $(ASSETS_TARGET)/stylesheets/app.css $(ASSETS_TARGET)/stylesheets/app-print.css
-CSS_MIN_TARGET = $(ASSETS_TARGET)/stylesheets/app.min.css $(ASSETS_TARGET)/stylesheets/app-print.min.css
+JS_PATH = $(ASSETS_TARGET)/scripts
+ALL_JS := $(shell find -L $(TESTS) $(ASSETS_SOURCE)/javascripts $(MTP_COMMON)/assets/javascripts -name \*.js)
 
-CSS_SOURCE := $(shell find -L $(ASSETS_SOURCE) $(GOVUK_ELEMENTS) $(MOJ_ELEMENTS) $(MTP_COMMON) -name \*.scss)
-CSS_LOAD_PATH = --include-path ./node_modules/hopscotch-highlight/src/stylesheets --include-path ./node_modules/hopscotch/dist/css --include-path ./node_modules/breakpoint-sass/stylesheets --include-path ./node_modules/include-media/dist --include-path ./node_modules/bourbon/app/assets/stylesheets --include-path ./node_modules/susy/sass --include-path $(ASSETS_SOURCE)/stylesheets --include-path $(GOVUK_ELEMENTS)/sass --include-path $(MOJ_ELEMENTS)/sass --include-path $(MTP_COMMON)/assets/scss --include-path $(MTP_COMMON)/assets/scss/elements --include-path ./node_modules
+CSS_PATH = $(ASSETS_TARGET)/stylesheets
+ALL_SCSS := $(shell find -L $(ASSETS_SOURCE) $(GOVUK_ELEMENTS) $(MOJ_ELEMENTS) $(MTP_COMMON) -name \*.scss)
 
-WATCHLIST := $(TESTS) $(ASSETS_SOURCE) $(MTP_COMMON) $(GOVUK_ELEMENTS) $(MOJ_ELEMENTS)
+SASS_LOAD_PATH = --include-path ./node_modules/hopscotch-highlight/src/stylesheets --include-path ./node_modules/hopscotch/dist/css --include-path ./node_modules/breakpoint-sass/stylesheets --include-path ./node_modules/include-media/dist --include-path ./node_modules/bourbon/app/assets/stylesheets --include-path ./node_modules/susy/sass --include-path $(ASSETS_SOURCE)/stylesheets --include-path $(GOVUK_ELEMENTS)/sass --include-path $(MOJ_ELEMENTS)/sass --include-path $(MTP_COMMON)/assets/scss --include-path $(MTP_COMMON)/assets/scss/elements --include-path ./node_modules
+
+WATCHLIST := $(TESTS) $(ASSETS_SOURCE) $(MTP_COMMON) $(GOVUK_ELEMENTS) $(MOJ_ELEMENTS) $(TEMPLATES)
 
 #################
 #### RECIPES ####
@@ -30,8 +31,8 @@ WATCHLIST := $(TESTS) $(ASSETS_SOURCE) $(MTP_COMMON) $(GOVUK_ELEMENTS) $(MOJ_ELE
 help:
 	@echo "run as: make [watch clean serve sync start all]"
 
-scripts: $(JS_TARGET)
-stylesheets: $(CSS_MIN_TARGET)
+scripts: $(JS_PATH)/app.bundle.js
+stylesheets: $(CSS_PATH)/app.css $(CSS_PATH)/app-print.css
 
 # start the server normally
 start: images stylesheets scripts
@@ -56,28 +57,28 @@ serve: all
 	@./run.sh serve $(WATCHLIST)
 
 images:
-#	@echo Collecting images
-	@mkdir -p ./mtp_cashbook/assets/images
-	@cp $(MTP_COMMON)/assets/images/* $(GOVUK_ELEMENTS)/images/* ./mtp_cashbook/assets/images
+	@echo Collecting images
+	@mkdir -p ./$(MTP_APP)/assets/images
+	@cp $(MTP_COMMON)/assets/images/* $(GOVUK_ELEMENTS)/images/* ./$(MTP_APP)/assets/images
 
 
 ######################
 #### FILE TARGETS ####
 ######################
 
-$(JS_TARGET): $(JS_SOURCE) $(TEST_JS)
+$(JS_PATH)/app.bundle.js: $(ALL_JS)
 	@echo Generating JS
 	-@jshint $<
-	@webpack > /dev/null
+	@webpack
 
-$(CSS_TARGET): $(CSS_SOURCE)
+$(CSS_PATH)/app-print.css: $(ALL_SCSS)
 	@echo Generating $@
-	@node-sass $(CSS_LOAD_PATH) $(ASSETS_SOURCE)/stylesheets/app.scss $@ > /dev/null 2>&1
+	@node-sass $(SASS_LOAD_PATH) $(ASSETS_SOURCE)/stylesheets/app-print.scss $@ > /dev/null 2>&1
 
-%.min.css: %.css
+$(CSS_PATH)/app.css: $(ALL_SCSS)
 	@echo Generating $@
-	@cleancss -o $@ $<
+	@node-sass $(SASS_LOAD_PATH) $(ASSETS_SOURCE)/stylesheets/app.scss $@ > /dev/null 2>&1
 
 node_modules:
 	npm install
-	@echo node_modules installed. Don't forget to link to local modules as needed (eg npm link money-to-prisoners-common)
+	@echo "node_modules installed. Don't forget to link to local modules as needed (eg npm link money-to-prisoners-common)"
