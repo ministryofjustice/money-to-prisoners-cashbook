@@ -1,6 +1,6 @@
 from django.conf.urls import include, url
 
-from moj_utils.views import HealthcheckView, PingJsonView
+from moj_irat.views import HealthcheckView, PingJsonView
 
 urlpatterns = [
     url(r'^', include('mtp_auth.urls')),

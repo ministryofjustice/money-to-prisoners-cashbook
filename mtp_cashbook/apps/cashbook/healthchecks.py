@@ -1,6 +1,6 @@
 from django.conf import settings
 
-from moj_utils.healthchecks import HealthcheckResponse, UrlHealthcheck, registry
+from moj_irat.healthchecks import HealthcheckResponse, UrlHealthcheck, registry
 from zendesk_tickets.client import zendesk_auth
 
 registry.register_healthcheck(UrlHealthcheck(
