@@ -1,63 +1,15 @@
 #!/bin/bash
-
-# This script runs the application in various ways depending on the params
-# passed. It's normally run from the makefile
-
-APP_PATH=./mtp_cashbook
-APP_PORT=8001
-
-
-IMAGES_SRC_DIR=./node_modules/money-to-prisoners-common/assets/images
-IMAGES_DST_DIR=./${APP_PATH}/assets/images
-
-# kill all processes spawned by this script in the
-# background when it stops, in particular django
-# restarts
-function clean_up {
-  echo "Killing all spawned processes."
-  echo kill -- -$(ps -o pgid= $PID | grep -o [0-9]*)
-  kill -- -$(ps -o pgid= $PID | grep -o [0-9]*)
-  exit 1
-}
-
-# Activate and run the django application
-function start {
-  source venv/bin/activate > /dev/null
-  pip install -r requirements/dev.txt > /dev/null
-  ./manage.py runserver 0.0.0.0:${APP_PORT}
-}
-
-case "$1" in
-  start)
-    # just run normally
-    start
-    ;;
-  watch)
-    # run normally but monitor assets and recompile
-    # them when they change
-    trap clean_up INT
-    start & PID=$!
-    shift
-    fswatch -o $@ | xargs  -n1 -I{} sh -c 'echo "---- Change detected ----"; make -f makefile_frontend all'
-    ;;
-  serve)
-    # as above but also run browser-sync for dynamic
-    # browser reload
-    trap clean_up INT
-    echo Starting Django dev server
-    start & PID=$!
-    echo Starting Browser-Sync
-    browser-sync start --host=localhost --port=3000 --proxy=localhost:${APP_PORT} --no-open --ui-port=3001 &
-    shift
-    echo "Watching changes"
-    fswatch -o $@ | xargs -n1 -I{} sh -c 'echo "---- Change detected ----"; make -f makefile_frontend all; browser-sync reload'
-    ;;
-  *)
-    echo "Usage: $0 [start|watch|serve] <args>"
-    echo " - $0 start: just start the application server"
-    echo " - $0 watch <list of asset directories to monitor>: start the "
-    echo "   application server and recompile the assets if they are changed"
-    echo " - $0 serve <list of asset directories to monitor>: start the "
-    echo "   browser-sync server and recompile the assets if they are changed"
-    exit 1
-esac
+if [ "$#" -ne 1 ]; then
+  echo "Usage: $0 [run | start | serve | watch | clean | all]"
+else
+  if [ ! -d node_modules ]; then
+    echo "The installation process is about to start. It usually takes a while."
+    echo "The only thing that this script doesn't do is set up the API. While"
+    echo "installation is running, head to https://github.com/ministryofjustice/money-to-prisoners-api"
+    echo "to find out how to run it."
+    echo "Press Return to continue"
+    read
+    npm install
+  fi
+  make -f node_modules/money-to-prisoners-common/makefile $1 app=mtp_cashbook port=8001
+fi
