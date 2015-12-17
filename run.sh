@@ -1,6 +1,11 @@
-#!/bin/bash
+#!/usr/bin/env bash
 if [ "$#" -ne 1 ]; then
-  echo "Usage: $0 [run | start | serve | watch | clean | all]"
+  echo "Usage: $0 [start|watch|serve|clean|all] app=<app_name> port=8001"
+  echo " - start: start the application server"
+  echo " - watch: start the application server and recompile the assets when they change"
+  echo " - serve: start the browser-sync server and recompile the assets when they change"
+  echo " - all: compile all the assets"
+  echo " - test: run the test suite"
 else
   if [ ! -d node_modules ]; then
     echo "The installation process is about to start. It usually takes a while."
@@ -11,5 +16,5 @@ else
     read
     npm install
   fi
-  make -f node_modules/money-to-prisoners-common/makefile $1 app=mtp_cashbook port=8001
+  make -f node_modules/money-to-prisoners-common/Makefile $1 app=mtp_cashbook port=8001
 fi
