@@ -3,6 +3,9 @@
 
 {% block content %}
   <p id="tour-step7">{% trans "Home" %}</p>
+
+  {% include "includes/message_box.html" %}
+
   <ul class="SummaryBoxes">
     <li class="SummaryBoxes--unprocessed" id="tour-step1">
       <a href="{% url 'transaction-list' %}">
