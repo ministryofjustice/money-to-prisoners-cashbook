@@ -35,3 +35,6 @@ mtp_cashbook/assets/
 
 # failed test screenshots
 test/errorshots/
+
+# ghostdriver
+ghostdriver.log
