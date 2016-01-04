@@ -10,7 +10,8 @@ class FunctionalTestCase(LiveServerTestCase):
         return []
 
     def setUp(self):
-        self.driver = webdriver.PhantomJS(executable_path='./node_modules/.bin/phantomjs')
+        path = './node_modules/phantomjs/lib/phantom/bin/phantomjs'
+        self.driver = webdriver.PhantomJS(executable_path=path)
 
     def tearDown(self):
         self.driver.quit()
