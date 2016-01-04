@@ -42,3 +42,9 @@ class FunctionalTestCase(LiveServerTestCase):
         self._login('test-prison-1', 'test-prison-1')
         self.assertEquals(self.driver.current_url, self.live_server_url + '/')
         self.assertIn('Credits to process', self.driver.page_source)
+
+    def test_logout(self):
+        self._login('test-prison-1', 'test-prison-1')
+        logout_link = self.driver.find_element_by_link_text('Sign out')
+        logout_link.click()
+        self.assertEqual(self.driver.current_url.split('?')[0], self.live_server_url + '/login/')
