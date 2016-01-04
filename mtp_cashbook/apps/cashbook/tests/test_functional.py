@@ -1,8 +1,12 @@
+import os
+import unittest
+
 from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
 
+@unittest.skipUnless('RUN_FUNCTIONAL_TESTS' in os.environ, 'functional tests are disabled')
 class FunctionalTestCase(LiveServerTestCase):
     @classmethod
     def _databases_names(cls, include_mirrors=True):
