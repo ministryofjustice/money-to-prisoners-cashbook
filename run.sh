@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-if [ "$#" -ne 1 ]; then
-  echo "Usage: $0 [start|watch|serve|clean|all] app=<app_name> port=8001"
-  echo " - start: start the application server"
-  echo " - watch: start the application server and recompile the assets when they change"
-  echo " - serve: start the browser-sync server and recompile the assets when they change"
-  echo " - all: compile all the assets"
+if [ "$#" -eq 0 ]; then
+  echo "Usage: $0 [start|watch|serve|clean|build] [args]"
+  echo " - start [port]: start the application server using the port specified"
+  echo " - watch [port]: start the application server and recompile the assets when they change"
+  echo " - serve [port]: start the browser-sync server and recompile the assets when they change"
+  echo " - build: compile all the assets"
   echo " - test: run the test suite"
 else
   if [ ! -d node_modules ]; then
@@ -16,5 +16,5 @@ else
     read
     npm install
   fi
-  make -f node_modules/money-to-prisoners-common/Makefile $1 app=mtp_cashbook port=8001
+  make -f node_modules/money-to-prisoners-common/Makefile $1 app=mtp_cashbook port=$2
 fi
