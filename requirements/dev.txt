@@ -1,6 +1,7 @@
 # Place your development dependencies here
 -r base.txt
-responses==0.4.0
+django-template-i18n-lint==1.2.1
 flake8==2.4.1
 pep8-naming==0.3.3
-django-template-i18n-lint==1.2.1
+responses==0.4.0
+selenium==2.48
