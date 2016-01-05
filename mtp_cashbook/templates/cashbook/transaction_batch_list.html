@@ -8,7 +8,7 @@
 {% block content %}
 
   <header class="ContentHeader">
-    <a href="{% url 'transaction-discard' %}" class="ContentHeader-back" id="tour-step7">{% trans 'Home' %}</a>
+    <a href="{% url 'transaction-discard' %}" class="ContentHeader-back">{% trans 'Home' %}</a>
     <h1>{% trans 'New credits' %}</h1>
   </header>
 
@@ -45,6 +45,25 @@
         </div>
       {% endif %}
 
+      <div class="help-box">
+        <p>{% trans "These credits are ready to be processed in NOMIS. When you've finished crediting, click ‘Done’." %}</p>
+
+          <h3><div></div>{%trans "How to process credits in NOMIS" %}</h3>
+          <div class="help-box-contents">
+            {% blocktrans %}
+              <ul>
+                <li>Start by opening NOMIS and selecting ‘Financials’, then ‘Trust Accounts’, then ‘Receive Trust Funds’</li>
+                <li>Enter the control total</li>
+                <li>Select the ‘Misc Receipt - Private Cash‘ category as Transaction Type in NOMIS</li>
+                <li>Enter the prisoner number</li>
+                <li>Check the prisoner's name matches in NOMIS</li>
+                <li>Enter the amount</li>
+                <li>You don't need to use a reference</li>
+              </ul>
+              <p>When you've entered the information in NOMIS, remember to click ‘Done’ in the digital cashbook. This is important so the credit is not processed twice.</p>
+           {% endblocktrans %}
+           </div>
+      </div>
 
       <div class="batch">
         <div class="print-box">
@@ -56,7 +75,7 @@
           </p>
         </div>
 
-        <div class="totals js-StickyHeader"  id="tour-step-total">
+        <div class="totals js-StickyHeader">
           <div class="container js-RunningTotal" data-label="{% trans 'Credits processed in NOMIS' %}">
             <p>
               <span class='label'>{% trans 'Control total' %}</span><span class='total'>&pound;{{total|currency}}</span>
@@ -68,16 +87,16 @@
 
 
 
-        <table id="tour-step1">
+        <table>
           <thead>
             {% include "cashbook/includes/table_actions.html" with location='header' field_name=form.transactions.html_name %}
 
             <tr>
-              <th id="tour-step2">{% trans "Prisoner no" %}</th>
-              <th id="tour-step3">{% trans "Prisoner name" %}</th>
-              <th id="tour-step4">{% trans "Amount&nbsp;(&pound;)" %}</th>
+              <th>{% trans "Prisoner no" %}</th>
+              <th>{% trans "Prisoner name" %}</th>
+              <th>{% trans "Amount&nbsp;(&pound;)" %}</th>
               <th>{% trans "Sender" %}</th>
-              <th id="tour-step5" class="check"><span id="id_transactions-label">{% trans "Credited?" %}</span></th>
+              <th class="check"><span id="id_transactions-label">{% trans "Credited?" %}</span></th>
             </tr>
           </thead>
 
@@ -130,85 +149,3 @@
   {% include "cashbook/includes/print_dialog.html" %}
 
 {% endblock content %}
-
-{% block main_js %}
-  <script>
-    var tour = {
-      id: 'batch',
-      steps: [
-        {
-          content: '{% blocktrans %}<p>This table shows credits to be processed in NOMIS.</p>{% endblocktrans %}',
-          target: 'tour-step1',
-          padding: 10,
-          placement: 'top',
-          xOffset: 'center',
-          highlight: true
-        },
-        {
-          content: '{% blocktrans %}<p>Start by entering the control total in NOMIS then use the ‘misc receipt - private cash’ category as Transaction Type in NOMIS.</p><p>A running total of ticked credits will be displayed here.</p>{% endblocktrans %}',
-          target: 'tour-step-total',
-          padding: 10,
-          placement: 'bottom',
-          xOffset: 'center',
-          highlight: true
-        },
-        {
-          content: '{% blocktrans %}<p>Enter the prisoner number in NOMIS.</p>{% endblocktrans %}',
-          target: 'tour-step2',
-          padding: 10,
-          placement: 'top',
-          arrowOffset: 52,
-          table: 'column',
-          highlight: true
-        },
-        {
-          content: '{% blocktrans %}<p>Check prisoner\'s names match.</p>{% endblocktrans %}',
-          target: 'tour-step3',
-          padding: 10,
-          placement: 'top',
-          xOffset: 'center',
-          table: 'column',
-          highlight: true
-        },
-        {
-          content: '{% blocktrans %}<p>Add credit amount.</p>{% endblocktrans %}',
-          target: 'tour-step4',
-          padding: 10,
-          placement: 'top',
-          xOffset: 'center',
-          table: 'column',
-          highlight: true
-        },
-        {
-          content: '{% blocktrans %}<p>Keep track by ticking credits you\'ve processed in NOMIS.</p>{% endblocktrans %}',
-          target: 'tour-step5',
-          padding: 10,
-          placement: 'top',
-          xOffset: -204,
-          arrowOffset: 252,
-          table: 'column',
-          highlight: true
-        },
-        {
-          content: '{% blocktrans %}<p>Click ‘Done’ when you\'ve processed credits to NOMIS.</p>{% endblocktrans %}',
-          target: 'tour-step6',
-          padding: 10,
-          placement: 'bottom',
-          xOffset: 'center',
-          highlight: true
-        },
-        {
-          content: '{% blocktrans %}<p>Click ‘Home’ to return to the home page.</p>{% endblocktrans %}',
-          target: 'tour-step7',
-          padding: 10,
-          placement: 'bottom',
-          xOffset: 0,
-          arrowOffset: 20,
-          highlight: true
-        }
-      ]
-    };
-  </script>
-
-  {{ block.super }}
-{% endblock %}

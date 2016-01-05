@@ -4,4 +4,13 @@
   @include breakpoint($mobile) {
     width: 100%;
   }
+
+  p.locked-help {
+    padding-bottom: 1em;
+    border-bottom: 2px solid $bg-color-alt;
+  }
+
+  .batch-buttons span {
+    padding-right: 1em;
+  }
 }
