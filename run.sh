@@ -16,5 +16,5 @@ else
     read
     npm install
   fi
-  make -f node_modules/money-to-prisoners-common/Makefile $1 app=mtp_cashbook port=$2
+  make -f node_modules/money-to-prisoners-common/Makefile $1 app=mtp_cashbook port=${2-8000}
 fi
