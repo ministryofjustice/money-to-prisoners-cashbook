@@ -108,6 +108,33 @@ TEMPLATES = [
     },
 ]
 
+# logging settings
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'simple': {
+            'format': '%(asctime)s [%(levelname)s] %(message)s',
+            'datefmt': '%Y-%m-%dT%H:%M:%S',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+        },
+    },
+    'root': {
+        'level': 'WARNING' if ENVIRONMENT == 'prod' else 'INFO',
+        'handlers': ['console'],
+    },
+}
+
 # sentry exception handling
 if os.environ.get('SENTRY_DSN'):
     INSTALLED_APPS = ('raven.contrib.django.raven_compat',) + INSTALLED_APPS
@@ -115,6 +142,11 @@ if os.environ.get('SENTRY_DSN'):
         'dsn': os.environ['SENTRY_DSN'],
         'release': os.environ.get('APP_GIT_COMMIT', 'unknown'),
     }
+    LOGGING['handlers']['sentry'] = {
+        'level': 'ERROR',
+        'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler'
+    }
+    LOGGING['root']['handlers'].append('sentry')
 
 # authentication
 SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
