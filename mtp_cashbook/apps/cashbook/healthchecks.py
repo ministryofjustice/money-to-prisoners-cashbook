@@ -1,9 +1,10 @@
 from django.conf import settings
 
-from moj_irat.healthchecks import HealthcheckResponse, UrlHealthcheck, registry
+from moj_irat.healthchecks import HealthcheckResponse, JsonUrlHealthcheck, \
+    UrlHealthcheck, registry
 from zendesk_tickets.client import zendesk_auth
 
-registry.register_healthcheck(UrlHealthcheck(
+registry.register_healthcheck(JsonUrlHealthcheck(
     name='api',
     url='%s/healthcheck.json' % settings.API_URL,
     value_at_json_path=(True, '*.status'),
