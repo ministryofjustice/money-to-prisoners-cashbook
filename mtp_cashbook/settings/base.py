@@ -30,9 +30,12 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.contenttypes',
+    'django.contrib.auth',
 )
 PROJECT_APPS = (
     'moj_utils',
+    'mtp_auth',
     'widget_tweaks',
     'cashbook',
     'zendesk_tickets'
@@ -152,7 +155,6 @@ if os.environ.get('SENTRY_DSN'):
 SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
-AUTH_USER_MODEL = 'mtp_auth.MtpUser'
 MOJ_USER_MODEL = 'mtp_auth.models.MtpUser'
 
 AUTHENTICATION_BACKENDS = (
