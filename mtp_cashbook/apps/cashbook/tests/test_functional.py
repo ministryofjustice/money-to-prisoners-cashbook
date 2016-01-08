@@ -20,6 +20,7 @@ class FunctionalTestCase(LiveServerTestCase):
     def setUp(self):
         path = './node_modules/phantomjs/lib/phantom/bin/phantomjs'
         self.driver = webdriver.PhantomJS(executable_path=path)
+        self.driver.set_window_size(1000,1000)
 
     def tearDown(self):
         self.driver.quit()
@@ -45,7 +46,7 @@ class LoginTests(FunctionalTestCase):
         self.driver.get(self.live_server_url)
         heading = self.driver.find_element_by_tag_name('h1')
         self.assertEquals('Money sent to prisoners', heading.text)
-        self.assertEquals('32px', heading.value_of_css_property('font-size'))
+        self.assertEquals('48px', heading.value_of_css_property('font-size'))
 
     def test_bad_login(self):
         self.login('test-prison-1', 'bad-password')
@@ -92,13 +93,14 @@ class NewPaymentsPageTests(FunctionalTestCase):
         self.assertIn('Control total', self.driver.page_source)
 
     def test_submitting_payments_credited(self):
-        self.driver.find_element_by_xpath('//input[@type="checkbox"]').click()
+        self.driver.find_element_by_xpath('//input[@type="checkbox" and @data-amount]').click()
         self.driver.find_element_by_xpath('//button[text()="Done"]').click()
         self.assertIsNotNone(self.driver.find_element_by_xpath('//div[@class="Dialog-inner"]/h3[text()="Are you sure?"]'))
 
     def test_submitting_and_confirming_payments_credited(self):
-        self.driver.find_element_by_xpath('//input[@type="checkbox" and @data-amount]').click()
+        self.driver.find_element_by_xpath('//input[@type="checkbox" and @data-amount][1]').click()
         self.driver.find_element_by_xpath('//button[text()="Done"]').click()
+        self.driver.find_element_by_xpath('//div[@class="Dialog-inner"]/*[text()="Yes"]').click()
         self.assertIn('You\'ve credited 1 payment to NOMIS.', self.driver.page_source)
 
     def test_clicking_done_with_no_payments_credited(self):
@@ -108,6 +110,15 @@ class NewPaymentsPageTests(FunctionalTestCase):
     def test_printing(self):
         self.driver.find_element_by_link_text('Print these payments').click()
         self.assertIsNotNone(self.driver.find_element_by_xpath('//div[@class="Dialog-inner"]/h3[text()="Do you need to print?"]'))
+
+    def test_help_popup(self):
+        help_box_contents = self.driver.find_element_by_css_selector('.help-box-contents')
+        help_box_button = self.driver.find_element_by_css_selector('.help-box h3')
+        self.assertEquals('none', help_box_contents.value_of_css_property('display'))
+        help_box_button.click()
+        self.assertEquals('block', help_box_contents.value_of_css_property('display'))
+        help_box_button.click()
+        self.assertEquals('none', help_box_contents.value_of_css_property('display'))
 
 
 class HistoryPageTests(FunctionalTestCase):

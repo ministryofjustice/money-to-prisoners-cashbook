@@ -4,6 +4,24 @@ form.HistorySearch {
     width: 100%;
     margin-bottom: 1em;
   }
+
+  .date-start, .date-end {
+    display:inline-block;
+    width: 40%;
+  }
+
+  .date-start {
+    margin-right: 18.7%;
+  }
+
+  .date-label {
+    margin: 1em 0 .5em 0;
+  }
+
+  label[for=id_start], label[for=id_end] {
+    font-weight: normal;
+  }
+
 }
 
 .batch-history {

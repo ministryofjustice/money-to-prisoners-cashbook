@@ -12,12 +12,12 @@
       require('dialog'),
       require('batch-validation'),
       require('show-hide'),
-      require('feature-tour'),
       require('messages'),
       require('print'),
       require('polyfills'),
       require('select-all'),
       require('unload'),
+      require('help-popup'),
 
       require('sticky-header'),
       require('running-total')
