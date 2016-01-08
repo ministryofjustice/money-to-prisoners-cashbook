@@ -1,4 +1,5 @@
 import datetime
+import logging
 
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -13,6 +14,8 @@ from moj_auth import api_client
 
 from .forms import ProcessTransactionBatchForm, DiscardLockedTransactionsForm, \
     FilterTransactionHistoryForm
+
+logger = logging.getLogger()
 
 
 class DashboardView(TemplateView):
@@ -74,6 +77,12 @@ class TransactionBatchListView(FormView):
                     'credited': credited_count
                 }
             )
+
+            logger.info('User "%(username)s" credited %(credited)d payment(s) to NOMIS' % {
+                'username': self.request.user.username,
+                'credited': credited_count,
+            })
+
         return super(TransactionBatchListView, self).form_valid(form)
 
 
@@ -121,6 +130,12 @@ class TransactionsLockedView(FormView):
                 'discarded': discarded_count
             }
         )
+
+        logger.info('User "%(username)s" unlocked %(discarded)d payment(s)' % {
+            'username': self.request.user.username,
+            'discarded': discarded_count,
+        })
+
         return super(TransactionsLockedView, self).form_valid(form)
 
 
