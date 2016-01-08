@@ -8,7 +8,7 @@ from django.utils.translation import ugettext as _
 from moj_utils.rest import retrieve_all_pages
 from moj_auth.api_client import get_connection
 
-from .form_fields import MtpTextInput, MtpDateInput, MtpInlineRadioFieldRenderer
+from .form_fields import MtpTextInput, MtpDateInput
 
 
 class ProcessTransactionBatchForm(forms.Form):
