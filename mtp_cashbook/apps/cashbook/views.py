@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse_lazy, reverse
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.utils.timezone import now
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ungettext
 from django.views.generic import FormView, TemplateView
 
 from moj_auth import api_client
@@ -63,13 +63,15 @@ class TransactionBatchListView(FormView):
         credited, discarded = form.save()
 
         if credited:
+            credited_count = len(credited)
             messages.success(
                 self.request,
-                _(
-                    'You\'ve credited %(credited)s payment%(plural)s to NOMIS.'
+                ungettext(
+                    'You’ve credited %(credited)s payment to NOMIS.',
+                    'You’ve credited %(credited)s payments to NOMIS.',
+                    credited_count
                 ) % {
-                    'credited': len(credited),
-                    'plural': '' if len(credited) == 1 else 's'
+                    'credited': credited_count
                 }
             )
         return super(TransactionBatchListView, self).form_valid(form)
@@ -107,14 +109,16 @@ class TransactionsLockedView(FormView):
 
     def form_valid(self, form):
         discarded = form.save()
+        discarded_count = len(discarded)
 
         messages.success(
             self.request,
-            _(
-                '%(discarded)s transaction%(plural)s returned to ‘New credits’.'
+            ungettext(
+                '%(discarded)s payment returned to ‘New credits’.',
+                '%(discarded)s payments returned to ‘New credits’.',
+                discarded_count
             ) % {
-                'discarded': len(discarded),
-                'plural': '' if len(discarded) == 1 else 's'
+                'discarded': discarded_count
             }
         )
         return super(TransactionsLockedView, self).form_valid(form)
