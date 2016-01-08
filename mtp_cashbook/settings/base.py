@@ -133,7 +133,7 @@ LOGGING = {
         },
     },
     'root': {
-        'level': 'WARNING' if ENVIRONMENT == 'prod' else 'INFO',
+        'level': 'INFO',
         'handlers': ['console'],
     },
 }
