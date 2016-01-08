@@ -10,7 +10,6 @@
       require('mojular-govuk-elements'),
       require('mojular-moj-elements'),
       require('dialog'),
-      require('batch-validation'),
       require('show-hide'),
       require('messages'),
       require('print'),
@@ -19,6 +18,7 @@
       require('unload'),
       require('help-popup'),
 
+      require('batch-validation'),
       require('sticky-header'),
       require('running-total')
     ])
