@@ -101,7 +101,7 @@ class NewPaymentsPageTests(FunctionalTestCase):
         self.driver.find_element_by_xpath('//input[@type="checkbox" and @data-amount][1]').click()
         self.driver.find_element_by_xpath('//button[text()="Done"]').click()
         self.driver.find_element_by_xpath('//div[@class="Dialog-inner"]/*[text()="Yes"]').click()
-        self.assertIn('You\'ve credited 1 payment to NOMIS.', self.driver.page_source)
+        self.assertIn('You’ve credited 1 payment to NOMIS.', self.driver.page_source)
 
     def test_clicking_done_with_no_payments_credited(self):
         self.driver.find_element_by_xpath('//button[text()="Done"]').click()
