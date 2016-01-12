@@ -60,7 +60,10 @@ exports.BatchValidation = {
     var checkedValid = this._allChecked();
     var numChecked = this._numChecked();
 
+    ga && ga('send', 'event', 'credits', 'submit', numChecked);
+
     if(type !== 'submit') {
+      // If this is a confirmation popup, actually submit
       return;
     }
 
