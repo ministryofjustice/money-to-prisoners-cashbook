@@ -243,7 +243,7 @@ class FilterTransactionHistoryFormTestCase(SimpleTestCase):
     def fill_in_form(self, data):
         return FilterTransactionHistoryForm(self.request, data=data)
 
-    def assertValidForm(self, data, api_called_with):
+    def assertValidForm(self, data, api_called_with):  # noqa
         form = self.fill_in_form(data)
         self.assertTrue(form.is_valid())
         response = form.transaction_choices
@@ -254,7 +254,7 @@ class FilterTransactionHistoryFormTestCase(SimpleTestCase):
         })
         self.api_call.assert_called_with(**api_called_with)
 
-    def assertInvalidForm(self, data):
+    def assertInvalidForm(self, data):  # noqa
         form = self.fill_in_form(data)
         self.assertFalse(form.is_valid())
 
