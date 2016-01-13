@@ -20,7 +20,7 @@ class FunctionalTestCase(LiveServerTestCase):
     def setUp(self):
         path = './node_modules/phantomjs/lib/phantom/bin/phantomjs'
         self.driver = webdriver.PhantomJS(executable_path=path)
-        self.driver.set_window_size(1000,1000)
+        self.driver.set_window_size(1000, 1000)
 
     def tearDown(self):
         self.driver.quit()

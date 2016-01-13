@@ -8,10 +8,6 @@ media/
 # Sass-cache
 *.sass-cache/
 
-# sqlite3 db
-*.db
-*.sqlite3
-
 # sublime stuff
 *.sublime-workspace
 *.sublime-project
@@ -27,7 +23,9 @@ venv/
 
 # Node Stuff
 node_modules
+npm-debug.log
 
+# App assets
 mtp_cashbook/assets/
 
 # Docker make targets
