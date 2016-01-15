@@ -1,5 +1,5 @@
 // Batch validation module
-/* global exports, require */
+/* global exports, require, ga, $ */
 'use strict';
 
 var bindAll = require('lodash/function/bindAll');
@@ -54,20 +54,23 @@ exports.BatchValidation = {
     return count;
   },
 
+  // Called when the user submits the form,
+  // either clicking 'Done' or 'Yes' in the popup.
   onSubmit: function (e) {
     var $el = $(e.target);
     var type = $el.val();
     var checkedValid = this._allChecked();
     var numChecked = this._numChecked();
 
-    ga && ga('send', 'event', 'credits', 'submit', numChecked);
-
     if(type !== 'submit') {
-      // If this is a confirmation popup, actually submit
+      // If this is a 'Yes' click in the confirmation popup, so just
+      // actually submit
       return;
     }
 
+    // Check if this a total or a partial batch submission
     if (!checkedValid && numChecked > 0) {
+      // Partial: ask for confirmation
       e.preventDefault();
       this.base.Events.trigger({
         type: 'Dialog.render',
@@ -75,6 +78,9 @@ exports.BatchValidation = {
         targetSelector: '#incomplete-batch-dialog'
       });
       return;
+    } else {
+      // Tell analytics that a complete batch was submitted
+      ga && ga('send', { 'hitType': 'pageview', 'page': '/batch/-complete_submitted/', 'title': 'Complete batch submitted' });
     }
   }
 };
