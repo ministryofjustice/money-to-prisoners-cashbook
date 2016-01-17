@@ -17,6 +17,7 @@
       require('select-all'),
       require('unload'),
       require('help-popup'),
+      require('analytics'),
 
       require('batch-validation'),
       require('sticky-header'),
