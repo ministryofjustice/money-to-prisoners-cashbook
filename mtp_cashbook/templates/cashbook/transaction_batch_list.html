@@ -134,12 +134,19 @@
       <p>{% trans "No transactions found" %}</p>
     {% endif %}
 
-    <dialog id="incomplete-batch-dialog" class="Dialog u-nojs-hidden" data-hide-close="true" data-disable-backdrop-close="true">
+    <dialog id="incomplete-batch-dialog"
+            class="Dialog u-nojs-hidden"
+            data-hide-close="true"
+            data-disable-backdrop-close="true">
       <div class="Dialog-inner">
         <h3>{% trans "Are you sure?" %}</h3>
         <p>{% trans "Do you want to submit only the selected credits?" %}</p>
-        <button type="submit" class="button" value="override">{% trans "Yes" %}</button>
-        <button type="button" class="button button-secondary js-Dialog-close">{% trans "No, continue processing" %}</button>
+        <button type="submit"
+                class="button"
+                value="override">{% trans "Yes" %}</button>
+        <button type="button"
+                class="button button-secondary js-Dialog-close"
+                data-analytics="pageview,/batch/-dialog_close/">{% trans "No, continue processing" %}</button>
       </div>
     </dialog>
   </form>

@@ -40,7 +40,6 @@ class DashboardView(TemplateView):
 
 
 class TransactionBatchListView(FormView):
-
     form_class = ProcessTransactionBatchForm
     template_name = 'cashbook/transaction_batch_list.html'
     success_url = reverse_lazy('dashboard')
@@ -64,9 +63,10 @@ class TransactionBatchListView(FormView):
 
     def form_valid(self, form):
         credited, discarded = form.save()
+        credited_count = len(credited)
+        discarded_count = len(discarded)
 
-        if credited:
-            credited_count = len(credited)
+        if credited_count:
             messages.success(
                 self.request,
                 ungettext(
@@ -82,6 +82,11 @@ class TransactionBatchListView(FormView):
                 'username': self.request.user.username,
                 'credited': credited_count,
             })
+
+        if discarded_count:
+            self.success_url = reverse('dashboard-batch-incomplete')
+        else:
+            self.success_url = reverse('dashboard-batch-complete')
 
         return super(TransactionBatchListView, self).form_valid(form)
 

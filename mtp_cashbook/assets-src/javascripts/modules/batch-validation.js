@@ -1,5 +1,5 @@
 // Batch validation module
-/* global exports, require, ga, $ */
+/* global exports, require, analytics, $ */
 'use strict';
 
 var bindAll = require('lodash/function/bindAll');
@@ -78,9 +78,6 @@ exports.BatchValidation = {
         targetSelector: '#incomplete-batch-dialog'
       });
       return;
-    } else {
-      // Tell analytics that a complete batch was submitted
-      ga && ga('send', { 'hitType': 'pageview', 'page': '/batch/-complete_submitted/', 'title': 'Complete batch submitted' });
     }
   }
 };
