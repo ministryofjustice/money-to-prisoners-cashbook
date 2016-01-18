@@ -113,11 +113,18 @@ class NewPaymentsPageTests(FunctionalTestCase):
             '//div[@class="Dialog-inner"]/h3[text()="Are you sure?"]'
         ))
 
-    def test_submitting_and_confirming_payments_credited(self):
+    def test_submitting_and_confirming_partial_batch(self):
         self.driver.find_element_by_xpath('//input[@type="checkbox" and @data-amount][1]').click()
         self.driver.find_element_by_xpath('//button[text()="Done"]').click()
         self.driver.find_element_by_xpath('//div[@class="Dialog-inner"]/*[text()="Yes"]').click()
         self.assertIn('You’ve credited 1 payment to NOMIS.', self.driver.page_source)
+        self.assertEquals('Digital cashbook', self.driver.title)
+
+    def test_submitting_and_not_confirming_partial_batch(self):
+        self.driver.find_element_by_xpath('//input[@type="checkbox" and @data-amount][1]').click()
+        self.driver.find_element_by_xpath('//button[text()="Done"]').click()
+        self.driver.find_element_by_xpath('//div[@class="Dialog-inner"]/*[text()="No, continue processing"]').click()
+        self.assertEquals('New credits - Digital cashbook', self.driver.title)
 
     def test_clicking_done_with_no_payments_credited(self):
         self.driver.find_element_by_xpath('//button[text()="Done"]').click()
@@ -139,6 +146,40 @@ class NewPaymentsPageTests(FunctionalTestCase):
         self.assertEquals('block', help_box_contents.value_of_css_property('display'))
         help_box_button.click()
         self.assertEquals('none', help_box_contents.value_of_css_property('display'))
+
+    def test_go_back_home(self):
+        self.driver.find_element_by_link_text('Home').click()
+        self.assertEquals('Digital cashbook', self.driver.title)
+
+    def test_submitting_complete_batch(self):
+        self.driver.find_element_by_xpath('//input[@type="checkbox"][1]').click()
+        self.driver.find_element_by_xpath('//button[text()="Done"]').click()
+        self.assertEquals('Digital cashbook', self.driver.title)
+        self.assertIn('You’ve credited', self.driver.page_source)
+
+
+class VisualTests(FunctionalTestCase):
+    """
+    Tests that need to be run with a visual browser as they require interacting
+    with browser controls (alerts or onbeforeunload)
+    """
+    def setUp(self):
+        self.driver = webdriver.Firefox()
+        self.login_and_go_to('New')
+
+    def test_leaving_confirming_incomplete_batch(self):
+        # we need firefox as this is using a native dialog
+        self.driver.find_element_by_xpath('//input[@type="checkbox" and @data-amount][1]').click()
+        self.driver.find_element_by_link_text('Home').click()
+        self.driver.switch_to.alert.dismiss()
+        self.assertEquals('New credits - Digital cashbook', self.driver.title)
+
+    def test_leaving_not_confirming_incomplete_batch(self):
+        # we need firefox as this is using a native dialog
+        self.driver.find_element_by_xpath('//input[@type="checkbox" and @data-amount][1]').click()
+        self.driver.find_element_by_link_text('Home').click()
+        self.driver.switch_to.alert.accept()
+        self.assertEquals('Digital cashbook', self.driver.title)
 
 
 class HistoryPageTests(FunctionalTestCase):
