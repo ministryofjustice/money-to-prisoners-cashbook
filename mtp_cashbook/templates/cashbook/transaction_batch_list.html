@@ -143,14 +143,10 @@
         <p>{% trans "Do you want to submit only the selected credits?" %}</p>
         <button type="submit"
                 class="button"
-                value="override">
-          {% trans "Yes" %}
-        </button>
+                value="override">{% trans "Yes" %}</button>
         <button type="button"
                 class="button button-secondary js-Dialog-close"
-                data-analytics="pageview,/batch/-dialog_close/">
-          {% trans "No, continue processing" %}
-        </button>
+                data-analytics="pageview,/batch/-dialog_close/">{% trans "No, continue processing" %}</button>
       </div>
     </dialog>
   </form>
