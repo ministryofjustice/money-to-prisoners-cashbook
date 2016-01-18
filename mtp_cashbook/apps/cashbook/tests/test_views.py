@@ -1,6 +1,7 @@
 import datetime
 from unittest import mock
 
+from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.utils.timezone import now, utc
 
@@ -186,6 +187,81 @@ class LockedViewTestCase(MTPBaseTestCase):
         response = self.client.get(self.locked_url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['object_list'], expected_groups)
+
+
+class BatchListView(MTPBaseTestCase):
+    @mock.patch('cashbook.views.api_client')
+    @mock.patch('cashbook.forms.get_connection')
+    def __call__(self, result, mocked_get_connection, mocked_api_client):
+        self.mocked_api_client = mocked_api_client
+        self.mocked_get_connection = mocked_get_connection
+        super().__call__(result)
+
+    @property
+    def list_url(self):
+        return reverse('transaction-list')
+
+    @mock.patch('cashbook.views.TransactionBatchListView.form_class')
+    def test_empty_batch_submitted(self, mocked_form_class):
+        mocked_form = mocked_form_class()
+        mocked_form.transaction_choices = [
+            (1, {'id': 1,
+                 'amount': 1050}),
+            (2, {'id': 2,
+                 'amount': 4500}),
+        ]
+        mocked_form.clean_transactions.side_effect = ValidationError('empty list and not discarding')
+        mocked_form.is_valid.return_value = False
+
+        self.login()
+        response = self.client.post(
+            self.list_url,
+            data={'transactions': []},
+            follow=False,
+        )
+        self.assertEqual(response.status_code, 200)
+
+    @mock.patch('cashbook.views.TransactionBatchListView.form_class')
+    def test_incomplete_batch_submitted(self, mocked_form_class):
+        mocked_form = mocked_form_class()
+        mocked_form.transaction_choices = [
+            (1, {'id': 1,
+                 'amount': 1050}),
+            (2, {'id': 2,
+                 'amount': 4500}),
+        ]
+        mocked_form.is_valid.return_value = True
+        mocked_form.save.return_value = ({1}, {2})
+
+        self.login()
+        response = self.client.post(
+            self.list_url,
+            data={'transactions': [1]},
+            follow=False,
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('dashboard-batch-incomplete'))
+
+    @mock.patch('cashbook.views.TransactionBatchListView.form_class')
+    def test_complete_batch_submitted(self, mocked_form_class):
+        mocked_form = mocked_form_class()
+        mocked_form.transaction_choices = [
+            (1, {'id': 1,
+                 'amount': 1050}),
+            (2, {'id': 2,
+                 'amount': 4500}),
+        ]
+        mocked_form.is_valid.return_value = True
+        mocked_form.save.return_value = ({1, 2}, {})
+
+        self.login()
+        response = self.client.post(
+            self.list_url,
+            data={'transactions': [1, 2]},
+            follow=False,
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('dashboard-batch-complete'))
 
 
 class HistoryViewTestCase(MTPBaseTestCase):
