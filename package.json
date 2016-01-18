@@ -1,5 +1,6 @@
 {
   "name": "money-to-prisoners-cashbook",
+  "description": "Cashbook UI for Money to Prisoners",
   "version": "0.1.0",
   "repository": {
     "type": "git",
@@ -15,11 +16,7 @@
     "unsafe-perm": true
   },
   "scripts": {
-    "start": "./node_modules/gulp/bin/gulp.js serve",
-    "test": "./node_modules/.bin/wdio test/wdio.conf.js",
-    "test-init": "./node_modules/.bin/selenium-standalone install",
-    "test-headless": "./node_modules/.bin/wdio test/wdio.headless.conf.js",
-    "test-wip": "./node_modules/.bin/wdio test/wdio.wip.conf.js"
+    "start": "./node_modules/gulp/bin/gulp.js serve"
   },
   "license": "MIT",
   "dependencies": {
