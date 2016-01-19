@@ -178,13 +178,15 @@ class NewPaymentsPageTests(FunctionalTestCase):
         self.assertIn('You’ve credited', self.driver.page_source)
 
 
+@unittest.skipUnless(os.environ.get('WEBDRIVER') == 'firefox', 'visual tests require firefox web driver')
 class VisualTests(FunctionalTestCase):
     """
     Tests that need to be run with a visual browser as they require interacting
     with browser controls (alerts or onbeforeunload)
     """
+
     def setUp(self):
-        self.driver = webdriver.Firefox()
+        super().setUp()
         self.login_and_go_to('New')
 
     def test_leaving_confirming_incomplete_batch(self):
