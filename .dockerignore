@@ -1,28 +1,16 @@
-*.pyc
-include/
-lib/
-static/
-media/
-.build
+# general
+*.DS_Store
+*.py?
+*~
 
-# sqlite3 db
-*.db
-*.sqlite3
-
-# sublime stuff
+# editors
+.idea/
 *.sublime-workspace
 *.sublime-project
 
-# Virtual env
-venv/
-
-# Mac crap
-*.DS_Store
-
-# Node Stuff
-node_modules
-
+# project
+mtp_cashbook/settings/local.py
 mtp_cashbook/assets/
-
-# Sass-cache
-.sass-cache
+node_modules/
+static/
+venv/

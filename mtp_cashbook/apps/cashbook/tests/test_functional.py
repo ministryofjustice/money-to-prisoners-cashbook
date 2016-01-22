@@ -2,8 +2,10 @@ import glob
 import logging
 import os
 import socket
+from urllib.parse import urlparse
 import unittest
 
+from django.conf import settings
 from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -45,19 +47,18 @@ class FunctionalTestCase(LiveServerTestCase):
 
     def load_test_data(self):
         logger.info('Reloading test data')
-        sock = None
         try:
-            sock = socket.socket()
-            sock.connect(('localhost', os.environ.get('CONTROLLER_PORT', 8800)))
-            sock.sendall(b'load_test_data')
-            response = sock.recv(1024).strip()
+            with socket.socket() as sock:
+                sock.connect((
+                    urlparse(settings.API_URL).netloc.split(':')[0],
+                    os.environ.get('CONTROLLER_PORT', 8800)
+                ))
+                sock.sendall(b'load_test_data')
+                response = sock.recv(1024).strip()
             if response != b'done':
                 logger.error('Test data not reloaded!')
         except OSError:
             logger.exception('Error communicating with test server controller socket')
-        finally:
-            if sock:
-                sock.close()
 
     def login(self, username, password):
         self.driver.get(self.live_server_url)

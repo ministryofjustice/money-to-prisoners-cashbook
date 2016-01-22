@@ -1,5 +1,5 @@
 """
-Production/Docker settings
+Docker settings
 """
 from .base import *  # noqa
 
@@ -21,7 +21,8 @@ if not OAUTHLIB_INSECURE_TRANSPORT:
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = ''
 
 # security tightening
-SECURE_SSL_REDIRECT = True  # also done at nginx level
-SECURE_HSTS_SECONDS = 300
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+if ENVIRONMENT != 'local':
+    SECURE_SSL_REDIRECT = True  # also done at nginx level
+    SECURE_HSTS_SECONDS = 300
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True

@@ -15,33 +15,20 @@ Please refer to the [money-to-prisoners-api](https://github.com/ministryofjustic
 Once the API is running locally, run
 
 ```
-./run.sh start
+make start
 ```
 
 This will build everything (which will initially take a while) and run
 the local server at [http://localhost:8001](http://localhost:8001).
-
-### Alternative: Gulp
-
-The method above is still experimental. The traditional way, which is closer
-to how real deployments are done, is:
-
-```
-virtualenv -p python3 venv
-source venv/bin/activate
-pip install -r requirements/dev.txt
-gulp
-./manage runserver 8001
 ```
 
 ### Alternative: Docker
 
 In order to run a server that's exactly similar to the production machines,
-you need to have [Docker](http://docs.docker.com/installation/mac/) and
-[Docker Compose](https://docs.docker.com/compose/install/) installed. Run
+you need to have [Docker](https://www.docker.com/docker-toolbox) installed. Run
 
 ```
-make run
+make docker
 ```
 
 and you should eventually be able to connect to the local server.
@@ -55,16 +42,12 @@ You should be able to log into the cash book app using following credentials:
 
 ## Developing
 
-With the `run.sh` command, you can run a browser-sync server, and get the assets
-to automatically recompile when changes are made, run `./run.sh serve` instead of
-`./run.sh start`. The server is then available at the URL indicated.
-
-If you've used the second method method above, you can use `gulp serve`
-but you'll also need to keep the server at port 8000 running.
-
+With the `make` command, you can run a browser-sync server, and get the assets
+to automatically recompile when changes are made, run `make serve` instead of
+`make start`. The server is then available at the URL indicated.
 
 ```
-./run.sh test
+make test
 ```
 
 Runs all the application tests.

@@ -10,6 +10,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mtp_cashbook.settings.prod')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mtp_cashbook.settings.docker')
 
 application = get_wsgi_application()
