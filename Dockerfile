@@ -16,22 +16,25 @@ RUN apt-get update && \
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 10
 
 WORKDIR /app
+RUN mkdir -p /app/mtp_cashbook/assets
+RUN mkdir -p /app/static
 
 RUN npm install npm -g
 RUN npm config set python python2.7
-RUN npm install -g gulp
 
-ADD ./conf/uwsgi /etc/uwsgi
+# cache node modules, unless requirements change
+ADD ./package.json /app/package.json
+RUN npm install
 
-ADD ./requirements/ /app/requirements/
-RUN pip3 install -r requirements/prod.txt
+RUN pip3 install -U setuptools pip wheel virtualenv
+RUN virtualenv -p python3.4 venv
 
-ADD package.json README.md /app/
-RUN npm install --production --unsafe-perm
+# cache python packages, unless requirements change
+ADD ./requirements /app/requirements
+RUN venv/bin/pip install -r requirements/docker.txt
 
 ADD . /app
-RUN gulp --production
-RUN ./manage.py collectstatic --noinput
+RUN make build python_requirements=requirements/docker.txt
 
 EXPOSE 8080
-CMD ["/usr/local/bin/uwsgi", "--ini", "/etc/uwsgi/cashbook.ini"]
+CMD make uwsgi python_requirements=requirements/docker.txt
