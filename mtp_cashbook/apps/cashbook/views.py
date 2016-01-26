@@ -15,7 +15,7 @@ from moj_auth import api_client
 from .forms import ProcessTransactionBatchForm, DiscardLockedTransactionsForm, \
     FilterTransactionHistoryForm
 
-logger = logging.getLogger()
+logger = logging.getLogger('mtp')
 
 
 class DashboardView(TemplateView):

@@ -10,7 +10,7 @@ from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
-logger = logging.getLogger()
+logger = logging.getLogger('mtp')
 
 
 @unittest.skipUnless('RUN_FUNCTIONAL_TESTS' in os.environ, 'functional tests are disabled')

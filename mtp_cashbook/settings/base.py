@@ -121,6 +121,10 @@ LOGGING = {
         },
     },
     'handlers': {
+        'null': {
+            'level': 'DEBUG',
+            'class': 'logging.NullHandler',
+        },
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
@@ -132,8 +136,19 @@ LOGGING = {
         },
     },
     'root': {
-        'level': 'INFO',
+        'level': 'WARNING',
         'handlers': ['console'],
+    },
+    'loggers': {
+        'django.security.DisallowedHost': {
+            'handlers': ['null'],
+            'propagate': False,
+        },
+        'mtp': {
+            'level': 'INFO',
+            'handlers': ['console'],
+            'propagate': False,
+        },
     },
 }
 
@@ -149,6 +164,7 @@ if os.environ.get('SENTRY_DSN'):
         'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler'
     }
     LOGGING['root']['handlers'].append('sentry')
+    LOGGING['loggers']['mtp']['handlers'].append('sentry')
 
 # authentication
 SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
