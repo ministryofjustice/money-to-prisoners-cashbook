@@ -13,4 +13,4 @@ browsersync_ui_port=3031
 	@npm install
 
 %: ./node_modules/money-to-prisoners-common
-include node_modules/money-to-prisoners-common/Makefile
+	@$(MAKE) -f ./node_modules/money-to-prisoners-common/Makefile app=$(app) port=$(port) browsersync_port=$(browsersync_port) browsersync_ui_port=$(browsersync_ui_port) $@
