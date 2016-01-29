@@ -46,6 +46,7 @@ class FunctionalTestCase(LiveServerTestCase):
             self.driver = webdriver.PhantomJS(executable_path=path)
 
         self.driver.set_window_size(1000, 1000)
+        self.driver.set_window_position(0, 0)
 
     def tearDown(self):
         self.driver.quit()
@@ -287,6 +288,14 @@ class Journeys(FunctionalTestCase):
         self.driver.switch_to.alert.accept()
         self.click_on('History')
         self.click_on('Home')
+        self.click_on('Sign out')
+
+    def test_journey_5(self):
+        self.login('test-prison-1', 'test-prison-1')
+        self.click_on('New')
+        self.click_checkbox(1)
+        self.scroll_to_top()
+        self.click_on('Done')
         self.click_on('Sign out')
 
 
