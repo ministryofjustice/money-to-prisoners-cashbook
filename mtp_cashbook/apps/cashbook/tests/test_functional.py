@@ -27,7 +27,11 @@ class FunctionalTestCase(LiveServerTestCase):
     def setUp(self):
         web_driver = os.environ.get('WEBDRIVER', 'phantomjs')
         if web_driver == 'firefox':
-            self.driver = webdriver.Firefox()
+            fp = webdriver.FirefoxProfile()
+            fp.set_preference('browser.startup.homepage', 'about:blank')
+            fp.set_preference('startup.homepage_welcome_url', 'about:blank')
+            fp.set_preference('startup.homepage_welcome_url.additional', 'about:blank')
+            self.driver = webdriver.Firefox(firefox_profile=fp)
         elif web_driver == 'chrome':
             paths = glob.glob('node_modules/selenium-standalone/.selenium/chromedriver/*-chromedriver')
             paths = filter(lambda path: os.path.isfile(path) and os.access(path, os.X_OK),

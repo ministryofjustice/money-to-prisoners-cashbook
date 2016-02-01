@@ -183,7 +183,8 @@ def find_api_url():
 
     api_port = int(os.environ.get('API_PORT', '8000'))
     try:
-        host_machine_ip = subprocess.check_output(['docker-machine', 'ip', 'default'])
+        host_machine_ip = subprocess.check_output(['docker-machine', 'ip', 'default'],
+                                                  stderr=subprocess.DEVNULL)
         host_machine_ip = host_machine_ip.decode('ascii').strip()
         with socket.socket() as sock:
             sock.connect((host_machine_ip, api_port))
