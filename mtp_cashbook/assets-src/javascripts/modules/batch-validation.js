@@ -3,6 +3,7 @@
 'use strict';
 
 var bindAll = require('lodash/function/bindAll');
+var analytics = require('analytics');
 
 exports.BatchValidation = {
   selector: '.js-BatchValidation',
@@ -77,6 +78,7 @@ exports.BatchValidation = {
         target: e.target,
         targetSelector: '#incomplete-batch-dialog'
       });
+      analytics.analytics.send('pageview', '/batch/-dialog_open/');
       return;
     }
   }
