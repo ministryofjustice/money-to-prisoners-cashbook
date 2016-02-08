@@ -25,6 +25,7 @@ class FunctionalTestCase(LiveServerTestCase):
         return []
 
     def setUp(self):
+        self.load_test_data()
         web_driver = os.environ.get('WEBDRIVER', 'phantomjs')
         if web_driver == 'firefox':
             fp = webdriver.FirefoxProfile()
@@ -45,6 +46,7 @@ class FunctionalTestCase(LiveServerTestCase):
             self.driver = webdriver.PhantomJS(executable_path=path)
 
         self.driver.set_window_size(1000, 1000)
+        self.driver.set_window_position(0, 0)
 
     def tearDown(self):
         self.driver.quit()
@@ -75,6 +77,24 @@ class FunctionalTestCase(LiveServerTestCase):
         self.login('test-prison-1', 'test-prison-1')
         self.driver.find_element_by_partial_link_text(link_text).click()
 
+    def click_checkbox(self, index):
+        self.driver.find_elements_by_xpath('//input[@type="checkbox"]')[index].click()
+
+    def click_on(self, text):
+        self.driver.find_element_by_xpath(
+            '//*[text() = "' + text + '"] | '
+            '//input[@type="submit" and @value="' + text + '"]'
+        ).click()
+
+    def scroll_to_top(self):
+        self.driver.execute_script('window.scrollTo(0, 0);')
+
+    def scroll_to_bottom(self):
+        self.driver.execute_script('window.scrollTo(0, document.body.scrollHeight);')
+
+    def type_in(self, element_id, text):
+        self.driver.find_element_by_id(element_id).send_keys(text)
+
 
 class LoginTests(FunctionalTestCase):
     """
@@ -84,8 +104,8 @@ class LoginTests(FunctionalTestCase):
     def test_title(self):
         self.driver.get(self.live_server_url)
         heading = self.driver.find_element_by_tag_name('h1')
-        self.assertEquals('Money sent to prisoners', heading.text)
-        self.assertEquals('48px', heading.value_of_css_property('font-size'))
+        self.assertEqual('Money sent to prisoners', heading.text)
+        self.assertEqual('48px', heading.value_of_css_property('font-size'))
 
     def test_bad_login(self):
         self.login('test-prison-1', 'bad-password')
@@ -94,7 +114,7 @@ class LoginTests(FunctionalTestCase):
 
     def test_good_login(self):
         self.login('test-prison-1', 'test-prison-1')
-        self.assertEquals(self.driver.current_url, self.live_server_url + '/')
+        self.assertEqual(self.driver.current_url, self.live_server_url + '/')
         self.assertIn('Credits to process', self.driver.page_source)
 
     def test_logout(self):
@@ -143,13 +163,13 @@ class NewPaymentsPageTests(FunctionalTestCase):
         self.driver.find_element_by_xpath('//button[text()="Done"]').click()
         self.driver.find_element_by_xpath('//div[@class="Dialog-inner"]/*[text()="Yes"]').click()
         self.assertIn('You’ve credited 1 payment to NOMIS.', self.driver.page_source)
-        self.assertEquals('Digital cashbook', self.driver.title)
+        self.assertEqual('Digital cashbook', self.driver.title)
 
     def test_submitting_and_not_confirming_partial_batch(self):
         self.driver.find_element_by_xpath('//input[@type="checkbox" and @data-amount][1]').click()
         self.driver.find_element_by_xpath('//button[text()="Done"]').click()
         self.driver.find_element_by_xpath('//div[@class="Dialog-inner"]/*[text()="No, continue processing"]').click()
-        self.assertEquals('New credits - Digital cashbook', self.driver.title)
+        self.assertEqual('New credits - Digital cashbook', self.driver.title)
 
     def test_clicking_done_with_no_payments_credited(self):
         self.driver.find_element_by_xpath('//button[text()="Done"]').click()
@@ -166,20 +186,20 @@ class NewPaymentsPageTests(FunctionalTestCase):
     def test_help_popup(self):
         help_box_contents = self.driver.find_element_by_css_selector('.help-box-contents')
         help_box_button = self.driver.find_element_by_css_selector('.help-box h3')
-        self.assertEquals('none', help_box_contents.value_of_css_property('display'))
+        self.assertEqual('none', help_box_contents.value_of_css_property('display'))
         help_box_button.click()
-        self.assertEquals('block', help_box_contents.value_of_css_property('display'))
+        self.assertEqual('block', help_box_contents.value_of_css_property('display'))
         help_box_button.click()
-        self.assertEquals('none', help_box_contents.value_of_css_property('display'))
+        self.assertEqual('none', help_box_contents.value_of_css_property('display'))
 
     def test_go_back_home(self):
         self.driver.find_element_by_link_text('Home').click()
-        self.assertEquals('Digital cashbook', self.driver.title)
+        self.assertEqual('Digital cashbook', self.driver.title)
 
     def test_submitting_complete_batch(self):
         self.driver.find_element_by_xpath('//input[@type="checkbox"][1]').click()
         self.driver.find_element_by_xpath('//button[text()="Done"]').click()
-        self.assertEquals('Digital cashbook', self.driver.title)
+        self.assertEqual('Digital cashbook', self.driver.title)
         self.assertIn('You’ve credited', self.driver.page_source)
 
 
@@ -192,6 +212,7 @@ class VisualTests(FunctionalTestCase):
 
     def setUp(self):
         super().setUp()
+        self.driver.implicitly_wait(10)
         self.login_and_go_to('New')
 
     def test_leaving_confirming_incomplete_batch(self):
@@ -199,14 +220,83 @@ class VisualTests(FunctionalTestCase):
         self.driver.find_element_by_xpath('//input[@type="checkbox" and @data-amount][1]').click()
         self.driver.find_element_by_link_text('Home').click()
         self.driver.switch_to.alert.dismiss()
-        self.assertEquals('New credits - Digital cashbook', self.driver.title)
+        self.assertEqual('New credits - Digital cashbook', self.driver.title)
 
     def test_leaving_not_confirming_incomplete_batch(self):
         # we need firefox as this is using a native dialog
         self.driver.find_element_by_xpath('//input[@type="checkbox" and @data-amount][1]').click()
         self.driver.find_element_by_link_text('Home').click()
         self.driver.switch_to.alert.accept()
-        self.assertEquals('Digital cashbook', self.driver.title)
+        self.assertEqual('Digital cashbook', self.driver.title)
+
+
+@unittest.skipUnless(os.environ.get('WEBDRIVER') == 'firefox', 'visual tests require firefox web driver')
+class Journeys(FunctionalTestCase):
+    """
+    These aren't real tests but rather simulations of complex
+    sessions as a real user would do. This is used to automatically
+    populate analytics with semi-realistic data
+    """
+
+    def test_journey_1(self):
+        self.login('test-prison-1', 'bad-password')
+        self.login('test-prison-1', 'bad-password-again')
+        self.login('test-prison-1', 'test-prison-1')
+        self.click_on('New')
+        self.click_on('How to process credits in NOMIS')
+        self.click_on('How to process credits in NOMIS')
+        self.click_on('Done')
+        self.click_checkbox(2)
+        self.scroll_to_top()
+        self.click_on('Done')
+        self.click_on('No, continue processing')
+        self.click_on('Done')
+        self.click_on('Yes')
+        self.click_on('History')
+        self.scroll_to_bottom()
+        self.click_on('Print these payments')
+        self.click_on('Cancel')
+        self.scroll_to_top()
+        self.click_on('Sign out')
+
+    def test_journey_2(self):
+        self.login('test-prison-1', 'test-prison-1')
+        self.click_on('History')
+        self.type_in('id_search', 'e')
+        self.type_in('id_start', '15-01-16')
+        self.click_on('Search')
+        self.type_in('id_start', '15/01/2016')
+        self.click_on('Search')
+        self.click_on('Home')
+
+    def test_journey_3(self):
+        self.login('test-prison-1', 'test-prison-1')
+        self.click_on('New')
+        self.click_checkbox(1)
+        self.click_on('Home')
+        self.driver.switch_to.alert.dismiss()
+        self.click_checkbox(0)
+        self.click_on('Done')
+        self.click_on('In progress')
+        self.click_on('Sign out')
+
+    def test_journey_4(self):
+        self.login('test-prison-1', 'test-prison-1')
+        self.click_on('New')
+        self.click_checkbox(1)
+        self.click_on('Home')
+        self.driver.switch_to.alert.accept()
+        self.click_on('History')
+        self.click_on('Home')
+        self.click_on('Sign out')
+
+    def test_journey_5(self):
+        self.login('test-prison-1', 'test-prison-1')
+        self.click_on('New')
+        self.click_checkbox(1)
+        self.scroll_to_top()
+        self.click_on('Done')
+        self.click_on('Sign out')
 
 
 class HistoryPageTests(FunctionalTestCase):
