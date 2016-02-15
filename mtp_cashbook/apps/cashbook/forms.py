@@ -5,17 +5,19 @@ from django import forms
 from django.utils.dateparse import parse_datetime
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext as _
+from form_error_reporting import GARequestErrorReportingMixin
 from moj_utils.rest import retrieve_all_pages
 from moj_auth.api_client import get_connection
 
 from .form_fields import MtpTextInput, MtpDateInput
 
 
-class ProcessTransactionBatchForm(forms.Form):
+class ProcessTransactionBatchForm(GARequestErrorReportingMixin, forms.Form):
     transactions = forms.MultipleChoiceField(choices=(), required=False)
 
     def __init__(self, request, *args, **kwargs):
         super(ProcessTransactionBatchForm, self).__init__(*args, **kwargs)
+        self.request = request
         self.user = request.user
         self.client = get_connection(request)
 
@@ -81,11 +83,12 @@ class ProcessTransactionBatchForm(forms.Form):
         return (to_credit, to_discard)
 
 
-class DiscardLockedTransactionsForm(forms.Form):
+class DiscardLockedTransactionsForm(GARequestErrorReportingMixin, forms.Form):
     transactions = forms.MultipleChoiceField(choices=(), required=False)
 
     def __init__(self, request, *args, **kwargs):
         super(DiscardLockedTransactionsForm, self).__init__(*args, **kwargs)
+        self.request = request
         self.user = request.user
         self.client = get_connection(request)
 
@@ -144,7 +147,7 @@ class DiscardLockedTransactionsForm(forms.Form):
         return to_discard
 
 
-class FilterTransactionHistoryForm(forms.Form):
+class FilterTransactionHistoryForm(GARequestErrorReportingMixin, forms.Form):
     start = forms.DateField(label=_('From received date'),
                             required=True, widget=MtpDateInput)
     end = forms.DateField(label=_('To received date'),
@@ -155,6 +158,7 @@ class FilterTransactionHistoryForm(forms.Form):
     def __init__(self, request, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.label_suffix = ''
+        self.request = request
         self.user = request.user
         self.client = get_connection(request)
 
