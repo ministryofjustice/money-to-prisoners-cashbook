@@ -1,5 +1,5 @@
 // Batch validation module
-/* global exports, require, analytics, $ */
+/* global exports, require, $ */
 'use strict';
 
 var bindAll = require('lodash/function/bindAll');
