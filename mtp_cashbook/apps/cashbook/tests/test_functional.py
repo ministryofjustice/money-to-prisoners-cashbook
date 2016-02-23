@@ -95,6 +95,9 @@ class FunctionalTestCase(LiveServerTestCase):
     def type_in(self, element_id, text):
         self.driver.find_element_by_id(element_id).send_keys(text)
 
+    def assert_url_is(self, path):
+        return self.assertEqual(self.driver.current_url.split('?')[0], self.live_server_url + path)
+
 
 class LoginTests(FunctionalTestCase):
     """
@@ -238,65 +241,56 @@ class Journeys(FunctionalTestCase):
     populate analytics with semi-realistic data
     """
 
+    # Route: 1, 2
     def test_journey_1(self):
-        self.login('test-prison-1', 'bad-password')
-        self.login('test-prison-1', 'bad-password-again')
         self.login('test-prison-1', 'test-prison-1')
         self.click_on('New')
-        self.click_on('How to process credits in NOMIS')
-        self.click_on('How to process credits in NOMIS')
+        self.click_checkbox(0)
         self.click_on('Done')
-        self.click_checkbox(2)
-        self.scroll_to_top()
-        self.click_on('Done')
-        self.click_on('No, continue processing')
-        self.click_on('Done')
-        self.click_on('Yes')
-        self.click_on('History')
-        self.scroll_to_bottom()
-        self.click_on('Print these payments')
-        self.click_on('Cancel')
-        self.scroll_to_top()
-        self.click_on('Sign out')
+        self.assert_url_is('/dashboard-batch/')
 
+    # Route: 1, 3
     def test_journey_2(self):
         self.login('test-prison-1', 'test-prison-1')
-        self.click_on('History')
-        self.type_in('id_search', 'e')
-        self.type_in('id_start', '15-01-16')
-        self.click_on('Search')
-        self.type_in('id_start', '15/01/2016')
-        self.click_on('Search')
+        self.click_on('New')
         self.click_on('Home')
+        self.assert_url_is('/')
 
-    def test_journey_3(self):
+    # Route: 1, 4, 5
+    def test_journey_2(self):
         self.login('test-prison-1', 'test-prison-1')
         self.click_on('New')
         self.click_checkbox(1)
-        self.click_on('Home')
-        self.driver.switch_to.alert.dismiss()
-        self.click_checkbox(0)
         self.click_on('Done')
-        self.click_on('In progress')
-        self.click_on('Sign out')
+        self.click_on('Yes')
+        self.assert_url_is('/dashboard-batch-incomplete/')
 
-    def test_journey_4(self):
+    # Route: 1, 4, 6
+    def test_journey_2(self):
+        self.login('test-prison-1', 'test-prison-1')
+        self.click_on('New')
+        self.click_checkbox(1)
+        self.click_on('Done')
+        self.click_on('No, continue processing')
+        self.assert_url_is('/batch/')
+
+    # Route 1, 7, 8
+    def test_journey_2(self):
         self.login('test-prison-1', 'test-prison-1')
         self.click_on('New')
         self.click_checkbox(1)
         self.click_on('Home')
         self.driver.switch_to.alert.accept()
-        self.click_on('History')
-        self.click_on('Home')
-        self.click_on('Sign out')
+        self.assert_url_is('/')
 
-    def test_journey_5(self):
+    # Route 1, 7, 9
+    def test_journey_2(self):
         self.login('test-prison-1', 'test-prison-1')
         self.click_on('New')
         self.click_checkbox(1)
-        self.scroll_to_top()
-        self.click_on('Done')
-        self.click_on('Sign out')
+        self.click_on('Home')
+        self.driver.switch_to.alert.dismiss()
+        self.assert_url_is('/batch/')
 
 
 class HistoryPageTests(FunctionalTestCase):
