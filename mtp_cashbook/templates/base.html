@@ -10,3 +10,9 @@
 {% block page_title %}{% trans "Digital cashbook" %}{% endblock %}
 
 {% block proposition %}{% trans "Digital cashbook" %}{% endblock %}
+
+{% block user_menu %}
+<span>
+  <a href="{% url 'password_change' %}">{% trans "Change password" %}</a>
+</span>
+{% endblock %}

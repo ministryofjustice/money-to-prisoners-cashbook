@@ -13,4 +13,14 @@ urlpatterns = [
             'next_page': reverse_lazy('login'),
         }, name='logout'
     ),
+    url(
+        r'^password_change/$', views.password_change, {
+            'template_name': 'auth/password_change.html'
+        }, name='password_change'
+    ),
+    url(
+        r'^password_change_done/$', views.password_change_done, {
+            'template_name': 'auth/password_change_done.html'
+        }, name='password_change_done'
+    ),
 ]
