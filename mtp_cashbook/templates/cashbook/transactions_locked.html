@@ -14,7 +14,7 @@
 
   {% if object_list %}
 
-    <p class="locked-help">{% trans 'See the credits your team are working on. Click ‘unlock’ to move them into ‘New credits’ to be processed by someone else.' %}</p>
+    <p class="locked-help">{% trans 'See the credits your team are working on. Click ‘Release’ to move them into ‘New credits’ to be processed by someone else.' %}</p>
 
     {% include "cashbook/includes/locked_buttons.html" %}
 
@@ -30,7 +30,7 @@
             <th>{% trans "Credits" %}</th>
             <th>{% trans "Amount (£)" %}</th>
             <th>{% trans "Time in progress" %}</th>
-            <th>{% trans "Unlock" %}</th>
+            <th>{% trans "Select" %}</th>
           </tr>
         </thead>
 
@@ -48,7 +48,7 @@
                 value="{{ transaction_locked_ids }}"
                 id="check-{{ transaction_group.owner }}"
                 {% if transaction_locked_ids in form.transactions.value %}checked{% endif %}>
-              <label for="check-{{ transaction_group.owner }}">{% trans "Unlock" %}</label>
+              <label for="check-{{ transaction_group.owner }}">{% trans "Select" %}</label>
             </td>
           </tr>
         {% endfor %}
