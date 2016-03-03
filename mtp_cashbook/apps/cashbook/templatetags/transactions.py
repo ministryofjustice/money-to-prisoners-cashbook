@@ -51,12 +51,15 @@ def regroup_transactions(transactions):
             return 1
         return 2
 
+    def get_order_key(t):
+        return t['prisoner_number']
+
     grouped_transactions = OrderedDict()
     groups = groupby(transactions, key=lambda t: t['received_at'].date() if t['received_at'] else None)
     for date, group in groups:
         # NB: listing out inner generators so that results can be iterated multiple times
         grouped = groupby(sorted(group, key=get_status_order), key=get_status_key)
-        grouped = ((status_key, list(items)) for (status_key, items) in grouped)
+        grouped = ((status_key, list(sorted(items, key=get_order_key))) for (status_key, items) in grouped)
         grouped_transactions[date] = grouped
     return grouped_transactions.items()
 
