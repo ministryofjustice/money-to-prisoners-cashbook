@@ -267,6 +267,7 @@ class FilterTransactionHistoryFormTestCase(SimpleTestCase):
             'received_at_0': datetime.date(2015, 10, 10),
             'received_at_1': datetime.date(2015, 10, 17),
             'search': '',
+            'ordering': '-received_at',
         })
         self.assertValidForm({
             'start': '2015-10-10',
@@ -276,6 +277,7 @@ class FilterTransactionHistoryFormTestCase(SimpleTestCase):
             'received_at_0': datetime.date(2015, 10, 10),
             'received_at_1': datetime.date(2015, 10, 17),
             'search': '',
+            'ordering': '-received_at',
         })
         self.assertValidForm({
             'start': '10/10/2015',
@@ -285,6 +287,7 @@ class FilterTransactionHistoryFormTestCase(SimpleTestCase):
             'received_at_0': datetime.date(2015, 10, 10),
             'received_at_1': datetime.date(2015, 10, 17),
             'search': 'John',
+            'ordering': '-received_at',
         })
 
     def test_invalid_history_filter_form(self):

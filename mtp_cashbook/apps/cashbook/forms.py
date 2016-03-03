@@ -171,7 +171,9 @@ class FilterTransactionHistoryForm(GARequestErrorReportingMixin, forms.Form):
 
     @cached_property
     def transaction_choices(self):
-        filters = {}
+        filters = {
+            'ordering': '-received_at',
+        }
 
         fields = set(self.fields.keys())
         if self.is_valid():
