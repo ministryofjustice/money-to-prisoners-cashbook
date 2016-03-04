@@ -2,7 +2,60 @@
 {% load i18n %}
 
 {% block content %}
-{% trans "Send feedback" as form_title %}
-{% trans "Submit feedback" as submit_text %}
-{% include "forms/generic.html" %}
+
+<h1>{% trans 'Your feedback' %}</h1>
+
+<form action="." method="post" id="send-feedback">
+  {% csrf_token %}
+
+  {% if form.non_field_errors %}
+    <div class="error-summary" aria-labelledby="error-summary-heading" tabindex="-1" role="alert">
+      {% for error in form.non_field_errors %}
+        {% if forloop.first %}
+        <h1 class="error-summary-heading heading-medium" id="error-summary-heading">
+          {{ error }}
+        </h1>
+        {% else %}
+          {{ error }}
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {{ form.referer }}
+
+  <fieldset>
+    {% with field=form.ticket_content %}
+      <div class="form-group {% if field.errors %}error{% endif %}">
+        <label for="{{ field.id_for_label }}" id="{{ field.id_for_label }}-label" class="form-label">
+          {{ field.label }}
+        </label>
+        {% for error in field.errors %}
+          <span class="error-message">{{ error }}</span>
+        {% endfor %}
+        <textarea class="form-control" id="{{ field.id_for_label }}" name="{{ field.html_name }}" cols="40" rows="10">{{ field.value|default:'' }}</textarea>
+      </div>
+    {% endwith %}
+
+    <h2>{% trans 'Do you want a reply?' %}</h2>
+    <p>{% trans 'Enter your email address if you’d like a reply. We won’t use it for anything else.' %}</p>
+
+    {% with field=form.contact_email %}
+      <div class="form-group {% if field.errors %}error{% endif %}">
+        <label for="{{ field.id_for_label }}" id="{{ field.id_for_label }}-label" class="form-label">
+          {{ field.label }}
+        </label>
+        {% for error in field.errors %}
+          <span class="error-message">{{ error }}</span>
+        {% endfor %}
+        <input class="form-control" id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="{{ field.value|default:'' }}" type="email" />
+      </div>
+    {% endwith %}
+
+    <div class="form-group">
+      <button type="submit" class="button" name="submit-feedback">{% trans 'Send feedback' %}</button>
+    </div>
+  </fieldset>
+</form>
+
 {% endblock %}
