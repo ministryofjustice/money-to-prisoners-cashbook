@@ -3,7 +3,10 @@
 
 {% block content %}
 
-<h1>{% trans 'Your feedback' %}</h1>
+<header class="ContentHeader">
+  <a href="{% url 'dashboard' %}" class="ContentHeader-back">{% trans 'Home' %}</a>
+  <h1>{% trans 'Your feedback' %}</h1>
+</header>
 
 <form action="." method="post" id="send-feedback">
   {% csrf_token %}
