@@ -213,10 +213,10 @@ class VisualTests(FunctionalTestCase):
     def setUp(self):
         super().setUp()
         self.driver.implicitly_wait(10)
-        self.login_and_go_to('New')
 
     def test_leaving_confirming_incomplete_batch(self):
         # we need firefox as this is using a native dialog
+        self.login_and_go_to('New')
         self.driver.find_element_by_xpath('//input[@type="checkbox" and @data-amount][1]').click()
         self.driver.find_element_by_link_text('Home').click()
         self.driver.switch_to.alert.dismiss()
@@ -224,10 +224,20 @@ class VisualTests(FunctionalTestCase):
 
     def test_leaving_not_confirming_incomplete_batch(self):
         # we need firefox as this is using a native dialog
+        self.login_and_go_to('New')
         self.driver.find_element_by_xpath('//input[@type="checkbox" and @data-amount][1]').click()
         self.driver.find_element_by_link_text('Home').click()
         self.driver.switch_to.alert.accept()
         self.assertEqual('Digital cashbook', self.driver.title)
+
+    def test_search_focus(self):
+        self.login_and_go_to('History')
+        focused_element = self.driver.find_element_by_css_selector('input:focus')
+        self.assertEqual('id_search', focused_element.get_attribute('id'))
+        self.driver.find_element_by_id('id_start').clear()
+        self.click_on('Search')
+        focused_element = self.driver.find_element_by_css_selector('div:focus')
+        self.assertEqual('error-summary', focused_element.get_attribute('class'))
 
 
 @unittest.skipUnless(os.environ.get('WEBDRIVER') == 'firefox', 'visual tests require firefox web driver')
