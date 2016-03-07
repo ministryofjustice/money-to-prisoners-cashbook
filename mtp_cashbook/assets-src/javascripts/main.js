@@ -21,7 +21,8 @@
 
       require('batch-validation'),
       require('sticky-header'),
-      require('running-total')
+      require('running-total'),
+      require('search-focus')
     ])
     .init();
 }());
