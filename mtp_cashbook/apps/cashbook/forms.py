@@ -2,9 +2,11 @@ from functools import reduce
 from itertools import groupby
 
 from django import forms
+from django.conf import settings
 from django.utils.dateparse import parse_datetime
 from django.utils.functional import cached_property
-from django.utils.translation import ugettext as _
+from django.utils.dateformat import format as format_date
+from django.utils.translation import ugettext, ugettext_lazy, ungettext
 from form_error_reporting import GARequestErrorReportingMixin
 from moj_utils.rest import retrieve_all_pages
 from moj_auth.api_client import get_connection
@@ -38,7 +40,7 @@ class ProcessTransactionBatchForm(GARequestErrorReportingMixin, forms.Form):
         transactions = self.cleaned_data.get('transactions', [])
         discard = self.data.get('discard') == '1'
         if not transactions and not discard:
-            raise forms.ValidationError(_('Only click ‘Done’ when you’ve selected credits processed in NOMIS'))
+            raise forms.ValidationError(ugettext('Only click ‘Done’ when you’ve selected credits processed in NOMIS'))
         if discard:
             transactions = []
         return transactions
@@ -148,12 +150,13 @@ class DiscardLockedTransactionsForm(GARequestErrorReportingMixin, forms.Form):
 
 
 class FilterTransactionHistoryForm(GARequestErrorReportingMixin, forms.Form):
-    start = forms.DateField(label=_('From received date'),
-                            required=True, widget=MtpDateInput)
-    end = forms.DateField(label=_('To received date'),
-                          required=True, widget=MtpDateInput)
-    search = forms.CharField(label=_('Prisoner name, prisoner number or sender name'),
+    start = forms.DateField(label=ugettext_lazy('From received date'),
+                            required=False, widget=MtpDateInput)
+    end = forms.DateField(label=ugettext_lazy('To received date'),
+                          required=False, widget=MtpDateInput)
+    search = forms.CharField(label=ugettext_lazy('Prisoner name, prisoner number or sender name'),
                              required=False, widget=MtpTextInput)
+    page = forms.IntegerField(required=False, widget=forms.HiddenInput)
 
     def __init__(self, request, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -161,18 +164,32 @@ class FilterTransactionHistoryForm(GARequestErrorReportingMixin, forms.Form):
         self.request = request
         self.user = request.user
         self.client = get_connection(request)
+        self.pagination = {
+            'page': None,
+            'count': 0,
+            'page_count': 0,
+        }
 
     def clean(self):
         start = self.cleaned_data.get('start')
         end = self.cleaned_data.get('end')
         if start and end and start > end:
-            self.add_error('end', _('The end date must be after the start date.'))
+            self.add_error('end', ugettext('The end date must be after the start date.'))
         return super().clean()
+
+    @property
+    def has_filters(self):
+        if not hasattr(self, 'cleaned_data'):
+            return False
+        return any(self.cleaned_data.get(key) for key in ['start', 'end', 'search'])
 
     @cached_property
     def transaction_choices(self):
+        page_size = settings.REQUEST_PAGE_DAYS
         filters = {
             'ordering': '-received_at',
+            'page_by_date_field': 'received_at',
+            'page_size': page_size,
         }
 
         fields = set(self.fields.keys())
@@ -188,6 +205,11 @@ class FilterTransactionHistoryForm(GARequestErrorReportingMixin, forms.Form):
                     filters[field] = self.initial[field]
         else:
             # invalid form
+            self.pagination = {
+                'page': None,
+                'count': 0,
+                'page_count': 0,
+            }
             return []
 
         renames = (
@@ -199,4 +221,68 @@ class FilterTransactionHistoryForm(GARequestErrorReportingMixin, forms.Form):
                 filters[api_name] = filters[field_name]
                 del filters[field_name]
 
-        return retrieve_all_pages(self.client.cashbook.transactions.get, **filters)
+        response = self.client.cashbook.transactions.get(**filters)
+        self.pagination = {
+            'page': response.get('page', 1),
+            'count': response.get('count', 0),
+            'page_count': response.get('page_count', 0),
+        }
+        return response.get('results', [])
+
+    def _get_filter_description(self):
+        if self.cleaned_data:
+            search_description = self.cleaned_data.get('search')
+
+            def get_date(date_key):
+                date = self.cleaned_data.get(date_key)
+                if date:
+                    return format_date(date, 'd/m/Y')
+
+            date_range = {
+                'start': get_date('start'),
+                'end': get_date('end'),
+            }
+            if date_range['start'] and date_range['end']:
+                if date_range['start'] == date_range['end']:
+                    date_range_description = ugettext('on %(start)s') % date_range
+                else:
+                    date_range_description = ugettext('between %(start)s and %(end)s') % date_range
+            elif date_range['start']:
+                date_range_description = ugettext('since %(start)s') % date_range
+            elif date_range['end']:
+                date_range_description = ugettext('up to %(end)s') % date_range
+            else:
+                date_range_description = None
+        else:
+            search_description = None
+            date_range_description = None
+        return search_description, date_range_description
+
+    def get_search_description(self):
+        credit_description = ungettext(
+            '%(count)d credit',
+            '%(count)d credits',
+            self.pagination['count'],
+        ) % self.pagination
+
+        search_description, date_range_description = self._get_filter_description()
+        if search_description and date_range_description:
+            return ugettext('%(credits)s received %(date_range)s when searching for “%(search)s”.') % {
+                'search': search_description,
+                'date_range': date_range_description,
+                'credits': credit_description,
+            }
+        elif search_description:
+            return ugettext('Searching for “%(search)s” returned %(credits)s.') % {
+                'search': search_description,
+                'credits': credit_description,
+            }
+        elif date_range_description:
+            return ugettext('%(credits)s received %(date_range)s.') % {
+                'date_range': date_range_description,
+                'credits': credit_description,
+            }
+        else:
+            return ugettext('%(credits)s received.') % {
+                'credits': credit_description,
+            }

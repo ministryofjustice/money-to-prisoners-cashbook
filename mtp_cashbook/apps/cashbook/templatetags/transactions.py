@@ -1,5 +1,6 @@
 from collections import OrderedDict
 from itertools import groupby
+from urllib import parse as urlparse
 
 from django import template
 from django.utils.dateparse import parse_datetime, parse_date
@@ -70,3 +71,25 @@ def sum_transactions(transactions):
     Returns the total sum of payment amounts (irrespective of status)
     """
     return sum(map(lambda t: t['amount'] or 0, transactions))
+
+
+@register.simple_tag
+def url_with_query_param(request, param_name, value):
+    """
+    Sets or replaces a GET query parameter or the current URL with a new value
+    """
+
+    # adapted from Django REST Framework:
+    def replace_query_param(url, key, val):
+        """
+        Given a URL and a key/val pair, set or replace an item in the query
+        parameters of the URL, and return the new URL.
+        """
+        (scheme, netloc, path, query, fragment) = urlparse.urlsplit(url)
+        query_dict = urlparse.parse_qs(query, keep_blank_values=True)
+        query_dict[key] = [val]
+        query = urlparse.urlencode(sorted(list(query_dict.items())), doseq=True)
+        return urlparse.urlunsplit((scheme, netloc, path, query, fragment))
+
+    url = request.build_absolute_uri()
+    return replace_query_param(url, param_name, value)

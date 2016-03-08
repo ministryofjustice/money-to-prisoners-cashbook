@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load moj_utils %}
-{% load currency transactions %}
+{% load currency %}
+{% load transactions %}
 
 {% block content %}
   <header class="ContentHeader">
@@ -42,7 +43,7 @@
     {% endif %}
 
     <div class="grid-row">
-    <div id="form-group-search" class="form-group {% if form.search.errors %}error{% endif %}">
+      <div id="form-group-search" class="form-group {% if form.search.errors %}error{% endif %}">
         <div class="column-full">
           <label for="id_search" id="id_search-label" class="form-label">
             {% trans 'Prisoner name, prisoner number or sender name' %}
@@ -69,7 +70,7 @@
                   <span class="error-message">{{ error }}</span>
                 {% endfor %}
               </label>
-              <input class="form-control js-FormDateControl" id="id_start" name="start" type="text" value="{{ form.start.value|date:'d/m/Y'|default:form.start.value }}" />
+              <input class="form-control js-FormDateControl" id="id_start" name="start" type="text" value="{{ form.start.value|date:'d/m/Y'|default:form.start.value|default_if_none:'' }}" />
             </div>
           </div>
           <div class="date-end">
@@ -80,17 +81,24 @@
                   <span class="error-message">{{ error }}</span>
                 {% endfor %}
               </label>
-              <input class="form-control js-FormDateControl" id="id_end" name="end" type="text" value="{{ form.end.value|date:'d/m/Y'|default:form.end.value }}" />
+              <input class="form-control js-FormDateControl" id="id_end" name="end" type="text" value="{{ form.end.value|date:'d/m/Y'|default:form.end.value|default_if_none:'' }}" />
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    {# always forces a search to start on page 1 #}
+    <input type="hidden" name="{{ form.page.html_name }}" value="1">
+
     <div><input class="button button-secondary" type="submit" value="{% trans 'Search' %}"></div>
   </form>
 
+  <br>
 
   {% if object_list %}
+    <p>{{ form.get_search_description }}</p>
+
     {% for transaction_date, group in object_list|parse_date_fields|regroup_transactions %}
       <h3>{{ transaction_date|date:'DATE_FORMAT' }}</h3>
 
@@ -118,15 +126,15 @@
               </tr>
             </thead>
             <tbody>
-            {% for transaction in transactions %}
-              <tr {% if not forloop.counter|divisibleby:2 %}class="odd"{% endif %}>
-                <td>{{ transaction.prisoner_number }}</td>
-                <td>{{ transaction.prisoner_name }}</td>
-                <td class="numeric">{{ transaction.amount|currency }}</td>
-                <td>{{ transaction.sender }}</td>
-                <td>{{ transaction.owner_name|default_if_none:'—' }}</td>
-              </tr>
-            {% endfor %}
+              {% for transaction in transactions %}
+                <tr {% if not forloop.counter|divisibleby:2 %}class="odd"{% endif %}>
+                  <td>{{ transaction.prisoner_number }}</td>
+                  <td>{{ transaction.prisoner_name }}</td>
+                  <td class="numeric">{{ transaction.amount|currency }}</td>
+                  <td>{{ transaction.sender }}</td>
+                  <td>{{ transaction.owner_name|default_if_none:'—' }}</td>
+                </tr>
+              {% endfor %}
             </tbody>
           </table>
         </div>
@@ -134,7 +142,15 @@
       {% endfor %}
     {% endfor %}
 
-    <p><a href="#print-dialog" class="js-Dialog print-hidden">{% trans 'Print these payments' %}</a></p>
+    {% if page_range %}
+      <ul>
+        {% for page in page_range %}
+          <li><a href="{% url_with_query_param request 'page' page %}" class="{% if page == current_page %}current-page{% endif %}">{{ page }}</a></li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    <p><a href="#print-dialog" class="js-Dialog print-hidden">{% trans 'Print this page of credits' %}</a></p>
     {% include 'cashbook/includes/print_dialog.html' %}
 
   {% else %}
@@ -142,7 +158,7 @@
     <table>
       <thead>
         <tr>
-          <th>{% trans 'No payment history found for given filters' %}</th>
+          <th>{% trans 'No credit history found for given filters' %}</th>
         </tr>
       </thead>
     </table>

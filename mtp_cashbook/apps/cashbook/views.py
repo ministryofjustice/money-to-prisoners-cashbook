@@ -1,4 +1,3 @@
-import datetime
 import logging
 
 from django.contrib.auth.decorators import login_required
@@ -6,7 +5,6 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
-from django.utils.timezone import now
 from django.utils.translation import ungettext
 from django.views.generic import FormView, TemplateView
 
@@ -152,26 +150,18 @@ class TransactionHistoryView(FormView):
 
     def get_initial(self):
         initial = super().get_initial()
-        today = now().date()
-        seven_days_ago = today - datetime.timedelta(days=7)
         initial.update({
-            'start': seven_days_ago,
-            'end': today,
+            'page': 1,
         })
         return initial
 
     def get_form_kwargs(self):
-        form_kwargs = {
+        return {
             'request': self.request,
+            'data': self.request.GET or {},
             'initial': self.get_initial(),
             'prefix': self.get_prefix(),
         }
-        if 'search' in self.request.GET:
-            # use search field as a flag for form being submitted
-            form_kwargs.update({
-                'data': self.request.GET
-            })
-        return form_kwargs
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
@@ -188,8 +178,16 @@ class TransactionHistoryView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        form = context['form']
+        object_list = form.transaction_choices
+        if form.pagination['page_count'] > 1:
+            page_range = list(range(1, form.pagination['page_count'] + 1))
+        else:
+            page_range = []
         context.update({
-            'object_list': context['form'].transaction_choices,
+            'object_list': object_list,
+            'current_page': form.pagination['page'],
+            'page_range': page_range,
             'transaction_owner_name': self.request.user.get_full_name,
         })
         return context
