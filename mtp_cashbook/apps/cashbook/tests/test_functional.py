@@ -320,6 +320,7 @@ class HistoryPageTests(FunctionalTestCase):
 
     def test_going_to_history_page(self):
         self.assertIn('Credit history', self.driver.page_source)
+        self.assertNotIn('Intended recipient', self.driver.page_source)
         self.assertIsNotNone(self.driver.find_element_by_xpath('//input[@value="Search"]'))
         self.assertNotIn('Payments processed by', self.driver.page_source)
 
