@@ -112,7 +112,6 @@
               <tr>
                 <th>{% trans 'Prisoner no' %}</th>
                 <th>{% trans 'Prisoner name' %}</th>
-                <th>{% trans 'Intended recipient' %}</th>
                 <th>{% trans 'Amount (£)' %}</th>
                 <th>{% trans 'Sender' %}</th>
                 <th>{% trans 'Processed by' %}</th>
@@ -123,7 +122,6 @@
               <tr {% if not forloop.counter|divisibleby:2 %}class="odd"{% endif %}>
                 <td>{{ transaction.prisoner_number }}</td>
                 <td>{{ transaction.prisoner_name }}</td>
-                <td>{% if transaction.payment %}{{ transaction.payment.recipient_name }}{% else %}—{%endif%}</td>
                 <td class="numeric">{{ transaction.amount|currency }}</td>
                 <td>{{ transaction.sender }}</td>
                 <td>{{ transaction.owner_name|default_if_none:'—' }}</td>
