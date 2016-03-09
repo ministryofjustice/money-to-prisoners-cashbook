@@ -202,6 +202,15 @@ class NewPaymentsPageTests(FunctionalTestCase):
         self.assertEqual('Digital cashbook', self.driver.title)
         self.assertIn('You’ve credited', self.driver.page_source)
 
+    def test_checkboxes_style(self):
+        # Regression tests for https://www.pivotaltracker.com/story/show/115328657
+        self.driver.find_element_by_link_text('Print these payments').click()
+        remember_checkbox = self.driver.find_element_by_xpath('//label[@for="remove-print-prompt"]')
+        self.assertEqual('0px 10%', remember_checkbox.value_of_css_property('background-position'))
+        self.driver.find_element_by_link_text('close').click()
+        select_all_checkbox = self.driver.find_element_by_xpath('//label[@for="select-all-header"][1]')
+        self.assertEqual('100% 10%', select_all_checkbox.value_of_css_property('background-position'))
+
 
 @unittest.skipUnless(os.environ.get('WEBDRIVER') == 'firefox', 'visual tests require firefox web driver')
 class VisualTests(FunctionalTestCase):
