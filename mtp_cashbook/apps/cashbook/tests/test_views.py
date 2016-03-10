@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.utils.timezone import now, utc
 
-from core.testing.testcases import MTPBaseTestCase
+from cashbook.tests import MTPBaseTestCase
 
 
 class DashboardViewTestCase(MTPBaseTestCase):

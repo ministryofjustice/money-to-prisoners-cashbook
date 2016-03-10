@@ -166,6 +166,8 @@ if os.environ.get('SENTRY_DSN'):
     LOGGING['root']['handlers'].append('sentry')
     LOGGING['loggers']['mtp']['handlers'].append('sentry')
 
+TEST_RUNNER = 'cashbook.tests.TestRunner'
+
 # authentication
 SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
