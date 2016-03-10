@@ -89,7 +89,7 @@
 
         {% include "cashbook/includes/batch_buttons.html" %}
 
-<textarea style="display:none" id="holdText"> </textarea>
+        <!--[if IE 8]><textarea style="display:none" id="holdText"> </textarea><![endif]-->
 
         <table>
           <thead>
@@ -107,7 +107,13 @@
           <tbody>
           {% for transaction_pk, transaction in object_list %}
             <tr {% if forloop.counter|divisibleby:2 %}{% else %}class="odd"{% endif %}>
-              <td><span>{{ transaction.prisoner_number }}</span> <input type="button" class="copy-to-clipboard" value="Copy"/></td>
+              <td class="prisoner-number">
+                <div>
+                  <span class="pn">{{ transaction.prisoner_number }}</span>
+                  <input type="button" class="copy-to-clipboard" value="Copy"/>
+                  <span class="mtp-bubble" style="display: none">Copy to NOMIS</span>
+                </div>
+              </td>
               <td>{{ transaction.prisoner_name }}</td>
               <td class="numeric">{{ transaction.amount|currency }}</td>
               <td>{{ transaction.sender }}</td>
