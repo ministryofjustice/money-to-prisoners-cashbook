@@ -21,21 +21,14 @@
       <ol class="error-summary-list">
         {% for field, errors in form.errors.items %}
           {% with field_obj=form|field_from_name:field %}
-        <li>
-            {% if field_obj %}
-          <a href="#{{ field_obj.auto_id }}-label">
-              {{ field_obj.label }} —
-            {% endif %}
-            {% for error in errors %}
-              {% if not forloop.first  %}
-                {% trans 'and' %}
-              {% endif %}
-              {{ error }}
-            {% endfor %}
-            {% if field_obj %}
-          </a>
-            {% endif %}
-        </li>
+            <li>
+              {% if field_obj %}<a href="#{{ field_obj.auto_id }}-label">{{ field_obj.label }} —{% endif %}
+              {% for error in errors %}
+                {% if not forloop.first  %}{% trans 'and' %}{% endif %}
+                {{ error }}
+              {% endfor %}
+              {% if field_obj %}</a>{% endif %}
+            </li>
           {% endwith %}
         {% endfor %}
       </ol>
@@ -95,75 +88,80 @@
   </form>
 
 
-  {% if object_list %}
   <div class="batch batch-history">
+    {% if object_list %}
 
-    <p class="HistoryDescription">{{ form.get_search_description }}</p>
+      <p class="HistoryDescription">{{ form.get_search_description }}</p>
 
-    {% for transaction_date, group in object_list|parse_date_fields|regroup_transactions %}
-    <h3>{{ transaction_date|date:'DATE_FORMAT' }}</h3>
+      {% for transaction_date, group in object_list|parse_date_fields|regroup_transactions %}
+        <h3>{{ transaction_date|date:'DATE_FORMAT' }}</h3>
 
-      {% for transaction_status, transactions in group %}
-    <table id="HistoryBatch-{{ forloop.parentloop.counter }}-{{ forloop.counter }}">
-      <caption
-        class="HistoryHeader {% if transaction_status == 'uncredited' %}HistoryHeader-uncredited{% elif transaction_status == 'refunded' %}HistoryHeader-refunded{% endif %}">
-              {% if transaction_status == 'uncredited' %}
-                {% trans 'Uncredited' %}
-              {% elif transaction_status == 'refunded' %}
-                {% trans 'Refunded' %}
-              {% else %}
-                {% trans 'Credited' %}
-              {% endif %}
-        <span class="HistoryHeader-aside HistoryHeader-aside-right">{% trans 'Total' %}: £{{ transactions|sum_transactions|currency }}</span>
-      </caption>
-      <thead>
-        <tr>
-          <th>{% trans 'Prisoner no' %}</th>
-          <th>{% trans 'Prisoner name' %}</th>
-          <th>{% trans 'Amount (£)' %}</th>
-          <th>{% trans 'Sender' %}</th>
-          <th>{% trans 'Processed by' %}</th>
-        </tr>
-      </thead>
-      <tbody>
-          {% for transaction in transactions %}
-        <tr {% if not forloop.counter|divisibleby:2 %}class="odd"{% endif %}>
-          <td>{{ transaction.prisoner_number }}</td>
-          <td>{{ transaction.prisoner_name }}</td>
-          <td class="numeric">{{ transaction.amount|currency }}</td>
-          <td>{{ transaction.sender }}</td>
-          <td>{{ transaction.owner_name|default_if_none:'—' }}</td>
-        </tr>
+        {% for transaction_status, transactions in group %}
+          <table id="HistoryBatch-{{ forloop.parentloop.counter }}-{{ forloop.counter }}">
+            <caption
+              class="HistoryHeader {% if transaction_status == 'uncredited' %}HistoryHeader-uncredited{% elif transaction_status == 'refunded' %}HistoryHeader-refunded{% endif %}">
+                {% if transaction_status == 'uncredited' %}
+                  {% trans 'Uncredited' %}
+                {% elif transaction_status == 'refunded' %}
+                  {% trans 'Refunded' %}
+                {% else %}
+                  {% trans 'Credited' %}
+                {% endif %}
+              <span class="HistoryHeader-aside HistoryHeader-aside-right">{% trans 'Total' %}: £{{ transactions|sum_transactions|currency }}</span>
+            </caption>
+            <thead>
+              <tr>
+                <th>{% trans 'Prisoner no' %}</th>
+                <th>{% trans 'Prisoner name' %}</th>
+                <th>{% trans 'Amount (£)' %}</th>
+                <th>{% trans 'Sender' %}</th>
+                <th>{% trans 'Processed by' %}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for transaction in transactions %}
+                <tr {% if not forloop.counter|divisibleby:2 %}class="odd"{% endif %}>
+                  <td>{{ transaction.prisoner_number }}</td>
+                  <td>{{ transaction.prisoner_name }}</td>
+                  <td class="numeric">{{ transaction.amount|currency }}</td>
+                  <td>{{ transaction.sender }}</td>
+                  <td>{{ transaction.owner_name|default_if_none:'—' }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
         {% endfor %}
-      </tbody>
-    </table>
-
       {% endfor %}
-    {% endfor %}
 
-    {% if page_range %}
-    <ul class="Pagination">
-      {% for page in page_range %}
-        <li><a href="{% url_with_query_param request 'page' page %}" class="{% if page == current_page %}current-page{% endif %}">{{ page }}</a></li>
-      {% endfor %}
-    </ul>
+      {% if page_range %}
+        <ul class="Pagination print-hidden">
+          {% if previous_page %}
+            <li><a href="{% url_with_query_param request 'page' previous_page %}">{% trans 'Previous' %}</a></li>
+          {% endif %}
+          {% for page in page_range %}
+            <li><a href="{% url_with_query_param request 'page' page %}" class="{% if page == current_page %}current-page{% endif %}">{{ page }}</a></li>
+          {% endfor %}
+          {% if next_page %}
+            <li><a href="{% url_with_query_param request 'page' next_page %}">{% trans 'Next' %}</a></li>
+          {% endif %}
+        </ul>
+        <p class="Pagination-print-description">{% blocktrans with page=current_page pages=page_count %}Page {{ page }} of {{ pages }}.{% endblocktrans %}</p>
+      {% endif %}
+
+      <p><a href="#print-dialog" class="js-Dialog print-hidden">{% trans 'Print this page of credits' %}</a></p>
+      {% include 'cashbook/includes/print_dialog.html' %}
+
+    {% else %}
+
+      <table>
+        <thead>
+          <tr>
+            <th>{% trans 'No credit history found for given filters' %}</th>
+          </tr>
+        </thead>
+      </table>
+
     {% endif %}
-
-    <p><a href="#print-dialog" class="js-Dialog print-hidden">{% trans 'Print this page of credits' %}</a></p>
-    {% include 'cashbook/includes/print_dialog.html' %}
-
-  {% else %}
-
-    <table>
-      <thead>
-        <tr>
-          <th>{% trans 'No credit history found for given filters' %}</th>
-        </tr>
-      </thead>
-    </table>
-
-  {% endif %}
-
   </div>
 
 {% endblock content %}

@@ -355,7 +355,7 @@ class HistoryPageTests(FunctionalTestCase):
         self.assertEqual(self.driver.current_url.split('?')[0], self.live_server_url + '/history/')
 
     def test_searching_history(self):
-        self.assertInSource(re.compile(r'Showing \d+ payments.'))
+        self.assertInSource(re.compile(r'\d+ credits? received.'))
         self.type_in('id_search', '1')
         self.get_search_button().click()
-        self.assertInSource(re.compile(r'Searching for “1” returned \d+ payments.'))
+        self.assertInSource(re.compile(r'Searching for “1” returned \d+ credits?.'))

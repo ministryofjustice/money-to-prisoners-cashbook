@@ -180,14 +180,21 @@ class TransactionHistoryView(FormView):
         context = super().get_context_data(**kwargs)
         form = context['form']
         object_list = form.transaction_choices
-        if form.pagination['page_count'] > 1:
-            page_range = list(range(1, form.pagination['page_count'] + 1))
+        current_page = form.pagination['page']
+        page_count = form.pagination['page_count']
+        if page_count > 1:
+            page_range = list(range(1, page_count + 1))
         else:
             page_range = []
+        previous_page = current_page - 1 if current_page > 1 else None
+        next_page = current_page + 1 if page_range and page_range[-1] > current_page else None
         context.update({
             'object_list': object_list,
-            'current_page': form.pagination['page'],
+            'previous_page': previous_page,
+            'current_page': current_page,
+            'next_page': next_page,
             'page_range': page_range,
+            'page_count': page_count,
             'transaction_owner_name': self.request.user.get_full_name,
         })
         return context

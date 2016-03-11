@@ -2,14 +2,12 @@
 <dialog id="print-dialog" class="Dialog">
   <div class="Dialog-inner">
     <h3>{% trans "Do you need to print?" %}</h3>
-    {% blocktrans %}
-    <p>Did you know:</p>
+    <p>{% trans 'Did you know:' %}</p>
     <ul>
-      <li>you can see the digital cashbook and NOMIS screens at the same time by changing the size of your windows</li>
-      <li>you can switch between windows using the ALT + TAB keys</li>
-      <li>you can copy and paste the prisoner number from one window to the other</li>
+      <li>{% trans 'you can see the digital cashbook and NOMIS screens at the same time by changing the size of your windows' %}</li>
+      <li>{% trans 'you can switch between windows using the ALT + TAB keys' %}</li>
+      <li>{% trans 'you can copy and paste the prisoner number from one window to the other' %}</li>
     </ul>
-    {% endblocktrans %}
 
     <p class="u-nojs-hidden">
       <input type="checkbox" class="Checkbox--left" name="remove-print-prompt" id="remove-print-prompt" value="1">
