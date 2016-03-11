@@ -147,6 +147,12 @@ class TransactionHistoryView(FormView):
     template_name = 'cashbook/transactions_history.html'
     success_url = reverse_lazy('transaction-history')
     http_method_names = ['get', 'options']
+    show_search = False
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        if self.show_search:
+            self.template_name = 'cashbook/transactions_history_search.html'
 
     def get_initial(self):
         initial = super().get_initial()
