@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load moj_utils %}
-{% load currency transactions %}
+{% load currency %}
+{% load transactions %}
 
 {% block content %}
   <header class="ContentHeader">
@@ -13,41 +14,34 @@
 
   <form method="get" class="print-hidden HistorySearch" action="">
     {% if form.errors %}
-      <div class="error-summary" aria-labelledby="error-summary-heading" tabindex="-1" role="alert">
-        <h1 class="error-summary-heading heading-medium" id="error-summary-heading">{% trans 'There was a problem submitting the form' %}</h1>
-        <p>{% trans 'Because of the following problems:' %}</p>
+    <div class="error-summary" aria-labelledby="error-summary-heading" tabindex="-1" role="alert">
+      <h1 class="error-summary-heading heading-medium" id="error-summary-heading">{% trans 'There was a problem submitting the form' %}</h1>
+      <p>{% trans 'Because of the following problems:' %}</p>
 
-        <ol class="error-summary-list">
-          {% for field, errors in form.errors.items %}
-            {% with field_obj=form|field_from_name:field %}
-              <li>
-                {% if field_obj %}
-                  <a href="#{{ field_obj.auto_id }}-label">
-                  {{ field_obj.label }} —
-                {% endif %}
-                {% for error in errors %}
-                  {% if not forloop.first  %}
-                    {% trans 'and' %}
-                  {% endif %}
-                  {{ error }}
-                {% endfor %}
-                {% if field_obj %}
-                  </a>
-                {% endif %}
-              </li>
-            {% endwith %}
-          {% endfor %}
-        </ol>
-      </div>
+      <ol class="error-summary-list">
+        {% for field, errors in form.errors.items %}
+          {% with field_obj=form|field_from_name:field %}
+            <li>
+              {% if field_obj %}<a href="#{{ field_obj.auto_id }}-label">{{ field_obj.label }} —{% endif %}
+              {% for error in errors %}
+                {% if not forloop.first  %}{% trans 'and' %}{% endif %}
+                {{ error }}
+              {% endfor %}
+              {% if field_obj %}</a>{% endif %}
+            </li>
+          {% endwith %}
+        {% endfor %}
+      </ol>
+    </div>
     {% endif %}
 
     <div class="grid-row">
-    <div id="form-group-search" class="form-group {% if form.search.errors %}error{% endif %}">
+      <div id="form-group-search" class="form-group {% if form.search.errors %}error{% endif %}">
         <div class="column-full">
           <label for="id_search" id="id_search-label" class="form-label">
             {% trans 'Prisoner name, prisoner number or sender name' %}
             {% for error in form.search.errors %}
-              <span class="error-message">{{ error }}</span>
+            <span class="error-message">{{ error }}</span>
             {% endfor %}
           </label>
           <input class="form-control" id="id_search" name="search" type="text" value="{{ form.search.value|default_if_none:'' }}" />
@@ -69,7 +63,7 @@
                   <span class="error-message">{{ error }}</span>
                 {% endfor %}
               </label>
-              <input class="form-control js-FormDateControl" id="id_start" name="start" type="text" value="{{ form.start.value|date:'d/m/Y'|default:form.start.value }}" />
+              <input class="form-control js-FormDateControl" id="id_start" name="start" type="text" value="{{ form.start.value|date:'d/m/Y'|default:form.start.value|default_if_none:'' }}" />
             </div>
           </div>
           <div class="date-end">
@@ -80,22 +74,29 @@
                   <span class="error-message">{{ error }}</span>
                 {% endfor %}
               </label>
-              <input class="form-control js-FormDateControl" id="id_end" name="end" type="text" value="{{ form.end.value|date:'d/m/Y'|default:form.end.value }}" />
+              <input class="form-control js-FormDateControl" id="id_end" name="end" type="text" value="{{ form.end.value|date:'d/m/Y'|default:form.end.value|default_if_none:'' }}" />
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    {# always forces a search to start on page 1 #}
+    <input type="hidden" name="{{ form.page.html_name }}" value="1">
+
     <div><input class="button button-secondary" type="submit" value="{% trans 'Search' %}"></div>
   </form>
 
 
-  {% if object_list %}
-    {% for transaction_date, group in object_list|parse_date_fields|regroup_transactions %}
-      <h3>{{ transaction_date|date:'DATE_FORMAT' }}</h3>
+  <div class="batch batch-history">
+    {% if object_list %}
 
-      {% for transaction_status, transactions in group %}
-        <div class="batch batch-history">
+      <p class="HistoryDescription">{{ form.get_search_description }}</p>
+
+      {% for transaction_date, group in object_list|parse_date_fields|regroup_transactions %}
+        <h3>{{ transaction_date|date:'DATE_FORMAT' }}</h3>
+
+        {% for transaction_status, transactions in group %}
           <table id="HistoryBatch-{{ forloop.parentloop.counter }}-{{ forloop.counter }}">
             <caption
               class="HistoryHeader {% if transaction_status == 'uncredited' %}HistoryHeader-uncredited{% elif transaction_status == 'refunded' %}HistoryHeader-refunded{% endif %}">
@@ -118,35 +119,49 @@
               </tr>
             </thead>
             <tbody>
-            {% for transaction in transactions %}
-              <tr {% if not forloop.counter|divisibleby:2 %}class="odd"{% endif %}>
-                <td>{{ transaction.prisoner_number }}</td>
-                <td>{{ transaction.prisoner_name }}</td>
-                <td class="numeric">{{ transaction.amount|currency }}</td>
-                <td>{{ transaction.sender }}</td>
-                <td>{{ transaction.owner_name|default_if_none:'—' }}</td>
-              </tr>
-            {% endfor %}
+              {% for transaction in transactions %}
+                <tr {% if not forloop.counter|divisibleby:2 %}class="odd"{% endif %}>
+                  <td>{{ transaction.prisoner_number }}</td>
+                  <td>{{ transaction.prisoner_name }}</td>
+                  <td class="numeric">{{ transaction.amount|currency }}</td>
+                  <td>{{ transaction.sender }}</td>
+                  <td>{{ transaction.owner_name|default_if_none:'—' }}</td>
+                </tr>
+              {% endfor %}
             </tbody>
           </table>
-        </div>
-
+        {% endfor %}
       {% endfor %}
-    {% endfor %}
 
-    <p><a href="#print-dialog" class="js-Dialog print-hidden">{% trans 'Print these payments' %}</a></p>
-    {% include 'cashbook/includes/print_dialog.html' %}
+      {% if page_range %}
+        <ul class="Pagination print-hidden">
+          {% if previous_page %}
+            <li><a href="{% url_with_query_param request 'page' previous_page %}">{% trans 'Previous' %}</a></li>
+          {% endif %}
+          {% for page in page_range %}
+            <li><a href="{% url_with_query_param request 'page' page %}" class="{% if page == current_page %}current-page{% endif %}">{{ page }}</a></li>
+          {% endfor %}
+          {% if next_page %}
+            <li><a href="{% url_with_query_param request 'page' next_page %}">{% trans 'Next' %}</a></li>
+          {% endif %}
+        </ul>
+        <p class="Pagination-print-description">{% blocktrans with page=current_page pages=page_count %}Page {{ page }} of {{ pages }}.{% endblocktrans %}</p>
+      {% endif %}
 
-  {% else %}
+      <p><a href="#print-dialog" class="js-Dialog print-hidden">{% trans 'Print this page of credits' %}</a></p>
+      {% include 'cashbook/includes/print_dialog.html' %}
 
-    <table>
-      <thead>
-        <tr>
-          <th>{% trans 'No payment history found for given filters' %}</th>
-        </tr>
-      </thead>
-    </table>
+    {% else %}
 
-  {% endif %}
+      <table>
+        <thead>
+          <tr>
+            <th>{% trans 'No credit history found for given filters' %}</th>
+          </tr>
+        </thead>
+      </table>
+
+    {% endif %}
+  </div>
 
 {% endblock content %}

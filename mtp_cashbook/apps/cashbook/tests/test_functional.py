@@ -1,6 +1,7 @@
 import glob
 import logging
 import os
+import re
 import socket
 from urllib.parse import urlparse
 import unittest
@@ -95,6 +96,18 @@ class FunctionalTestCase(LiveServerTestCase):
     def type_in(self, element_id, text):
         self.driver.find_element_by_id(element_id).send_keys(text)
 
+    def assertInSource(self, search):  # noqa
+        if hasattr(search, 'search'):
+            self.assertTrue(search.search(self.driver.page_source))
+        else:
+            self.assertIn(search, self.driver.page_source)
+
+    def assertNotInSource(self, search):  # noqa
+        if hasattr(search, 'search'):
+            self.assertFalse(search.search(self.driver.page_source))
+        else:
+            self.assertNotIn(search, self.driver.page_source)
+
 
 class LoginTests(FunctionalTestCase):
     """
@@ -109,13 +122,12 @@ class LoginTests(FunctionalTestCase):
 
     def test_bad_login(self):
         self.login('test-prison-1', 'bad-password')
-        self.assertIn('There was a problem submitting the form',
-                      self.driver.page_source)
+        self.assertInSource('There was a problem submitting the form')
 
     def test_good_login(self):
         self.login('test-prison-1', 'test-prison-1')
         self.assertEqual(self.driver.current_url, self.live_server_url + '/')
-        self.assertIn('Credits to process', self.driver.page_source)
+        self.assertInSource('Credits to process')
 
     def test_logout(self):
         self.login('test-prison-1', 'test-prison-1')
@@ -133,9 +145,9 @@ class LockedPaymentsPageTests(FunctionalTestCase):
         self.login_and_go_to('In progress')
 
     def test_going_to_the_locked_payments_page(self):
-        self.assertIn('Credits in progress', self.driver.page_source)
-        self.assertIn('Staff name', self.driver.page_source)
-        self.assertIn('Time in progress', self.driver.page_source)
+        self.assertInSource('Credits in progress')
+        self.assertInSource('Staff name')
+        self.assertInSource('Time in progress')
 
 
 class NewPaymentsPageTests(FunctionalTestCase):
@@ -148,8 +160,8 @@ class NewPaymentsPageTests(FunctionalTestCase):
         self.login_and_go_to('New')
 
     def test_going_to_the_credits_page(self):
-        self.assertIn('New credits', self.driver.page_source)
-        self.assertIn('Control total', self.driver.page_source)
+        self.assertInSource('New credits')
+        self.assertInSource('Control total')
 
     def test_submitting_payments_credited(self):
         self.driver.find_element_by_xpath('//input[@type="checkbox" and @data-amount]').click()
@@ -162,7 +174,7 @@ class NewPaymentsPageTests(FunctionalTestCase):
         self.driver.find_element_by_xpath('//input[@type="checkbox" and @data-amount][1]').click()
         self.driver.find_element_by_xpath('//button[text()="Done"]').click()
         self.driver.find_element_by_xpath('//div[@class="Dialog-inner"]/*[text()="Yes"]').click()
-        self.assertIn('You’ve credited 1 payment to NOMIS.', self.driver.page_source)
+        self.assertInSource('You’ve credited 1 payment to NOMIS.')
         self.assertEqual('Digital cashbook', self.driver.title)
 
     def test_submitting_and_not_confirming_partial_batch(self):
@@ -200,7 +212,7 @@ class NewPaymentsPageTests(FunctionalTestCase):
         self.driver.find_element_by_xpath('//input[@type="checkbox"][1]').click()
         self.driver.find_element_by_xpath('//button[text()="Done"]').click()
         self.assertEqual('Digital cashbook', self.driver.title)
-        self.assertIn('You’ve credited', self.driver.page_source)
+        self.assertInSource('You’ve credited')
 
     def test_checkboxes_style(self):
         # Regression tests for https://www.pivotaltracker.com/story/show/115328657
@@ -327,12 +339,23 @@ class HistoryPageTests(FunctionalTestCase):
         super().setUp()
         self.login_and_go_to('History')
 
+    def get_search_button(self):
+        button = self.driver.find_element_by_xpath('//input[@value="Search"]')
+        self.assertIsNotNone(button)
+        return button
+
     def test_going_to_history_page(self):
-        self.assertIn('Credit history', self.driver.page_source)
-        self.assertNotIn('Intended recipient', self.driver.page_source)
-        self.assertIsNotNone(self.driver.find_element_by_xpath('//input[@value="Search"]'))
-        self.assertNotIn('Payments processed by', self.driver.page_source)
+        self.assertInSource('Credit history')
+        self.assertNotInSource('Intended recipient')
+        self.assertNotInSource('Payments processed by')
+        self.get_search_button()
 
     def test_do_a_search_and_make_sure_it_takes_you_back_to_history_page(self):
-        self.driver.find_element_by_xpath('//input[@value="Search"]').click()
+        self.get_search_button().click()
         self.assertEqual(self.driver.current_url.split('?')[0], self.live_server_url + '/history/')
+
+    def test_searching_history(self):
+        self.assertInSource(re.compile(r'\d+ credits? received.'))
+        self.type_in('id_search', '1')
+        self.get_search_button().click()
+        self.assertInSource(re.compile(r'Searching for “1” returned \d+ credits?.'))

@@ -25,7 +25,7 @@ form.HistorySearch {
 }
 
 .batch-history {
-  width: 80%;
+  float: left;
   table {
     width: 100%;
     margin-bottom: 1.5em;
@@ -35,6 +35,10 @@ form.HistorySearch {
       border-top: 0;
     }
   }
+}
+
+.HistoryDescription {
+  margin-top: 2em;
 }
 
 .HistoryHeader {
@@ -83,4 +87,13 @@ form.HistorySearch {
 
 .inline .block-label {
   margin-top: 0;
+}
+
+.Pagination-print-description {
+  @if $is-print {
+    display: block;
+    font-size: 0.75em;
+  } @else {
+    display: none;
+  }
 }

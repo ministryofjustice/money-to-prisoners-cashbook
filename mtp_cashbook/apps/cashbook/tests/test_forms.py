@@ -248,10 +248,6 @@ class FilterTransactionHistoryFormTestCase(SimpleTestCase):
         self.assertTrue(form.is_valid())
         response = form.transaction_choices
         self.assertEqual(response, [])
-        api_called_with.update({
-            'limit': settings.REQUEST_PAGE_SIZE,
-            'offset': 0,
-        })
         self.api_call.assert_called_with(**api_called_with)
 
     def assertInvalidForm(self, data):  # noqa
@@ -259,6 +255,28 @@ class FilterTransactionHistoryFormTestCase(SimpleTestCase):
         self.assertFalse(form.is_valid())
 
     def test_valid_history_filter_form(self):
+        self.assertValidForm({}, {
+            'received_at_0': None,
+            'received_at_1': None,
+            'search': '',
+            'ordering': '-received_at',
+            'page': None,
+            'page_size': settings.REQUEST_PAGE_DAYS,
+            'page_by_date_field': 'received_at',
+        })
+        self.assertValidForm({
+            'start': '',
+            'end': '',
+            'search': '',
+        }, {
+            'received_at_0': None,
+            'received_at_1': None,
+            'search': '',
+            'ordering': '-received_at',
+            'page': None,
+            'page_size': settings.REQUEST_PAGE_DAYS,
+            'page_by_date_field': 'received_at',
+        })
         self.assertValidForm({
             'start': '10/10/2015',
             'end': '17/10/2015',
@@ -268,6 +286,9 @@ class FilterTransactionHistoryFormTestCase(SimpleTestCase):
             'received_at_1': datetime.date(2015, 10, 17),
             'search': '',
             'ordering': '-received_at',
+            'page': None,
+            'page_size': settings.REQUEST_PAGE_DAYS,
+            'page_by_date_field': 'received_at',
         })
         self.assertValidForm({
             'start': '2015-10-10',
@@ -278,6 +299,9 @@ class FilterTransactionHistoryFormTestCase(SimpleTestCase):
             'received_at_1': datetime.date(2015, 10, 17),
             'search': '',
             'ordering': '-received_at',
+            'page': None,
+            'page_size': settings.REQUEST_PAGE_DAYS,
+            'page_by_date_field': 'received_at',
         })
         self.assertValidForm({
             'start': '10/10/2015',
@@ -288,24 +312,47 @@ class FilterTransactionHistoryFormTestCase(SimpleTestCase):
             'received_at_1': datetime.date(2015, 10, 17),
             'search': 'John',
             'ordering': '-received_at',
+            'page': None,
+            'page_size': settings.REQUEST_PAGE_DAYS,
+            'page_by_date_field': 'received_at',
+        })
+        self.assertValidForm({
+            'start': '10/10/2015',
+            'end': '17/10/2015',
+            'search': 'John',
+            'page': '1',
+        }, {
+            'received_at_0': datetime.date(2015, 10, 10),
+            'received_at_1': datetime.date(2015, 10, 17),
+            'search': 'John',
+            'ordering': '-received_at',
+            'page': 1,
+            'page_size': settings.REQUEST_PAGE_DAYS,
+            'page_by_date_field': 'received_at',
+        })
+        self.assertValidForm({
+            'start': '10/10/2015',
+            'end': '17/10/2015',
+            'search': 'John',
+            'page': '2',
+        }, {
+            'received_at_0': datetime.date(2015, 10, 10),
+            'received_at_1': datetime.date(2015, 10, 17),
+            'search': 'John',
+            'ordering': '-received_at',
+            'page': 2,
+            'page_size': settings.REQUEST_PAGE_DAYS,
+            'page_by_date_field': 'received_at',
         })
 
     def test_invalid_history_filter_form(self):
         self.assertInvalidForm({
-            'start': '',
-            'end': '',
-            'owner': '',
-            'search': '',
-        })
-        self.assertInvalidForm({
             'start': '11/10/2015',
             'end': '10/10/2015',
-            'owner': '',
             'search': '',
         })
         self.assertInvalidForm({
-            'received_at_0': '01/10/2015',
-            'received_at_1': '10/10/2015',
-            'owner': '',
+            'start': 'today',
+            'end': '',
             'search': '',
         })
