@@ -339,7 +339,6 @@ class HistoryViewTestCase(MTPBaseTestCase):
             login_data['user_data']['last_name'],
         ))
         self.assertContains(response, text='Total:', count=2)  # indicates 2 groups of credited transactions
-        self.assertContains(response, text='2 credits received.', count=1)
 
     def test_paged_history_view(self):
         self.login()
@@ -386,4 +385,3 @@ class HistoryViewTestCase(MTPBaseTestCase):
             login_data['user_data']['last_name'],
         ))
         self.assertContains(response, text='Total:', count=1)  # indicates 1 group of credited transactions
-        self.assertContains(response, text='9 credits received.', count=1)

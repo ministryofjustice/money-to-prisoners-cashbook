@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load moj_utils %}
+
+{% block content %}
+  <header class="ContentHeader">
+    <a href="{% url 'dashboard' %}" class="ContentHeader-back">{% trans 'Home' %}</a>
+    <h1>{% trans 'Credit history' %}</h1>
+  </header>
+
+  {% include "includes/message_box.html" %}
+
+  <form method="get" class="print-hidden HistorySearch" action="{% url 'transaction-history' %}">
+    {% if form.errors %}
+      <div class="error-summary" aria-labelledby="error-summary-heading" tabindex="-1" role="alert">
+        <h1 class="error-summary-heading heading-medium" id="error-summary-heading">{% trans 'There was a problem submitting the form' %}</h1>
+        <p>{% trans 'Because of the following problems:' %}</p>
+
+        <ol class="error-summary-list">
+          {% for field, errors in form.errors.items %}
+            {% with field_obj=form|field_from_name:field %}
+              <li>
+                {% if field_obj %}<a href="#{{ field_obj.auto_id }}-label">{{ field_obj.label }} —{% endif %}
+                {% for error in errors %}
+                  {% if not forloop.first  %}{% trans 'and' %}{% endif %}
+                  {{ error }}
+                {% endfor %}
+                {% if field_obj %}</a>{% endif %}
+              </li>
+            {% endwith %}
+          {% endfor %}
+        </ol>
+      </div>
+    {% endif %}
+
+    <div class="grid-row">
+      <div id="form-group-search" class="form-group {% if form.search.errors %}error{% endif %}">
+        <div class="column-full">
+          <label for="id_search" id="id_search-label" class="form-label">
+            {% trans 'Prisoner name, prisoner number or sender name' %}
+            {% for error in form.search.errors %}
+              <span class="error-message">{{ error }}</span>
+            {% endfor %}
+          </label>
+          <input class="form-control" id="id_search" name="search" type="text" value="{{ form.search.value|default_if_none:'' }}" />
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-row">
+      <div class="column-full">
+        <div class="date-label">
+          <label>{% trans 'Date received' %}</label>
+        </div>
+        <div class="date-fields">
+          <div class="date-start">
+            <div id="form-group-start" class="form-group {% if form.start.errors %}error{% endif %}">
+              <label for="id_start" id="id_start-label" class="form-label">
+                {% trans 'Start' %}
+                {% for error in form.start.errors %}
+                  <span class="error-message">{{ error }}</span>
+                {% endfor %}
+              </label>
+              <input class="form-control js-FormDateControl" id="id_start" name="start" type="text" value="{{ form.start.value|date:'d/m/Y'|default:form.start.value|default_if_none:'' }}" />
+            </div>
+          </div>
+          <div class="date-end">
+            <div id="form-group-end" class="form-group {% if form.end.errors %}error{% endif %}">
+              <label for="id_end" id="id_end-label" class="form-label">
+                {% trans 'Finish' %}
+                {% for error in form.end.errors %}
+                  <span class="error-message">{{ error }}</span>
+                {% endfor %}
+              </label>
+              <input class="form-control js-FormDateControl" id="id_end" name="end" type="text" value="{{ form.end.value|date:'d/m/Y'|default:form.end.value|default_if_none:'' }}" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {# always forces a search to start on page 1 #}
+    <input type="hidden" name="{{ form.page.html_name }}" value="1">
+
+    <div>
+      <input class="button" type="submit" value="{% trans 'Search' %}">
+      <a href="{% url 'transaction-history' %}">{% trans 'Clear search' %}</a>
+    </div>
+  </form>
+
+{% endblock %}
