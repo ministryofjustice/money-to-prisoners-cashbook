@@ -14,32 +14,32 @@
 
   <form method="get" class="print-hidden HistorySearch" action="">
     {% if form.errors %}
-      <div class="error-summary" aria-labelledby="error-summary-heading" tabindex="-1" role="alert">
-        <h1 class="error-summary-heading heading-medium" id="error-summary-heading">{% trans 'There was a problem submitting the form' %}</h1>
-        <p>{% trans 'Because of the following problems:' %}</p>
+    <div class="error-summary" aria-labelledby="error-summary-heading" tabindex="-1" role="alert">
+      <h1 class="error-summary-heading heading-medium" id="error-summary-heading">{% trans 'There was a problem submitting the form' %}</h1>
+      <p>{% trans 'Because of the following problems:' %}</p>
 
-        <ol class="error-summary-list">
-          {% for field, errors in form.errors.items %}
-            {% with field_obj=form|field_from_name:field %}
-              <li>
-                {% if field_obj %}
-                  <a href="#{{ field_obj.auto_id }}-label">
-                  {{ field_obj.label }} —
-                {% endif %}
-                {% for error in errors %}
-                  {% if not forloop.first  %}
-                    {% trans 'and' %}
-                  {% endif %}
-                  {{ error }}
-                {% endfor %}
-                {% if field_obj %}
-                  </a>
-                {% endif %}
-              </li>
-            {% endwith %}
-          {% endfor %}
-        </ol>
-      </div>
+      <ol class="error-summary-list">
+        {% for field, errors in form.errors.items %}
+          {% with field_obj=form|field_from_name:field %}
+        <li>
+            {% if field_obj %}
+          <a href="#{{ field_obj.auto_id }}-label">
+              {{ field_obj.label }} —
+            {% endif %}
+            {% for error in errors %}
+              {% if not forloop.first  %}
+                {% trans 'and' %}
+              {% endif %}
+              {{ error }}
+            {% endfor %}
+            {% if field_obj %}
+          </a>
+            {% endif %}
+        </li>
+          {% endwith %}
+        {% endfor %}
+      </ol>
+    </div>
     {% endif %}
 
     <div class="grid-row">
@@ -48,7 +48,7 @@
           <label for="id_search" id="id_search-label" class="form-label">
             {% trans 'Prisoner name, prisoner number or sender name' %}
             {% for error in form.search.errors %}
-              <span class="error-message">{{ error }}</span>
+            <span class="error-message">{{ error }}</span>
             {% endfor %}
           </label>
           <input class="form-control" id="id_search" name="search" type="text" value="{{ form.search.value|default_if_none:'' }}" />
@@ -94,7 +94,6 @@
     <div><input class="button button-secondary" type="submit" value="{% trans 'Search' %}"></div>
   </form>
 
-  <br>
 
   {% if object_list %}
   <div class="batch batch-history">
@@ -102,44 +101,42 @@
     <p class="HistoryDescription">{{ form.get_search_description }}</p>
 
     {% for transaction_date, group in object_list|parse_date_fields|regroup_transactions %}
-      <h3>{{ transaction_date|date:'DATE_FORMAT' }}</h3>
+    <h3>{{ transaction_date|date:'DATE_FORMAT' }}</h3>
 
       {% for transaction_status, transactions in group %}
-        <div class="batch batch-history">
-          <table id="HistoryBatch-{{ forloop.parentloop.counter }}-{{ forloop.counter }}">
-            <caption
-              class="HistoryHeader {% if transaction_status == 'uncredited' %}HistoryHeader-uncredited{% elif transaction_status == 'refunded' %}HistoryHeader-refunded{% endif %}">
-                {% if transaction_status == 'uncredited' %}
-                  {% trans 'Uncredited' %}
-                {% elif transaction_status == 'refunded' %}
-                  {% trans 'Refunded' %}
-                {% else %}
-                  {% trans 'Credited' %}
-                {% endif %}
-              <span class="HistoryHeader-aside HistoryHeader-aside-right">{% trans 'Total' %}: £{{ transactions|sum_transactions|currency }}</span>
-            </caption>
-            <thead>
-              <tr>
-                <th>{% trans 'Prisoner no' %}</th>
-                <th>{% trans 'Prisoner name' %}</th>
-                <th>{% trans 'Amount (£)' %}</th>
-                <th>{% trans 'Sender' %}</th>
-                <th>{% trans 'Processed by' %}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for transaction in transactions %}
-                <tr {% if not forloop.counter|divisibleby:2 %}class="odd"{% endif %}>
-                  <td>{{ transaction.prisoner_number }}</td>
-                  <td>{{ transaction.prisoner_name }}</td>
-                  <td class="numeric">{{ transaction.amount|currency }}</td>
-                  <td>{{ transaction.sender }}</td>
-                  <td>{{ transaction.owner_name|default_if_none:'—' }}</td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
+    <table id="HistoryBatch-{{ forloop.parentloop.counter }}-{{ forloop.counter }}">
+      <caption
+        class="HistoryHeader {% if transaction_status == 'uncredited' %}HistoryHeader-uncredited{% elif transaction_status == 'refunded' %}HistoryHeader-refunded{% endif %}">
+              {% if transaction_status == 'uncredited' %}
+                {% trans 'Uncredited' %}
+              {% elif transaction_status == 'refunded' %}
+                {% trans 'Refunded' %}
+              {% else %}
+                {% trans 'Credited' %}
+              {% endif %}
+        <span class="HistoryHeader-aside HistoryHeader-aside-right">{% trans 'Total' %}: £{{ transactions|sum_transactions|currency }}</span>
+      </caption>
+      <thead>
+        <tr>
+          <th>{% trans 'Prisoner no' %}</th>
+          <th>{% trans 'Prisoner name' %}</th>
+          <th>{% trans 'Amount (£)' %}</th>
+          <th>{% trans 'Sender' %}</th>
+          <th>{% trans 'Processed by' %}</th>
+        </tr>
+      </thead>
+      <tbody>
+          {% for transaction in transactions %}
+        <tr {% if not forloop.counter|divisibleby:2 %}class="odd"{% endif %}>
+          <td>{{ transaction.prisoner_number }}</td>
+          <td>{{ transaction.prisoner_name }}</td>
+          <td class="numeric">{{ transaction.amount|currency }}</td>
+          <td>{{ transaction.sender }}</td>
+          <td>{{ transaction.owner_name|default_if_none:'—' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
 
       {% endfor %}
     {% endfor %}
@@ -166,5 +163,7 @@
     </table>
 
   {% endif %}
+
+  </div>
 
 {% endblock content %}

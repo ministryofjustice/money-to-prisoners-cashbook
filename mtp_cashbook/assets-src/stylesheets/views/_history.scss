@@ -25,7 +25,7 @@ form.HistorySearch {
 }
 
 .batch-history {
-  width: 80%;
+  float: left;
   table {
     width: 100%;
     margin-bottom: 1.5em;
@@ -35,6 +35,10 @@ form.HistorySearch {
       border-top: 0;
     }
   }
+}
+
+.HistoryDescription {
+  margin-top: 2em;
 }
 
 .HistoryHeader {
