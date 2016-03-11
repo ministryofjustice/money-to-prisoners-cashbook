@@ -97,7 +97,9 @@
   <br>
 
   {% if object_list %}
-    <p>{{ form.get_search_description }}</p>
+  <div class="batch batch-history">
+
+    <p class="HistoryDescription">{{ form.get_search_description }}</p>
 
     {% for transaction_date, group in object_list|parse_date_fields|regroup_transactions %}
       <h3>{{ transaction_date|date:'DATE_FORMAT' }}</h3>
@@ -143,11 +145,11 @@
     {% endfor %}
 
     {% if page_range %}
-      <ul>
-        {% for page in page_range %}
-          <li><a href="{% url_with_query_param request 'page' page %}" class="{% if page == current_page %}current-page{% endif %}">{{ page }}</a></li>
-        {% endfor %}
-      </ul>
+    <ul class="Pagination">
+      {% for page in page_range %}
+        <li><a href="{% url_with_query_param request 'page' page %}" class="{% if page == current_page %}current-page{% endif %}">{{ page }}</a></li>
+      {% endfor %}
+    </ul>
     {% endif %}
 
     <p><a href="#print-dialog" class="js-Dialog print-hidden">{% trans 'Print this page of credits' %}</a></p>
