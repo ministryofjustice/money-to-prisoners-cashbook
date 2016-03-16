@@ -1,9 +1,10 @@
-Django==1.9.2
+# Dependencies needed for all environments
+# NB: this is not the complete set needed to run the app
+Django==1.9.4
 slumber==0.7.1
 django-widget-tweaks==1.4.1
 git+git://github.com/ministryofjustice/django-moj-auth.git
 git+git://github.com/ministryofjustice/django-moj-irat.git
-git+git://github.com/ministryofjustice/django-utils.git
 git+git://github.com/ministryofjustice/django-zendesk-tickets.git
 django-form-error-reporting>=0.2
 pytz>=2015.7

@@ -1,7 +1,4 @@
 # Place development dependencies here
 -r base.txt
-django-template-i18n-lint==1.2.1
-flake8==2.5.1
-pep8-naming==0.3.3
-responses==0.5.0
-selenium==2.48.0
+
+money-to-prisoners-utils[testing]==0.6

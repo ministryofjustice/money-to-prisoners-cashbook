@@ -1,118 +1,31 @@
-import glob
 import logging
-import os
 import re
-import socket
-from urllib.parse import urlparse
-import unittest
 
-from django.conf import settings
-from django.test import LiveServerTestCase
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
+from mtp_utils.test_utils.functional_tests import FunctionalTestCase
 
 logger = logging.getLogger('mtp')
 
 
-@unittest.skipUnless('RUN_FUNCTIONAL_TESTS' in os.environ, 'functional tests are disabled')
-class FunctionalTestCase(LiveServerTestCase):
+class CashbookTestCase(FunctionalTestCase):
     """
     Base class to define common methods to test subclasses below
     """
-
-    @classmethod
-    def _databases_names(cls, include_mirrors=True):
-        # this app has no databases
-        return []
-
-    def setUp(self):
-        self.load_test_data()
-        web_driver = os.environ.get('WEBDRIVER', 'phantomjs')
-        if web_driver == 'firefox':
-            fp = webdriver.FirefoxProfile()
-            fp.set_preference('browser.startup.homepage', 'about:blank')
-            fp.set_preference('startup.homepage_welcome_url', 'about:blank')
-            fp.set_preference('startup.homepage_welcome_url.additional', 'about:blank')
-            self.driver = webdriver.Firefox(firefox_profile=fp)
-        elif web_driver == 'chrome':
-            paths = glob.glob('node_modules/selenium-standalone/.selenium/chromedriver/*-chromedriver')
-            paths = filter(lambda path: os.path.isfile(path) and os.access(path, os.X_OK),
-                           paths)
-            try:
-                self.driver = webdriver.Chrome(executable_path=next(paths))
-            except StopIteration:
-                self.fail('Cannot find Chrome driver')
-        else:
-            path = './node_modules/phantomjs/lib/phantom/bin/phantomjs'
-            self.driver = webdriver.PhantomJS(executable_path=path)
-
-        self.driver.set_window_size(1000, 1000)
-        self.driver.set_window_position(0, 0)
-
-    def tearDown(self):
-        self.driver.quit()
-
-    def load_test_data(self):
-        logger.info('Reloading test data')
-        try:
-            with socket.socket() as sock:
-                sock.connect((
-                    urlparse(settings.API_URL).netloc.split(':')[0],
-                    os.environ.get('CONTROLLER_PORT', 8800)
-                ))
-                sock.sendall(b'load_test_data')
-                response = sock.recv(1024).strip()
-            if response != b'done':
-                logger.error('Test data not reloaded!')
-        except OSError:
-            logger.exception('Error communicating with test server controller socket')
-
-    def login(self, username, password):
-        self.driver.get(self.live_server_url)
-        login_field = self.driver.find_element_by_id('id_username')
-        login_field.send_keys(username)
-        password_field = self.driver.find_element_by_id('id_password')
-        password_field.send_keys(password + Keys.RETURN)
+    auto_load_test_data = True
 
     def login_and_go_to(self, link_text):
         self.login('test-prison-1', 'test-prison-1')
-        self.driver.find_element_by_partial_link_text(link_text).click()
+        self.click_on_text(link_text)
 
-    def click_checkbox(self, index):
-        self.driver.find_elements_by_xpath('//input[@type="checkbox"]')[index].click()
+    def click_select_all_payments(self):
+        self.get_element('//label[@for="select-all-header"]').click()
 
-    def click_on(self, text):
-        self.driver.find_element_by_xpath(
-            '//*[text() = "' + text + '"] | '
-            '//input[@type="submit" and @value="' + text + '"]'
-        ).click()
-
-    def scroll_to_top(self):
-        self.driver.execute_script('window.scrollTo(0, 0);')
-
-    def scroll_to_bottom(self):
-        self.driver.execute_script('window.scrollTo(0, document.body.scrollHeight);')
-
-    def type_in(self, element_id, text):
-        self.driver.find_element_by_id(element_id).send_keys(text)
-
-    def assertInSource(self, search):  # noqa
-        if hasattr(search, 'search'):
-            self.assertTrue(search.search(self.driver.page_source))
-        else:
-            self.assertIn(search, self.driver.page_source)
-
-    def assertNotInSource(self, search):  # noqa
-        if hasattr(search, 'search'):
-            self.assertFalse(search.search(self.driver.page_source))
-        else:
-            self.assertNotIn(search, self.driver.page_source)
-
-    def assert_url_is(self, path):
-        return self.assertEqual(self.driver.current_url.split('?')[0], self.live_server_url + path)
+    def click_done_payment(self, row):
+        xpath = '//input[@type="checkbox" and @data-amount][%d]' % row
+        checkbox_id = self.get_element(xpath).get_attribute('id')
+        self.get_element('//label[@for="%s"]' % checkbox_id).click()
 
 
-class LoginTests(FunctionalTestCase):
+class LoginTests(CashbookTestCase):
     """
     Tests for Login page
     """
@@ -138,7 +51,7 @@ class LoginTests(FunctionalTestCase):
         self.assertEqual(self.driver.current_url.split('?')[0], self.live_server_url + '/login/')
 
 
-class LockedPaymentsPageTests(FunctionalTestCase):
+class LockedPaymentsPageTests(CashbookTestCase):
     """
     Tests for Locked Payments page
     """
@@ -153,7 +66,7 @@ class LockedPaymentsPageTests(FunctionalTestCase):
         self.assertInSource('Time in progress')
 
 
-class NewPaymentsPageTests(FunctionalTestCase):
+class NewPaymentsPageTests(CashbookTestCase):
     """
     Tests for New Payments page
     """
@@ -167,21 +80,21 @@ class NewPaymentsPageTests(FunctionalTestCase):
         self.assertInSource('Control total')
 
     def test_submitting_payments_credited(self):
-        self.driver.find_element_by_xpath('//input[@type="checkbox" and @data-amount]').click()
+        self.click_done_payment(row=1)
         self.driver.find_element_by_xpath('//button[text()="Done"]').click()
         self.assertIsNotNone(self.driver.find_element_by_xpath(
             '//div[@class="Dialog-inner"]/h3[text()="Are you sure?"]'
         ))
 
     def test_submitting_and_confirming_partial_batch(self):
-        self.driver.find_element_by_xpath('//input[@type="checkbox" and @data-amount][1]').click()
+        self.click_done_payment(row=1)
         self.driver.find_element_by_xpath('//button[text()="Done"]').click()
         self.driver.find_element_by_xpath('//div[@class="Dialog-inner"]/*[text()="Yes"]').click()
         self.assertInSource('You’ve credited 1 payment to NOMIS.')
         self.assertEqual('Digital cashbook', self.driver.title)
 
     def test_submitting_and_not_confirming_partial_batch(self):
-        self.driver.find_element_by_xpath('//input[@type="checkbox" and @data-amount][1]').click()
+        self.click_done_payment(row=1)
         self.driver.find_element_by_xpath('//button[text()="Done"]').click()
         self.driver.find_element_by_xpath('//div[@class="Dialog-inner"]/*[text()="No, continue processing"]').click()
         self.assertEqual('New credits - Digital cashbook', self.driver.title)
@@ -212,7 +125,7 @@ class NewPaymentsPageTests(FunctionalTestCase):
         self.assertEqual('Digital cashbook', self.driver.title)
 
     def test_submitting_complete_batch(self):
-        self.driver.find_element_by_xpath('//input[@type="checkbox"][1]').click()
+        self.click_select_all_payments()
         self.driver.find_element_by_xpath('//button[text()="Done"]').click()
         self.assertEqual('Digital cashbook', self.driver.title)
         self.assertInSource('You’ve credited')
@@ -227,12 +140,12 @@ class NewPaymentsPageTests(FunctionalTestCase):
         self.assertEqual('100% 10%', select_all_checkbox.value_of_css_property('background-position'))
 
 
-@unittest.skipUnless(os.environ.get('WEBDRIVER') == 'firefox', 'visual tests require firefox web driver')
-class VisualTests(FunctionalTestCase):
+class VisualTests(CashbookTestCase):
     """
     Tests that need to be run with a visual browser as they require interacting
     with browser controls (alerts or onbeforeunload)
     """
+    required_webdriver = 'firefox'
 
     def setUp(self):
         super().setUp()
@@ -241,7 +154,7 @@ class VisualTests(FunctionalTestCase):
     def test_leaving_confirming_incomplete_batch(self):
         # we need firefox as this is using a native dialog
         self.login_and_go_to('New')
-        self.driver.find_element_by_xpath('//input[@type="checkbox" and @data-amount][1]').click()
+        self.click_done_payment(row=1)
         self.driver.find_element_by_link_text('Home').click()
         self.driver.switch_to.alert.dismiss()
         self.assertEqual('New credits - Digital cashbook', self.driver.title)
@@ -249,7 +162,7 @@ class VisualTests(FunctionalTestCase):
     def test_leaving_not_confirming_incomplete_batch(self):
         # we need firefox as this is using a native dialog
         self.login_and_go_to('New')
-        self.driver.find_element_by_xpath('//input[@type="checkbox" and @data-amount][1]').click()
+        self.click_done_payment(row=1)
         self.driver.find_element_by_link_text('Home').click()
         self.driver.switch_to.alert.accept()
         self.assertEqual('Digital cashbook', self.driver.title)
@@ -258,73 +171,79 @@ class VisualTests(FunctionalTestCase):
         self.login_and_go_to('History')
         focused_element = self.driver.find_element_by_css_selector('input:focus')
         self.assertEqual('id_search', focused_element.get_attribute('id'))
-        self.driver.find_element_by_id('id_start').clear()
-        self.click_on('Search')
+        self.type_in('id_start', 'Today')
+        self.click_on_text('Search')
         focused_element = self.driver.find_element_by_css_selector('div:focus')
         self.assertEqual('error-summary', focused_element.get_attribute('class'))
 
 
-@unittest.skipUnless(os.environ.get('WEBDRIVER') == 'firefox', 'visual tests require firefox web driver')
-class Journeys(FunctionalTestCase):
+class Journeys(CashbookTestCase):
     """
     These aren't real tests but rather simulations of complex
     sessions as a real user would do. This is used to automatically
     populate analytics with semi-realistic data
     """
+    required_webdriver = 'firefox'
+
+    def click_on_checkbox(self, index):
+        if index == 0:
+            self.click_select_all_payments()
+        else:
+            self.click_done_payment(index)
 
     # Route: 1, 2
     def test_journey_1(self):
         self.login('test-prison-1', 'test-prison-1')
-        self.click_on('New')
-        self.click_checkbox(0)
-        self.click_on('Done')
-        self.assert_url_is('/dashboard-batch-complete/')
+        self.click_on_text('New')
+        self.click_on_checkbox(0)
+        self.click_on_text('Done')
+        self.assertCurrentUrl('/dashboard-batch-complete/')
 
     # Route: 1, 3
     def test_journey_2(self):
         self.login('test-prison-1', 'test-prison-1')
-        self.click_on('New')
-        self.click_on('Home')
-        self.assert_url_is('/')
+        self.click_on_text('New')
+        self.click_on_text('Home')
+        self.assertCurrentUrl('/')
 
     # Route: 1, 4, 5
     def test_journey_3(self):
         self.login('test-prison-1', 'test-prison-1')
-        self.click_on('New')
-        self.click_checkbox(1)
-        self.click_on('Done')
-        self.click_on('Yes')
-        self.assert_url_is('/dashboard-batch-incomplete/')
+        self.click_on_text('New')
+        self.click_on_checkbox(1)
+        self.click_on_text('Done')
+        self.click_on_text('Yes')
+        self.assertCurrentUrl('/dashboard-batch-incomplete/')
 
     # Route: 1, 4, 6
     def test_journey_4(self):
         self.login('test-prison-1', 'test-prison-1')
-        self.click_on('New')
-        self.click_checkbox(1)
-        self.click_on('Done')
-        self.click_on('No, continue processing')
-        self.assert_url_is('/batch/')
+        self.click_on_text('New')
+        self.click_on_checkbox(1)
+        self.click_on_text('Done')
+        self.click_on_text('No, continue processing')
+        self.assertCurrentUrl('/batch/')
 
     # Route 1, 7, 8
     def test_journey_5(self):
         self.login('test-prison-1', 'test-prison-1')
-        self.click_on('New')
-        self.click_checkbox(1)
-        self.click_on('Home')
+        self.click_on_text('New')
+        self.click_on_checkbox(1)
+        self.click_on_text('Home')
         self.driver.switch_to.alert.accept()
-        self.assert_url_is('/')
+        self.assertCurrentUrl('/')
 
     # Route 1, 7, 9
     def test_journey_6(self):
         self.login('test-prison-1', 'test-prison-1')
-        self.click_on('New')
-        self.click_checkbox(1)
-        self.click_on('Home')
+        self.click_on_text('New')
+        self.click_on_checkbox(1)
+        self.click_on_text('Home')
         self.driver.switch_to.alert.dismiss()
-        self.assert_url_is('/batch/')
+        self.assertCurrentUrl('/batch/')
 
 
-class HistoryPageTests(FunctionalTestCase):
+class HistoryPageTests(CashbookTestCase):
     """
     Tests for History page
     """
