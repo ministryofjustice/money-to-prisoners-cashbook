@@ -247,7 +247,7 @@ class Journeys(FunctionalTestCase):
         self.click_on('New')
         self.click_checkbox(0)
         self.click_on('Done')
-        self.assert_url_is('/dashboard-batch/')
+        self.assert_url_is('/dashboard-batch-complete/')
 
     # Route: 1, 3
     def test_journey_2(self):
@@ -257,7 +257,7 @@ class Journeys(FunctionalTestCase):
         self.assert_url_is('/')
 
     # Route: 1, 4, 5
-    def test_journey_2(self):
+    def test_journey_3(self):
         self.login('test-prison-1', 'test-prison-1')
         self.click_on('New')
         self.click_checkbox(1)
@@ -266,7 +266,7 @@ class Journeys(FunctionalTestCase):
         self.assert_url_is('/dashboard-batch-incomplete/')
 
     # Route: 1, 4, 6
-    def test_journey_2(self):
+    def test_journey_4(self):
         self.login('test-prison-1', 'test-prison-1')
         self.click_on('New')
         self.click_checkbox(1)
@@ -275,7 +275,7 @@ class Journeys(FunctionalTestCase):
         self.assert_url_is('/batch/')
 
     # Route 1, 7, 8
-    def test_journey_2(self):
+    def test_journey_5(self):
         self.login('test-prison-1', 'test-prison-1')
         self.click_on('New')
         self.click_checkbox(1)
@@ -284,7 +284,7 @@ class Journeys(FunctionalTestCase):
         self.assert_url_is('/')
 
     # Route 1, 7, 9
-    def test_journey_2(self):
+    def test_journey_6(self):
         self.login('test-prison-1', 'test-prison-1')
         self.click_on('New')
         self.click_checkbox(1)
