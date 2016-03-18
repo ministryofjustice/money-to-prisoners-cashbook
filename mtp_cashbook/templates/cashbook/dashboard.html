@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n moj_utils %}
+{% load i18n %}
 
 {% block content %}
   <p>{% trans "Home" %}</p>
@@ -13,8 +13,8 @@
       <a href="{% url 'transaction-list' %}">
         <h2>{% trans "New" %}</h2>
         <p>
-          {% blocktrans with payments_count="<strong>{0}</strong>"|safewrap:new_transactions %}
-          {{ payments_count }} Credits to process
+          {% blocktrans trimmed with payments_count=new_transactions %}
+            <strong>{{ payments_count }}</strong> Credits to process
           {% endblocktrans %}
         </p>
       </a>
@@ -31,8 +31,8 @@
       <a href="{% url 'transactions-locked' %}">
         <h2>{% trans "In progress" %}</h2>
         <p>
-          {% blocktrans with payments_count="<strong>{0}</strong>"|safewrap:locked_transactions %}
-          {{ payments_count }} Credits in progress
+          {% blocktrans trimmed with payments_count=locked_transactions %}
+            <strong>{{ payments_count }}</strong> Credits in progress
           {% endblocktrans %}
         </p>
       </a>

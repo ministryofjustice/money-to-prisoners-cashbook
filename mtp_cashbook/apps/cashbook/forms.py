@@ -8,8 +8,8 @@ from django.utils.functional import cached_property
 from django.utils.dateformat import format as format_date
 from django.utils.translation import ugettext, ugettext_lazy, ungettext
 from form_error_reporting import GARequestErrorReportingMixin
-from moj_utils.rest import retrieve_all_pages
 from moj_auth.api_client import get_connection
+from mtp_utils.api import retrieve_all_pages
 
 from .form_fields import MtpTextInput, MtpDateInput
 
@@ -165,7 +165,7 @@ class FilterTransactionHistoryForm(GARequestErrorReportingMixin, forms.Form):
         self.user = request.user
         self.client = get_connection(request)
         self.pagination = {
-            'page': None,
+            'page': 1,
             'count': 0,
             'page_count': 0,
         }
@@ -206,7 +206,7 @@ class FilterTransactionHistoryForm(GARequestErrorReportingMixin, forms.Form):
         else:
             # invalid form
             self.pagination = {
-                'page': None,
+                'page': 1,
                 'count': 0,
                 'page_count': 0,
             }
