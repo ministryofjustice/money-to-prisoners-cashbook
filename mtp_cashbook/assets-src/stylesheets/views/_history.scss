@@ -1,31 +1,33 @@
 form.HistorySearch {
-  width: 45%;
-  .grid-row input {
-    width: 100%;
+
+  .form-inputs {
     margin-bottom: 1em;
   }
 
-  .date-start, .date-end {
-    display:inline-block;
-    width: 40%;
+  .date-fields {
+    display: inline-block;
+    vertical-align: top;
+    background-color: $panel-colour;
+    padding: 0 1em .8em .7em;
+    .date-start, .date-end {
+      display:inline-block;
+      width: 5.7em;
+      margin-left: 0.5em;
+    }
   }
 
-  .date-start {
-    margin-right: 18.7%;
-  }
-
-  .date-label {
-    margin: 1em 0 .5em 0;
-  }
-
-  label[for=id_start], label[for=id_end] {
-    font-weight: normal;
+  .search-field {
+    vertical-align: top;
+    display: inline-block;
+    margin: 0 1.5em .8em 0;
+    input { width: 100% }
   }
 
 }
 
 .batch-history {
   float: left;
+  margin-top: 2em;
   table {
     width: 100%;
     margin-bottom: 1.5em;
@@ -37,9 +39,6 @@ form.HistorySearch {
   }
 }
 
-.HistoryDescription {
-  margin-top: 2em;
-}
 
 .HistoryHeader {
   font-size: 20px;
