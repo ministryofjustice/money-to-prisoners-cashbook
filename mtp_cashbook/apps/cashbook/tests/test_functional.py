@@ -11,6 +11,7 @@ class CashbookTestCase(FunctionalTestCase):
     Base class to define common methods to test subclasses below
     """
     auto_load_test_data = True
+    accessibility_scope_selector = '#content'
 
     def login_and_go_to(self, link_text):
         self.login('test-prison-1', 'test-prison-1')

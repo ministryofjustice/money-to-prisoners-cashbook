@@ -15,12 +15,9 @@
   "config": {
     "unsafe-perm": true
   },
-  "scripts": {
-    "start": "./node_modules/gulp/bin/gulp.js serve"
-  },
   "license": "MIT",
   "dependencies": {
-    "money-to-prisoners-common": "ministryofjustice/money-to-prisoners-common#2.6.0",
+    "money-to-prisoners-common": "ministryofjustice/money-to-prisoners-common#2.6.2",
     "phantomjs": "^1.9.19"
   }
 }
