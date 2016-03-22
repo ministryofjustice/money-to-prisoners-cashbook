@@ -114,15 +114,16 @@ class NewPaymentsPageTests(CashbookTestCase):
 
     def test_help_popup(self):
         help_box_contents = self.driver.find_element_by_css_selector('.help-box-contents')
-        help_box_button = self.driver.find_element_by_css_selector('.help-box h3')
+        help_box_heading = self.driver.find_element_by_css_selector('.help-box h3')
+        help_box_link = self.driver.find_element_by_css_selector('.help-box h3 a')
         self.assertEqual('none', help_box_contents.value_of_css_property('display'))
-        self.assertEqual('false', help_box_button.get_attribute('aria-expanded'))
-        help_box_button.click()
+        self.assertEqual('false', help_box_heading.get_attribute('aria-expanded'))
+        help_box_link.click()
         self.assertEqual('block', help_box_contents.value_of_css_property('display'))
-        self.assertEqual('true', help_box_button.get_attribute('aria-expanded'))
-        help_box_button.click()
+        self.assertEqual('true', help_box_heading.get_attribute('aria-expanded'))
+        help_box_link.click()
         self.assertEqual('none', help_box_contents.value_of_css_property('display'))
-        self.assertEqual('false', help_box_button.get_attribute('aria-expanded'))
+        self.assertEqual('false', help_box_heading.get_attribute('aria-expanded'))
 
     def test_go_back_home(self):
         self.driver.find_element_by_link_text('Home').click()
