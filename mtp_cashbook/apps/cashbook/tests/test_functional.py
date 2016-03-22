@@ -116,10 +116,13 @@ class NewPaymentsPageTests(CashbookTestCase):
         help_box_contents = self.driver.find_element_by_css_selector('.help-box-contents')
         help_box_button = self.driver.find_element_by_css_selector('.help-box h3')
         self.assertEqual('none', help_box_contents.value_of_css_property('display'))
+        self.assertEqual('false', help_box_button.get_attribute('aria-expanded'))
         help_box_button.click()
         self.assertEqual('block', help_box_contents.value_of_css_property('display'))
+        self.assertEqual('true', help_box_button.get_attribute('aria-expanded'))
         help_box_button.click()
         self.assertEqual('none', help_box_contents.value_of_css_property('display'))
+        self.assertEqual('false', help_box_button.get_attribute('aria-expanded'))
 
     def test_go_back_home(self):
         self.driver.find_element_by_link_text('Home').click()
