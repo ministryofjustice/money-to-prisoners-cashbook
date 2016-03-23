@@ -15,13 +15,28 @@
 
   {% if object_list %}
 
-    <p class="locked-help">{% trans 'See the credits your team are working on. Click ‘Release’ to move them into ‘New credits’ to be processed by someone else.' %}</p>
+    <div class="help-box">
+      <p>{% trans 'Here you can see who is currently processing the credits in your team. You can release them if you need to take over their work.' %}</p>
 
-    {% include "cashbook/includes/locked_buttons.html" %}
+      <div class="help-box-title" aria-controls="help-box-contents" aria-expanded="true">
+        <div></div><a href="#">{%trans "Help" %}</a>
+      </div>
+      <div class="help-box-contents" id="help-box-contents">
+        {% blocktrans %}
+        <ul>
+          <li>To release credits, find your team member under 'staff name' and select the box at the end of the row.</li>
+          <li>Click 'Release' to free up their work.</li>
+        </ul>
+        {% endblocktrans %}
+      </div>
+    </div>
 
     {{ form.errors }}
 
     <div class="batch">
+
+      {% include "cashbook/includes/locked_buttons.html" %}
+
       <table>
         <thead>
           {% include "cashbook/includes/table_actions.html" with location='header' field_name=form.transactions.html_name print=False %}
@@ -59,9 +74,11 @@
           {% include "cashbook/includes/table_actions.html" with location='footer' field_name=form.transactions.html_name print=False %}
         </tfoot>
       </table>
+
+      {% include "cashbook/includes/locked_buttons.html" %}
+
     </div>
 
-    {% include "cashbook/includes/locked_buttons.html" %}
   {% else %}
     <p>{% trans "No credits in progress" %}</p>
   {% endif %}

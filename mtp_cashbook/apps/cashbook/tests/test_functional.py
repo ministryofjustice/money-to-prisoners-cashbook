@@ -114,8 +114,8 @@ class NewPaymentsPageTests(CashbookTestCase):
 
     def test_help_popup(self):
         help_box_contents = self.driver.find_element_by_css_selector('.help-box-contents')
-        help_box_heading = self.driver.find_element_by_css_selector('.help-box h3')
-        help_box_link = self.driver.find_element_by_css_selector('.help-box h3 a')
+        help_box_heading = self.driver.find_element_by_css_selector('.help-box-title')
+        help_box_link = self.driver.find_element_by_css_selector('.help-box-title a')
         self.assertEqual('none', help_box_contents.value_of_css_property('display'))
         self.assertEqual('false', help_box_heading.get_attribute('aria-expanded'))
         help_box_link.click()

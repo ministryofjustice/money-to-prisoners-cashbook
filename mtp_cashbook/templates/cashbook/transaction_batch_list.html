@@ -50,27 +50,19 @@
       <div class="help-box">
         <p>{% trans "These credits are ready to be processed in NOMIS. When you've finished crediting, click ‘Done’." %}</p>
 
-          <h3 aria-controls="help-box-contents" aria-expanded="true">
-            <div></div><a href="#">{%trans "How to process credits in NOMIS" %}</a>
-          </h3>
-          <div id="help-box-contents" class="help-box-contents">
-            {% blocktrans %}
-              <ul>
-                <li>Start by opening NOMIS and selecting ‘Financials’, then ‘Trust Accounts’, then ‘Receive Trust Funds’</li>
-                <li>Enter the control total</li>
-                <li>Select the ‘Misc Receipt - Private Cash‘ category as Transaction Type in NOMIS</li>
-                <li>Enter the prisoner number</li>
-                <li>Check the prisoner's name matches in NOMIS</li>
-                <li>Enter the amount</li>
-                <li>You don't need to use a reference</li>
-                <li>
-                  When you’ve entered the information in NOMIS, remember to
-                  click ‘Done’ in the digital cashbook. This is important so
-                  the credit is not processed twice.
-                </li>
-              </ul>
-           {% endblocktrans %}
-           </div>
+        <div class="help-box-title" aria-controls="help-box-contents" aria-expanded="true">
+          <div></div><a href="#">{%trans "Help" %}</a>
+        </div>
+        <div class="help-box-contents" id="help-box-contents">
+          {% blocktrans %}
+          <ul>
+            <li>You can credit in NOMIS in the usual way but remember to select the <strong>‘Misc Receipt - Private Cash’ category as Transaction Type</strong></li>
+            <li>You don’t need to use a reference</li>
+            <li>In the Digital Cashbook below, tick off the credits you’ve entered in NOMIS and click ‘Done’ </li>
+            <li>You might find it easier to copy and paste the prisoner number from the Digital Cashbook into NOMIS</li>
+          </ul>
+         {% endblocktrans %}
+       </div>
       </div>
 
       <div class="batch">
