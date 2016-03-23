@@ -1,5 +1,4 @@
 .locked {
-  width: 65%;
 
   @include breakpoint($mobile) {
     width: 100%;
@@ -10,6 +9,7 @@
     border-bottom: 2px solid $bg-color-alt;
   }
 
+  .batch { margin-top: 1em }
   .batch-buttons span {
     padding-right: 1em;
   }

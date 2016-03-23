@@ -10,6 +10,24 @@
     <h1>{% trans 'Credit history' %}</h1>
   </header>
 
+  <div class="help-box">
+    <p>{% trans "Below you'll find all the credits listed to date." %}</p>
+
+    <div class="help-box-title" aria-controls="help-box-contents" aria-expanded="true">
+      <div></div><a href="#">{%trans "Help" %}</a>
+    </div>
+    <div class="help-box-contents" id="help-box-contents">
+      {% blocktrans %}
+      <ul>
+        <li>You can search by prisoner name, prisoner number, sender name or amount</li>
+        <li>You don't need to enter search dates to bring up the whole history, however you can enter start and finish dates if you have a specific search</li>
+        <li>Click on 'Expand' to see a list of credits for that day, then click on 'Collapse' to go back</li>
+        <li>The credits shown in grey haven't been processed yet</li>
+      </ul>
+      {% endblocktrans %}
+    </div>
+  </div>
+
   {% include "includes/message_box.html" %}
 
   <form method="get" class="print-hidden HistorySearch" action="">

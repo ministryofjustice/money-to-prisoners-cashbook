@@ -267,22 +267,22 @@ class FilterTransactionHistoryForm(GARequestErrorReportingMixin, forms.Form):
 
         search_description, date_range_description = self._get_filter_description()
         if search_description and date_range_description:
-            return ugettext('%(credits)s received %(date_range)s when searching for “%(search)s”.') % {
+            return ugettext('%(credits)s received %(date_range)s when searching for “%(search)s”') % {
                 'search': search_description,
                 'date_range': date_range_description,
                 'credits': credit_description,
             }
         elif search_description:
-            return ugettext('Searching for “%(search)s” returned %(credits)s.') % {
+            return ugettext('Searching for “%(search)s” returned %(credits)s') % {
                 'search': search_description,
                 'credits': credit_description,
             }
         elif date_range_description:
-            return ugettext('%(credits)s received %(date_range)s.') % {
+            return ugettext('%(credits)s received %(date_range)s') % {
                 'date_range': date_range_description,
                 'credits': credit_description,
             }
         else:
-            return ugettext('%(credits)s received.') % {
+            return ugettext('%(credits)s received') % {
                 'credits': credit_description,
             }
