@@ -66,6 +66,19 @@ class LockedPaymentsPageTests(CashbookTestCase):
         self.assertInSource('Staff name')
         self.assertInSource('Time in progress')
 
+    def test_help_popup(self):
+        help_box_contents = self.driver.find_element_by_css_selector('.help-box-contents')
+        help_box_heading = self.driver.find_element_by_css_selector('.help-box-title')
+        help_box_link = self.driver.find_element_by_css_selector('.help-box-title a')
+        self.assertEqual('none', help_box_contents.value_of_css_property('display'))
+        self.assertEqual('false', help_box_heading.get_attribute('aria-expanded'))
+        help_box_link.click()
+        self.assertEqual('block', help_box_contents.value_of_css_property('display'))
+        self.assertEqual('true', help_box_heading.get_attribute('aria-expanded'))
+        help_box_link.click()
+        self.assertEqual('none', help_box_contents.value_of_css_property('display'))
+        self.assertEqual('false', help_box_heading.get_attribute('aria-expanded'))
+
 
 class NewPaymentsPageTests(CashbookTestCase):
     """
@@ -247,6 +260,26 @@ class Journeys(CashbookTestCase):
         self.driver.switch_to.alert.dismiss()
         self.assertCurrentUrl('/batch/')
 
+    def test_journey_7(self):
+        self.login('test-prison-1', 'test-prison-1')
+        self.click_on_text('New')
+        self.click_on_text('Help')
+        self.click_on_text('Home')
+
+    def test_journey_8(self):
+        self.login('test-prison-1', 'test-prison-1')
+        self.click_on_text('New')
+        self.click_on_text('Help')
+        self.click_on_text('Help')
+        self.click_on_text('Home')
+
+    def test_journey_9(self):
+        self.login('test-prison-1', 'test-prison-1')
+        self.click_on_text('History')
+        self.click_on_text('Help')
+        self.click_on_text('Help')
+        self.click_on_text('Home')
+
 
 class HistoryPageTests(CashbookTestCase):
     """
@@ -277,3 +310,16 @@ class HistoryPageTests(CashbookTestCase):
         self.type_in('id_search', '1')
         self.get_search_button().click()
         self.assertInSource(re.compile(r'Searching for “1” returned \d+ credits?.'))
+
+    def test_help_popup(self):
+        help_box_contents = self.driver.find_element_by_css_selector('.help-box-contents')
+        help_box_heading = self.driver.find_element_by_css_selector('.help-box-title')
+        help_box_link = self.driver.find_element_by_css_selector('.help-box-title a')
+        self.assertEqual('none', help_box_contents.value_of_css_property('display'))
+        self.assertEqual('false', help_box_heading.get_attribute('aria-expanded'))
+        help_box_link.click()
+        self.assertEqual('block', help_box_contents.value_of_css_property('display'))
+        self.assertEqual('true', help_box_heading.get_attribute('aria-expanded'))
+        help_box_link.click()
+        self.assertEqual('none', help_box_contents.value_of_css_property('display'))
+        self.assertEqual('false', help_box_heading.get_attribute('aria-expanded'))
