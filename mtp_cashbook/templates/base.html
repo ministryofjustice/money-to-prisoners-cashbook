@@ -15,4 +15,9 @@
 <span>
   <a href="{% url 'password_change' %}">{% trans "Change password" %}</a>
 </span>
+{% if perms.auth.change_user %}
+<span>
+  <a href="{% url 'list-users' %}">{% trans "Manage users" %}</a>
+</span>
+{% endif %}
 {% endblock %}

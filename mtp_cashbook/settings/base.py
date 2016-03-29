@@ -37,7 +37,8 @@ PROJECT_APPS = (
     'mtp_auth',
     'widget_tweaks',
     'cashbook',
-    'zendesk_tickets'
+    'zendesk_tickets',
+    'mtp_user_admin'
 )
 INSTALLED_APPS += PROJECT_APPS
 
