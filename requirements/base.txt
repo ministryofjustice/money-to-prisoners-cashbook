@@ -6,5 +6,6 @@ django-widget-tweaks==1.4.1
 git+git://github.com/ministryofjustice/django-moj-auth.git
 git+git://github.com/ministryofjustice/django-moj-irat.git
 git+git://github.com/ministryofjustice/django-zendesk-tickets.git
+git+git://github.com/ministryofjustice/money-to-prisoners-user-admin.git
 django-form-error-reporting>=0.2
 pytz>=2015.7
