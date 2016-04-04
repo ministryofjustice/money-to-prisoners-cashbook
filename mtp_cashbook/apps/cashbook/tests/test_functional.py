@@ -275,10 +275,18 @@ class Journeys(CashbookTestCase):
 
     def test_journey_9(self):
         self.login('test-prison-1', 'test-prison-1')
-        self.click_on_text('History')
+        self.click_on_text('New')
         self.click_on_text('Help')
         self.click_on_text('Help')
         self.click_on_text('Home')
+
+    def test_journey_10(self):
+        self.login('test-prison-1', 'test-prison-1')
+        self.click_on_text('History')
+        self.click_on_text('Home')
+        self.click_on_text('History')
+        self.driver.execute_script('window.history.go(-1)')
+        self.click_on_text('History')
 
 
 class HistoryPageTests(CashbookTestCase):
