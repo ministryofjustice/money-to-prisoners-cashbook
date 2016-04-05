@@ -141,6 +141,7 @@ class NewPaymentsPageTests(CashbookTestCase):
     def test_go_back_home(self):
         self.driver.find_element_by_link_text('Home').click()
         self.assertEqual('Digital cashbook', self.driver.title)
+        self.assertEqual(self.driver.current_url, self.live_server_url + '/dashboard-batch-discard/')
 
     def test_submitting_complete_batch(self):
         self.click_select_all_payments()
@@ -194,6 +195,11 @@ class VisualTests(CashbookTestCase):
         focused_element = self.driver.find_element_by_css_selector('div:focus')
         self.assertEqual('error-summary', focused_element.get_attribute('class'))
 
+    def test_go_home_with_back_button(self):
+        self.login_and_go_to('New')
+        self.driver.execute_script('window.history.go(-1)')
+        self.assertEqual(self.driver.current_url, self.live_server_url + '/')
+
 
 class Journeys(CashbookTestCase):
     """
@@ -222,7 +228,7 @@ class Journeys(CashbookTestCase):
         self.login('test-prison-1', 'test-prison-1')
         self.click_on_text('New')
         self.click_on_text('Home')
-        self.assertCurrentUrl('/')
+        self.assertCurrentUrl('/dashboard-batch-discard/')
 
     # Route: 1, 4, 5
     def test_journey_3(self):
@@ -249,7 +255,7 @@ class Journeys(CashbookTestCase):
         self.click_on_checkbox(1)
         self.click_on_text('Home')
         self.driver.switch_to.alert.accept()
-        self.assertCurrentUrl('/')
+        self.assertCurrentUrl('/dashboard-batch-discard/')
 
     # Route 1, 7, 9
     def test_journey_6(self):
