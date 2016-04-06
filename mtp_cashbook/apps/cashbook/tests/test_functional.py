@@ -43,13 +43,13 @@ class LoginTests(CashbookTestCase):
 
     def test_good_login(self):
         self.login('test-prison-1', 'test-prison-1')
-        self.assertEqual(self.driver.current_url, self.live_server_url + '/')
+        self.assertCurrentUrl('/')
         self.assertInSource('Credits to process')
 
     def test_logout(self):
         self.login('test-prison-1', 'test-prison-1')
-        self.driver.find_element_by_link_text('Sign out').click()
-        self.assertEqual(self.driver.current_url.split('?')[0], self.live_server_url + '/login/')
+        self.click_on_text('Sign out')
+        self.assertCurrentUrl('/login/')
 
 
 class LockedPaymentsPageTests(CashbookTestCase):
@@ -95,32 +95,32 @@ class NewPaymentsPageTests(CashbookTestCase):
 
     def test_submitting_payments_credited(self):
         self.click_done_payment(row=1)
-        self.driver.find_element_by_xpath('//button[text()="Done"]').click()
+        self.click_on_text('Done')
         self.assertIsNotNone(self.driver.find_element_by_xpath(
             '//div[@class="Dialog-inner"]/h3[text()="Are you sure?"]'
         ))
 
     def test_submitting_and_confirming_partial_batch(self):
         self.click_done_payment(row=1)
-        self.driver.find_element_by_xpath('//button[text()="Done"]').click()
-        self.driver.find_element_by_xpath('//div[@class="Dialog-inner"]/*[text()="Yes"]').click()
+        self.click_on_text('Done')
+        self.click_on_text('Yes')
         self.assertInSource('You’ve credited 1 payment to NOMIS.')
         self.assertEqual('Digital cashbook', self.driver.title)
 
     def test_submitting_and_not_confirming_partial_batch(self):
         self.click_done_payment(row=1)
-        self.driver.find_element_by_xpath('//button[text()="Done"]').click()
-        self.driver.find_element_by_xpath('//div[@class="Dialog-inner"]/*[text()="No, continue processing"]').click()
+        self.click_on_text('Done')
+        self.click_on_text('No, continue processing')
         self.assertEqual('New credits - Digital cashbook', self.driver.title)
 
     def test_clicking_done_with_no_payments_credited(self):
-        self.driver.find_element_by_xpath('//button[text()="Done"]').click()
+        self.click_on_text('Done')
         self.assertIsNotNone(self.driver.find_element_by_xpath(
             '//div[@class="error-summary"]/h1[text()="You have not ticked any credits"]'
         ))
 
     def test_printing(self):
-        self.driver.find_element_by_link_text('Print these payments').click()
+        self.click_on_text('Print these payments')
         self.assertIsNotNone(self.driver.find_element_by_xpath(
             '//div[@class="Dialog-inner"]/h3[text()="Do you need to print?"]'
         ))
@@ -139,21 +139,22 @@ class NewPaymentsPageTests(CashbookTestCase):
         self.assertEqual('false', help_box_heading.get_attribute('aria-expanded'))
 
     def test_go_back_home(self):
-        self.driver.find_element_by_link_text('Home').click()
+        self.click_on_text('Home')
         self.assertEqual('Digital cashbook', self.driver.title)
+        self.assertCurrentUrl('/dashboard-batch-discard/')
 
     def test_submitting_complete_batch(self):
         self.click_select_all_payments()
-        self.driver.find_element_by_xpath('//button[text()="Done"]').click()
+        self.click_on_text('Done')
         self.assertEqual('Digital cashbook', self.driver.title)
         self.assertInSource('You’ve credited')
 
     def test_checkboxes_style(self):
         # Regression tests for https://www.pivotaltracker.com/story/show/115328657
-        self.driver.find_element_by_link_text('Print these payments').click()
+        self.click_on_text('Print these payments')
         remember_checkbox = self.driver.find_element_by_xpath('//label[@for="remove-print-prompt"]')
         self.assertEqual('0px 10%', remember_checkbox.value_of_css_property('background-position'))
-        self.driver.find_element_by_link_text('close').click()
+        self.click_on_text('close')
         select_all_checkbox = self.driver.find_element_by_xpath('//label[@for="select-all-header"][1]')
         self.assertEqual('100% 10%', select_all_checkbox.value_of_css_property('background-position'))
 
@@ -173,7 +174,7 @@ class VisualTests(CashbookTestCase):
         # we need firefox as this is using a native dialog
         self.login_and_go_to('New')
         self.click_done_payment(row=1)
-        self.driver.find_element_by_link_text('Home').click()
+        self.click_on_text('Home')
         self.driver.switch_to.alert.dismiss()
         self.assertEqual('New credits - Digital cashbook', self.driver.title)
 
@@ -181,7 +182,7 @@ class VisualTests(CashbookTestCase):
         # we need firefox as this is using a native dialog
         self.login_and_go_to('New')
         self.click_done_payment(row=1)
-        self.driver.find_element_by_link_text('Home').click()
+        self.click_on_text('Home')
         self.driver.switch_to.alert.accept()
         self.assertEqual('Digital cashbook', self.driver.title)
 
@@ -193,6 +194,11 @@ class VisualTests(CashbookTestCase):
         self.click_on_text('Search')
         focused_element = self.driver.find_element_by_css_selector('div:focus')
         self.assertEqual('error-summary', focused_element.get_attribute('class'))
+
+    def test_go_home_with_back_button(self):
+        self.login_and_go_to('New')
+        self.driver.execute_script('window.history.go(-1)')
+        self.assertCurrentUrl('/')
 
 
 class Journeys(CashbookTestCase):
@@ -222,7 +228,7 @@ class Journeys(CashbookTestCase):
         self.login('test-prison-1', 'test-prison-1')
         self.click_on_text('New')
         self.click_on_text('Home')
-        self.assertCurrentUrl('/')
+        self.assertCurrentUrl('/dashboard-batch-discard/')
 
     # Route: 1, 4, 5
     def test_journey_3(self):
@@ -249,7 +255,7 @@ class Journeys(CashbookTestCase):
         self.click_on_checkbox(1)
         self.click_on_text('Home')
         self.driver.switch_to.alert.accept()
-        self.assertCurrentUrl('/')
+        self.assertCurrentUrl('/dashboard-batch-discard/')
 
     # Route 1, 7, 9
     def test_journey_6(self):
@@ -311,7 +317,7 @@ class HistoryPageTests(CashbookTestCase):
 
     def test_do_a_search_and_make_sure_it_takes_you_back_to_history_page(self):
         self.get_search_button().click()
-        self.assertEqual(self.driver.current_url.split('?')[0], self.live_server_url + '/history/')
+        self.assertCurrentUrl('/history/')
 
     def test_searching_history(self):
         self.assertInSource(re.compile(r'\d+ credits? received.'))

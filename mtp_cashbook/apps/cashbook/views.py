@@ -3,7 +3,6 @@ import logging
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy, reverse
-from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.utils.translation import ungettext
 from django.views.generic import FormView, TemplateView
@@ -18,10 +17,17 @@ logger = logging.getLogger('mtp')
 
 class DashboardView(TemplateView):
     template_name = 'cashbook/dashboard.html'
+    discard_batch = False
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         self.client = api_client.get_connection(request)
+        if self.discard_batch:
+            form = ProcessTransactionBatchForm(request, data={
+                'discard': '1'
+            })
+            if form.is_valid():
+                form.save()
         return super(DashboardView, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -87,15 +93,6 @@ class TransactionBatchListView(FormView):
             self.success_url = reverse('dashboard-batch-complete')
 
         return super(TransactionBatchListView, self).form_valid(form)
-
-
-def transaction_batch_discard(request):
-    form = ProcessTransactionBatchForm(request, data={
-        'discard': '1'
-    })
-    if form.is_valid():
-        form.save()
-    return redirect(reverse('dashboard'))
 
 
 class TransactionsLockedView(FormView):
