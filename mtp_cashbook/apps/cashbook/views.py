@@ -82,9 +82,15 @@ class TransactionBatchListView(FormView):
                 }
             )
 
+            username = self.request.user.user_data.get('username', 'Unknown')
             logger.info('User "%(username)s" credited %(credited)d payment(s) to NOMIS' % {
-                'username': self.request.user.username,
+                'username': username,
                 'credited': credited_count,
+            }, extra={
+                'elk_fields': {
+                    '@fields.credited_count': credited_count,
+                    '@fields.username': username,
+                }
             })
 
         if discarded_count:
@@ -131,9 +137,15 @@ class TransactionsLockedView(FormView):
             }
         )
 
+        username = self.request.user.user_data.get('username', 'Unknown')
         logger.info('User "%(username)s" unlocked %(discarded)d payment(s)' % {
-            'username': self.request.user.username,
+            'username': username,
             'discarded': discarded_count,
+        }, extra={
+            'elk_fields': {
+                '@fields.discarded_count': discarded_count,
+                '@fields.username': username,
+            }
         })
 
         return super(TransactionsLockedView, self).form_valid(form)
