@@ -35,7 +35,7 @@ class LoginTests(CashbookTestCase):
         self.driver.get(self.live_server_url)
         heading = self.driver.find_element_by_tag_name('h1')
         self.assertEqual('Money sent to prisoners', heading.text)
-        self.assertEqual('48px', heading.value_of_css_property('font-size'))
+        self.assertCssProperty('h1', 'font-size', '48px')
 
     def test_bad_login(self):
         self.login('test-prison-1', 'bad-password')
@@ -67,16 +67,14 @@ class LockedPaymentsPageTests(CashbookTestCase):
         self.assertInSource('Time in progress')
 
     def test_help_popup(self):
-        help_box_contents = self.driver.find_element_by_css_selector('.help-box-contents')
         help_box_heading = self.driver.find_element_by_css_selector('.help-box-title')
-        help_box_link = self.driver.find_element_by_css_selector('.help-box-title a')
-        self.assertEqual('none', help_box_contents.value_of_css_property('display'))
+        self.assertCssProperty('.help-box-contents', 'display', 'none')
         self.assertEqual('false', help_box_heading.get_attribute('aria-expanded'))
-        help_box_link.click()
-        self.assertEqual('block', help_box_contents.value_of_css_property('display'))
+        self.click_on_text('Help')
+        self.assertCssProperty('.help-box-contents', 'display', 'block')
         self.assertEqual('true', help_box_heading.get_attribute('aria-expanded'))
-        help_box_link.click()
-        self.assertEqual('none', help_box_contents.value_of_css_property('display'))
+        self.click_on_text('Help')
+        self.assertCssProperty('.help-box-contents', 'display', 'none')
         self.assertEqual('false', help_box_heading.get_attribute('aria-expanded'))
 
 
@@ -126,16 +124,14 @@ class NewPaymentsPageTests(CashbookTestCase):
         ))
 
     def test_help_popup(self):
-        help_box_contents = self.driver.find_element_by_css_selector('.help-box-contents')
         help_box_heading = self.driver.find_element_by_css_selector('.help-box-title')
-        help_box_link = self.driver.find_element_by_css_selector('.help-box-title a')
-        self.assertEqual('none', help_box_contents.value_of_css_property('display'))
+        self.assertCssProperty('.help-box-contents', 'display', 'none')
         self.assertEqual('false', help_box_heading.get_attribute('aria-expanded'))
-        help_box_link.click()
-        self.assertEqual('block', help_box_contents.value_of_css_property('display'))
+        self.click_on_text('Help')
+        self.assertCssProperty('.help-box-contents', 'display', 'block')
         self.assertEqual('true', help_box_heading.get_attribute('aria-expanded'))
-        help_box_link.click()
-        self.assertEqual('none', help_box_contents.value_of_css_property('display'))
+        self.click_on_text('Help')
+        self.assertCssProperty('.help-box-contents', 'display', 'none')
         self.assertEqual('false', help_box_heading.get_attribute('aria-expanded'))
 
     def test_go_back_home(self):
@@ -152,11 +148,14 @@ class NewPaymentsPageTests(CashbookTestCase):
     def test_checkboxes_style(self):
         # Regression tests for https://www.pivotaltracker.com/story/show/115328657
         self.click_on_text('Print these payments')
-        remember_checkbox = self.driver.find_element_by_xpath('//label[@for="remove-print-prompt"]')
-        self.assertEqual('0px 10%', remember_checkbox.value_of_css_property('background-position'))
+        self.assertCssProperty('label[for=remove-print-prompt]', 'background-position', '0% 0%')
+        # remember_checkbox = self.driver.find_element_by_xpath('//label[@for="remove-print-prompt"]')
+        # self.assertEqual('0% 0%', remember_checkbox.value_of_css_property('background-position'))
         self.click_on_text('close')
-        select_all_checkbox = self.driver.find_element_by_xpath('//label[@for="select-all-header"][1]')
-        self.assertEqual('100% 10%', select_all_checkbox.value_of_css_property('background-position'))
+        self.assertCssProperty('label[for=select-all-header]', 'background-position', '0% 0%')
+
+        # select_all_checkbox = self.driver.find_element_by_xpath('//label[@for="select-all-header"][1]')
+        # self.assertEqual('0% 0%', select_all_checkbox.value_of_css_property('background-position'))
 
 
 class VisualTests(CashbookTestCase):
@@ -326,14 +325,77 @@ class HistoryPageTests(CashbookTestCase):
         self.assertInSource(re.compile(r'Searching for “1” returned \d+ credits?.'))
 
     def test_help_popup(self):
-        help_box_contents = self.driver.find_element_by_css_selector('.help-box-contents')
         help_box_heading = self.driver.find_element_by_css_selector('.help-box-title')
-        help_box_link = self.driver.find_element_by_css_selector('.help-box-title a')
-        self.assertEqual('none', help_box_contents.value_of_css_property('display'))
+        self.assertCssProperty('.help-box-contents', 'display', 'none')
         self.assertEqual('false', help_box_heading.get_attribute('aria-expanded'))
-        help_box_link.click()
-        self.assertEqual('block', help_box_contents.value_of_css_property('display'))
+        self.click_on_text('Help')
+        self.assertCssProperty('.help-box-contents', 'display', 'block')
         self.assertEqual('true', help_box_heading.get_attribute('aria-expanded'))
-        help_box_link.click()
-        self.assertEqual('none', help_box_contents.value_of_css_property('display'))
+        self.click_on_text('Help')
+        self.assertCssProperty('.help-box-contents', 'display', 'none')
         self.assertEqual('false', help_box_heading.get_attribute('aria-expanded'))
+
+
+class AdminPagesTests(CashbookTestCase):
+    """
+    Tests for Admin pages
+    """
+
+    def setUp(self):
+        super().setUp()
+        self.login('admin', 'admin')
+        self.click_on_text('Manage users')
+
+    def _create_dummy_user(self, username):
+        self.click_on_text('Manage users')
+        self.click_on_text('Add a new user')
+        self.type_in('id_username', username)
+        self.type_in('id_first_name', 'Joe')
+        self.type_in('id_last_name', 'Bloggs')
+        self.type_in('id_email', 'a@v.com')
+        self.driver.find_element_by_css_selector('form').submit()
+
+    def test_list_page(self):
+        self.assertCurrentUrl('/users/')
+        self.assertInSource('Manage user accounts')
+        self.assertInSource('Admin User')
+        self.assertCssProperty('td.actions > div', 'margin-right', '80px')
+
+    def test_create_user_missing_fields(self):
+        self.click_on_text('Add a new user')
+        self.assertInSource('Create a new user')
+        self.type_in('id_username', 'dummy')
+        self.driver.find_element_by_css_selector('form').submit()
+        self.assertInSource('This field is required')
+
+    def test_create_user(self):
+        self._create_dummy_user('dummy')
+        self.assertInSource('User account ‘dummy’ created')
+
+    def test_delete_user(self):
+        self._create_dummy_user('dummy2')
+        self.click_on_text('Return to user management')
+        self.get_element('//a[text()="Delete" and ancestor::tr/td[text()="dummy2"]]').click()
+        self.assertInSource('Delete user account')
+        self.driver.find_element_by_css_selector('form').submit()
+        self.assertInSource('User account ‘dummy2’ deleted')
+
+    def test_edit_user(self):
+        self._create_dummy_user('dummy3')
+        self.click_on_text('Edit this user account')
+        self.type_in('id_first_name', 'Jane')
+        self.driver.find_element_by_css_selector('form').submit()
+        self.assertInSource('User account ‘dummy3’ edited')
+
+    def test_edit_user_from_list(self):
+        self._create_dummy_user('dummy4')
+        self.click_on_text('Return to user management')
+        self.get_element('//a[text()="Edit" and ancestor::tr/td[text()="dummy4"]]').click()
+        self.type_in('id_first_name', 'Jane')
+        self.driver.find_element_by_css_selector('form').submit()
+        self.assertInSource('User account ‘dummy4’ edited')
+
+    def test_create_two_users_same_username(self):
+        self._create_dummy_user('dummy5')
+        self._create_dummy_user('dummy5')
+        self.assertInSource('A user with that username already exists.')
