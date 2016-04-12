@@ -11,6 +11,8 @@ urlpatterns = [
         name='dashboard-batch-incomplete'),
     url(r'^dashboard-batch-discard/$', DashboardView.as_view(discard_batch=True),
         name='dashboard-batch-discard'),
+    url(r'^dashboard-unlocked-payments/$', DashboardView.as_view(),
+        name='dashboard-unlocked-payments'),
 
     url(r'^locked/$', TransactionsLockedView.as_view(), name='transactions-locked'),
 

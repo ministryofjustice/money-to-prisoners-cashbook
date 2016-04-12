@@ -148,6 +148,9 @@ class TransactionsLockedView(FormView):
             }
         })
 
+        if discarded_count:
+            self.success_url = reverse('dashboard-unlocked-payments')
+
         return super(TransactionsLockedView, self).form_valid(form)
 
 

@@ -25,6 +25,9 @@ class CashbookTestCase(FunctionalTestCase):
         checkbox_id = self.get_element(xpath).get_attribute('id')
         self.get_element('//label[@for="%s"]' % checkbox_id).click()
 
+    def click_checkbox(self, index):
+        self.driver.find_element_by_xpath('//input[@type="checkbox"][%d]' % (index+1)).click()
+
 
 class LoginTests(CashbookTestCase):
     """
@@ -65,6 +68,12 @@ class LockedPaymentsPageTests(CashbookTestCase):
         self.assertInSource('Credits in progress')
         self.assertInSource('Staff name')
         self.assertInSource('Time in progress')
+
+    def test_releasing_credits(self):
+        self.click_checkbox(0)
+        self.click_on_text('Release')
+        self.assertCurrentUrl('/dashboard-unlocked-payments/')
+        self.assertInSource('You have now returned')
 
     def test_help_popup(self):
         help_box_heading = self.driver.find_element_by_css_selector('.help-box-title')
@@ -208,7 +217,7 @@ class Journeys(CashbookTestCase):
     """
     required_webdriver = 'firefox'
 
-    def click_on_checkbox(self, index):
+    def click_credit_checkbox(self, index):
         if index == 0:
             self.click_select_all_payments()
         else:
@@ -218,7 +227,7 @@ class Journeys(CashbookTestCase):
     def test_journey_1(self):
         self.login('test-prison-1', 'test-prison-1')
         self.click_on_text('New')
-        self.click_on_checkbox(0)
+        self.click_credit_checkbox(0)
         self.click_on_text('Done')
         self.assertCurrentUrl('/dashboard-batch-complete/')
 
@@ -233,7 +242,7 @@ class Journeys(CashbookTestCase):
     def test_journey_3(self):
         self.login('test-prison-1', 'test-prison-1')
         self.click_on_text('New')
-        self.click_on_checkbox(1)
+        self.click_credit_checkbox(1)
         self.click_on_text('Done')
         self.click_on_text('Yes')
         self.assertCurrentUrl('/dashboard-batch-incomplete/')
@@ -242,7 +251,7 @@ class Journeys(CashbookTestCase):
     def test_journey_4(self):
         self.login('test-prison-1', 'test-prison-1')
         self.click_on_text('New')
-        self.click_on_checkbox(1)
+        self.click_credit_checkbox(1)
         self.click_on_text('Done')
         self.click_on_text('No, continue processing')
         self.assertCurrentUrl('/batch/')
@@ -251,7 +260,7 @@ class Journeys(CashbookTestCase):
     def test_journey_5(self):
         self.login('test-prison-1', 'test-prison-1')
         self.click_on_text('New')
-        self.click_on_checkbox(1)
+        self.click_credit_checkbox(1)
         self.click_on_text('Home')
         self.driver.switch_to.alert.accept()
         self.assertCurrentUrl('/dashboard-batch-discard/')
@@ -260,7 +269,7 @@ class Journeys(CashbookTestCase):
     def test_journey_6(self):
         self.login('test-prison-1', 'test-prison-1')
         self.click_on_text('New')
-        self.click_on_checkbox(1)
+        self.click_credit_checkbox(1)
         self.click_on_text('Home')
         self.driver.switch_to.alert.dismiss()
         self.assertCurrentUrl('/batch/')
@@ -287,11 +296,26 @@ class Journeys(CashbookTestCase):
 
     def test_journey_10(self):
         self.login('test-prison-1', 'test-prison-1')
-        self.click_on_text('History')
+        self.click_on_text('New')
         self.click_on_text('Home')
-        self.click_on_text('History')
+        self.click_on_text('Sign out')
+
+    def test_journey_11(self):
+        self.login('test-prison-1', 'test-prison-1')
+        self.click_on_text('New')
         self.driver.execute_script('window.history.go(-1)')
-        self.click_on_text('History')
+        self.click_on_text('Sign out')
+
+    def test_journey_12(self):
+        self.login('test-prison-1', 'test-prison-1')
+        self.click_on_text('In progress')
+        self.click_on_text('Release')
+
+    def test_journey_13(self):
+        self.login('test-prison-1', 'test-prison-1')
+        self.click_on_text('In progress')
+        self.click_checkbox(1)
+        self.click_on_text('Release')
 
 
 class HistoryPageTests(CashbookTestCase):
