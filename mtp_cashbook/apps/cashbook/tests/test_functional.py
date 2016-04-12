@@ -358,7 +358,7 @@ class AdminPagesTests(CashbookTestCase):
     def test_list_page(self):
         self.assertCurrentUrl('/users/')
         self.assertInSource('Manage user accounts')
-        self.assertInSource('Admin User')
+        self.assertInSource('Prison 1 Clerk')
         self.assertCssProperty('td.actions > div', 'margin-right', '80px')
 
     def test_create_user_missing_fields(self):
