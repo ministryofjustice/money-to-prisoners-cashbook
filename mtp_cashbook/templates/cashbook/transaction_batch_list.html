@@ -115,7 +115,7 @@
                   value="{{ transaction_pk }}"
                   id="check-{{ transaction.id }}"
                   {% if transaction_pk|to_string in form.transactions.value %}checked{% endif %}
-                  class="js-RunningTotal-item"
+                  class="js-RunningTotal-item Checkbox"
                   data-amount="{{ transaction.amount|currency }}">
                 <label for="check-{{ transaction.id }}">{% trans "Credited" %}</label>
               </td>

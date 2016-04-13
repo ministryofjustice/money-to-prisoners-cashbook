@@ -63,6 +63,7 @@
                 name="{{ form.transactions.html_name }}"
                 value="{{ transaction_locked_ids }}"
                 id="check-{{ transaction_group.owner }}"
+                class="Checkbox"
                 {% if transaction_locked_ids in form.transactions.value %}checked{% endif %}>
               <label for="check-{{ transaction_group.owner }}">{% trans "Select" %}</label>
             </td>
