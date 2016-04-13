@@ -40,7 +40,7 @@ class ProcessTransactionBatchForm(GARequestErrorReportingMixin, forms.Form):
         transactions = self.cleaned_data.get('transactions', [])
         discard = self.data.get('discard') == '1'
         if not transactions and not discard:
-            raise forms.ValidationError(ugettext('Only click ‘Done’ when you’ve selected credits processed in NOMIS'))
+            raise forms.ValidationError(ugettext('Only click ‘Done’ when you’ve selected credits'))
         if discard:
             transactions = []
         return transactions
