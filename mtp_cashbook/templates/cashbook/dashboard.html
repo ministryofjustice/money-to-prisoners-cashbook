@@ -6,7 +6,14 @@
 
   {% include "includes/message_box.html" %}
 
-  <p>{%trans "See ‘New credits’ for money to be credited to prisoners in NOMIS, ‘History’ for all credits processed, and ‘In progress’ for credits being processed by your team." %}</p>
+  {% blocktrans %}
+  <p>Use:</p>
+  <ul>
+    <li>‘New’ to process credits in NOMIS"</li>
+    <li>‘History’ to view all credits processed"</li>
+    <li>‘In progress’ to view credits currently being processed by your team"</li>
+  </ul>
+  {% endblocktrans %}
 
   <ul class="SummaryBoxes">
     <li class="SummaryBoxes--unprocessed">
