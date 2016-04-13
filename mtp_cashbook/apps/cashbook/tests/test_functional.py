@@ -17,11 +17,11 @@ class CashbookTestCase(FunctionalTestCase):
         self.login('test-prison-1', 'test-prison-1')
         self.click_on_text(link_text)
 
-    def click_select_all_payments(self):
+    def select_all_payments(self):
         self.get_element('//label[@for="select-all-header"]').click()
 
-    def click_done_payment(self, row):
-        xpath = '//input[@type="checkbox" and @data-amount][%d]' % row
+    def select_first_payment(self):
+        xpath = '//input[@type="checkbox" and @data-amount][1]'
         checkbox_id = self.get_element(xpath).get_attribute('id')
         self.get_element('//label[@for="%s"]' % checkbox_id).click()
 
@@ -66,6 +66,12 @@ class LockedPaymentsPageTests(CashbookTestCase):
         self.assertInSource('Staff name')
         self.assertInSource('Time in progress')
 
+    def test_releasing_credits(self):
+        self.get_element('//tbody//input[@type="checkbox"][1]').click()
+        self.click_on_text('Release')
+        self.assertCurrentUrl('/dashboard-unlocked-payments/')
+        self.assertInSource('You have now returned')
+
     def test_help_popup(self):
         help_box_heading = self.driver.find_element_by_css_selector('.help-box-title')
         self.assertCssProperty('.help-box-contents', 'display', 'none')
@@ -92,21 +98,21 @@ class NewPaymentsPageTests(CashbookTestCase):
         self.assertInSource('Control total')
 
     def test_submitting_payments_credited(self):
-        self.click_done_payment(row=1)
+        self.select_first_payment()
         self.click_on_text('Done')
         self.assertIsNotNone(self.driver.find_element_by_xpath(
             '//div[@class="Dialog-inner"]/h3[text()="Are you sure?"]'
         ))
 
     def test_submitting_and_confirming_partial_batch(self):
-        self.click_done_payment(row=1)
+        self.select_first_payment()
         self.click_on_text('Done')
         self.click_on_text('Yes')
         self.assertInSource('You’ve credited 1 payment to NOMIS.')
         self.assertEqual('Digital cashbook', self.driver.title)
 
     def test_submitting_and_not_confirming_partial_batch(self):
-        self.click_done_payment(row=1)
+        self.select_first_payment()
         self.click_on_text('Done')
         self.click_on_text('No, continue processing')
         self.assertEqual('New credits - Digital cashbook', self.driver.title)
@@ -140,7 +146,7 @@ class NewPaymentsPageTests(CashbookTestCase):
         self.assertCurrentUrl('/dashboard-batch-discard/')
 
     def test_submitting_complete_batch(self):
-        self.click_select_all_payments()
+        self.select_all_payments()
         self.click_on_text('Done')
         self.assertEqual('Digital cashbook', self.driver.title)
         self.assertInSource('You’ve credited')
@@ -172,7 +178,7 @@ class VisualTests(CashbookTestCase):
     def test_leaving_confirming_incomplete_batch(self):
         # we need firefox as this is using a native dialog
         self.login_and_go_to('New')
-        self.click_done_payment(row=1)
+        self.select_first_payment()
         self.click_on_text('Home')
         self.driver.switch_to.alert.dismiss()
         self.assertEqual('New credits - Digital cashbook', self.driver.title)
@@ -180,7 +186,7 @@ class VisualTests(CashbookTestCase):
     def test_leaving_not_confirming_incomplete_batch(self):
         # we need firefox as this is using a native dialog
         self.login_and_go_to('New')
-        self.click_done_payment(row=1)
+        self.select_first_payment()
         self.click_on_text('Home')
         self.driver.switch_to.alert.accept()
         self.assertEqual('Digital cashbook', self.driver.title)
@@ -208,17 +214,11 @@ class Journeys(CashbookTestCase):
     """
     required_webdriver = 'firefox'
 
-    def click_on_checkbox(self, index):
-        if index == 0:
-            self.click_select_all_payments()
-        else:
-            self.click_done_payment(index)
-
     # Route: 1, 2
     def test_journey_1(self):
         self.login('test-prison-1', 'test-prison-1')
         self.click_on_text('New')
-        self.click_on_checkbox(0)
+        self.select_all_payments()
         self.click_on_text('Done')
         self.assertCurrentUrl('/dashboard-batch-complete/')
 
@@ -233,7 +233,7 @@ class Journeys(CashbookTestCase):
     def test_journey_3(self):
         self.login('test-prison-1', 'test-prison-1')
         self.click_on_text('New')
-        self.click_on_checkbox(1)
+        self.select_first_payment()
         self.click_on_text('Done')
         self.click_on_text('Yes')
         self.assertCurrentUrl('/dashboard-batch-incomplete/')
@@ -242,7 +242,7 @@ class Journeys(CashbookTestCase):
     def test_journey_4(self):
         self.login('test-prison-1', 'test-prison-1')
         self.click_on_text('New')
-        self.click_on_checkbox(1)
+        self.select_first_payment()
         self.click_on_text('Done')
         self.click_on_text('No, continue processing')
         self.assertCurrentUrl('/batch/')
@@ -251,7 +251,7 @@ class Journeys(CashbookTestCase):
     def test_journey_5(self):
         self.login('test-prison-1', 'test-prison-1')
         self.click_on_text('New')
-        self.click_on_checkbox(1)
+        self.select_first_payment()
         self.click_on_text('Home')
         self.driver.switch_to.alert.accept()
         self.assertCurrentUrl('/dashboard-batch-discard/')
@@ -260,7 +260,7 @@ class Journeys(CashbookTestCase):
     def test_journey_6(self):
         self.login('test-prison-1', 'test-prison-1')
         self.click_on_text('New')
-        self.click_on_checkbox(1)
+        self.select_first_payment()
         self.click_on_text('Home')
         self.driver.switch_to.alert.dismiss()
         self.assertCurrentUrl('/batch/')
@@ -287,11 +287,26 @@ class Journeys(CashbookTestCase):
 
     def test_journey_10(self):
         self.login('test-prison-1', 'test-prison-1')
-        self.click_on_text('History')
+        self.click_on_text('New')
         self.click_on_text('Home')
-        self.click_on_text('History')
+        self.click_on_text('Sign out')
+
+    def test_journey_11(self):
+        self.login('test-prison-1', 'test-prison-1')
+        self.click_on_text('New')
         self.driver.execute_script('window.history.go(-1)')
-        self.click_on_text('History')
+        self.click_on_text('Sign out')
+
+    def test_journey_12(self):
+        self.login('test-prison-1', 'test-prison-1')
+        self.click_on_text('In progress')
+        self.click_on_text('Release')
+
+    def test_journey_13(self):
+        self.login('test-prison-1', 'test-prison-1')
+        self.click_on_text('In progress')
+        self.get_element('//tbody//input[@type="checkbox"][1]').click()
+        self.click_on_text('Release')
 
 
 class HistoryPageTests(CashbookTestCase):
