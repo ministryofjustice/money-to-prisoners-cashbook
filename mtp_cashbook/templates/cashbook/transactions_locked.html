@@ -24,8 +24,8 @@
       <div class="panel-indent help-box-contents" id="help-box-contents">
         {% blocktrans %}
         <ul>
-          <li>To release credits, find your team member under 'staff name' and select the box at the end of the row.</li>
-          <li>Click 'Release' to free up their work.</li>
+          <li>To release credits, find your team member under ‘staff name’ and select the box at the end of the row</li>
+          <li>Click ‘Release’ to free up their work</li>
         </ul>
         {% endblocktrans %}
       </div>
@@ -63,6 +63,7 @@
                 name="{{ form.transactions.html_name }}"
                 value="{{ transaction_locked_ids }}"
                 id="check-{{ transaction_group.owner }}"
+                class="Checkbox"
                 {% if transaction_locked_ids in form.transactions.value %}checked{% endif %}>
               <label for="check-{{ transaction_group.owner }}">{% trans "Select" %}</label>
             </td>

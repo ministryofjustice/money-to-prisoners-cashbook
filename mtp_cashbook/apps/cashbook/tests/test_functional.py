@@ -155,13 +155,8 @@ class NewPaymentsPageTests(CashbookTestCase):
         # Regression tests for https://www.pivotaltracker.com/story/show/115328657
         self.click_on_text('Print these payments')
         self.assertCssProperty('label[for=remove-print-prompt]', 'background-position', '0% 0%')
-        # remember_checkbox = self.driver.find_element_by_xpath('//label[@for="remove-print-prompt"]')
-        # self.assertEqual('0% 0%', remember_checkbox.value_of_css_property('background-position'))
         self.click_on_text('close')
-        self.assertCssProperty('label[for=select-all-header]', 'background-position', '0% 0%')
-
-        # select_all_checkbox = self.driver.find_element_by_xpath('//label[@for="select-all-header"][1]')
-        # self.assertEqual('0% 0%', select_all_checkbox.value_of_css_property('background-position'))
+        self.assertCssProperty('label[for=select-all-header]', 'background-position', '100% 10%')
 
 
 class VisualTests(CashbookTestCase):
