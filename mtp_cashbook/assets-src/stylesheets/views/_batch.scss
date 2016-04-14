@@ -70,6 +70,41 @@
     }
   }
 
+  .prisoner-number {
+    > div {
+      position: relative;
+      width: 8em;
+
+      .pn {
+        font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+        padding-right: .5em;
+      }
+      input[type=button] {
+        cursor: pointer;
+        font-size: 70%;
+      }
+
+      .mtp-bubble {
+        width: 10em;
+        background-color: black;
+        color: white;
+        position: absolute;
+        padding: .1em;
+        font-size: 80%;
+        z-index: 100;
+        text-align: center;
+        top: 25px;
+        left: 40px;
+
+        &.copied {
+          width: 4em;
+          top: 30px;
+          left: 76px;
+        }
+      }
+    }
+  }
+
   &.no-js {
     .print,
     .select-all {

@@ -22,7 +22,8 @@
       require('batch-validation'),
       require('sticky-header'),
       require('running-total'),
-      require('search-focus')
+      require('search-focus'),
+      require('copy-to-clipboard')
     ])
     .init();
 }());
