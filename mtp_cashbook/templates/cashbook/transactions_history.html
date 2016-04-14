@@ -126,7 +126,13 @@
                 <th>{% trans 'Prisoner name' %}</th>
                 <th>{% trans 'Amount (£)' %}</th>
                 <th>{% trans 'Sender' %}</th>
-                <th>{% trans 'Processed by' %}</th>
+                <th>
+                  {% if transaction_status == 'uncredited' %}
+                    {% trans 'Locked by' %}
+                  {% else %}
+                    {% trans 'Processed by' %}
+                  {% endif %}
+                </th>
               </tr>
             </thead>
             <tbody>
