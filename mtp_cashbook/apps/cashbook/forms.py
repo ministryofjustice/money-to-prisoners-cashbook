@@ -99,6 +99,12 @@ class DiscardLockedTransactionsForm(GARequestErrorReportingMixin, forms.Form):
     def _request_locked_transactions(self):
         return retrieve_all_pages(self.client.cashbook.transactions.locked.get)
 
+    def clean_transactions(self):
+        transactions = self.cleaned_data.get('transactions')
+        if not transactions:
+            raise forms.ValidationError(ugettext('Only click ‘Done’ when you’ve selected credits'))
+        return transactions
+
     @cached_property
     def transaction_choices(self):
         """

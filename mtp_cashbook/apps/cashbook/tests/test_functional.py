@@ -68,9 +68,15 @@ class LockedPaymentsPageTests(CashbookTestCase):
 
     def test_releasing_credits(self):
         self.get_element('//tbody//input[@type="checkbox"][1]').click()
-        self.click_on_text('Release')
+        self.click_on_text('Done')
         self.assertCurrentUrl('/dashboard-unlocked-payments/')
         self.assertInSource('You have now returned')
+
+    def test_clicking_done_with_no_payments_released(self):
+        self.click_on_text('Done')
+        self.assertIsNotNone(self.driver.find_element_by_xpath(
+            '//div[@class="error-summary"]/h1[text()="You haven’t ticked any credits"]'
+        ))
 
     def test_help_popup(self):
         help_box_heading = self.driver.find_element_by_css_selector('.help-box-title')
@@ -120,7 +126,7 @@ class NewPaymentsPageTests(CashbookTestCase):
     def test_clicking_done_with_no_payments_credited(self):
         self.click_on_text('Done')
         self.assertIsNotNone(self.driver.find_element_by_xpath(
-            '//div[@class="error-summary"]/h1[text()="You have not ticked any credits"]'
+            '//div[@class="error-summary"]/h1[text()="You haven’t ticked any credits"]'
         ))
 
     def test_printing(self):

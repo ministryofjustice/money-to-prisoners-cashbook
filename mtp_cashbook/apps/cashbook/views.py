@@ -126,16 +126,19 @@ class TransactionsLockedView(FormView):
         discarded = form.save()
         discarded_count = len(discarded)
 
-        messages.success(
-            self.request,
-            ungettext(
-                'You have now returned the %(discarded)s payment your colleague was processing to ‘New Credits’.',
-                'You have now returned the %(discarded)s payments your colleague was processing to ‘New Credits’.',
-                discarded_count
-            ) % {
-                'discarded': discarded_count
-            }
-        )
+        if discarded_count:
+            messages.success(
+                self.request,
+                ungettext(
+                    'You have now returned the %(discarded)s payment your '
+                    'colleagues were processing to ‘New Credits’.',
+                    'You have now returned the %(discarded)s payments your '
+                    'colleagues were processing to ‘New Credits’.',
+                    discarded_count
+                ) % {
+                    'discarded': discarded_count
+                }
+            )
 
         username = self.request.user.user_data.get('username', 'Unknown')
         logger.info('User "%(username)s" unlocked %(discarded)d payment(s)' % {

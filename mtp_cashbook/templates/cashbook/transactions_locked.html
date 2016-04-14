@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load currency %}
+{% load mtp_utils %}
 
 {% block content %}
   <header class="ContentHeader">
@@ -33,7 +34,26 @@
       </div>
     </div>
 
-    {{ form.errors }}
+    {% if form.errors or form.non_field_errors %}
+      <div class="error-summary" aria-labelledby="error-summary-heading" tabindex="-1" role="alert">
+        <h1 class="error-summary-heading heading-medium" id="error-summary-heading">{% trans 'You haven’t ticked any credits' %}</h1>
+
+        <ol class="error-summary-list">
+          {% for field, errors in form.errors.items %}
+            {% with field_obj=form|field_from_name:field %}
+            <li><a href="#{{ field_obj.auto_id }}-label">
+              {% for error in errors %}
+                {% if not forloop.first  %}
+                  {% trans 'and' %}
+                {% endif %}
+                {{ error }}
+              {% endfor %}
+            </a></li>
+            {% endwith %}
+          {% endfor %}
+        </ol>
+      </div>
+    {% endif %}
 
     <div class="batch">
 
