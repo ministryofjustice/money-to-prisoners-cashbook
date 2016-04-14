@@ -18,11 +18,12 @@
     </div>
     <div class="panel-indent help-box-contents" id="help-box-contents">
       {% blocktrans %}
+      <p>To help with your search:</p>
       <ul>
-        <li>You can search by prisoner name, prisoner number, sender name or amount</li>
-        <li>You don’t need to enter search dates to bring up the whole history, however you can enter start and finish dates if you have a specific search</li>
+        <li>Search by prisoner name, prisoner number, sender name or amount</li>
+        <li>To bring up the whole history, don’t enter search dates although you can enter start and finish dates if you have a specific search</li>
         <li>Click on ‘Expand’ to see a list of credits for that day, then click on ‘Collapse’ to go back</li>
-        <li>The credits shown in grey haven’t been processed yet</li>
+        <li>Remember the payments in ‘Uncredited’ haven’t been processed yet</li>
       </ul>
       {% endblocktrans %}
     </div>
@@ -126,7 +127,13 @@
                 <th>{% trans 'Prisoner name' %}</th>
                 <th>{% trans 'Amount (£)' %}</th>
                 <th>{% trans 'Sender' %}</th>
-                <th>{% trans 'Processed by' %}</th>
+                <th>
+                  {% if transaction_status == 'uncredited' %}
+                    {% trans 'Started by' %}
+                  {% else %}
+                    {% trans 'Finished by' %}
+                  {% endif %}
+                </th>
               </tr>
             </thead>
             <tbody>
