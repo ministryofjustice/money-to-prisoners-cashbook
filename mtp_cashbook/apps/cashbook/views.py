@@ -130,8 +130,10 @@ class TransactionsLockedView(FormView):
             messages.success(
                 self.request,
                 ungettext(
-                    'You have now returned the %(discarded)s payment your colleagues were processing to ‘New Credits’.',
-                    'You have now returned the %(discarded)s payments your colleagues were processing to ‘New Credits’.',
+                    'You have now returned the %(discarded)s payment your '
+                    'colleagues were processing to ‘New Credits’.',
+                    'You have now returned the %(discarded)s payments your '
+                    'colleagues were processing to ‘New Credits’.',
                     discarded_count
                 ) % {
                     'discarded': discarded_count

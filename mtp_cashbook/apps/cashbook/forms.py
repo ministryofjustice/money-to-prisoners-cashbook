@@ -102,7 +102,7 @@ class DiscardLockedTransactionsForm(GARequestErrorReportingMixin, forms.Form):
     def clean_transactions(self):
         transactions = self.cleaned_data.get('transactions')
         if not transactions:
-            raise forms.ValidationError(ugettext('Please select a staff member to release credits for'))
+            raise forms.ValidationError(ugettext('Only click ‘Done’ when you’ve selected credits'))
         return transactions
 
     @cached_property
