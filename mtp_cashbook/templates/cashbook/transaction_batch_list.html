@@ -26,26 +26,7 @@
 
 
     {% if object_list %}
-      {% if form.errors or form.non_field_errors %}
-        <div class="error-summary" aria-labelledby="error-summary-heading" tabindex="-1" role="alert">
-          <h1 class="error-summary-heading heading-medium" id="error-summary-heading">{% trans 'You haven’t ticked any credits' %}</h1>
-
-          <ol class="error-summary-list">
-            {% for field, errors in form.errors.items %}
-              {% with field_obj=form|field_from_name:field %}
-              <li><a href="#{{ field_obj.auto_id }}-label">
-                {% for error in errors %}
-                  {% if not forloop.first  %}
-                    {% trans 'and' %}
-                  {% endif %}
-                  {{ error }}
-                {% endfor %}
-              </a></li>
-              {% endwith %}
-            {% endfor %}
-          </ol>
-        </div>
-      {% endif %}
+      {% include 'mtp_utils/forms/error-summary.html' with form=form only %}
 
       <div class="help-box">
         <p>{% trans "These credits are ready to be processed in NOMIS. When you’ve finished crediting, click ‘Done’." %}</p>
@@ -54,14 +35,14 @@
           <div></div><a href="#">{%trans "Help" %}</a>
         </div>
         <div class="panel-indent help-box-contents" id="help-box-contents">
-          {% blocktrans %}
-          <p>How to use the Digital Cashbook with NOMIS:</p>
-          <ul>
-            <li>You can credit in NOMIS in the usual way but remember to select the <strong>‘Misc Receipt - Private Cash’ category as Transaction Type</strong></li>
-            <li>You don’t need to use a reference</li>
-            <li>In the Digital Cashbook below, tick off the credits you’ve entered in NOMIS and click ‘Done’</li>
-            <li>You might find it easier to copy and paste the prisoner number from the Digital Cashbook into NOMIS</li>
-          </ul>
+          {% blocktrans trimmed %}
+            <p>How to use the Digital Cashbook with NOMIS:</p>
+            <ul>
+              <li>You can credit in NOMIS in the usual way but remember to select the <strong>‘Misc Receipt - Private Cash’ category as Transaction Type</strong></li>
+              <li>You don’t need to use a reference</li>
+              <li>In the Digital Cashbook below, tick off the credits you’ve entered in NOMIS and click ‘Done’</li>
+              <li>You might find it easier to copy and paste the prisoner number from the Digital Cashbook into NOMIS</li>
+            </ul>
          {% endblocktrans %}
        </div>
       </div>
@@ -86,8 +67,6 @@
 
         {% include "cashbook/includes/batch_buttons.html" %}
 
-
-
         <table>
           <thead>
             {% include "cashbook/includes/table_actions.html" with location='header' field_name=form.transactions.html_name %}
@@ -102,25 +81,25 @@
           </thead>
 
           <tbody>
-          {% for transaction_pk, transaction in object_list %}
-            <tr {% if forloop.counter|divisibleby:2 %}{% else %}class="odd"{% endif %}>
-              <td>{{ transaction.prisoner_number }}</td>
-              <td>{{ transaction.prisoner_name }}</td>
-              <td class="numeric">{{ transaction.amount|currency }}</td>
-              <td>{{ transaction.sender }}</td>
-              <td class="check">
-                <input
-                  type="checkbox"
-                  name="{{ form.transactions.html_name }}"
-                  value="{{ transaction_pk }}"
-                  id="check-{{ transaction.id }}"
-                  {% if transaction_pk|to_string in form.transactions.value %}checked{% endif %}
-                  class="js-RunningTotal-item Checkbox"
-                  data-amount="{{ transaction.amount|currency }}">
-                <label for="check-{{ transaction.id }}">{% trans "Credited" %}</label>
-              </td>
-            </tr>
-          {% endfor %}
+            {% for transaction_pk, transaction in object_list %}
+              <tr {% if forloop.counter|divisibleby:2 %}{% else %}class="odd"{% endif %}>
+                <td>{{ transaction.prisoner_number }}</td>
+                <td>{{ transaction.prisoner_name }}</td>
+                <td class="numeric">{{ transaction.amount|currency }}</td>
+                <td>{{ transaction.sender }}</td>
+                <td class="check">
+                  <input
+                    type="checkbox"
+                    name="{{ form.transactions.html_name }}"
+                    value="{{ transaction_pk }}"
+                    id="check-{{ transaction.id }}"
+                    {% if transaction_pk|to_string in form.transactions.value %}checked{% endif %}
+                    class="js-RunningTotal-item Checkbox"
+                    data-amount="{{ transaction.amount|currency }}">
+                  <label for="check-{{ transaction.id }}">{% trans "Credited" %}</label>
+                </td>
+              </tr>
+            {% endfor %}
           </tbody>
 
           <tfoot>
