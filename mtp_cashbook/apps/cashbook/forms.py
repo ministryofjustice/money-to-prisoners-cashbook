@@ -40,7 +40,7 @@ class ProcessTransactionBatchForm(GARequestErrorReportingMixin, forms.Form):
         transactions = self.cleaned_data.get('transactions', [])
         discard = self.data.get('discard') == '1'
         if not transactions and not discard:
-            raise forms.ValidationError(ugettext('Only click ‘Done’ when you’ve selected credits'))
+            self.add_error(None, ugettext('Only click ‘Done’ when you’ve selected credits'))
         if discard:
             transactions = []
         return transactions
@@ -102,7 +102,7 @@ class DiscardLockedTransactionsForm(GARequestErrorReportingMixin, forms.Form):
     def clean_transactions(self):
         transactions = self.cleaned_data.get('transactions')
         if not transactions:
-            raise forms.ValidationError(ugettext('Only click ‘Done’ when you’ve selected credits'))
+            self.add_error(None, ugettext('Only click ‘Done’ when you’ve selected credits'))
         return transactions
 
     @cached_property
@@ -156,9 +156,9 @@ class DiscardLockedTransactionsForm(GARequestErrorReportingMixin, forms.Form):
 
 
 class FilterTransactionHistoryForm(GARequestErrorReportingMixin, forms.Form):
-    start = forms.DateField(label=ugettext_lazy('From received date'),
+    start = forms.DateField(label=ugettext_lazy('Start date'),
                             required=False, widget=MtpDateInput)
-    end = forms.DateField(label=ugettext_lazy('To received date'),
+    end = forms.DateField(label=ugettext_lazy('Finish date'),
                           required=False, widget=MtpDateInput)
     search = forms.CharField(label=ugettext_lazy('Prisoner name, prisoner number or sender name'),
                              required=False, widget=MtpTextInput)

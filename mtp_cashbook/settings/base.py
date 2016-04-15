@@ -16,6 +16,8 @@ get_project_dir = partial(join, BASE_DIR)
 
 APP = 'cashbook'
 ENVIRONMENT = os.environ.get('ENV', 'local')
+APP_BUILD_DATE = os.environ.get('APP_BUILD_DATE')
+APP_GIT_COMMIT = os.environ.get('APP_GIT_COMMIT')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -161,7 +163,7 @@ if os.environ.get('SENTRY_DSN'):
     INSTALLED_APPS = ('raven.contrib.django.raven_compat',) + INSTALLED_APPS
     RAVEN_CONFIG = {
         'dsn': os.environ['SENTRY_DSN'],
-        'release': os.environ.get('APP_GIT_COMMIT', 'unknown'),
+        'release': APP_GIT_COMMIT or 'unknown',
     }
     LOGGING['handlers']['sentry'] = {
         'level': 'ERROR',

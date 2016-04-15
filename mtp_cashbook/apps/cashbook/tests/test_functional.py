@@ -75,7 +75,7 @@ class LockedPaymentsPageTests(CashbookTestCase):
     def test_clicking_done_with_no_payments_released(self):
         self.click_on_text('Done')
         self.assertIsNotNone(self.driver.find_element_by_xpath(
-            '//div[@class="error-summary"]/h1[text()="You haven’t ticked any credits"]'
+            '//div[@class="error-summary"]//li[text()="Only click ‘Done’ when you’ve selected credits"]'
         ))
 
     def test_help_popup(self):
@@ -126,7 +126,7 @@ class NewPaymentsPageTests(CashbookTestCase):
     def test_clicking_done_with_no_payments_credited(self):
         self.click_on_text('Done')
         self.assertIsNotNone(self.driver.find_element_by_xpath(
-            '//div[@class="error-summary"]/h1[text()="You haven’t ticked any credits"]'
+            '//div[@class="error-summary"]//li[text()="Only click ‘Done’ when you’ve selected credits"]'
         ))
 
     def test_printing(self):
