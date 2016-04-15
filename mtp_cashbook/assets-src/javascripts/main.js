@@ -18,6 +18,7 @@
       require('unload'),
       require('help-popup'),
       require('analytics'),
+      require('track-printing'),
 
       require('batch-validation'),
       require('sticky-header'),
