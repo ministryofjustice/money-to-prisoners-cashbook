@@ -17,7 +17,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "money-to-prisoners-common": "ministryofjustice/money-to-prisoners-common#2.10.1",
+    "money-to-prisoners-common": "ministryofjustice/money-to-prisoners-common#2.11.0",
     "phantomjs": "^1.9.19"
   }
 }
