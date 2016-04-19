@@ -75,7 +75,8 @@ class LockedPaymentsPageTests(CashbookTestCase):
     def test_clicking_done_with_no_payments_released(self):
         self.click_on_text('Done')
         self.assertIsNotNone(self.driver.find_element_by_xpath(
-            '//div[@class="error-summary"]//li[text()="Only click ‘Done’ when you’ve selected credits"]'
+            '//div[@class="error-summary"]//li[text()='
+            '"Only click ‘Done’ when you’ve selected the row of credits you want to release"]'
         ))
 
     def test_help_popup(self):
@@ -107,7 +108,7 @@ class NewPaymentsPageTests(CashbookTestCase):
         self.select_first_payment()
         self.click_on_text('Done')
         self.assertIsNotNone(self.driver.find_element_by_xpath(
-            '//div[@class="Dialog-inner"]/h3[text()="Are you sure?"]'
+            '//div[@class="Dialog-inner"]/p/strong[text()="Do you want to submit only the selected credits?"]'
         ))
 
     def test_submitting_and_confirming_partial_batch(self):

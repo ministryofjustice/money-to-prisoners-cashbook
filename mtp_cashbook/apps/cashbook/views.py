@@ -131,9 +131,9 @@ class TransactionsLockedView(FormView):
                 self.request,
                 ungettext(
                     'You have now returned the %(discarded)s payment your '
-                    'colleagues were processing to ‘New Credits’.',
+                    'colleagues were processing to ‘New’ credits.',
                     'You have now returned the %(discarded)s payments your '
-                    'colleagues were processing to ‘New Credits’.',
+                    'colleagues were processing to ‘New’ credits.',
                     discarded_count
                 ) % {
                     'discarded': discarded_count
