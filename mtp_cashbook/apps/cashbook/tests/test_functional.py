@@ -1,7 +1,7 @@
 import logging
 import re
 
-from mtp_utils.test_utils.functional_tests import FunctionalTestCase
+from mtp_common.test_utils.functional_tests import FunctionalTestCase
 
 logger = logging.getLogger('mtp')
 

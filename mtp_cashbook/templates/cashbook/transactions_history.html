@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load currency %}
-{% load mtp_utils %}
+{% load mtp_common %}
 {% load transactions %}
 
 {% block content %}
@@ -29,22 +29,22 @@
     </div>
   </div>
 
-  {% include "includes/message_box.html" %}
+  {% include "mtp_common/includes/message_box.html" %}
 
   <form method="get" class="print-hidden HistorySearch" action="">
-    {% include 'mtp_utils/forms/error-summary.html' with form=form only %}
+    {% include 'mtp_common/forms/error-summary.html' with form=form only %}
 
     <div class="form-inputs">
       <div class="search-field">
-        {% include 'mtp_utils/forms/field.html' with field=form.search only %}
+        {% include 'mtp_common/forms/field.html' with field=form.search only %}
       </div>
 
       <div class="date-fields">
         <div class="date-start">
-          {% include 'mtp_utils/forms/field.html' with field=form.start input_classes='js-FormDateControl' value=form.start.value|date:'d/m/Y'|default:form.start.value|default_if_none:'' only %}
+          {% include 'mtp_common/forms/field.html' with field=form.start input_classes='js-FormDateControl' value=form.start.value|date:'d/m/Y'|default:form.start.value|default_if_none:'' only %}
         </div>
         <div class="date-end">
-          {% include 'mtp_utils/forms/field.html' with field=form.end input_classes='js-FormDateControl' value=form.end.value|date:'d/m/Y'|default:form.end.value|default_if_none:'' only %}
+          {% include 'mtp_common/forms/field.html' with field=form.end input_classes='js-FormDateControl' value=form.end.value|date:'d/m/Y'|default:form.end.value|default_if_none:'' only %}
         </div>
       </div>
     </div>
