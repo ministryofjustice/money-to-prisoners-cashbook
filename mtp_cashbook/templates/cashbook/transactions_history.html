@@ -110,13 +110,13 @@
       {% if page_range %}
         <ul class="Pagination print-hidden">
           {% if previous_page %}
-            <li><a href="{% url_with_query_param request 'page' previous_page %}">{% trans 'Previous' %}</a></li>
+            <li><a href="{% url_with_query_param request 'page' previous_page %}">{% trans 'Previous' %}<span class="screenreader-only"> page</span></a></li>
           {% endif %}
           {% for page in page_range %}
-            <li><a href="{% url_with_query_param request 'page' page %}" class="{% if page == current_page %}current-page{% endif %}">{{ page }}</a></li>
+            <li><a href="{% url_with_query_param request 'page' page %}" class="{% if page == current_page %}current-page{% endif %}"><span class="screenreader-only">page </span>{{ page }}</a></li>
           {% endfor %}
           {% if next_page %}
-            <li><a href="{% url_with_query_param request 'page' next_page %}">{% trans 'Next' %}</a></li>
+            <li><a href="{% url_with_query_param request 'page' next_page %}">{% trans 'Next' %}<span class="screenreader-only"> page</span></a></li>
           {% endif %}
         </ul>
         <p class="Pagination-print-description">{% blocktrans with page=current_page pages=page_count %}Page {{ page }} of {{ pages }}.{% endblocktrans %}</p>
