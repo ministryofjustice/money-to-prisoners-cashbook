@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load currency %}
-{% load mtp_utils %}
+{% load mtp_common %}
 
 {% block page_title %}{% trans "New credits - Digital cashbook" %}{% endblock %}
 
@@ -14,7 +14,7 @@
     <h1>{% trans 'New credits' %}</h1>
   </header>
 
-  {% include "includes/message_box.html" %}
+  {% include "mtp_common/includes/message_box.html" %}
 
   <form
     method="post"
@@ -26,7 +26,7 @@
 
 
     {% if object_list %}
-      {% include 'mtp_utils/forms/error-summary.html' with form=form only %}
+      {% include 'mtp_common/forms/error-summary.html' with form=form only %}
 
       <div class="help-box">
         <p>{% trans "These credits are ready to be processed in NOMIS. When you’ve finished crediting, click ‘Done’." %}</p>

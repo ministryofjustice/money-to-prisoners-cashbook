@@ -1,4 +1,4 @@
 # Place development dependencies here
 -r base.txt
 
-money-to-prisoners-utils[testing]==0.15
+money-to-prisoners-common[testing]==3.0.2

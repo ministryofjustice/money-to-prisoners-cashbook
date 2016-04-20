@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load currency %}
-{% load mtp_utils %}
+{% load mtp_common %}
 
 {% block content %}
   <header class="ContentHeader">
@@ -9,7 +9,7 @@
     <h1>{% trans 'Credits in progress' %}</h1>
   </header>
 
-  {% include "includes/message_box.html" %}
+  {% include "mtp_common/includes/message_box.html" %}
 
   <form method="post" action="" class="locked">
     {% csrf_token %}
@@ -34,7 +34,7 @@
         </div>
       </div>
 
-      {% include 'mtp_utils/forms/error-summary.html' with form=form only %}
+      {% include 'mtp_common/forms/error-summary.html' with form=form only %}
 
       <div class="batch">
 

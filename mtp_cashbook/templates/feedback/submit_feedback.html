@@ -11,15 +11,15 @@
 <form action="." method="post" id="send-feedback">
   {% csrf_token %}
 
-  {% include 'mtp_utils/forms/error-summary.html' with form=form only %}
+  {% include 'mtp_common/forms/error-summary.html' with form=form only %}
 
   {{ form.referer }}
 
   <fieldset>
     {% with field=form.ticket_content %}
       <div class="form-group {% if field.errors %}error{% endif %}">
-        {% include 'mtp_utils/forms/field-label.html' with field=field only %}
-        {% include 'mtp_utils/forms/field-errors.html' with field=field only %}
+        {% include 'mtp_common/forms/field-label.html' with field=field only %}
+        {% include 'mtp_common/forms/field-errors.html' with field=field only %}
         <textarea class="form-control" id="{{ field.id_for_label }}" name="{{ field.html_name }}" cols="40" rows="10">{{ field.value|default:'' }}</textarea>
       </div>
     {% endwith %}
@@ -27,7 +27,7 @@
     <h2>{% trans 'Do you want a reply?' %}</h2>
     <p>{% trans 'Enter your email address if you’d like a reply. We won’t use it for anything else.' %}</p>
 
-    {% include 'mtp_utils/forms/field.html' with field=form.contact_email only %}
+    {% include 'mtp_common/forms/field.html' with field=form.contact_email only %}
 
     <div class="form-group">
       <button type="submit" class="button" name="submit-feedback">{% trans 'Send feedback' %}</button>
