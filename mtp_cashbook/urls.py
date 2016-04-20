@@ -6,7 +6,7 @@ urlpatterns = [
     url(r'^', include('mtp_auth.urls')),
     url(r'^', include('cashbook.urls')),
     url(r'^', include('feedback.urls')),
-    url(r'^', include('mtp_user_admin.urls')),
+    url(r'^', include('mtp_common.user_admin.urls')),
 
     url(r'^ping.json$', PingJsonView.as_view(
         build_date_key='APP_BUILD_DATE',
