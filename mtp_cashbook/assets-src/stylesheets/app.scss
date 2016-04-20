@@ -7,6 +7,16 @@ $images-dir: '/static/images/';
 // app-specific
 .help-box { width: 65% }
 
+// Text only for screen readers
+.screenreader-only {
+  height: 1px;
+  width: 1px;
+  position: absolute;
+  overflow: hidden;
+  top: -10px;
+}
+
+
 // Page specific styles
 @import 'views/batch';
 @import 'views/history';
