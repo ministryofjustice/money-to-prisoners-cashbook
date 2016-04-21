@@ -1,8 +1,10 @@
 from collections import OrderedDict
+import datetime
 from itertools import groupby
 from urllib import parse as urlparse
 
 from django import template
+from django.utils import timezone
 from django.utils.dateparse import parse_datetime, parse_date
 
 register = template.Library()
@@ -24,7 +26,10 @@ def parse_date_fields(transactions):
                 continue
             for parser in parsers:
                 try:
-                    transaction[field] = parser(value)
+                    value = parser(value)
+                    if isinstance(value, datetime.datetime):
+                        value = timezone.localtime(value)
+                    transaction[field] = value
                     break
                 except (ValueError, TypeError):
                     pass
