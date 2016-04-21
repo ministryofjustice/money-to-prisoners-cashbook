@@ -74,8 +74,8 @@ class TransactionBatchListView(FormView):
             messages.success(
                 self.request,
                 ungettext(
-                    'You’ve credited %(credited)s payment to NOMIS.',
-                    'You’ve credited %(credited)s payments to NOMIS.',
+                    'You’ve added 1 credit to NOMIS.',
+                    'You’ve added %(credited)s credits to NOMIS.',
                     credited_count
                 ) % {
                     'credited': credited_count
@@ -83,7 +83,7 @@ class TransactionBatchListView(FormView):
             )
 
             username = self.request.user.user_data.get('username', 'Unknown')
-            logger.info('User "%(username)s" credited %(credited)d payment(s) to NOMIS' % {
+            logger.info('User "%(username)s" added %(credited)d credits(s) to NOMIS' % {
                 'username': username,
                 'credited': credited_count,
             }, extra={
@@ -130,9 +130,9 @@ class TransactionsLockedView(FormView):
             messages.success(
                 self.request,
                 ungettext(
-                    'You have now returned the %(discarded)s payment your '
+                    'You have now returned the credit your '
                     'colleagues were processing to ‘New’ credits.',
-                    'You have now returned the %(discarded)s payments your '
+                    'You have now returned the %(discarded)s credits your '
                     'colleagues were processing to ‘New’ credits.',
                     discarded_count
                 ) % {
@@ -141,7 +141,7 @@ class TransactionsLockedView(FormView):
             )
 
         username = self.request.user.user_data.get('username', 'Unknown')
-        logger.info('User "%(username)s" unlocked %(discarded)d payment(s)' % {
+        logger.info('User "%(username)s" unlocked %(discarded)d credits(s)' % {
             'username': username,
             'discarded': discarded_count,
         }, extra={
