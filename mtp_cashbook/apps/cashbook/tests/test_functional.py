@@ -115,7 +115,7 @@ class NewPaymentsPageTests(CashbookTestCase):
         self.select_first_payment()
         self.click_on_text('Done')
         self.click_on_text('Yes')
-        self.assertInSource('You’ve credited 1 payment to NOMIS.')
+        self.assertInSource('You’ve added 1 credit to NOMIS.')
         self.assertEqual('Digital cashbook', self.driver.title)
 
     def test_submitting_and_not_confirming_partial_batch(self):
@@ -131,7 +131,7 @@ class NewPaymentsPageTests(CashbookTestCase):
         ))
 
     def test_printing(self):
-        self.click_on_text('Print these payments')
+        self.click_on_text('Print these credits')
         self.assertIsNotNone(self.driver.find_element_by_xpath(
             '//div[@class="Dialog-inner"]/h3[text()="Do you need to print?"]'
         ))
@@ -156,11 +156,11 @@ class NewPaymentsPageTests(CashbookTestCase):
         self.select_all_payments()
         self.click_on_text('Done')
         self.assertEqual('Digital cashbook', self.driver.title)
-        self.assertInSource('You’ve credited')
+        self.assertInSource('You’ve added')
 
     def test_checkboxes_style(self):
         # Regression tests for https://www.pivotaltracker.com/story/show/115328657
-        self.click_on_text('Print these payments')
+        self.click_on_text('Print these credits')
         self.assertCssProperty('label[for=remove-print-prompt]', 'background-position', '0% 0%')
         self.click_on_text('close')
         self.assertCssProperty('label[for=select-all-header]', 'background-position', '100% 10%')
