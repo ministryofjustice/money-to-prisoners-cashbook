@@ -15,6 +15,6 @@ urlpatterns = [
         }, name='submit_ticket'),
     url(r'^feedback/success/$', views.success,
         {
-            'template_name': 'feedback/success.html',
+            'template_name': 'mtp_common/feedback/success.html',
         }, name='feedback_success'),
 ]
