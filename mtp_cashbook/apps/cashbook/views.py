@@ -1,5 +1,6 @@
 import logging
 
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy, reverse
@@ -211,6 +212,7 @@ class TransactionHistoryView(FormView):
             'page_range': page_range,
             'page_count': page_count,
             'transaction_owner_name': self.request.user.get_full_name,
+            'DEBIT_CARD_ACTIVE': settings.DEBIT_CARD_ACTIVE
         })
         return context
 
