@@ -81,6 +81,7 @@
               <tr>
                 <th>{% trans 'Prisoner no' %}</th>
                 <th>{% trans 'Prisoner name' %}</th>
+                {% if DEBIT_CARD_ACTIVE %}<th>{% trans 'Intended recipient' %}</th>{% endif %}
                 <th>{% trans 'Amount (£)' %}</th>
                 <th>{% trans 'Sender' %}</th>
                 <th>
@@ -90,6 +91,7 @@
                     {% trans 'Finished by' %}
                   {% endif %}
                 </th>
+                {% if DEBIT_CARD_ACTIVE %}<th>{% trans 'Payment method' %}</th>{% endif %}
               </tr>
             </thead>
             <tbody>
@@ -97,9 +99,11 @@
                 <tr {% if not forloop.counter|divisibleby:2 %}class="odd"{% endif %}>
                   <td>{{ transaction.prisoner_number }}</td>
                   <td>{{ transaction.prisoner_name }}</td>
+                  {% if DEBIT_CARD_ACTIVE %}<td>{% if transaction.payment %}{{ transaction.payment.recipient_name }}{% else %}-{%endif%}</td>{% endif %}
                   <td class="numeric">{{ transaction.amount|currency }}</td>
                   <td>{{ transaction.sender }}</td>
                   <td>{{ transaction.owner_name|default_if_none:'—' }}</td>
+                  {% if DEBIT_CARD_ACTIVE %}<td>{% if transaction.payment %}{% trans 'Debit card' %}{% else %}{% trans 'Bank transfer' %}{%endif%}</td>{% endif %}
                 </tr>
               {% endfor %}
             </tbody>
