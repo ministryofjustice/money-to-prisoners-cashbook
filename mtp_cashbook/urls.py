@@ -15,3 +15,7 @@ urlpatterns = [
     ), name='ping_json'),
     url(r'^healthcheck.json$', HealthcheckView.as_view(), name='healthcheck_json'),
 ]
+
+handler404 = 'mtp_common.views.page_not_found'
+handler500 = 'mtp_common.views.server_error'
+handler400 = 'mtp_common.views.bad_request'
