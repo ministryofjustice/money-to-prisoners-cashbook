@@ -327,8 +327,6 @@ class HistoryPageTests(CashbookTestCase):
 
     def test_going_to_history_page(self):
         self.assertInSource('Credit history')
-        self.assertNotInSource('Intended recipient')
-        self.assertNotInSource('Payments processed by')
         self.get_search_button()
 
     def test_do_a_search_and_make_sure_it_takes_you_back_to_history_page(self):
