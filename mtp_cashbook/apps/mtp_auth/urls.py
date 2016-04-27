@@ -15,12 +15,14 @@ urlpatterns = [
     ),
     url(
         r'^password_change/$', views.password_change, {
-            'template_name': 'mtp_common/auth/password_change.html'
+            'template_name': 'mtp_common/auth/password_change.html',
+            'cancel_url': reverse_lazy('dashboard'),
         }, name='password_change'
     ),
     url(
         r'^password_change_done/$', views.password_change_done, {
-            'template_name': 'mtp_common/auth/password_change_done.html'
+            'template_name': 'mtp_common/auth/password_change_done.html',
+            'cancel_url': reverse_lazy('dashboard'),
         }, name='password_change_done'
     ),
     url(
