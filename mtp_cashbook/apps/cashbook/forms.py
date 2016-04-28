@@ -183,7 +183,7 @@ class FilterTransactionHistoryForm(GARequestErrorReportingMixin, forms.Form):
         start = self.cleaned_data.get('start')
         end = self.cleaned_data.get('end')
         if start and end and start > end:
-            self.add_error('end', ugettext('The end date must be after the start date.'))
+            self.add_error('end', ugettext('The end date must be after the start date'))
         return super().clean()
 
     @property
