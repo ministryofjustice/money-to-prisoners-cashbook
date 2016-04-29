@@ -39,7 +39,7 @@ class LoginTests(CashbookTestCase):
 
     def test_bad_login(self):
         self.login('test-prison-1', 'bad-password')
-        self.assertInSource('There was a problem submitting the form')
+        self.assertInSource('There was a problem')
 
     def test_good_login(self):
         self.login('test-prison-1', 'test-prison-1')
