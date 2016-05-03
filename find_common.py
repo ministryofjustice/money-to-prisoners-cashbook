@@ -1,2 +1,5 @@
-import pkg_resources
-print(pkg_resources.get_distribution('money-to-prisoners-common').location)
+try:
+    import pkg_resources
+    print(pkg_resources.get_distribution('money-to-prisoners-common').location)
+except Exception:
+    pass
