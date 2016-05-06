@@ -7,8 +7,7 @@ from django.core.urlresolvers import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
 from django.utils.translation import ungettext
 from django.views.generic import FormView, TemplateView
-
-from moj_auth import api_client
+from mtp_common.auth import api_client
 
 from .forms import ProcessCreditBatchForm, DiscardLockedCreditsForm, \
     FilterCreditHistoryForm

@@ -8,8 +8,8 @@ from django.utils.functional import cached_property
 from django.utils.dateformat import format as format_date
 from django.utils.translation import ugettext, ugettext_lazy, ungettext
 from form_error_reporting import GARequestErrorReportingMixin
-from moj_auth.api_client import get_connection
 from mtp_common.api import retrieve_all_pages
+from mtp_common.auth.api_client import get_connection
 
 from .form_fields import MtpTextInput, MtpDateInput
 

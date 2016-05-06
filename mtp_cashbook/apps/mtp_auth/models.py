@@ -1,4 +1,4 @@
-from moj_auth.models import MojUser
+from mtp_common.auth.models import MojUser
 
 
 class MtpUser(MojUser):
