@@ -44,52 +44,52 @@ class DashboardViewTestCase(MTPBaseTestCase):
     def test_0_available_0_locked_gives_correct_new_count(self):
         self.login()
 
-        conn = self.mocked_api_client.get_connection().cashbook.transactions
+        conn = self.mocked_api_client.get_connection().credits
         conn.get.side_effect = self._generate_mock_response(0, 0, 0)
 
         response = self.client.get(self.dashboard_url)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context['new_transactions'], 0)
+        self.assertEqual(response.context['new_credits'], 0)
 
     def test_some_available_0_locked_gives_correct_new_count(self):
         self.login()
 
-        conn = self.mocked_api_client.get_connection().cashbook.transactions
+        conn = self.mocked_api_client.get_connection().credits
         conn.get.side_effect = self._generate_mock_response(21, 0, 0)
 
         response = self.client.get(self.dashboard_url)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context['new_transactions'], 21)
+        self.assertEqual(response.context['new_credits'], 21)
 
     def test_0_available_some_locked_gives_correct_new_count(self):
         self.login()
 
-        conn = self.mocked_api_client.get_connection().cashbook.transactions
+        conn = self.mocked_api_client.get_connection().credits
         conn.get.side_effect = self._generate_mock_response(0, 3, 0)
 
         response = self.client.get(self.dashboard_url)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context['new_transactions'], 3)
+        self.assertEqual(response.context['new_credits'], 3)
 
     def test_some_available_some_locked_gives_correct_new_count(self):
         self.login()
 
-        conn = self.mocked_api_client.get_connection().cashbook.transactions
+        conn = self.mocked_api_client.get_connection().credits
         conn.get.side_effect = self._generate_mock_response(21, 3, 0)
 
         response = self.client.get(self.dashboard_url)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context['new_transactions'], 24)
+        self.assertEqual(response.context['new_credits'], 24)
 
-    def test_locked_transactions_gives_correct_count(self):
+    def test_locked_credits_gives_correct_count(self):
         self.login()
 
-        conn = self.mocked_api_client.get_connection().cashbook.transactions
+        conn = self.mocked_api_client.get_connection().credits
         conn.get.side_effect = self._generate_mock_response(21, 3, 19)
 
         response = self.client.get(self.dashboard_url)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context['locked_transactions'], 19)
+        self.assertEqual(response.context['locked_credits'], 19)
 
 
 class LockedViewTestCase(MTPBaseTestCase):
@@ -102,7 +102,7 @@ class LockedViewTestCase(MTPBaseTestCase):
 
     @property
     def locked_url(self):
-        return reverse('transactions-locked')
+        return reverse('credits-locked')
 
     def test_cannot_access_if_not_logged_in(self):
         response = self.client.get(self.locked_url)
@@ -116,7 +116,7 @@ class LockedViewTestCase(MTPBaseTestCase):
 
     def test_no_locked_credits(self):
         self.login()
-        api_endpoint = self.mocked_get_connection().cashbook.transactions.locked.get
+        api_endpoint = self.mocked_get_connection().credits.locked.get
         api_endpoint.return_value = {
             'count': 0,
             'results': []
@@ -181,7 +181,7 @@ class LockedViewTestCase(MTPBaseTestCase):
         ]
 
         self.login()
-        api_endpoint = self.mocked_get_connection().cashbook.transactions.locked.get
+        api_endpoint = self.mocked_get_connection().credits.locked.get
         api_endpoint.side_effect = api_responses
 
         response = self.client.get(self.locked_url)
@@ -199,32 +199,32 @@ class BatchListView(MTPBaseTestCase):
 
     @property
     def list_url(self):
-        return reverse('transaction-list')
+        return reverse('credit-list')
 
-    @mock.patch('cashbook.views.TransactionBatchListView.form_class')
+    @mock.patch('cashbook.views.CreditBatchListView.form_class')
     def test_empty_batch_submitted(self, mocked_form_class):
         mocked_form = mocked_form_class()
-        mocked_form.transaction_choices = [
+        mocked_form.credit_choices = [
             (1, {'id': 1,
                  'amount': 1050}),
             (2, {'id': 2,
                  'amount': 4500}),
         ]
-        mocked_form.clean_transactions.side_effect = ValidationError('empty list and not discarding')
+        mocked_form.clean_credits.side_effect = ValidationError('empty list and not discarding')
         mocked_form.is_valid.return_value = False
 
         self.login()
         response = self.client.post(
             self.list_url,
-            data={'transactions': []},
+            data={'credits': []},
             follow=False,
         )
         self.assertEqual(response.status_code, 200)
 
-    @mock.patch('cashbook.views.TransactionBatchListView.form_class')
+    @mock.patch('cashbook.views.CreditBatchListView.form_class')
     def test_incomplete_batch_submitted(self, mocked_form_class):
         mocked_form = mocked_form_class()
-        mocked_form.transaction_choices = [
+        mocked_form.credit_choices = [
             (1, {'id': 1,
                  'amount': 1050}),
             (2, {'id': 2,
@@ -236,16 +236,16 @@ class BatchListView(MTPBaseTestCase):
         self.login()
         response = self.client.post(
             self.list_url,
-            data={'transactions': [1]},
+            data={'credits': [1]},
             follow=False,
         )
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('dashboard-batch-incomplete'))
 
-    @mock.patch('cashbook.views.TransactionBatchListView.form_class')
+    @mock.patch('cashbook.views.CreditBatchListView.form_class')
     def test_complete_batch_submitted(self, mocked_form_class):
         mocked_form = mocked_form_class()
-        mocked_form.transaction_choices = [
+        mocked_form.credit_choices = [
             (1, {'id': 1,
                  'amount': 1050}),
             (2, {'id': 2,
@@ -257,7 +257,7 @@ class BatchListView(MTPBaseTestCase):
         self.login()
         response = self.client.post(
             self.list_url,
-            data={'transactions': [1, 2]},
+            data={'credits': [1, 2]},
             follow=False,
         )
         self.assertEqual(response.status_code, 302)
@@ -274,7 +274,7 @@ class HistoryViewTestCase(MTPBaseTestCase):
 
     @property
     def history_url(self):
-        return reverse('transaction-history')
+        return reverse('credit-history')
 
     def test_history_view(self):
         self.login()
@@ -282,8 +282,7 @@ class HistoryViewTestCase(MTPBaseTestCase):
 
         today = now()
 
-        self.mocked_get_connection().cashbook.\
-            transactions.get.return_value = {
+        self.mocked_get_connection().credits.get.return_value = {
             'page': 1,
             'page_count': 1,
             'count': 2,
@@ -302,9 +301,8 @@ class HistoryViewTestCase(MTPBaseTestCase):
                         login_data['user_data']['last_name'],
                     ),
                     'received_at': today - datetime.timedelta(days=2),
-                    'credited': True,
+                    'resolution': 'credited',
                     'credited_at': today - datetime.timedelta(days=1),
-                    'refunded': False,
                     'refunded_at': None,
                 },
                 {
@@ -321,9 +319,8 @@ class HistoryViewTestCase(MTPBaseTestCase):
                         login_data['user_data']['last_name'],
                     ),
                     'received_at': today - datetime.timedelta(days=1),
-                    'credited': True,
+                    'resolution': 'credited',
                     'credited_at': today - datetime.timedelta(hours=2),
-                    'refunded': False,
                     'refunded_at': None,
                 },
             ]
@@ -334,11 +331,11 @@ class HistoryViewTestCase(MTPBaseTestCase):
         self.assertEqual(response.context['page_range'], [])
         self.assertEqual(response.context['current_page'], 1)
         self.assertEqual(len(response.context['object_list']), 2)
-        self.assertEqual(response.context['transaction_owner_name'], '%s %s' % (
+        self.assertEqual(response.context['credit_owner_name'], '%s %s' % (
             login_data['user_data']['first_name'],
             login_data['user_data']['last_name'],
         ))
-        self.assertContains(response, text='Total:', count=2)  # indicates 2 groups of credited transactions
+        self.assertContains(response, text='Total:', count=2)  # indicates 2 groups of credited credits
         self.assertContains(response, text='2 credits received', count=1)
 
     def test_paged_history_view(self):
@@ -347,14 +344,13 @@ class HistoryViewTestCase(MTPBaseTestCase):
 
         today = now()
 
-        self.mocked_get_connection().cashbook.\
-            transactions.get.return_value = {
+        self.mocked_get_connection().credits.get.return_value = {
             'page': 1,
             'page_count': 2,
             'count': 9,
             'results': [
                 {
-                    'id': 142 - transaction_index,
+                    'id': 142 - credit_index,
                     'prisoner_name': 'John Smith',
                     'prisoner_number': 'A1234BC',
                     'amount': 5200,
@@ -367,12 +363,11 @@ class HistoryViewTestCase(MTPBaseTestCase):
                         login_data['user_data']['last_name'],
                     ),
                     'received_at': today - datetime.timedelta(days=2),
-                    'credited': True,
+                    'resolution': 'credited',
                     'credited_at': today - datetime.timedelta(days=1),
-                    'refunded': False,
                     'refunded_at': None,
                 }
-                for transaction_index in range(5)
+                for credit_index in range(5)
             ]
         }
 
@@ -381,9 +376,9 @@ class HistoryViewTestCase(MTPBaseTestCase):
         self.assertEqual(response.context['page_range'], [1, 2])
         self.assertEqual(response.context['current_page'], 1)
         self.assertEqual(len(response.context['object_list']), 5)
-        self.assertEqual(response.context['transaction_owner_name'], '%s %s' % (
+        self.assertEqual(response.context['credit_owner_name'], '%s %s' % (
             login_data['user_data']['first_name'],
             login_data['user_data']['last_name'],
         ))
-        self.assertContains(response, text='Total:', count=1)  # indicates 1 group of credited transactions
+        self.assertContains(response, text='Total:', count=1)  # indicates 1 group of credited credits
         self.assertContains(response, text='9 credits received', count=1)

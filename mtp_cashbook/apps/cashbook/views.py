@@ -10,8 +10,8 @@ from django.views.generic import FormView, TemplateView
 
 from moj_auth import api_client
 
-from .forms import ProcessTransactionBatchForm, DiscardLockedTransactionsForm, \
-    FilterTransactionHistoryForm
+from .forms import ProcessCreditBatchForm, DiscardLockedCreditsForm, \
+    FilterCreditHistoryForm
 
 logger = logging.getLogger('mtp')
 
@@ -24,7 +24,7 @@ class DashboardView(TemplateView):
     def dispatch(self, request, *args, **kwargs):
         self.client = api_client.get_connection(request)
         if self.discard_batch:
-            form = ProcessTransactionBatchForm(request, data={
+            form = ProcessCreditBatchForm(request, data={
                 'discard': '1'
             })
             if form.is_valid():
@@ -34,36 +34,36 @@ class DashboardView(TemplateView):
     def get_context_data(self, **kwargs):
         context_data = super(DashboardView, self).get_context_data(**kwargs)
 
-        # new transactions == available + my locked
-        transaction_client = self.client.cashbook.transactions
-        available = transaction_client.get(status='available')
-        my_locked = transaction_client.get(user=self.request.user.pk, status='locked')
-        locked = transaction_client.get(status='locked')
-        context_data['new_transactions'] = available['count'] + my_locked['count']
-        context_data['locked_transactions'] = locked['count']
+        # new credits == available + my locked
+        credit_client = self.client.credits
+        available = credit_client.get(status='available')
+        my_locked = credit_client.get(user=self.request.user.pk, status='locked')
+        locked = credit_client.get(status='locked')
+        context_data['new_credits'] = available['count'] + my_locked['count']
+        context_data['locked_credits'] = locked['count']
         return context_data
 
 
-class TransactionBatchListView(FormView):
-    form_class = ProcessTransactionBatchForm
-    template_name = 'cashbook/transaction_batch_list.html'
+class CreditBatchListView(FormView):
+    form_class = ProcessCreditBatchForm
+    template_name = 'cashbook/credit_batch_list.html'
     success_url = reverse_lazy('dashboard')
 
     def get_form_kwargs(self):
-        form_kwargs = super(TransactionBatchListView, self).get_form_kwargs()
+        form_kwargs = super(CreditBatchListView, self).get_form_kwargs()
         form_kwargs['request'] = self.request
         return form_kwargs
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
-        return super(TransactionBatchListView, self).dispatch(request, *args, **kwargs)
+        return super(CreditBatchListView, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        context = super(TransactionBatchListView, self).get_context_data(**kwargs)
+        context = super(CreditBatchListView, self).get_context_data(**kwargs)
 
-        transaction_choices = context['form'].transaction_choices
-        context['object_list'] = transaction_choices
-        context['total'] = sum([x[1]['amount'] for x in transaction_choices])
+        credit_choices = context['form'].credit_choices
+        context['object_list'] = credit_choices
+        context['total'] = sum([x[1]['amount'] for x in credit_choices])
         return context
 
     def form_valid(self, form):
@@ -99,28 +99,28 @@ class TransactionBatchListView(FormView):
         else:
             self.success_url = reverse('dashboard-batch-complete')
 
-        return super(TransactionBatchListView, self).form_valid(form)
+        return super(CreditBatchListView, self).form_valid(form)
 
 
-class TransactionsLockedView(FormView):
+class CreditsLockedView(FormView):
 
-    form_class = DiscardLockedTransactionsForm
-    template_name = 'cashbook/transactions_locked.html'
+    form_class = DiscardLockedCreditsForm
+    template_name = 'cashbook/credits_locked.html'
     success_url = reverse_lazy('dashboard')
 
     def get_form_kwargs(self):
-        form_kwargs = super(TransactionsLockedView, self).get_form_kwargs()
+        form_kwargs = super(CreditsLockedView, self).get_form_kwargs()
         form_kwargs['request'] = self.request
         return form_kwargs
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
-        return super(TransactionsLockedView, self).dispatch(request, *args, **kwargs)
+        return super(CreditsLockedView, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        context = super(TransactionsLockedView, self).get_context_data(**kwargs)
+        context = super(CreditsLockedView, self).get_context_data(**kwargs)
 
-        context['object_list'] = context['form'].grouped_transaction_choices
+        context['object_list'] = context['form'].grouped_credit_choices
         return context
 
     def form_valid(self, form):
@@ -155,13 +155,13 @@ class TransactionsLockedView(FormView):
         if discarded_count:
             self.success_url = reverse('dashboard-unlocked-payments')
 
-        return super(TransactionsLockedView, self).form_valid(form)
+        return super(CreditsLockedView, self).form_valid(form)
 
 
-class TransactionHistoryView(FormView):
-    form_class = FilterTransactionHistoryForm
-    template_name = 'cashbook/transactions_history.html'
-    success_url = reverse_lazy('transaction-history')
+class CreditHistoryView(FormView):
+    form_class = FilterCreditHistoryForm
+    template_name = 'cashbook/credits_history.html'
+    success_url = reverse_lazy('credit-history')
     http_method_names = ['get', 'options']
 
     def get_initial(self):
@@ -195,7 +195,7 @@ class TransactionHistoryView(FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         form = context['form']
-        object_list = form.transaction_choices
+        object_list = form.credit_choices
         current_page = form.pagination['page']
         page_count = form.pagination['page_count']
         if page_count > 1:
@@ -211,7 +211,7 @@ class TransactionHistoryView(FormView):
             'next_page': next_page,
             'page_range': page_range,
             'page_count': page_count,
-            'transaction_owner_name': self.request.user.get_full_name,
+            'credit_owner_name': self.request.user.get_full_name,
             'DEBIT_CARD_ACTIVE': settings.DEBIT_CARD_ACTIVE
         })
         return context

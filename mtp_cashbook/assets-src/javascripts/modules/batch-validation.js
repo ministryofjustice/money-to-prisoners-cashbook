@@ -17,8 +17,8 @@ exports.BatchValidation = {
   cacheEls: function () {
     this.$body = $('body');
     this.$form = $(this.selector);
-    this.transactionsName = this.$form.data('transactions-name');
-    this.$transactions = $('[name="' + this.transactionsName + '"]');
+    this.creditsName = this.$form.data('credits-name');
+    this.$credits = $('[name="' + this.creditsName + '"]');
   },
 
   bindEvents: function () {
@@ -29,7 +29,7 @@ exports.BatchValidation = {
   _allChecked: function () {
     var allChecked = true;
 
-    this.$transactions.each(function (i, el) {
+    this.$credits.each(function (i, el) {
       var $item = $(el);
 
       if (!$item.is(':checked')) {
@@ -44,7 +44,7 @@ exports.BatchValidation = {
   _numChecked: function () {
     var count = 0;
 
-    this.$transactions.each(function (i, el) {
+    this.$credits.each(function (i, el) {
       var $item = $(el);
 
       if ($item.is(':checked')) {

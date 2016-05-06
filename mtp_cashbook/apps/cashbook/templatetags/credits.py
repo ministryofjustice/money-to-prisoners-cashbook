@@ -11,7 +11,7 @@ register = template.Library()
 
 
 @register.filter
-def parse_date_fields(transactions):
+def parse_date_fields(credits):
     """
     MTP API responds with string date/time fields,
     this filter converts them to python objects
@@ -19,9 +19,9 @@ def parse_date_fields(transactions):
     fields = ['received_at', 'credited_at', 'refunded_at']
     parsers = [parse_datetime, parse_date]
 
-    def convert(transaction):
+    def convert(credit):
         for field in fields:
-            value = transaction[field]
+            value = credit[field]
             if not value:
                 continue
             for parser in parsers:
@@ -29,53 +29,53 @@ def parse_date_fields(transactions):
                     value = parser(value)
                     if isinstance(value, datetime.datetime):
                         value = timezone.localtime(value)
-                    transaction[field] = value
+                    credit[field] = value
                     break
                 except (ValueError, TypeError):
                     pass
-        return transaction
+        return credit
 
-    return map(convert, transactions)
+    return map(convert, credits)
 
 
 @register.filter
-def regroup_transactions(transactions):
+def regroup_credits(credits):
     """
-    Groups transactions into days (by received_at) and refunded status
+    Groups credits into days (by received_at) and refunded status
     """
     def get_status_key(t):
-        if not t['credited']:
+        if not t['resolution'] == 'credited':
             return 'uncredited'
-        if t['refunded']:
+        if t['resolution'] == 'refunded':
             return 'refunded'
         return 'credited'
 
     def get_status_order(t):
-        if not t['credited']:
+        if not t['resolution'] == 'credited':
             return 0
-        if not t['refunded']:
+        if not t['resolution'] == 'refunded':
             return 1
         return 2
 
     def get_order_key(t):
         return t['prisoner_number']
 
-    grouped_transactions = OrderedDict()
-    groups = groupby(transactions, key=lambda t: t['received_at'].date() if t['received_at'] else None)
+    grouped_credits = OrderedDict()
+    groups = groupby(credits, key=lambda t: t['received_at'].date() if t['received_at'] else None)
     for date, group in groups:
         # NB: listing out inner generators so that results can be iterated multiple times
         grouped = groupby(sorted(group, key=get_status_order), key=get_status_key)
         grouped = ((status_key, list(sorted(items, key=get_order_key))) for (status_key, items) in grouped)
-        grouped_transactions[date] = grouped
-    return grouped_transactions.items()
+        grouped_credits[date] = grouped
+    return grouped_credits.items()
 
 
 @register.filter
-def sum_transactions(transactions):
+def sum_credits(credits):
     """
     Returns the total sum of payment amounts (irrespective of status)
     """
-    return sum(map(lambda t: t['amount'] or 0, transactions))
+    return sum(map(lambda t: t['amount'] or 0, credits))
 
 
 @register.simple_tag

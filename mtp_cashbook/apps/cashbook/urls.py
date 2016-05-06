@@ -1,7 +1,7 @@
 from django.conf.urls import url
 
-from .views import TransactionBatchListView, TransactionsLockedView, \
-    TransactionHistoryView, DashboardView
+from .views import CreditBatchListView, CreditsLockedView, \
+    CreditHistoryView, DashboardView
 
 urlpatterns = [
     url(r'^$', DashboardView.as_view(), name='dashboard'),
@@ -14,9 +14,9 @@ urlpatterns = [
     url(r'^dashboard-unlocked-payments/$', DashboardView.as_view(),
         name='dashboard-unlocked-payments'),
 
-    url(r'^locked/$', TransactionsLockedView.as_view(), name='transactions-locked'),
+    url(r'^locked/$', CreditsLockedView.as_view(), name='credits-locked'),
 
-    url(r'^batch/$', TransactionBatchListView.as_view(), name='transaction-list'),
+    url(r'^batch/$', CreditBatchListView.as_view(), name='credit-list'),
 
-    url(r'^history/$', TransactionHistoryView.as_view(), name='transaction-history'),
+    url(r'^history/$', CreditHistoryView.as_view(), name='credit-history'),
 ]
