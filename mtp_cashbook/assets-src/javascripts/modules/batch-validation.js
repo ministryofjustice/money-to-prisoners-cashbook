@@ -2,14 +2,12 @@
 /* global exports, require, $ */
 'use strict';
 
-var bindAll = require('lodash/function/bindAll');
 var analytics = require('analytics');
 
 exports.BatchValidation = {
   selector: '.js-BatchValidation',
 
   init: function () {
-    bindAll(this, 'onSubmit');
     this.cacheEls();
     this.bindEvents();
   },
@@ -23,7 +21,7 @@ exports.BatchValidation = {
 
   bindEvents: function () {
     this.base.Events.on('BatchValidation.render', this.render);
-    this.$form.on('click', ':submit', this.onSubmit);
+    this.$form.on('click', ':submit', $.proxy(this.onSubmit, this));
   },
 
   _allChecked: function () {

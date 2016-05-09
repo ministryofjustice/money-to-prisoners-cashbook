@@ -1,14 +1,11 @@
 // Running Total module
-/* globals require, exports */
+/* globals exports, $ */
 'use strict';
-
-var bindAll = require('lodash/function/bindAll');
 
 exports.RunningTotal = {
   selector: '.js-RunningTotal',
 
   init: function () {
-    bindAll(this, 'render', 'updateTotal');
     this.cacheEls();
 
     if (this.$totalsContainer.length) {
@@ -27,8 +24,8 @@ exports.RunningTotal = {
   },
 
   bindEvents: function () {
-    this.base.Events.on('RunningTotal.render', this.render);
-    this.$items.on('change', this.updateTotal);
+    this.base.Events.on('RunningTotal.render', $.proxy(this.render, this));
+    this.$items.on('change', $.proxy(this.updateTotal, this));
   },
 
   updateTotal: function () {
