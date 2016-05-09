@@ -1,8 +1,6 @@
 // Sticky header module
-/* globals exports, require */
+/* globals exports, $ */
 'use strict';
-
-var bindAll = require('lodash/function/bindAll');
 
 exports.StickyHeader = {
   selector: '.js-StickyHeader',
@@ -10,7 +8,6 @@ exports.StickyHeader = {
   stickyClass: 'is-sticky',
 
   init: function () {
-    bindAll(this, 'render', 'onScroll');
     this.cacheEls();
 
     if (this.$originalHeader.length) {
@@ -31,8 +28,8 @@ exports.StickyHeader = {
   },
 
   bindEvents: function () {
-    this.base.Events.on('StickyHeader.render', this.render);
-    this.$window.scroll(this.onScroll);
+    this.base.Events.on('StickyHeader.render', $.proxy(this.render, this));
+    this.$window.scroll($.proxy(this.onScroll, this));
   },
 
   onScroll: function () {
