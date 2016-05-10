@@ -38,7 +38,6 @@
       <div class="search-field">
         {% include 'mtp_common/forms/field.html' with field=form.search only %}
       </div>
-
       <div class="date-fields">
         <div class="date-start">
           {% include 'mtp_common/forms/field.html' with field=form.start input_classes='js-FormDateControl' value=form.start.value|date:'d/m/Y'|default:form.start.value|default_if_none:'' only %}
@@ -131,13 +130,7 @@
 
     {% else %}
 
-      <table>
-        <thead>
-          <tr>
-            <th>{% trans 'No credit history found' %}</th>
-          </tr>
-        </thead>
-      </table>
+      <p><strong>{% trans 'No credit history found' %}</strong></p>
 
     {% endif %}
   </div>
