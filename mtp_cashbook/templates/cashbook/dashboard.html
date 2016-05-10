@@ -24,10 +24,10 @@
 
   <ul class="SummaryBoxes">
     <li class="SummaryBoxes--unprocessed">
-      <a href="{% url 'transaction-list' %}">
+      <a href="{% url 'credit-list' %}">
         <h2>{% trans "New" %}</h2>
         <p>
-          {% blocktrans trimmed with payments_count=new_transactions %}
+          {% blocktrans trimmed with payments_count=new_credits %}
             <strong>{{ payments_count }}</strong> Credits to process
           {% endblocktrans %}
         </p>
@@ -35,17 +35,17 @@
     </li>
 
     <li>
-      <a href="{% url 'transaction-history' %}">
+      <a href="{% url 'credit-history' %}">
         <h2>{% trans "History" %}</h2>
         <p>{%trans "Credits processed by the team" %}</p>
       </a>
     </li>
 
     <li class="SummaryBoxes--locked">
-      <a href="{% url 'transactions-locked' %}">
+      <a href="{% url 'credits-locked' %}">
         <h2>{% trans "In progress" %}</h2>
         <p>
-          {% blocktrans trimmed with payments_count=locked_transactions %}
+          {% blocktrans trimmed with payments_count=locked_credits %}
             <strong>{{ payments_count }}</strong> Credits in progress
           {% endblocktrans %}
         </p>

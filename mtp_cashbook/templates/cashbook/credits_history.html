@@ -2,7 +2,7 @@
 {% load i18n %}
 {% load currency %}
 {% load mtp_common %}
-{% load transactions %}
+{% load credits %}
 
 {% block content %}
   <header class="ContentHeader">
@@ -61,21 +61,21 @@
 
       <p class="HistoryDescription">{{ form.get_search_description }}</p>
 
-      {% for transaction_date, group in object_list|parse_date_fields|regroup_transactions %}
-        <h3>{{ transaction_date|date:'DATE_FORMAT' }}</h3>
+      {% for credit_date, group in object_list|parse_date_fields|regroup_credits %}
+        <h3>{{ credit_date|date:'DATE_FORMAT' }}</h3>
 
-        {% for transaction_status, transactions in group %}
+        {% for credit_status, credits in group %}
           <table id="HistoryBatch-{{ forloop.parentloop.counter }}-{{ forloop.counter }}">
             <caption
-              class="HistoryHeader {% if transaction_status == 'uncredited' %}HistoryHeader-uncredited{% elif transaction_status == 'refunded' %}HistoryHeader-refunded{% endif %}">
-                {% if transaction_status == 'uncredited' %}
+              class="HistoryHeader {% if credit_status == 'uncredited' %}HistoryHeader-uncredited{% elif credit_status == 'refunded' %}HistoryHeader-refunded{% endif %}">
+                {% if credit_status == 'uncredited' %}
                   {% trans 'Uncredited' %}
-                {% elif transaction_status == 'refunded' %}
+                {% elif credit_status == 'refunded' %}
                   {% trans 'Refunded' %}
                 {% else %}
                   {% trans 'Credited' %}
                 {% endif %}
-              <span class="HistoryHeader-aside HistoryHeader-aside-right">{% trans 'Total' %}: £{{ transactions|sum_transactions|currency }}</span>
+              <span class="HistoryHeader-aside HistoryHeader-aside-right">{% trans 'Total' %}: £{{ credits|sum_credits|currency }}</span>
             </caption>
             <thead>
               <tr>
@@ -85,7 +85,7 @@
                 <th>{% trans 'Amount (£)' %}</th>
                 <th>{% trans 'Sender' %}</th>
                 <th>
-                  {% if transaction_status == 'uncredited' %}
+                  {% if credit_status == 'uncredited' %}
                     {% trans 'Started by' %}
                   {% else %}
                     {% trans 'Finished by' %}
@@ -95,15 +95,15 @@
               </tr>
             </thead>
             <tbody>
-              {% for transaction in transactions %}
+              {% for credit in credits %}
                 <tr {% if not forloop.counter|divisibleby:2 %}class="odd"{% endif %}>
-                  <td>{{ transaction.prisoner_number }}</td>
-                  <td>{{ transaction.prisoner_name }}</td>
-                  {% if DEBIT_CARD_ACTIVE %}<td>{% if transaction.payment %}{{ transaction.payment.recipient_name }}{% else %}-{%endif%}</td>{% endif %}
-                  <td class="numeric">{{ transaction.amount|currency }}</td>
-                  <td>{{ transaction.sender }}</td>
-                  <td>{{ transaction.owner_name|default_if_none:'—' }}</td>
-                  {% if DEBIT_CARD_ACTIVE %}<td>{% if transaction.payment %}{% trans 'Debit card' %}{% else %}{% trans 'Bank transfer' %}{%endif%}</td>{% endif %}
+                  <td>{{ credit.prisoner_number }}</td>
+                  <td>{{ credit.prisoner_name }}</td>
+                  {% if DEBIT_CARD_ACTIVE %}<td>{% if credit.payment %}{{ credit.payment.recipient_name }}{% else %}-{%endif%}</td>{% endif %}
+                  <td class="numeric">{{ credit.amount|currency }}</td>
+                  <td>{{ credit.sender }}</td>
+                  <td>{{ credit.owner_name|default_if_none:'—' }}</td>
+                  {% if DEBIT_CARD_ACTIVE %}<td>{% if credit.payment %}{% trans 'Debit card' %}{% else %}{% trans 'Bank transfer' %}{%endif%}</td>{% endif %}
                 </tr>
               {% endfor %}
             </tbody>

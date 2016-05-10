@@ -14,55 +14,55 @@ from mtp_common.api import retrieve_all_pages
 from .form_fields import MtpTextInput, MtpDateInput
 
 
-class ProcessTransactionBatchForm(GARequestErrorReportingMixin, forms.Form):
-    transactions = forms.MultipleChoiceField(choices=(), required=False)
+class ProcessCreditBatchForm(GARequestErrorReportingMixin, forms.Form):
+    credits = forms.MultipleChoiceField(choices=(), required=False)
 
     def __init__(self, request, *args, **kwargs):
-        super(ProcessTransactionBatchForm, self).__init__(*args, **kwargs)
+        super(ProcessCreditBatchForm, self).__init__(*args, **kwargs)
         self.request = request
         self.user = request.user
         self.client = get_connection(request)
 
-        self.fields['transactions'].choices = self.transaction_choices
+        self.fields['credits'].choices = self.credit_choices
 
-    def _request_locked_transactions(self):
-        return retrieve_all_pages(self.client.cashbook.transactions.get,
+    def _request_locked_credits(self):
+        return retrieve_all_pages(self.client.credits.get,
                                   status='locked', user=self.user.pk)
 
-    def _take_transactions(self):
-        self.client.cashbook.transactions.actions.lock.post()
+    def _take_credits(self):
+        self.client.credits.actions.lock.post()
 
-    def clean_transactions(self):
+    def clean_credits(self):
         """
-        If discard button clicked => ignore any transactions that might
+        If discard button clicked => ignore any credits that might
         have been ticked.
         """
-        transactions = self.cleaned_data.get('transactions', [])
+        credits = self.cleaned_data.get('credits', [])
         discard = self.data.get('discard') == '1'
-        if not transactions and not discard:
+        if not credits and not discard:
             self.add_error(None, ugettext('Only click ‘Done’ when you’ve selected credits'))
         if discard:
-            transactions = []
-        return transactions
+            credits = []
+        return credits
 
     @cached_property
-    def transaction_choices(self):
+    def credit_choices(self):
         """
-        Gets the transactions currently locked by the user if they exist
+        Gets the credits currently locked by the user if they exist
         or locks some and returns them if not.
         """
-        transactions = self._request_locked_transactions()
-        if not self.is_bound and len(transactions) == 0:
-            self._take_transactions()
-            transactions = self._request_locked_transactions()
+        credits = self._request_locked_credits()
+        if not self.is_bound and len(credits) == 0:
+            self._take_credits()
+            credits = self._request_locked_credits()
 
         return [
-            (t['id'], t) for t in transactions
+            (t['id'], t) for t in credits
         ]
 
     def save(self):
-        all_ids = {str(t[0]) for t in self.transaction_choices}
-        to_credit = set(self.cleaned_data['transactions'])
+        all_ids = {str(t[0]) for t in self.credit_choices}
+        to_credit = set(self.cleaned_data['credits'])
         to_discard = all_ids - to_credit
 
         # The two calls to the api might return a status code != 2xx
@@ -72,69 +72,70 @@ class ProcessTransactionBatchForm(GARequestErrorReportingMixin, forms.Form):
 
         # credit
         if to_credit:
-            self.client.cashbook.transactions.patch(
+            self.client.credits.patch(
                 [{'id': t_id, 'credited': True} for t_id in to_credit]
             )
 
         # discard
         if to_discard:
-            self.client.cashbook.transactions.actions.unlock.post({
-                'transaction_ids': list(to_discard)
+            self.client.credits.actions.unlock.post({
+                'credit_ids': list(to_discard)
             })
 
         return (to_credit, to_discard)
 
 
-class DiscardLockedTransactionsForm(GARequestErrorReportingMixin, forms.Form):
-    transactions = forms.MultipleChoiceField(choices=(), required=False)
+class DiscardLockedCreditsForm(GARequestErrorReportingMixin, forms.Form):
+    credits = forms.MultipleChoiceField(choices=(), required=False)
 
     def __init__(self, request, *args, **kwargs):
-        super(DiscardLockedTransactionsForm, self).__init__(*args, **kwargs)
+        super(DiscardLockedCreditsForm, self).__init__(*args, **kwargs)
         self.request = request
         self.user = request.user
         self.client = get_connection(request)
 
-        self.fields['transactions'].choices = self.grouped_transaction_choices
+        self.fields['credits'].choices = self.grouped_credit_choices
 
-    def _request_locked_transactions(self):
-        return retrieve_all_pages(self.client.cashbook.transactions.locked.get)
+    def _request_locked_credits(self):
+        return retrieve_all_pages(self.client.credits.locked.get)
 
-    def clean_transactions(self):
-        transactions = self.cleaned_data.get('transactions')
-        if not transactions:
+    def clean_credits(self):
+        credits = self.cleaned_data.get('credits')
+        if not credits:
             self.add_error(
                 None,
                 ugettext('Only click ‘Done’ when you’ve selected the row of credits you want to release')
             )
-        return transactions
+        return credits
 
     @cached_property
-    def transaction_choices(self):
+    def credit_choices(self):
         """
-        Gets the transactions currently locked by all users for prison
+        Gets the credits currently locked by all users for prison
         """
-        transactions = self._request_locked_transactions()
+        credits = self._request_locked_credits()
+        print(credits)
 
         return [
-            (t['id'], t) for t in transactions
+            (t['id'], t) for t in credits
         ]
 
     @cached_property
-    def grouped_transaction_choices(self):
+    def grouped_credit_choices(self):
         """
-        Gets transactions grouped by prison clerk who currently has them locked
+        Gets credits grouped by prison clerk who currently has them locked
         for current prison
         """
-        transactions = self._request_locked_transactions()
+        credits = self._request_locked_credits()
 
         # group by locking prison clerk (needs sort first)
-        transactions = sorted(transactions, key=lambda t: '%s%d' % (t['owner_name'], t['owner']))
-        grouped_transactions = []
-        for owner, group in groupby(transactions, key=lambda t: t['owner']):
+        credits = sorted(credits, key=lambda t: '%s%d' % (t['owner_name'], t['owner']))
+        grouped_credits = []
+        for owner, group in groupby(credits, key=lambda t: t['owner']):
             group = list(group)
 
             locked_ids = ' '.join(sorted(str(t['id']) for t in group))
-            grouped_transactions.append((locked_ids, {
+            grouped_credits.append((locked_ids, {
                 'owner': group[0]['owner'],
                 'owner_name': group[0]['owner_name'],
                 'owner_prison': group[0]['prison'],
@@ -142,23 +143,23 @@ class DiscardLockedTransactionsForm(GARequestErrorReportingMixin, forms.Form):
                 'locked_amount': sum((t['amount'] for t in group)),
                 'locked_at_earliest': parse_datetime(min((t['locked_at'] for t in group))),
             }))
-        return grouped_transactions
+        return grouped_credits
 
     def save(self):
-        transaction_ids = map(str.split, self.cleaned_data['transactions'])
-        transaction_ids = reduce(list.__add__, transaction_ids, [])
-        to_discard = set(transaction_ids)
+        credit_ids = map(str.split, self.cleaned_data['credits'])
+        credit_ids = reduce(list.__add__, credit_ids, [])
+        to_discard = set(credit_ids)
 
         # discard
         if to_discard:
-            self.client.cashbook.transactions.actions.unlock.post({
-                'transaction_ids': list(to_discard)
+            self.client.credits.actions.unlock.post({
+                'credit_ids': list(to_discard)
             })
 
         return to_discard
 
 
-class FilterTransactionHistoryForm(GARequestErrorReportingMixin, forms.Form):
+class FilterCreditHistoryForm(GARequestErrorReportingMixin, forms.Form):
     start = forms.DateField(label=ugettext_lazy('Start date'),
                             required=False, widget=MtpDateInput)
     end = forms.DateField(label=ugettext_lazy('Finish date'),
@@ -193,7 +194,7 @@ class FilterTransactionHistoryForm(GARequestErrorReportingMixin, forms.Form):
         return any(self.cleaned_data.get(key) for key in ['start', 'end', 'search'])
 
     @cached_property
-    def transaction_choices(self):
+    def credit_choices(self):
         page_size = settings.REQUEST_PAGE_DAYS
         filters = {
             'ordering': '-received_at',
@@ -230,7 +231,7 @@ class FilterTransactionHistoryForm(GARequestErrorReportingMixin, forms.Form):
                 filters[api_name] = filters[field_name]
                 del filters[field_name]
 
-        response = self.client.cashbook.transactions.get(**filters)
+        response = self.client.credits.get(**filters)
         self.pagination = {
             'page': response.get('page', 1),
             'count': response.get('count', 0),
