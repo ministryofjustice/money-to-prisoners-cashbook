@@ -1,7 +1,6 @@
 from django.conf.urls import url
 from django.core.urlresolvers import reverse_lazy
-
-from moj_auth import views
+from mtp_common.auth import views
 
 urlpatterns = [
     url(r'^login/$', views.login, {
