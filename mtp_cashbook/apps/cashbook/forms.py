@@ -6,7 +6,8 @@ from django.conf import settings
 from django.utils.dateparse import parse_datetime
 from django.utils.functional import cached_property
 from django.utils.dateformat import format as format_date
-from django.utils.translation import ugettext, ugettext_lazy, ungettext
+from django.utils.text import capfirst
+from django.utils.translation import gettext, gettext_lazy, ngettext
 from form_error_reporting import GARequestErrorReportingMixin
 from mtp_common.api import retrieve_all_pages
 from mtp_common.auth.api_client import get_connection
@@ -40,7 +41,7 @@ class ProcessCreditBatchForm(GARequestErrorReportingMixin, forms.Form):
         credits = self.cleaned_data.get('credits', [])
         discard = self.data.get('discard') == '1'
         if not credits and not discard:
-            self.add_error(None, ugettext('Only click ‘Done’ when you’ve selected credits'))
+            self.add_error(None, gettext('Only click ‘Done’ when you’ve selected credits'))
         if discard:
             credits = []
         return credits
@@ -104,7 +105,7 @@ class DiscardLockedCreditsForm(GARequestErrorReportingMixin, forms.Form):
         if not credits:
             self.add_error(
                 None,
-                ugettext('Only click ‘Done’ when you’ve selected the row of credits you want to release')
+                gettext('Only click ‘Done’ when you’ve selected the row of credits you want to release')
             )
         return credits
 
@@ -160,11 +161,11 @@ class DiscardLockedCreditsForm(GARequestErrorReportingMixin, forms.Form):
 
 
 class FilterCreditHistoryForm(GARequestErrorReportingMixin, forms.Form):
-    start = forms.DateField(label=ugettext_lazy('Start date'),
+    start = forms.DateField(label=gettext_lazy('Start date'),
                             required=False, widget=MtpDateInput)
-    end = forms.DateField(label=ugettext_lazy('Finish date'),
+    end = forms.DateField(label=gettext_lazy('Finish date'),
                           required=False, widget=MtpDateInput)
-    search = forms.CharField(label=ugettext_lazy('Prisoner name, prisoner number or sender name'),
+    search = forms.CharField(label=gettext_lazy('Prisoner name, prisoner number or sender name'),
                              required=False, widget=MtpTextInput)
     page = forms.IntegerField(required=False, widget=forms.HiddenInput)
 
@@ -184,7 +185,7 @@ class FilterCreditHistoryForm(GARequestErrorReportingMixin, forms.Form):
         start = self.cleaned_data.get('start')
         end = self.cleaned_data.get('end')
         if start and end and start > end:
-            self.add_error('end', ugettext('The end date must be after the start date'))
+            self.add_error('end', gettext('The end date must be after the start date'))
         return super().clean()
 
     @property
@@ -254,13 +255,13 @@ class FilterCreditHistoryForm(GARequestErrorReportingMixin, forms.Form):
             }
             if date_range['start'] and date_range['end']:
                 if date_range['start'] == date_range['end']:
-                    date_range_description = ugettext('on %(start)s') % date_range
+                    date_range_description = gettext('on %(start)s') % date_range
                 else:
-                    date_range_description = ugettext('between %(start)s and %(end)s') % date_range
+                    date_range_description = gettext('between %(start)s and %(end)s') % date_range
             elif date_range['start']:
-                date_range_description = ugettext('since %(start)s') % date_range
+                date_range_description = gettext('since %(start)s') % date_range
             elif date_range['end']:
-                date_range_description = ugettext('up to %(end)s') % date_range
+                date_range_description = gettext('up to %(end)s') % date_range
             else:
                 date_range_description = None
         else:
@@ -269,30 +270,34 @@ class FilterCreditHistoryForm(GARequestErrorReportingMixin, forms.Form):
         return search_description, date_range_description
 
     def get_search_description(self):
-        credit_description = ungettext(
-            '%(count)d credit',
-            '%(count)d credits',
-            self.pagination['count'],
-        ) % self.pagination
+        if self.pagination['count']:
+            credit_description = ngettext(
+                '%(count)d credit',
+                '%(count)d credits',
+                self.pagination['count'],
+            ) % self.pagination
+        else:
+            credit_description = gettext('no credits')
 
         search_description, date_range_description = self._get_filter_description()
         if search_description and date_range_description:
-            return ugettext('%(credits)s received %(date_range)s when searching for “%(search)s”') % {
+            description = gettext('%(credits)s received %(date_range)s when searching for “%(search)s”') % {
                 'search': search_description,
                 'date_range': date_range_description,
                 'credits': credit_description,
             }
         elif search_description:
-            return ugettext('Searching for “%(search)s” returned %(credits)s') % {
+            description = gettext('Searching for “%(search)s” returned %(credits)s') % {
                 'search': search_description,
                 'credits': credit_description,
             }
         elif date_range_description:
-            return ugettext('%(credits)s received %(date_range)s') % {
+            description = gettext('%(credits)s received %(date_range)s') % {
                 'date_range': date_range_description,
                 'credits': credit_description,
             }
         else:
-            return ugettext('%(credits)s received') % {
+            description = gettext('%(credits)s received') % {
                 'credits': credit_description,
             }
+        return capfirst(description)

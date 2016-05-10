@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
-from django.utils.translation import ungettext
+from django.utils.translation import ngettext
 from django.views.generic import FormView, TemplateView
 from mtp_common.auth import api_client
 
@@ -73,7 +73,7 @@ class CreditBatchListView(FormView):
         if credited_count:
             messages.success(
                 self.request,
-                ungettext(
+                ngettext(
                     'You’ve added 1 credit to NOMIS.',
                     'You’ve added %(credited)s credits to NOMIS.',
                     credited_count
@@ -129,7 +129,7 @@ class CreditsLockedView(FormView):
         if discarded_count:
             messages.success(
                 self.request,
-                ungettext(
+                ngettext(
                     'You have now returned the credit your '
                     'colleagues were processing to ‘New’ credits.',
                     'You have now returned the %(discarded)s credits your '

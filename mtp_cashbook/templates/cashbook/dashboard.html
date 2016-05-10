@@ -8,24 +8,22 @@
 
   <div class="help-box">
     <div class="help-box-title" aria-controls="help-box-contents" aria-expanded="true" role="heading">
-      <div></div><a href="#">{%trans "Help" %}</a>
+      <div></div><a href="#">{% trans 'Help' %}</a>
     </div>
     <div class="panel-indent help-box-contents" id="help-box-contents">
-      {% blocktrans trimmed %}
-      <p>You can click on:</p>
+      <p>{% trans 'You can click on:' %}</p>
       <ul>
-        <li>‘New’ to process credits in NOMIS</li>
-        <li>‘History’ to view all credits processed</li>
-        <li>‘In progress’ to view credits currently being processed by your team</li>
+        <li>{% trans '‘New’ to process credits in NOMIS' %}</li>
+        <li>{% trans '‘History’ to view all credits processed' %}</li>
+        <li>{% trans '‘In progress’ to view credits currently being processed by your team' %}</li>
       </ul>
-      {% endblocktrans %}
     </div>
   </div>
 
   <ul class="SummaryBoxes">
     <li class="SummaryBoxes--unprocessed">
       <a href="{% url 'credit-list' %}">
-        <h2>{% trans "New" %}</h2>
+        <h2>{% trans 'New' %}</h2>
         <p>
           {% blocktrans trimmed with payments_count=new_credits %}
             <strong>{{ payments_count }}</strong> Credits to process
@@ -36,14 +34,14 @@
 
     <li>
       <a href="{% url 'credit-history' %}">
-        <h2>{% trans "History" %}</h2>
-        <p>{%trans "Credits processed by the team" %}</p>
+        <h2>{% trans 'History' %}</h2>
+        <p>{% trans 'Credits processed by the team' %}</p>
       </a>
     </li>
 
     <li class="SummaryBoxes--locked">
       <a href="{% url 'credits-locked' %}">
-        <h2>{% trans "In progress" %}</h2>
+        <h2>{% trans 'In progress' %}</h2>
         <p>
           {% blocktrans trimmed with payments_count=locked_credits %}
             <strong>{{ payments_count }}</strong> Credits in progress

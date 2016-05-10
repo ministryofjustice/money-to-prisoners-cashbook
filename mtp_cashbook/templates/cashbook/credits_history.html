@@ -11,21 +11,19 @@
   </header>
 
   <div class="help-box">
-    <p>{% trans "Below you'll find all the credits listed to date. You can also use the search to find specific credits." %}</p>
+    <p>{% trans 'Below you’ll find all the credits listed to date. You can also use the search to find specific credits.' %}</p>
 
     <div class="help-box-title" aria-controls="help-box-contents" aria-expanded="true" role="heading">
-      <div></div><a href="#">{%trans "Help" %}</a>
+      <div></div><a href="#">{% trans 'Help' %}</a>
     </div>
     <div class="panel-indent help-box-contents" id="help-box-contents">
-      {% blocktrans trimmed %}
-      <p>To help with your search:</p>
+      <p>{% trans 'To help with your search:' %}</p>
       <ul>
-        <li>Search by prisoner name, prisoner number, sender name or amount</li>
-        <li>To bring up the whole history, don’t enter search dates although you can enter start and finish dates if you have a specific search</li>
-        <li>Click on ‘Expand’ to see a list of credits for that day, then click on ‘Collapse’ to go back</li>
-        <li>Remember the credits in ‘Uncredited’ haven’t been processed yet</li>
+        <li>{% trans 'Search by prisoner name, prisoner number, sender name or amount' %}</li>
+        <li>{% trans 'To bring up the whole history, don’t enter search dates although you can enter start and finish dates if you have a specific search' %}</li>
+        <li>{% trans 'Click on ‘Expand’ to see a list of credits for that day, then click on ‘Collapse’ to go back' %}</li>
+        <li>{% trans 'Remember the credits in ‘Uncredited’ haven’t been processed yet' %}</li>
       </ul>
-      {% endblocktrans %}
     </div>
   </div>
 
@@ -38,7 +36,6 @@
       <div class="search-field">
         {% include 'mtp_common/forms/field.html' with field=form.search only %}
       </div>
-
       <div class="date-fields">
         <div class="date-start">
           {% include 'mtp_common/forms/field.html' with field=form.start input_classes='js-FormDateControl' value=form.start.value|date:'d/m/Y'|default:form.start.value|default_if_none:'' only %}
@@ -114,13 +111,13 @@
       {% if page_range %}
         <ul class="Pagination print-hidden">
           {% if previous_page %}
-            <li><a href="{% url_with_query_param request 'page' previous_page %}">{% trans 'Previous' %}<span class="screenreader-only"> page</span></a></li>
+            <li><a href="{% url_with_query_param request 'page' previous_page %}">{% trans 'Previous' %}<span class="screenreader-only"> {% trans 'page' %}</span></a></li>
           {% endif %}
           {% for page in page_range %}
-            <li><a href="{% url_with_query_param request 'page' page %}" class="{% if page == current_page %}current-page{% endif %}"><span class="screenreader-only">page </span>{{ page }}</a></li>
+            <li><a href="{% url_with_query_param request 'page' page %}" class="{% if page == current_page %}current-page{% endif %}"><span class="screenreader-only">{% trans 'Page' %} </span>{{ page }}</a></li>
           {% endfor %}
           {% if next_page %}
-            <li><a href="{% url_with_query_param request 'page' next_page %}">{% trans 'Next' %}<span class="screenreader-only"> page</span></a></li>
+            <li><a href="{% url_with_query_param request 'page' next_page %}">{% trans 'Next' %}<span class="screenreader-only"> {% trans 'page' %}</span></a></li>
           {% endif %}
         </ul>
         <p class="Pagination-print-description">{% blocktrans with page=current_page pages=page_count %}Page {{ page }} of {{ pages }}.{% endblocktrans %}</p>
@@ -131,13 +128,7 @@
 
     {% else %}
 
-      <table>
-        <thead>
-          <tr>
-            <th>{% trans 'No credit history found' %}</th>
-          </tr>
-        </thead>
-      </table>
+      <p><strong>{{ form.get_search_description }}</strong></p>
 
     {% endif %}
   </div>
