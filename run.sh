@@ -41,7 +41,7 @@ NODE_MODULES=node_modules
 
 case "$COMMAND" in
     clean)
-        rm -r $VIRTUAL_ENV_DIR $NODE_MODULES static mtp_$APP/assets
+        rm -rf $VIRTUAL_ENV_DIR $NODE_MODULES static mtp_$APP/assets
         ;;
     serve | watch | docker | update | build | test | start)
         PORT=8001
@@ -57,7 +57,7 @@ case "$COMMAND" in
           fi
           source $VIRTUAL_ENV_DIR/bin/activate >/dev/null
         fi
-        PYTHON_BIN=$VIRTUAL_ENV/bin/
+        PYTHON_BIN=$VIRTUAL_ENV/bin
         export PYTHON_LIBS=`$PYTHON_BIN/python find_common.py`
         if [[ ("$REGENERATE" == "YES") || ("$PYTHON_LIBS" == "") ]]; then
             echo -n "Fetching common resources "
