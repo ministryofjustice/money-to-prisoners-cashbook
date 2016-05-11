@@ -413,4 +413,4 @@ class AdminPagesTests(CashbookTestCase):
     def test_create_two_users_same_username(self):
         self._create_dummy_user('dummy5')
         self._create_dummy_user('dummy5')
-        self.assertInSource('A user with that username already exists.')
+        self.assertInSource('That username already exists')
