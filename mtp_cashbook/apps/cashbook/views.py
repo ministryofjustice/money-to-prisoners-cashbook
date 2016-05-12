@@ -210,7 +210,7 @@ class CreditHistoryView(FormView):
             'next_page': next_page,
             'page_range': page_range,
             'page_count': page_count,
-            'credit_owner_name': self.request.user.get_full_name,
+            'credit_owner_name': self.request.user.get_full_name(),
             'DEBIT_CARD_ACTIVE': settings.DEBIT_CARD_ACTIVE
         })
         return context
