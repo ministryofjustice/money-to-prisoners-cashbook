@@ -176,8 +176,6 @@ TEST_RUNNER = 'mtp_common.test_utils.runner.TestRunner'
 SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
-MOJ_USER_MODEL = 'mtp_auth.models.MtpUser'
-
 AUTHENTICATION_BACKENDS = (
     'mtp_common.auth.backends.MojBackend',
 )
