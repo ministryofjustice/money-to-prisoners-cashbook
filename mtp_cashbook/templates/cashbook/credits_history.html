@@ -96,11 +96,11 @@
                 <tr {% if not forloop.counter|divisibleby:2 %}class="odd"{% endif %}>
                   <td>{{ credit.prisoner_number }}</td>
                   <td>{{ credit.prisoner_name }}</td>
-                  {% if DEBIT_CARD_ACTIVE %}<td>{% if credit.payment %}{{ credit.payment.recipient_name }}{% else %}-{%endif%}</td>{% endif %}
+                  {% if DEBIT_CARD_ACTIVE %}<td>{% if credit.source == 'online' %}{{ credit.intended_recipient }}{% else %}-{%endif%}</td>{% endif %}
                   <td class="numeric">{{ credit.amount|currency }}</td>
-                  <td>{{ credit.sender }}</td>
+                  <td>{{ credit.sender_name }}</td>
                   <td>{{ credit.owner_name|default_if_none:'—' }}</td>
-                  {% if DEBIT_CARD_ACTIVE %}<td>{% if credit.payment %}{% trans 'Debit card' %}{% else %}{% trans 'Bank transfer' %}{%endif%}</td>{% endif %}
+                  {% if DEBIT_CARD_ACTIVE %}<td>{% if credit.source == 'online' %}{% trans 'Debit card' %}{% else %}{% trans 'Bank transfer' %}{%endif%}</td>{% endif %}
                 </tr>
               {% endfor %}
             </tbody>

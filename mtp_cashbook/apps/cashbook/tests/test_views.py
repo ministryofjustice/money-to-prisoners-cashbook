@@ -293,7 +293,7 @@ class HistoryViewTestCase(MTPBaseTestCase):
                     'prisoner_number': 'A1234BC',
                     'amount': 5200,
                     'formatted_amount': '£52.00',
-                    'sender': 'Fred Smith',
+                    'sender_name': 'Fred Smith',
                     'prison': 14,
                     'owner': login_data['user_pk'],
                     'owner_name': '%s %s' % (
@@ -311,7 +311,7 @@ class HistoryViewTestCase(MTPBaseTestCase):
                     'prisoner_number': 'A1234BC',
                     'amount': 2650,
                     'formatted_amount': '£26.50',
-                    'sender': 'Mary Smith',
+                    'sender_name': 'Mary Smith',
                     'prison': 14,
                     'owner': login_data['user_pk'],
                     'owner_name': '%s %s' % (
@@ -355,7 +355,7 @@ class HistoryViewTestCase(MTPBaseTestCase):
                     'prisoner_number': 'A1234BC',
                     'amount': 5200,
                     'formatted_amount': '£52.00',
-                    'sender': 'Fred Smith',
+                    'sender_name': 'Fred Smith',
                     'prison': 14,
                     'owner': login_data['user_pk'],
                     'owner_name': '%s %s' % (
