@@ -19,7 +19,9 @@
     {% with field=form.ticket_content %}
       <div class="form-group {% if field.errors %}error{% endif %}">
         {% include 'mtp_common/forms/field-label.html' with field=field only %}
-        <p><strong>{% trans 'Please don’t include bank details or any other personal information.' %}</strong></p>
+        <p><div class="panel-indent panel-border-wide">
+          {% trans 'Please don’t include bank details or any other personal information.' %}
+        </div></p>
         {% include 'mtp_common/forms/field-errors.html' with field=field only %}
         <textarea class="form-control" id="{{ field.id_for_label }}" name="{{ field.html_name }}" cols="40" rows="10">{{ field.value|default:'' }}</textarea>
       </div>
