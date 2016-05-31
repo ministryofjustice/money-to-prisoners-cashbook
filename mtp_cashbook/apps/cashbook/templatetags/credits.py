@@ -43,29 +43,33 @@ def regroup_credits(credits):
     """
     Groups credits into days (by received_at) and refunded status
     """
-    def get_status_key(t):
-        if not t['resolution'] == 'credited':
-            return 'uncredited'
-        if t['resolution'] == 'refunded':
+    def get_status_key(c):
+        if c['resolution'] == 'refunded':
             return 'refunded'
-        return 'credited'
+        if c['resolution'] == 'credited':
+            return 'credited'
+        if c['anonymous']:
+            return 'anonymous'
+        return 'uncredited'
 
-    def get_status_order(t):
-        if not t['resolution'] == 'credited':
+    def get_status_order(c):
+        if not c['resolution'] == 'credited':
             return 0
-        if not t['resolution'] == 'refunded':
+        if not c['resolution'] == 'refunded':
             return 1
-        return 2
-
-    def get_order_key(t):
-        return t['prisoner_number']
+        if c['anonymous']:
+            return 2
+        return 3
 
     grouped_credits = OrderedDict()
-    groups = groupby(credits, key=lambda t: t['received_at'].date() if t['received_at'] else None)
+    groups = groupby(credits, key=lambda c: c['received_at'].date() if c['received_at'] else None)
     for date, group in groups:
         # NB: listing out inner generators so that results can be iterated multiple times
         grouped = groupby(sorted(group, key=get_status_order), key=get_status_key)
-        grouped = ((status_key, list(sorted(items, key=get_order_key))) for (status_key, items) in grouped)
+        grouped = (
+            (status_key, list(sorted(items, key=lambda c: c['prisoner_number'])))
+            for (status_key, items) in grouped
+        )
         grouped_credits[date] = grouped
     return grouped_credits.items()
 
@@ -75,7 +79,7 @@ def sum_credits(credits):
     """
     Returns the total sum of payment amounts (irrespective of status)
     """
-    return sum(map(lambda t: t['amount'] or 0, credits))
+    return sum(map(lambda c: c['amount'] or 0, credits))
 
 
 @register.simple_tag
