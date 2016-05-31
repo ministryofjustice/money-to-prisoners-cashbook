@@ -62,19 +62,20 @@
         <h3>{{ credit_date|date:'DATE_FORMAT' }}</h3>
 
         {% for credit_status, credits in group %}
-          <table id="HistoryBatch-{{ forloop.parentloop.counter }}-{{ forloop.counter }}">
-            <caption
-              class="HistoryHeader {% if credit_status == 'uncredited' %}HistoryHeader-uncredited{% elif credit_status == 'refunded' %}HistoryHeader-refunded{% elif credit_status == 'anonymous' %}HistoryHeader-anonymous{% endif %}">
-                {% if credit_status == 'credited' %}
-                  {% trans 'Credited' %}
-                {% elif credit_status == 'refunded' %}
-                  {% trans 'Refunded' %}
-                {% elif credit_status == 'anonymous' %}
-                  {% trans 'Anonymous' %}
-                {% else %}
-                  {% trans 'Uncredited' %}
-                {% endif %}
-              <span class="HistoryHeader-aside HistoryHeader-aside-right">{% trans 'Total' %}: £{{ credits|sum_credits|currency }}</span>
+          <table id="HistoryBatch-{{ forloop.parentloop.counter }}-{{ forloop.counter }}" class="CollapsingTable">
+            <caption class="CollapsingTableHeader {% credit_group_class credit_status %}" data-collapse-text="{% trans 'Collapse' %}" data-expand-text="{% trans 'Expand' %}">
+              {% if credit_status == 'credited' %}
+                {% trans 'Credited' %}
+              {% elif credit_status == 'refunded' %}
+                {% trans 'Refunded' %}
+              {% elif credit_status == 'anonymous' %}
+                {% trans 'Anonymous' %}
+              {% else %}
+                {% trans 'Uncredited' %}
+              {% endif %}
+              <span class="CollapsingTableHeader-aside CollapsingTableHeader-aside-right">
+                {% trans 'Total' %}: £{{ credits|sum_credits|currency }}
+              </span>
             </caption>
             <thead>
               <tr>

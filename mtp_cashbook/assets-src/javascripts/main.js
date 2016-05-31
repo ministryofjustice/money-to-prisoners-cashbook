@@ -10,7 +10,7 @@
       require('mojular-govuk-elements'),
       require('mojular-moj-elements'),
       require('dialog'),
-      require('show-hide'),
+      require('collapsing-table'),
       require('messages'),
       require('print'),
       require('polyfills'),
