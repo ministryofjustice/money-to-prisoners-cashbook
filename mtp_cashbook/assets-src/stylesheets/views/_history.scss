@@ -38,41 +38,8 @@ form.HistorySearch {
   }
 }
 
-
-.HistoryHeader {
-  font-size: 20px;
-  font-weight: bold;
-  position: relative;
-  margin: 0;
-  padding: 0.6em .5em;
+.HistoryHeader-credited {
   background: #CDE2B7;
-  border-bottom: 1px solid $grey-1;
-  text-align: center;
-  line-height: 1.2em;
-
-  a, span {
-    margin: 0;
-  }
-
-  .HistoryHeader-aside {
-    position: absolute;
-    left: 1em;
-    top: 40%;
-    height: 1.7em;
-    margin-top: -0.5em;
-    font-size: 0.75em;
-    font-weight: normal;
-    line-height: 1.9em;
-  }
-
-  .HistoryHeader-aside-right {
-    left: auto;
-    right: 1em;
-  }
-
-  .ShowHide {
-    float: left;
-  }
 }
 
 .HistoryHeader-uncredited {
@@ -84,7 +51,7 @@ form.HistorySearch {
 }
 
 .HistoryHeader-anonymous {
-  background: #F47738;
+  background: $orange-50;
 }
 
 .inline .block-label {

@@ -74,6 +74,13 @@ def regroup_credits(credits):
     return grouped_credits.items()
 
 
+@register.simple_tag
+def credit_group_class(credit_status):
+    if credit_status in ['credited', 'uncredited', 'refunded', 'anonymous']:
+        return 'HistoryHeader-%s' % credit_status
+    return ''
+
+
 @register.filter
 def sum_credits(credits):
     """
