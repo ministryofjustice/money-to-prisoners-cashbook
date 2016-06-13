@@ -2,12 +2,13 @@ from django.conf import settings
 from django.conf.urls import url
 from django.core.urlresolvers import reverse_lazy
 from zendesk_tickets import views
-from zendesk_tickets.forms import EmailTicketForm
+
+from .forms import PrisonTicketForm
 
 urlpatterns = [
     url(r'^feedback/$', views.ticket,
         {
-            'form_class': EmailTicketForm,
+            'form_class': PrisonTicketForm,
             'template_name': 'feedback/submit_feedback.html',
             'success_redirect_url': reverse_lazy('feedback_success'),
             'subject': 'MTP Cashbook Feedback',
