@@ -15,6 +15,7 @@ exports.RunningTotal = {
   },
 
   cacheEls: function () {
+    this.$body = $('body');
     this.$items = $('.js-RunningTotal-item');
     this.$totalsContainer = $(this.selector);
     this.labelText = this.$totalsContainer.data('label');
@@ -24,7 +25,7 @@ exports.RunningTotal = {
   },
 
   bindEvents: function () {
-    this.base.Events.on('RunningTotal.render', $.proxy(this.render, this));
+    this.$body.on('RunningTotal.render', $.proxy(this.render, this));
     this.$items.on('change', $.proxy(this.updateTotal, this));
   },
 

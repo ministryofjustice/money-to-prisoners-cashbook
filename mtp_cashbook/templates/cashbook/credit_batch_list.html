@@ -5,13 +5,13 @@
 
 {% block page_title %}{% trans "New credits - Digital cashbook" %}{% endblock %}
 
-{% block template_type %}v-batch{% endblock %}
+{% block body_classes %}v-batch{% endblock %}
 
-{% block content %}
+{% block inner_content %}
 
   <header class="ContentHeader">
     <a id="header-home-link" href="{% url 'dashboard-batch-discard' %}" class="ContentHeader-back">{% trans 'Home' %}</a>
-    <h1>{% trans 'New credits' %}</h1>
+    <h1 class="heading-xlarge">{% trans 'New credits' %}</h1>
   </header>
 
   {% include "mtp_common/includes/message_box.html" %}
@@ -34,7 +34,7 @@
         <div class="help-box-title" aria-controls="help-box-contents" aria-expanded="true" role="heading">
           <div></div><a href="#">{% trans 'Help' %}</a>
         </div>
-        <div class="panel-indent help-box-contents" id="help-box-contents">
+        <div class="panel help-box-contents" id="help-box-contents">
           {% blocktrans trimmed %}
             <p>How to use the Digital Cashbook with NOMIS:</p>
             <ul>
@@ -114,10 +114,11 @@
       <p>{% trans "There aren’t any credits available" %}</p>
     {% endif %}
 
-    <dialog id="incomplete-batch-dialog"
-            class="Dialog u-nojs-hidden"
-            data-hide-close="true"
-            data-disable-backdrop-close="true">
+    <div id="incomplete-batch-dialog"
+         class="Dialog u-nojs-hidden"
+         style="display: none"
+         data-hide-close="true"
+         data-disable-backdrop-close="true">
       <div class="Dialog-inner">
         <p><strong>{% trans "Do you want to submit only the selected credits?" %}</strong></p>
         <button type="submit"
@@ -127,9 +128,9 @@
                 class="button button-secondary js-Dialog-close"
                 data-analytics="pageview,/batch/-dialog_close/">{% trans "No, continue processing" %}</button>
       </div>
-    </dialog>
+    </div>
   </form>
 
   {% include "cashbook/includes/print_dialog.html" %}
 
-{% endblock content %}
+{% endblock %}

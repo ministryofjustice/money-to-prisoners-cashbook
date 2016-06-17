@@ -3,10 +3,10 @@
 {% load currency %}
 {% load mtp_common %}
 
-{% block content %}
+{% block inner_content %}
   <header class="ContentHeader">
     <a href="{% url 'dashboard' %}" class="ContentHeader-back">{% trans 'Home' %}</a>
-    <h1>{% trans 'Credits in progress' %}</h1>
+    <h1 class="heading-xlarge">{% trans 'Credits in progress' %}</h1>
   </header>
 
   {% include "mtp_common/includes/message_box.html" %}
@@ -22,7 +22,7 @@
         <div class="help-box-title" aria-controls="help-box-contents" aria-expanded="true" role="heading">
           <div></div><a href="#">{% trans 'Help' %}</a>
         </div>
-        <div class="panel-indent help-box-contents" id="help-box-contents">
+        <div class="panel help-box-contents" id="help-box-contents">
           {% blocktrans trimmed %}
             <p>If you want to release credits:</p>
             <ul>
@@ -87,4 +87,4 @@
       <p>{% trans "No credits in progress" %}</p>
     {% endif %}
   </form>
-{% endblock content %}
+{% endblock %}
