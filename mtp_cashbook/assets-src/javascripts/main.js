@@ -3,27 +3,19 @@
 (function() {
   'use strict';
 
-  var Mojular = require('mojular');
+  require('dialog').Dialog.init();
+  require('collapsing-table').CollapsingTable.init();
+  require('messages').Messages.init();
+  require('print').Print.init();
+  require('polyfills').Polyfills.init();
+  require('select-all').SelectAll.init();
+  require('unload').Unload.init();
+  require('help-popup').HelpPopup.init();
+  require('analytics').Analytics.init();
+  require('track-printing').TrackPrinting.init();
 
-  Mojular
-    .use([
-      require('mojular-govuk-elements'),
-      require('mojular-moj-elements'),
-      require('dialog'),
-      require('collapsing-table'),
-      require('messages'),
-      require('print'),
-      require('polyfills'),
-      require('select-all'),
-      require('unload'),
-      require('help-popup'),
-      require('analytics'),
-      require('track-printing'),
-
-      require('batch-validation'),
-      require('sticky-header'),
-      require('running-total'),
-      require('search-focus')
-    ])
-    .init();
+  require('batch-validation').BatchValidation.init();
+  require('sticky-header').StickyHeader.init();
+  require('running-total').RunningTotal.init();
+  require('search-focus').SearchFocus.init();
 }());

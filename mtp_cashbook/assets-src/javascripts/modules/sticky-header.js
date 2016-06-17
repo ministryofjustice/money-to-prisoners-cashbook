@@ -9,7 +9,6 @@ exports.StickyHeader = {
 
   init: function () {
     this.cacheEls();
-
     if (this.$originalHeader.length) {
       this.bindEvents();
       this.render();
@@ -28,7 +27,7 @@ exports.StickyHeader = {
   },
 
   bindEvents: function () {
-    this.base.Events.on('StickyHeader.render', $.proxy(this.render, this));
+    this.$body.on('StickyHeader.render', $.proxy(this.render, this));
     this.$window.scroll($.proxy(this.onScroll, this));
   },
 

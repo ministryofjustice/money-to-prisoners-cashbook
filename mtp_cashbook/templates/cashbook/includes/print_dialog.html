@@ -1,5 +1,5 @@
 {% load i18n %}
-<dialog id="print-dialog" class="Dialog">
+<div id="print-dialog" class="Dialog" style="display: none">
   <div class="Dialog-inner">
     <h3>{% trans "Do you need to print?" %}</h3>
     <p>{% trans 'Did you know:' %}</p>
@@ -17,4 +17,4 @@
     <button type="button" class="button u-nojs-hidden js-Print">{% trans 'Print' %}</button>
     <button type="button" class="button u-nojs-hidden js-Dialog-close">{% trans 'Cancel' %}</button>
   </div>
-</dialog>
+</div>

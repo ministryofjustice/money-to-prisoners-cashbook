@@ -20,7 +20,7 @@ exports.BatchValidation = {
   },
 
   bindEvents: function () {
-    this.base.Events.on('BatchValidation.render', this.render);
+    this.$body.on('BatchValidation.render', this.render);
     this.$form.on('click', ':submit', $.proxy(this.onSubmit, this));
   },
 
@@ -71,12 +71,12 @@ exports.BatchValidation = {
     if (!checkedValid && numChecked > 0) {
       // Partial: ask for confirmation
       e.preventDefault();
-      this.base.Events.trigger({
+      this.$body.trigger({
         type: 'Dialog.render',
         target: e.target,
         targetSelector: '#incomplete-batch-dialog'
       });
-      analytics.analytics.send('pageview', '/batch/-dialog_open/');
+      analytics.Analytics.send('pageview', '/batch/-dialog_open/');
       return;
     }
   }

@@ -5,7 +5,7 @@
       <a href="#print-dialog" class="js-Dialog">{% trans "Print these credits" %}</a>
     {% endif %}
   </td>
-  <td colspan="2" align="right" class="cell--compact cell--bold">
+  <td colspan="2" class="cell--compact cell--bold flush-right">
     {% if select_all != False %}
       <input type="checkbox" id="select-all-{{ location }}" class="Checkbox Checkbox--right js-SelectAll" data-name="{{ field_name }}">
       <label data-analytics="event,select-all,{{ location }}" for="select-all-{{ location }}">{% trans "Select all" %}</label>
