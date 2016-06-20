@@ -161,9 +161,9 @@ class DiscardLockedCreditsForm(GARequestErrorReportingMixin, forms.Form):
 
 
 class FilterCreditHistoryForm(GARequestErrorReportingMixin, forms.Form):
-    start = forms.DateField(label=gettext_lazy('Start date'),
+    start = forms.DateField(label=gettext_lazy('From'),
                             required=False, widget=MtpDateInput)
-    end = forms.DateField(label=gettext_lazy('Finish date'),
+    end = forms.DateField(label=gettext_lazy('To'),
                           required=False, widget=MtpDateInput)
     search = forms.CharField(label=gettext_lazy('Prisoner name, prisoner number or sender name'),
                              required=False, widget=MtpTextInput)
