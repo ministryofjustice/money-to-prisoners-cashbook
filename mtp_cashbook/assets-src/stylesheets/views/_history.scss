@@ -1,9 +1,5 @@
 form.HistorySearch {
 
-  .form-inputs {
-    margin: 2em 0 1em 0;
-  }
-
   .date-fields {
     display: inline-block;
     background-color: $panel-colour;
@@ -11,6 +7,8 @@ form.HistorySearch {
     .date-start, .date-end {
       display:inline-block;
       width: 6.7em;
+    }
+    .date-label, .date-start, .date-end {
       padding-left: .5em;
     }
     input { width: 100% }
@@ -26,7 +24,11 @@ form.HistorySearch {
 
 .batch-history {
   float: left;
-  margin-top: 2em;
+  margin-top: 1em;
+  h2 {
+    margin-top: 0;
+  }
+
   table {
     width: 100%;
     margin-bottom: 1.5em;

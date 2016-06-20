@@ -7,7 +7,7 @@
 {% block inner_content %}
   <header class="ContentHeader">
     <a href="{% url 'dashboard' %}" class="ContentHeader-back">{% trans 'Home' %}</a>
-    <h1 class="heading-xlarge">{% trans 'Credit history' %}</h1>
+    <h1 class="heading-large">{% trans 'Credit history' %}</h1>
   </header>
 
   <div class="help-box">
@@ -37,6 +37,7 @@
         {% include 'mtp_common/forms/field.html' with field=form.search only %}
       </div>
       <div class="date-fields">
+        <div class="date-label">Date received</div>
         <div class="date-start">
           {% include 'mtp_common/forms/field.html' with field=form.start input_classes='js-FormDateControl' value=form.start.value|date:'d/m/Y'|default:form.start.value|default_if_none:'' only %}
         </div>
