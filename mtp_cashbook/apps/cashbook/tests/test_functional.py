@@ -374,7 +374,7 @@ class AdminPagesTests(CashbookTestCase):
         self.assertCurrentUrl('/users/')
         self.assertInSource('Manage user accounts')
         self.assertInSource('Prison 1 Clerk')
-        self.assertCssProperty('td.actions > div', 'margin-right', '80px')
+        self.assertCssProperty('div.delete-action', 'margin-right', '0px')
 
     def test_create_user_missing_fields(self):
         self.click_on_text('Add a new user')
