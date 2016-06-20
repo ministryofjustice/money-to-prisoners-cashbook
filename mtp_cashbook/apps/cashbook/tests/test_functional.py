@@ -367,7 +367,7 @@ class AdminPagesTests(CashbookTestCase):
         self.type_in('id_username', username)
         self.type_in('id_first_name', 'Joe')
         self.type_in('id_last_name', 'Bloggs')
-        self.type_in('id_email', 'a@v.local')
+        self.type_in('id_email', 'joe@mtp.local')
         self.driver.find_element_by_css_selector('form').submit()
 
     def test_list_page(self):
