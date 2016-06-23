@@ -24,18 +24,22 @@ class MTPBaseTestCase(SimpleTestCase):
             'password': 'my-password'
         }
         token = generate_tokens()
+        permissions = ['credit.view_credit',
+                       'credit.lock_credit', 'credit.unlock_credit',
+                       'credit.patch_credited_credit']
         user_data = {
             'first_name': 'My First Name',
             'last_name': 'My Last Name',
             'username': credentials['username'],
-            'prisons': ['prison1']
+            'applications': ['cashbook'],
+            'permissions': permissions,
         }
 
         return {
+            'user_pk': user_pk,
+            'token': token,
             'credentials': credentials,
             'user_data': user_data,
-            'token': token,
-            'user_pk': user_pk
         }
 
     @mock.patch('mtp_common.auth.backends.api_client')

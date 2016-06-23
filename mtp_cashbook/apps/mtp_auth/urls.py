@@ -1,11 +1,15 @@
+from django.conf import settings
 from django.conf.urls import url
 from django.core.urlresolvers import reverse_lazy
 from mtp_common.auth import views
 
 urlpatterns = [
-    url(r'^login/$', views.login, {
-        'template_name': 'mtp_auth/login.html',
-        }, name='login'),
+    url(
+        r'^login/$', views.login, {
+            'template_name': 'mtp_auth/login.html',
+            'restrict_applications': (settings.API_CLIENT_ID,),
+        }, name='login'
+    ),
     url(
         r'^logout/$', views.logout, {
             'template_name': 'mtp_auth/login.html',

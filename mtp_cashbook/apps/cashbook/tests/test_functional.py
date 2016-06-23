@@ -390,7 +390,7 @@ class AdminPagesTests(CashbookTestCase):
     def test_delete_user(self):
         self._create_dummy_user('dummy2')
         self.click_on_text('Return to user management')
-        self.get_element('//a[text()="Delete" and ancestor::tr/td[text()="dummy2"]]').click()
+        self.get_element('//div[@class="delete-action"]/a[ancestor::tr/td[text()="dummy2"]]').click()
         self.assertInSource('Delete user account')
         self.driver.find_element_by_css_selector('form').submit()
         self.assertInSource('User account ‘dummy2’ deleted')

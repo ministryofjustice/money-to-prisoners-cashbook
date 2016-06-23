@@ -4,6 +4,7 @@ from unittest import mock
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.utils.timezone import now, utc
+from mtp_common.auth.test_utils import generate_tokens
 
 from cashbook.tests import MTPBaseTestCase
 
@@ -28,6 +29,42 @@ class DashboardViewTestCase(MTPBaseTestCase):
         )
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, redirect_url)
+
+    @mock.patch('mtp_common.auth.backends.api_client')
+    def test_cannot_login_with_incorrect_details(self, mock_api_client):
+        mock_api_client.authenticate.return_value = None
+
+        response = self.client.post(
+            reverse('login'),
+            data={'username': 'shall', 'password': 'pass'},
+            follow=True
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.context['form'].is_valid())
+
+    @mock.patch('mtp_common.auth.backends.api_client')
+    def test_cannot_login_without_app_access(self, mock_api_client):
+        mock_api_client.authenticate.return_value = {
+            'pk': 5,
+            'token': generate_tokens(),
+            'user_data': {
+                'first_name': 'Sam',
+                'last_name': 'Hall',
+                'username': 'shall',
+                'applications': [''],
+                'permissions': ['credit.view_credit',
+                                'credit.lock_credit', 'credit.unlock_credit',
+                                'credit.patch_credited_credit'],
+            }
+        }
+
+        response = self.client.post(
+            reverse('login'),
+            data={'username': 'shall', 'password': 'pass'},
+            follow=True
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.context['form'].is_valid())
 
     def _generate_mock_response(self, available, locked_by_user, overall_locked):
         def mock_response(*args, **kwargs):
