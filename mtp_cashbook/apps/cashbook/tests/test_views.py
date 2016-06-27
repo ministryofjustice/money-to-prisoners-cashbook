@@ -4,7 +4,7 @@ from unittest import mock
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.utils.timezone import now, utc
-from mtp_common.auth.test_utils import generate_tokens
+from mtp_common.auth.exceptions import Forbidden
 
 from cashbook.tests import MTPBaseTestCase
 
@@ -44,19 +44,7 @@ class DashboardViewTestCase(MTPBaseTestCase):
 
     @mock.patch('mtp_common.auth.backends.api_client')
     def test_cannot_login_without_app_access(self, mock_api_client):
-        mock_api_client.authenticate.return_value = {
-            'pk': 5,
-            'token': generate_tokens(),
-            'user_data': {
-                'first_name': 'Sam',
-                'last_name': 'Hall',
-                'username': 'shall',
-                'applications': [''],
-                'permissions': ['credit.view_credit',
-                                'credit.lock_credit', 'credit.unlock_credit',
-                                'credit.patch_credited_credit'],
-            }
-        }
+        mock_api_client.authenticate.side_effect = Forbidden
 
         response = self.client.post(
             reverse('login'),
