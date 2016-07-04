@@ -5,7 +5,7 @@
 exports.SearchFocus = {
   init: function () {
     var searchInputField = document.getElementById('id_search');
-    if (searchInputField && document.activeElement.tagName === 'BODY') {
+    if (searchInputField && document.activeElement && document.activeElement.tagName === 'BODY') {
       searchInputField.focus();
     }
   }
