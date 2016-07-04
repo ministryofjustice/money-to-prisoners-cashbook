@@ -12,12 +12,12 @@
 {% block proposition %}{% trans "Digital cashbook" %}{% endblock %}
 
 {% block user_menu %}
-<span>
+<li>
   <a href="{% url 'password_change' %}">{% trans "Change password" %}</a>
-</span>
+</li>
 {% if perms.auth.change_user %}
-<span>
+<li>
   <a href="{% url 'list-users' %}">{% trans "Manage users" %}</a>
-</span>
+</li>
 {% endif %}
 {% endblock %}
