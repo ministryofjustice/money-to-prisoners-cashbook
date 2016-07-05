@@ -82,7 +82,7 @@
 
           <tbody>
             {% for credit_pk, credit in object_list %}
-              <tr {% if forloop.counter|divisibleby:2 %}{% else %}class="odd"{% endif %}>
+              <tr>
                 <td>{{ credit.prisoner_number }}</td>
                 <td>{{ credit.prisoner_name }}</td>
                 <td class="numeric">{{ credit.amount|currency }}</td>

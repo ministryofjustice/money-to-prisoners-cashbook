@@ -97,7 +97,7 @@
             </thead>
             <tbody>
               {% for credit in credits %}
-                <tr {% if not forloop.counter|divisibleby:2 %}class="odd"{% endif %}>
+                <tr>
                   <td>{{ credit.prisoner_number }}</td>
                   <td>{{ credit.prisoner_name }}</td>
                   {% if DEBIT_CARD_ACTIVE %}<td>{% if credit.source == 'online' %}{{ credit.intended_recipient }}{% else %}-{%endif%}</td>{% endif %}
