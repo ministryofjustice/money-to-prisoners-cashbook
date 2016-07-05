@@ -6,11 +6,11 @@
 
 {% block inner_content %}
   <header class="ContentHeader">
-    <a href="{% url 'dashboard' %}" class="ContentHeader-back">{% trans 'Home' %}</a>
+    <a href="{% url 'dashboard' %}" class="ContentHeader-back print-hidden">{% trans 'Home' %}</a>
     <h1 class="heading-large">{% trans 'Credit history' %}</h1>
   </header>
 
-  <div class="help-box">
+  <div class="help-box print-hidden">
     <p>{% trans 'Below you’ll find all the credits listed to date. You can also use the search to find specific credits.' %}</p>
 
     <div class="help-box-title" aria-controls="help-box-contents" aria-expanded="true" role="heading">
