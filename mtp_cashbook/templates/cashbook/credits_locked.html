@@ -55,7 +55,7 @@
 
           <tbody>
             {% for credit_locked_ids, credit_group in object_list %}
-              <tr {% if forloop.counter|divisibleby:2 %}{% else %}class="odd"{% endif %}>
+              <tr>
                 <td title="{{ credit_group.owner_prison }}">{{ credit_group.owner_name }}</td>
                 <td class="numeric">{{ credit_group.locked_count }}</td>
                 <td class="numeric">{{ credit_group.locked_amount|currency }}</td>
