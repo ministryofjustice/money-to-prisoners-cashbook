@@ -37,7 +37,7 @@
         {% include 'mtp_common/forms/field.html' with field=form.search only %}
       </div>
       <div class="date-fields">
-        <div class="date-label">Date received</div>
+        <div class="date-label">Date received<div class="form-hint">eg 28/04/2016</div></div>
         <div class="date-start">
           {% include 'mtp_common/forms/field.html' with field=form.start input_classes='js-FormDateControl' value=form.start.value|date:'d/m/Y'|default:form.start.value|default_if_none:'' only %}
         </div>
