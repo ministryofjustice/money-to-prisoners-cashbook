@@ -2,7 +2,7 @@ form.HistorySearch {
 
   .date-fields {
     display: inline-block;
-    background-color: $panel-colour;
+    background-color: $highlight-colour;
     padding: .5em 1em .5em .6em;
     .date-start, .date-end {
       display:inline-block;
@@ -12,6 +12,9 @@ form.HistorySearch {
       padding-left: .5em;
     }
     input { width: 100% }
+    .form-hint {
+      color: #666;
+    }
   }
 
   .search-field {
@@ -44,7 +47,7 @@ form.HistorySearch {
 }
 
 .HistoryHeader-uncredited {
-  background: #6F72AF;
+  background: #575A96;
   color: $page-colour;
 }
 
