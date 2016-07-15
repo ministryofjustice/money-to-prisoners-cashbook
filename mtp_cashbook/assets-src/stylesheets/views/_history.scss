@@ -23,6 +23,10 @@ form.HistorySearch {
     input { width: 100% }
   }
 
+  @media print {
+    display: none;
+  }
+
 }
 
 .batch-history {

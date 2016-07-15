@@ -5,7 +5,7 @@
 
 {% block inner_content %}
   <header class="ContentHeader">
-    <a href="{% url 'dashboard' %}" class="ContentHeader-back print-hidden">{% trans 'Home' %}</a>
+    <a href="{% url 'dashboard' %}" class="ContentHeader-back">{% trans 'Home' %}</a>
     <h1 class="heading-xlarge">{% trans 'Credits in progress' %}</h1>
   </header>
 
@@ -16,7 +16,7 @@
 
     {% if object_list %}
 
-      <div class="help-box print-hidden">
+      <div class="help-box">
         <p>{% trans 'Here you can see who is currently processing the credits in your team. You can release them if you need to take over their work.' %}</p>
 
         <div class="help-box-title" aria-controls="help-box-contents" aria-expanded="true" role="heading">
