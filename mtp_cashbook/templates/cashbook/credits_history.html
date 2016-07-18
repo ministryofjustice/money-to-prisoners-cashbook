@@ -6,11 +6,11 @@
 
 {% block inner_content %}
   <header class="ContentHeader">
-    <a href="{% url 'dashboard' %}" class="ContentHeader-back print-hidden">{% trans 'Home' %}</a>
+    <a href="{% url 'dashboard' %}" class="ContentHeader-back">{% trans 'Home' %}</a>
     <h1 class="heading-large">{% trans 'Credit history' %}</h1>
   </header>
 
-  <div class="help-box print-hidden">
+  <div class="help-box">
     <p>{% trans 'Below you’ll find all the credits listed to date. You can also use the search to find specific credits.' %}</p>
 
     <div class="help-box-title" aria-controls="help-box-contents" aria-expanded="true" role="heading">
@@ -29,7 +29,7 @@
 
   {% include "mtp_common/includes/message_box.html" %}
 
-  <form method="get" class="print-hidden HistorySearch" action="">
+  <form method="get" class="HistorySearch" action="">
     {% include 'mtp_common/forms/error-summary.html' with form=form only %}
 
     <div class="form-inputs">
@@ -113,7 +113,7 @@
       {% endfor %}
 
       {% if page_range %}
-        <ul class="Pagination print-hidden">
+        <ul class="Pagination">
           {% if previous_page %}
             <li><a href="{% url_with_query_param request 'page' previous_page %}">{% trans 'Previous' %}<span class="screenreader-only"> {% trans 'page' %}</span></a></li>
           {% endif %}
@@ -127,7 +127,7 @@
         <p class="Pagination-print-description">{% blocktrans with page=current_page pages=page_count %}Page {{ page }} of {{ pages }}.{% endblocktrans %}</p>
       {% endif %}
 
-      <p><a href="#print-dialog" class="js-Dialog print-hidden">{% trans 'Print this page of credits' %}</a></p>
+      <p><a href="#print-dialog" class="js-Dialog">{% trans 'Print this page of credits' %}</a></p>
       {% include 'cashbook/includes/print_dialog.html' %}
 
     {% else %}
