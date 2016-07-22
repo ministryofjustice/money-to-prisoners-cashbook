@@ -1,0 +1,13 @@
+{% load i18n %}
+{% load static %}
+
+<section class="training-section">
+  <div class="training-section--image">
+    <img src="{% static 'images/service-overview--day-4.png' %}"
+         srcset="{% static 'images/service-overview--day-4@2x.png' %} 2x"
+         alt="{% trans 'NOMS security staff check for errors and criminal activity' %}" />
+  </div>
+  <div class="training-section--text">
+    <p>{% trans 'NOMS security staff check for errors and criminal activity in the security dashboard tool in NOMS Ops.' %}</p>
+  </div>
+</section>

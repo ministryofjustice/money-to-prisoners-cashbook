@@ -1,0 +1,32 @@
+{% load i18n %}
+{% load static %}
+
+<section class="training-section">
+  <h1 class="heading-small">{% trans 'How to use the digital cashbook' %}</h1>
+  <p>{% trans 'There are 3 parts to the digital cashbook:' %}</p>
+  <ul class="list list-bullet">
+    <li>{% trans 'New credits – where you go to process credits in NOMIS' %}</li>
+    <li>{% trans 'History – where you view all credits processed' %}</li>
+    <li>{% trans 'In progress – where you view credits currently being processed by other members of your team' %}</li>
+  </ul>
+  <p>{% trans '‘Help’ text to remind you how to use the digital cashbook is available in each section.' %}</p>
+</section>
+
+<section class="training-section">
+  <div class="training-section--image">
+    <img src="{% static 'images/training--new.png' %}"
+         srcset="{% static 'images/training--new@2x.png' %} 2x"
+         alt="{% trans 'New credits screen' %}" />
+  </div>
+  <div class="training-section--text">
+    <p>{% trans '<strong>New credits</strong> are those ready to be processed in NOMIS.' %}</p>
+    <p>{% trans 'To process a new credit:' %}</p>
+    <ol class="list list-number">
+      <li>{% trans 'Cross-reference the prisoner location and data reports from NOMS HQ to confirm the prisoner details are correct and the prisoner is still in this prison' %}</li>
+      <li>{% trans 'Copy and paste the prisoner number from the digital cashbook into the NOMIS database - you don’t need to use a reference but remember to select the ‘Misc Receipt - Private Cash’ category as Credit Type' %}</li>
+      <li>{% trans 'The cash will appear as CREDITED and the prisoner will get their money' %}</li>
+      <li>{% trans 'Tick off the credits you’ve entered in NOMIS (or ‘select all’) and click ‘Done’' %}</li>
+      <li>{% trans 'Print any pages, if necessary' %}</li>
+    </ol>
+  </div>
+</section>

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block inner_content %}
+  <header class="ContentHeader">
+    <a href="{% url 'dashboard' %}" class="ContentHeader-back">{% trans 'Home' %}</a>
+    <h1 class="heading-large">{{ title }}</h1>
+  </header>
+
+  {% include 'mtp_common/includes/message_box.html' %}
+
+  <ul class="training-navigation">
+    {% for page in pages %}
+      <li class="training-navigation--item {% if page.page == view.kwargs.page %}training-navigation--item-active{% endif %}">
+        <a href="{% url view.url_name page=page.page %}">{{ page.title }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+
+
+  {% include page_template %}
+
+
+  <nav class="pagination" role="navigation" aria-label="Pagination">
+    <ul class="group">
+      {% if prev_page %}
+        <li class="previous">
+          <a title="Navigate to previous part" rel="prev" href="{% url view.url_name page=prev_page.page %}">
+            <span class="pagination-label">{% trans 'Previous' %}</span>
+            <span class="pagination-part-title">{{ prev_page.title }}</span>
+          </a>
+        </li>
+      {% endif %}
+
+      {% if next_page %}
+        <li class="next">
+          <a title="Navigate to next part" rel="next" href="{% url view.url_name page=next_page.page %}">
+            <span class="pagination-label">{% trans 'Next' %}</span>
+            <span class="pagination-part-title">{{ next_page.title }}</span>
+          </a>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
+
+{% endblock %}

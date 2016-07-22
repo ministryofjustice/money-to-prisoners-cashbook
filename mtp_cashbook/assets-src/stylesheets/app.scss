@@ -5,9 +5,12 @@ $images-dir: '/static/images/';
 @import 'mtp';
 
 // Page specific styles
+@import 'views/dashboard';
 @import 'views/batch';
 @import 'views/history';
 @import 'views/locked';
+@import 'views/training';
+@import 'views/pagination';
 
 // app-specific
 .help-box div { width: 65% }

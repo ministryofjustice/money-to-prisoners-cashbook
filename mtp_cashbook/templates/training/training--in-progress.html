@@ -1,0 +1,23 @@
+{% load i18n %}
+{% load static %}
+
+<section class="training-section">
+  <div class="training-section--image">
+    <img src="{% static 'images/training--in-progress.png' %}"
+         srcset="{% static 'images/training--in-progress@2x.png' %} 2x"
+         alt="{% trans 'In progress screen' %}" />
+  </div>
+  <div class="training-section--text">
+    <p>
+      {% trans 'Use this page to see who is currently processing which credits in your team.' %}
+      {% trans 'If you need to take over another colleague’s work, you can release what they’ve already done.' %}
+    </p>
+    <p>{% trans 'To release credits:' %}</p>
+    <ol class="list list-number">
+      <li>{% trans 'Find your team member under ‘staff name’' %}</li>
+      <li>{% trans 'Decide which credits you need to release to work on, then ‘Select’ the box at the end of that row' %}</li>
+      <li>{% trans 'Click ‘Done’ to free up those credits' %}</li>
+      <li>{% trans 'You can ‘Select all’ if you want to release several colleague’s work, then click ‘Done’ as before' %}</li>
+    </ol>
+  </div>
+</section>

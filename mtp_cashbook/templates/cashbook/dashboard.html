@@ -34,13 +34,6 @@
       </a>
     </li>
 
-    <li>
-      <a href="{% url 'credit-history' %}">
-        <h2>{% trans 'History' %}</h2>
-        <p>{% trans 'Credits processed by the team' %}</p>
-      </a>
-    </li>
-
     <li class="SummaryBoxes--variant-2">
       <a href="{% url 'credits-locked' %}">
         <h2>{% trans 'In progress' %}</h2>
@@ -51,6 +44,19 @@
         </p>
       </a>
     </li>
+
+    <li>
+      <a href="{% url 'credit-history' %}">
+        <h2>{% trans 'History' %}</h2>
+        <p>{% trans 'Credits processed by the team' %}</p>
+      </a>
+    </li>
   </ul>
+
+  <div class="dashboard-training">
+    <h2 class="heading-large">{% trans 'Training' %}</h2>
+    <p><a href="{% url 'service-overview' page='day-1' %}">{% trans 'Service overview' %}</a></p>
+    <p><a href="{% url 'training' page='new' %}">{% trans 'How to use the digital cashbook' %}</a></p>
+  </div>
 
 {% endblock %}

@@ -1,0 +1,24 @@
+{% load i18n %}
+{% load static %}
+
+<section class="training-section">
+  <div class="training-section--image">
+    <img src="{% static 'images/training--history.png' %}"
+         srcset="{% static 'images/training--history@2x.png' %} 2x"
+         alt="{% trans 'History screen' %}" />
+  </div>
+  <div class="training-section--text">
+    <p>{% trans 'Find all credits processed by the team (to date) in this section.' %}</p>
+    <ol class="list list-number">
+      <li>{% trans 'To find a credit, enter as much information as you have eg, the prisoner name, prisoner number, sender name or amount' %}</li>
+      <li>{% trans 'Click on ‘Search’' %}</li>
+      <li>{% trans 'To bring up the whole history, don’t enter any search dates, just click on ‘Search’' %}</li>
+      <li>{% trans 'Enter start and finish dates, if you have a specific search, then click on ‘Search’' %}</li>
+      <li>{% trans 'Click on ‘Expand’ to see a list of credits for that day, then click on ‘Collapse’ to go back' %}</li>
+      <li>{% trans 'Credits in ‘Uncredited’ haven’t been processed yet' %}</li>
+      <li>{% trans 'Credits in ‘Unknown sender (uncredited)’ have not been credited due to an anonymous sender' %}</li>
+      <li>{% trans 'There may be several pages of credits' %}</li>
+      <li>{% trans 'Print any pages, if necessary' %}</li>
+    </ol>
+  </div>
+</section>

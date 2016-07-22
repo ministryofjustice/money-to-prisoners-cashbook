@@ -1,0 +1,16 @@
+{% load i18n %}
+{% load static %}
+
+<section class="training-section">
+  <div class="training-section--image">
+    <img src="{% static 'images/service-overview--day-3.png' %}"
+         srcset="{% static 'images/service-overview--day-3@2x.png' %} 2x"
+         alt="{% trans 'NOMS cashiers check reports' %}" />
+  </div>
+  <div class="training-section--text">
+    <p>
+      {% trans 'NOMS cashiers in each prison check reports from Phoenix and P-NOMIS and makes sure they reconcile.' %}
+      {% trans 'If errors are found, they will check with credit history in the Digital cashbook.' %}
+    </p>
+  </div>
+</section>

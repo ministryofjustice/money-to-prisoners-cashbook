@@ -1,0 +1,69 @@
+from django.contrib.auth.decorators import login_required
+from django.http import Http404
+from django.shortcuts import redirect
+from django.utils.decorators import method_decorator
+from django.utils.translation import gettext_lazy as _
+from django.views.generic import TemplateView
+
+
+@method_decorator(login_required, name='dispatch')
+class Training(TemplateView):
+    template_name = 'training/page.html'
+    url_name = 'training'
+    pages = [
+        {'page': 'new',
+         'title': _('New credits')},
+        {'page': 'in-progress',
+         'title': _('In progress')},
+        {'page': 'history',
+         'title': _('History')},
+    ]
+    page_set = {page['page'] for page in pages}
+
+    def get(self, request, *args, **kwargs):
+        page = kwargs['page']
+        if not page:
+            return redirect(self.url_name, page=self.pages[0]['page'])
+        if page not in self.page_set:
+            raise Http404('Training page %s not found' % page)
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        kwargs = super().get_context_data(**kwargs)
+
+        current_page = kwargs['page']
+        prev_page = None
+        next_page = None
+        for index, page in enumerate(self.pages):
+            if page['page'] != current_page:
+                continue
+            if index > 0:
+                prev_page = self.pages[index - 1]
+            if index < len(self.pages) - 1:
+                next_page = self.pages[index + 1]
+            break
+
+        kwargs.update({
+            'prev_page': prev_page,
+            'next_page': next_page,
+            'pages': self.pages,
+            'page_template': 'training/%s--%s.html' % (self.url_name, current_page),
+        })
+        return kwargs
+
+
+class ServiceOverview(Training):
+    url_name = 'service-overview'
+    pages = [
+        {'page': 'day-1',
+         'title': _('Day 1')},
+        {'page': 'day-2',
+         'title': _('Day 2')},
+        {'page': 'day-3',
+         'title': _('Day 3')},
+        {'page': 'day-4',
+         'title': _('Day 4')},
+        {'page': 'day-5',
+         'title': _('Day 5')},
+    ]
+    page_set = {page['page'] for page in pages}
