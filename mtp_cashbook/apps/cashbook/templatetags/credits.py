@@ -53,13 +53,13 @@ def regroup_credits(credits):
         return 'uncredited'
 
     def get_status_order(c):
-        if not c['resolution'] == 'credited':
-            return 0
-        if not c['resolution'] == 'refunded':
-            return 1
-        if c['anonymous']:
+        if c['resolution'] == 'credited':
+            return 3
+        if c['resolution'] == 'refunded':
             return 2
-        return 3
+        if c['anonymous']:
+            return 1
+        return 0
 
     grouped_credits = OrderedDict()
     groups = groupby(credits, key=lambda c: c['received_at'].date() if c['received_at'] else None)
