@@ -70,7 +70,7 @@
               {% elif credit_status == 'refunded' %}
                 {% trans 'Refunded' %}
               {% elif credit_status == 'anonymous' %}
-                {% trans 'Anonymous' %}
+                {% trans 'Unknown sender (uncredited)' %}
               {% else %}
                 {% trans 'Uncredited' %}
               {% endif %}
