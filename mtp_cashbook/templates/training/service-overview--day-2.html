@@ -5,10 +5,10 @@
   <div class="training-section--image">
     <img src="{% static 'images/service-overview--day-2a.png' %}"
          srcset="{% static 'images/service-overview--day-2a@2x.png' %} 2x"
-         alt="{% trans 'Bank statement is received' %}" />
+         alt="{% trans 'A bank statement is received' %}" />
   </div>
   <div class="training-section--text">
-    <p>{% trans 'Bank statement is automatically received from NOMS bank account.' %}</p>
+    <p>{% trans 'A bank statement is automatically received from NOMS bank account at 2.30am.' %}</p>
   </div>
 </section>
 
@@ -19,13 +19,8 @@
          alt="{% trans 'Prisoner location report is uploaded' %}" />
   </div>
   <div class="training-section--text">
-    <p>
-      {% trans 'NOMS HQ upload the prisoner location report in the NOMS Ops service.' %}
-    </p>
-    <p>
-      {% trans 'The two reports are cross-referenced.' %}
-      {% trans 'If a payment’s reference does not match a prisoner or is from an anonymous sender, it is marked for refund.' %}
-    </p>
+    <p>{% trans 'NOMS HQ upload the prisoner location report to the system before 9am.' %}</p>
+    <p>{% trans 'If a payment reference doesn’t match a prisoner or is from an unknown sender, it’s marked for refund.' %}</p>
   </div>
 </section>
 
@@ -36,11 +31,8 @@
          alt="{% trans 'SSCL staff download reports' %}" />
   </div>
   <div class="training-section--text">
-    <p>{% trans 'The SSCL cash management team does reconciliation and uploads details into Phoenix.' %}</p>
-    <p>
-      {% trans 'The SSCL payment team get the refund report and upload the details into Access Pay (their software tool).' %}
-      {% trans 'This instructs the NOMS bank account to send out money.' %}
-    </p>
+    <p>{% trans 'The SSCL cash management team performs reconciliation.' %}</p>
+    <p>{% trans 'The SSCL payment team processes refunds.' %}</p>
   </div>
 </section>
 
@@ -51,9 +43,7 @@
          alt="{% trans 'Prison clerks credit valid payments in P-NOMIS' %}" />
   </div>
   <div class="training-section--text">
-    <p>
-      {% trans 'Prison clerks credit valid payments in P-NOMIS.' %}
-      {% trans 'The prisoner is now credited with the £20.' %}
-    </p>
+    <p>{% trans 'Prison clerks credit valid payments in P-NOMIS.' %}</p>
+    <p>{% trans 'The prisoner is now credited with the £20.' %}</p>
   </div>
 </section>

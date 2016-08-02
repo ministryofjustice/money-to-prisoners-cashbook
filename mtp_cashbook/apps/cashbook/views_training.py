@@ -11,12 +11,14 @@ class Training(TemplateView):
     template_name = 'training/page.html'
     url_name = 'training'
     pages = [
+        {'page': 'intro',
+         'title': _('Introduction')},
         {'page': 'new',
          'title': _('New credits')},
         {'page': 'in-progress',
          'title': _('In progress')},
         {'page': 'history',
-         'title': _('History')},
+         'title': _('Credit history')},
     ]
     page_set = {page['page'] for page in pages}
 

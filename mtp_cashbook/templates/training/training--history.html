@@ -3,22 +3,41 @@
 
 <section class="training-section">
   <div class="training-section--image">
-    <img src="{% static 'images/training--history.png' %}"
-         srcset="{% static 'images/training--history@2x.png' %} 2x"
-         alt="{% trans 'History screen' %}" />
+    <img src="{% static 'images/training--history-a.png' %}"
+         srcset="{% static 'images/training--history-a@2x.png' %} 2x"
+         alt="{% trans 'Credit history screen' %}" />
   </div>
   <div class="training-section--text">
-    <p>{% trans 'Find all credits processed by the team (to date) in this section.' %}</p>
-    <ol class="list list-number">
-      <li>{% trans 'To find a credit, enter as much information as you have eg, the prisoner name, prisoner number, sender name or amount' %}</li>
-      <li>{% trans 'Click on ‘Search’' %}</li>
-      <li>{% trans 'To bring up the whole history, don’t enter any search dates, just click on ‘Search’' %}</li>
-      <li>{% trans 'Enter start and finish dates, if you have a specific search, then click on ‘Search’' %}</li>
-      <li>{% trans 'Click on ‘Expand’ to see a list of credits for that day, then click on ‘Collapse’ to go back' %}</li>
-      <li>{% trans 'Credits in ‘Uncredited’ haven’t been processed yet' %}</li>
-      <li>{% trans 'Credits in ‘Unknown sender (uncredited)’ have not been credited due to an anonymous sender' %}</li>
-      <li>{% trans 'There may be several pages of credits' %}</li>
-      <li>{% trans 'Print any pages, if necessary' %}</li>
-    </ol>
+    <p>
+      {% trans 'Use the <strong>credit history</strong> page to answer queries.' %}
+      {% trans 'You can find all credits processed by the team in this section.' %}
+    </p>
+    <p>{% trans 'To find a credit, enter as much information as you have – for example, the prisoner name, prisoner number, sender name or amount.' %}</p>
+    <p>
+      {% trans 'Use the ‘From’ and ‘To’ boxes to filter credits received during a specific time.' %}
+      {% trans 'Leave the ‘To’ field blank if you want to  search from a specific date in the past right up to today’s date.' %}
+    </p>
+    <p>{% trans 'Leave the filters blank to show all credits.' %}</p>
+    <p>{% trans 'Then click on ‘Search’.' %}</p>
+  </div>
+</section>
+
+<section class="training-section">
+  <div class="training-section--image">
+    <img src="{% static 'images/training--history-b.png' %}"
+         srcset="{% static 'images/training--history-b@2x.png' %} 2x"
+         alt="{% trans 'Credit history screen' %}" />
+  </div>
+  <div class="training-section--text">
+    <p>{% trans 'Credits appear grouped by the date they were received.' %}</p>
+    <p>{% trans 'They appear in chronological order with the most recent first.' %}</p>
+    <p>{% trans 'For each date, you’ll find credits that have been processed in P-NOMIS in a section called ‘Credited’.' %}</p>
+    <p>{% trans 'Credits waiting to be processed appear in the section called ‘Uncredited’.' %}</p>
+    <p>
+      {% trans 'Unknown sender credits are those where we don’t have complete sender information but we could match them to a prisoner in your prison.' %}
+      {% trans 'They can’t be credited to prisoners so the senders will have to reclaim them.' %}
+      {% trans 'You’ll see this in this section so you can answer queries from senders and prisoners.' %}
+    </p>
+    <p>{% trans 'There may be several pages of credits so if you’re printing, make sure you print all the pages you need.' %}</p>
   </div>
 </section>

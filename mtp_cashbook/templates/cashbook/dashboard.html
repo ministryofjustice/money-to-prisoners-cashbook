@@ -55,8 +55,16 @@
 
   <div class="dashboard-training">
     <h2 class="heading-large">{% trans 'Training' %}</h2>
-    <p><a href="{% url 'service-overview' page='day-1' %}">{% trans 'Service overview' %}</a></p>
-    <p><a href="{% url 'training' page='new' %}">{% trans 'How to use the digital cashbook' %}</a></p>
+    <p>
+      <a href="{% url 'service-overview' page='day-1' %}">
+        {% trans 'Overview' %} – {% trans 'sending money to prisoners online' %}
+      </a>
+    </p>
+    <p>
+      <a href="{% url 'training' page='intro' %}">
+        {% trans 'How to use the digital cashbook' %}
+      </a>
+    </p>
   </div>
 
 {% endblock %}
