@@ -12,7 +12,8 @@ RUN add-apt-repository -y ppa:chris-lea/node.js
 RUN apt-get update && \
     apt-get install -y \
         build-essential git python3-all python3-all-dev python3-setuptools \
-        curl libpq-dev ntp libpcre3-dev nodejs python3-pip python-pip
+        curl libpq-dev ntp libpcre3-dev nodejs python3-pip python-pip libfontconfig \
+        libfreetype6
 
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 10
 

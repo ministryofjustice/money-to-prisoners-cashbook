@@ -17,6 +17,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "phantomjs": "^1.9.19"
+    "phantomjs": "^2.1.7"
   }
 }
