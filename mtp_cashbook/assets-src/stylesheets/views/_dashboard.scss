@@ -2,6 +2,25 @@
   max-width: none;
 }
 
+li.SummaryBoxes--new-credits {
+  background: $green-2;
+  & h2 {
+    background: $green-1;
+  }
+}
+li.SummaryBoxes--history {
+  background:$light-blue-25;
+  & h2 {
+    background: $light-blue;
+  }
+}
+li.SummaryBoxes--locked {
+  background: $orange-25;
+  & h2 {
+    background: $orange;
+  }
+}
+
 .dashboard-training {
   clear: both;
   border-top: 1px solid $border-color;
