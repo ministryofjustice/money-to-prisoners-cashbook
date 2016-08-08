@@ -1,27 +1,34 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load i18n %}
+{% load training %}
 
 {% block inner_content %}
   <header class="ContentHeader">
     <a href="{% url 'dashboard' %}" class="ContentHeader-back">{% trans 'Home' %}</a>
-    <h1 class="heading-large">{{ title }}</h1>
+    <h1 class="heading-large heading-training">{{ view.training_title }}</h1>
   </header>
 
   {% include 'mtp_common/includes/message_box.html' %}
 
-  <ul class="training-navigation">
+  <ul class="training-navigation print-hidden">
     {% for page in pages %}
       <li class="training-navigation--item {% if page.page == view.kwargs.page %}training-navigation--item-active{% endif %}">
         <a href="{% url view.url_name page=page.page %}">{{ page.title }}</a>
       </li>
     {% endfor %}
+    <li class="training-navigation--item training-navigation--print">
+      <a href="#">{% trans 'Print this training guide' %}</a>
+    </li>
   </ul>
 
+  {% for page in pages %}
+    <div class="training-content {% if page.page != current_page %}training-content--print-only{% endif %}">
+      {% get_training_page_template page.page as page_template %}
+      {% include page_template %}
+    </div>
+  {% endfor %}
 
-  {% include page_template %}
-
-
-  <nav class="pagination" role="navigation" aria-label="Pagination">
+  <nav class="pagination print-hidden" role="navigation" aria-label="Pagination">
     <ul class="group">
       {% if prev_page %}
         <li class="previous">

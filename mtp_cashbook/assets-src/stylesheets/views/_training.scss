@@ -46,6 +46,41 @@
       }
     }
   }
+
+  &.training-navigation--print {
+    display: none;
+    float: right;
+
+    .js-enabled & {
+      display: block;
+    }
+
+    a {
+      padding-right: 0;
+      font-weight: normal;
+
+      &:focus {
+        background: none;
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.heading-training {
+  display: none;
+
+  @media print {
+    display: block;
+  }
+}
+
+.training-content--print-only {
+  display: none;
+
+  @media print {
+    display: block;
+  }
 }
 
 .training-section {

@@ -9,6 +9,7 @@ from django.views.generic import TemplateView
 @method_decorator(login_required, name='dispatch')
 class Training(TemplateView):
     template_name = 'training/page.html'
+    training_title = _('How to use the digital cashbook')
     url_name = 'training'
     pages = [
         {'page': 'intro',
@@ -46,15 +47,16 @@ class Training(TemplateView):
             break
 
         kwargs.update({
+            'current_page': current_page,
             'prev_page': prev_page,
             'next_page': next_page,
             'pages': self.pages,
-            'page_template': 'training/%s--%s.html' % (self.url_name, current_page),
         })
         return kwargs
 
 
 class ServiceOverview(Training):
+    training_title = _('Overview – sending money to prisoners online')
     url_name = 'service-overview'
     pages = [
         {'page': 'day-1',
