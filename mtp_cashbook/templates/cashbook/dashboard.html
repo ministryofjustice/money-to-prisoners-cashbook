@@ -74,6 +74,11 @@
         {% trans 'How to use the digital cashbook' %}
       </a>
     </p>
+
+    {% if ENVIRONMENT != 'prod' %}
+      <br>
+      {% include 'training/survey-link.html' %}
+    {% endif %}
   </div>
 
 {% endblock %}
