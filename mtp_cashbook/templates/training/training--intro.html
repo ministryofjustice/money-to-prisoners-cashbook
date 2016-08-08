@@ -18,3 +18,13 @@
     <p>{% trans '‘Help’ text is available in each section.' %}</p>
   </div>
 </section>
+
+{% if ENVIRONMENT != 'prod' %}
+  <section class="training-section">
+    <p>
+      <strong>
+        {% trans 'Please note – the training site details on here aren’t real so don’t try to process any of this prisoner information in P-NOMIS.' %}
+      </strong>
+    </p>
+  </section>
+{% endif %}

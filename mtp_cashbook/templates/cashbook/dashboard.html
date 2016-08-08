@@ -8,6 +8,15 @@
 
   {% include "mtp_common/includes/message_box.html" %}
 
+  {% if ENVIRONMENT != 'prod' %}
+    <h1 class="heading-large">{% trans 'Digital cashbook' %} – {% trans 'training site' %}</h1>
+    <p>
+      {% trans 'Please try this site out – the credits and prisoners listed are not real.' %}
+    </p>
+  {% else %}
+    <h1 class="heading-large">{% trans 'Digital cashbook' %}</h1>
+  {% endif %}
+
   <div class="help-box">
     <div class="help-box-title" aria-controls="help-box-contents" aria-expanded="true" role="heading">
       <div></div><a href="#">{% trans 'Help' %}</a>
@@ -54,7 +63,7 @@
   </ul>
 
   <div class="dashboard-training">
-    <h2 class="heading-large">{% trans 'Training' %}</h2>
+    <h2 class="heading-large">{% trans 'Training materials' %}</h2>
     <p>
       <a href="{% url 'service-overview' page='day-1' %}">
         {% trans 'Overview' %} – {% trans 'sending money to prisoners online' %}
