@@ -7,21 +7,15 @@ from django.views.generic import TemplateView
 
 
 @method_decorator(login_required, name='dispatch')
-class Training(TemplateView):
+class MultiPageView(TemplateView):
     template_name = 'training/page.html'
-    training_title = _('How to use the digital cashbook')
-    url_name = 'training'
-    pages = [
-        {'page': 'intro',
-         'title': _('Introduction')},
-        {'page': 'new',
-         'title': _('New credits')},
-        {'page': 'in-progress',
-         'title': _('In progress')},
-        {'page': 'history',
-         'title': _('Credit history')},
-    ]
-    page_set = {page['page'] for page in pages}
+    training_title = NotImplemented
+    url_name = NotImplemented
+    pages = []
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.page_set = {page['page'] for page in self.pages}
 
     def get(self, request, *args, **kwargs):
         page = kwargs['page']
@@ -55,7 +49,22 @@ class Training(TemplateView):
         return kwargs
 
 
-class ServiceOverview(Training):
+class Training(MultiPageView):
+    training_title = _('How to use the digital cashbook')
+    url_name = 'training'
+    pages = [
+        {'page': 'intro',
+         'title': _('Introduction')},
+        {'page': 'new',
+         'title': _('New credits')},
+        {'page': 'in-progress',
+         'title': _('In progress')},
+        {'page': 'history',
+         'title': _('Credit history')},
+    ]
+
+
+class ServiceOverview(MultiPageView):
     training_title = _('Overview – sending money to prisoners online')
     url_name = 'service-overview'
     pages = [
@@ -70,4 +79,3 @@ class ServiceOverview(Training):
         {'page': 'day-5',
          'title': _('Day 5')},
     ]
-    page_set = {page['page'] for page in pages}
