@@ -64,21 +64,26 @@
 
   <div class="dashboard-training">
     <h2 class="heading-large">{% trans 'Training materials' %}</h2>
-    <p>
-      <a href="{% url 'service-overview' page='day-1' %}">
-        {% trans 'Overview – sending money to prisoners online' %}
-      </a>
-    </p>
-    <p>
-      <a href="{% url 'training' page='intro' %}">
-        {% trans 'How to use the digital cashbook' %}
-      </a>
-    </p>
+    <div class="grid-row">
+      <div class="column-one-half">
+        <p>
+          <a href="{% url 'service-overview' page='day-1' %}">
+            {% trans 'Overview – sending money to prisoners online' %}
+          </a>
+        </p>
+        <p>
+          <a href="{% url 'training' page='intro' %}">
+            {% trans 'How to use the digital cashbook' %}
+          </a>
+        </p>
+      </div>
+      <div class="column-one-half">
+        {% if ENVIRONMENT != 'prod' %}
+          {% include 'training/survey-link.html' %}
+        {% endif %}
+      </div>
+    </div>
 
-    {% if ENVIRONMENT != 'prod' %}
-      <br>
-      {% include 'training/survey-link.html' %}
-    {% endif %}
   </div>
 
 {% endblock %}

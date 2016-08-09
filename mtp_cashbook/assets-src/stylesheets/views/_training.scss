@@ -113,3 +113,12 @@
     }
   }
 }
+
+.survey-link-cta {
+  padding: 0.8em 0.5em;
+  background: $panel-colour;
+
+  &.important div.message {
+    width: 85%;
+  }
+}
