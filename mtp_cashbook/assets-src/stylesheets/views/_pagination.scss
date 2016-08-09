@@ -1,0 +1,120 @@
+.pagination {
+  display: block;
+  margin: 2em 0 0 0;
+  border-bottom: 1px solid $border-colour;
+
+  @media (max-width: 640px) {
+    & {
+      margin: 2em 0 0 0;
+    }
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+  }
+
+  li {
+    font-family: "nta", Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.14286;
+    font-weight: 400;
+    text-transform: none;
+    font-size-adjust: 0.5;
+    float: left;
+    list-style: none;
+    text-align: right;
+    margin: 0;
+    padding: 0;
+    width: 49%;
+
+    @media (min-width: 641px) {
+      & {
+        font-size: 16px;
+        line-height: 1.25;
+      }
+    }
+
+    a {
+      background-color: transparent;
+      display: block;
+      color: $link-colour;
+      text-decoration: none;
+
+      &:hover, &:active {
+        background-color: $highlight-colour;
+      }
+
+      .pagination-label {
+        font-family: "nta", Arial, sans-serif;
+        font-size: 20px;
+        line-height: 1.11111;
+        font-weight: 400;
+        text-transform: none;
+        font-size-adjust: 0.5;
+        margin-bottom: 0.1em;
+        display: block;
+
+        @media (min-width: 641px) {
+          & {
+            font-size: 27px;
+            line-height: 1.25;
+          }
+        }
+      }
+
+      .pagination-part-title {
+        text-decoration: underline
+      }
+    }
+
+    &.next {
+      float: right;
+      text-align: right;
+
+      a {
+        padding: 0.75em 3em 0.75em 0;
+
+        &:before {
+          background: transparent url(/static/images/arrow-sprite.png) no-repeat -102px -11px;
+          margin: -4px -32px 0 0;
+          display: block;
+          float: right;
+          width: 30px;
+          height: 38px;
+          content: " "
+        }
+      }
+    }
+
+    &.previous {
+      float: left;
+      text-align: left;
+
+      a {
+        padding: 0.75em 0 0.75em 3em;
+
+        &:before {
+          background: transparent url(/static/images/arrow-sprite.png) no-repeat -20px -11px;
+          margin: -4px 0 0 -32px;
+          display: block;
+          float: left;
+          width: 30px;
+          height: 38px;
+          content: " "
+        }
+      }
+    }
+
+    @media (max-width: 640px) {
+      &.previous, &.next {
+        float: none;
+        width: 100%
+      }
+
+      &.next a {
+        text-align: right
+      }
+    }
+  }
+}

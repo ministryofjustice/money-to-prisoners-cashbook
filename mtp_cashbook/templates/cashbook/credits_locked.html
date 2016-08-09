@@ -23,14 +23,13 @@
           <div></div><a href="#">{% trans 'Help' %}</a>
         </div>
         <div class="panel panel-border-narrow help-box-contents" id="help-box-contents">
-          {% blocktrans trimmed %}
-            <p>If you want to release credits:</p>
-            <ul>
-              <li>Find your team member under ‘staff name’</li>
-              <li>Select the box at the end of the row</li>
-              <li>Click ‘Release’ to free up their work</li>
-            </ul>
-          {% endblocktrans %}
+          <p>{% trans 'If you want to release credits:' %}</p>
+          <ul>
+            <li>{% trans 'Find your team member under ‘staff name’' %}</li>
+            <li>{% trans 'Select the box at the end of the row' %}</li>
+            <li>{% trans 'Click ‘Release’ to free up their work' %}</li>
+            <li><a href="{% url 'training' page='in-progress' %}">{% trans 'More information is available in the training section' %}</a></li>
+          </ul>
         </div>
       </div>
 

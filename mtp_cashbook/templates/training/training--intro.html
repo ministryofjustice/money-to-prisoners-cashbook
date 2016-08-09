@@ -1,0 +1,32 @@
+{% load i18n %}
+{% load static %}
+
+<h2 class="heading-large heading-training">{% trans 'Introduction' %}</h2>
+
+<section class="training-section">
+  <div class="training-section--image">
+    <img src="{% static 'images/training--intro.png' %}"
+         srcset="{% static 'images/training--intro@2x.png' %} 2x"
+         alt="{% trans 'Digital cashbook dashboard' %}" />
+  </div>
+  <div class="training-section--text">
+    <p>{% trans 'There are 3 parts to the digital cashbook:' %}</p>
+    <ul class="list list-bullet">
+      <li><a href="{% url 'training' page='new' %}">{% trans 'New credits' %}</a> – {% trans 'where you go to process credits in P-NOMIS' %}</li>
+      <li><a href="{% url 'training' page='in-progress' %}">{% trans 'In progress' %}</a> – {% trans 'where you view colleagues working on credits and can take over their work' %}</li>
+      <li><a href="{% url 'training' page='history' %}">{% trans 'Credit history' %}</a> – {% trans 'where you view all credits received' %}</li>
+    </ul>
+    <p>{% trans 'On the home page, click on one of the boxes to open that section.' %}</p>
+    <p>{% trans '‘Help’ text is available in each section.' %}</p>
+  </div>
+</section>
+
+{% if ENVIRONMENT != 'prod' %}
+  <section class="training-section">
+    <p>
+      <strong>
+        {% trans 'Please note – the training site details on here aren’t real so don’t try to process any of this prisoner information in P-NOMIS.' %}
+      </strong>
+    </p>
+  </section>
+{% endif %}

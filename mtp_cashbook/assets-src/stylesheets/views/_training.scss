@@ -1,0 +1,124 @@
+.training-navigation {
+  display: block;
+  list-style: none;
+  overflow: hidden;
+  border: 1px solid $border-colour;
+  border-left: none;
+  border-right: none;
+}
+
+.training-navigation--item {
+  display: block;
+  float: left;
+  background: $page-colour;
+
+  a {
+    display: block;
+    line-height: 2em;
+    padding: 0.6em 2em;
+    font-size: 0.8em;
+    font-weight: bold;
+    color: $text-colour;
+    text-decoration: none;
+
+    @media (max-width: 640px) {
+      & {
+        padding: 0.6em 1em;
+      }
+    }
+
+    &:focus {
+      outline: none;
+    }
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &.training-navigation--item-active {
+    background: $govuk-blue;
+
+    a {
+      color: $white;
+
+      &:focus {
+        color: $text-colour;
+      }
+    }
+  }
+
+  &.training-navigation--print {
+    display: none;
+    float: right;
+
+    .js-enabled & {
+      display: block;
+    }
+
+    a {
+      padding-right: 0;
+      font-weight: normal;
+
+      &:focus {
+        background: none;
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.heading-training {
+  display: none;
+
+  @media print {
+    display: block;
+  }
+}
+
+.training-content--print-only {
+  display: none;
+
+  @media print {
+    display: block;
+  }
+}
+
+.training-section {
+  margin: 4em 0;
+  clear: both;
+  overflow: hidden;
+
+  .training-section--image {
+    float: right;
+    border: 1px solid $border-color;
+
+    img {
+      max-width: 100%;
+    }
+  }
+  .training-section--text {
+    width: 22em;
+    margin-right: 1em;
+    float: left;
+  }
+
+  @media (max-width: 970px) {
+    .training-section--image {
+      float: left;
+    }
+    .training-section--text {
+      width: 100%;
+      margin-right: 0;
+      margin-top: 1em;
+    }
+  }
+}
+
+.survey-link-cta {
+  padding: 0.8em 0.5em;
+  background: $panel-colour;
+
+  &.important div.message {
+    width: 85%;
+  }
+}

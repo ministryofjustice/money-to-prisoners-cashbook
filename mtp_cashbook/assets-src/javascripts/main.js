@@ -18,4 +18,5 @@
   require('sticky-header').StickyHeader.init();
   require('running-total').RunningTotal.init();
   require('search-focus').SearchFocus.init();
+  require('training').Training.init();
 }());

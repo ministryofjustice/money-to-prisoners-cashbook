@@ -1,0 +1,61 @@
+{% load i18n %}
+{% load static %}
+
+<h2 class="heading-large heading-training">{% trans 'New credits' %}</h2>
+
+<section class="training-section">
+  <div class="training-section--image">
+    <img src="{% static 'images/training--new-a.png' %}"
+         srcset="{% static 'images/training--new-a@2x.png' %} 2x"
+         alt="{% trans 'New credits screen' %}" />
+  </div>
+  <div class="training-section--text">
+    <p>{% trans '<strong>New credits</strong> are those ready to be processed in P-NOMIS.' %}</p>
+    <p>{% trans 'You’ll see a list of credits you’re responsible for entering into P-NOMIS.' %}</p>
+  </div>
+</section>
+
+<section class="training-section">
+  <div class="training-section--image">
+    <img src="{% static 'images/training--new-b.png' %}"
+         srcset="{% static 'images/training--new-b@2x.png' %} 2x"
+         alt="{% trans 'New credits screen' %}" />
+  </div>
+  <div class="training-section--text">
+    <p>{% trans 'Open the ‘Receive trust funds’ form in P-NOMIS.' %}</p>
+    <p>{% trans 'Enter the control total in this form from the digital cashbook.' %}</p>
+    <p>{% trans 'Choose ‘Misc Receipt - Private Cash’ as the transaction type.' %}</p>
+  </div>
+</section>
+
+<section class="training-section">
+  <div class="training-section--image">
+    <img src="{% static 'images/training--new-c.png' %}"
+         srcset="{% static 'images/training--new-c@2x.png' %} 2x"
+         alt="{% trans 'New credits screen' %}" />
+  </div>
+  <div class="training-section--text">
+    <p>{% trans 'Enter or copy and paste the prisoner number from the digital cashbook into the P-NOMIS form.' %}</p>
+    <p>{% trans 'Enter the amount to be credited.' %}</p>
+    <p>{% trans 'You don’t need to use a reference number.' %}</p>
+    <p>{% trans 'Continue to process money received through the post in P-NOMIS as you currently do, using the ‘Money through the post’ transaction type.' %}</p>
+    <p>{% trans 'Also use the ‘Money through the post’ procedure if a prisoner has been transferred to another prison or released.' %}</p>
+    <p>{% trans 'Check the control total is correct in the P-NOMIS form and save it.' %}</p>
+  </div>
+</section>
+
+<section class="training-section">
+  <div class="training-section--image">
+    <img src="{% static 'images/training--new-d.png' %}"
+         srcset="{% static 'images/training--new-d@2x.png' %} 2x"
+         alt="{% trans 'New credits screen' %}" />
+  </div>
+  <div class="training-section--text">
+    <p>{% trans 'In the digital cashbook, tick off the credits you’ve entered in P-NOMIS or ‘select all’.' %}</p>
+    <p>{% trans 'Click ‘Done’ when you’ve saved the batch of credits in P-NOMIS.' %}</p>
+  </div>
+</section>
+
+<section class="training-section">
+  <p>{% trans 'There’s no auditing requirement to print out the list of credits from the digital cashbook, but you can choose the ‘Print’ option if it helps you with your work.' %}</p>
+</section>

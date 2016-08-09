@@ -7,17 +7,22 @@
   {% sentry_js %}
 {% endblock %}
 
-{% block page_title %}{% trans "Digital cashbook" %}{% endblock %}
+{% block page_title %}{% trans 'Digital cashbook' %}{% endblock %}
 
-{% block proposition %}{% trans "Digital cashbook" %}{% endblock %}
+{% block proposition %}
+  {% trans 'Digital cashbook' %}
+  {% if ENVIRONMENT != 'prod' %}
+    – {% trans 'TRAINING SITE' %}
+  {% endif %}
+{% endblock %}
 
 {% block user_menu %}
-<li>
-  <a href="{% url 'password_change' %}">{% trans "Change password" %}</a>
-</li>
-{% if perms.auth.change_user %}
-<li>
-  <a href="{% url 'list-users' %}">{% trans "Manage users" %}</a>
-</li>
-{% endif %}
+  <li>
+    <a href="{% url 'password_change' %}">{% trans 'Change password' %}</a>
+  </li>
+  {% if perms.auth.change_user %}
+    <li>
+      <a href="{% url 'list-users' %}">{% trans 'Manage users' %}</a>
+    </li>
+  {% endif %}
 {% endblock %}

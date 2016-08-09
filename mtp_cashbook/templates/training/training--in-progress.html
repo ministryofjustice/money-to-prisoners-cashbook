@@ -1,0 +1,21 @@
+{% load i18n %}
+{% load static %}
+
+<h2 class="heading-large heading-training">{% trans 'In progress' %}</h2>
+
+<section class="training-section">
+  <div class="training-section--image">
+    <img src="{% static 'images/training--in-progress.png' %}"
+         srcset="{% static 'images/training--in-progress@2x.png' %} 2x"
+         alt="{% trans 'In progress screen' %}" />
+  </div>
+  <div class="training-section--text">
+    <p>{% trans 'Use the <strong>in progress</strong> page to see who is currently processing credits in your team.' %}</p>
+    <p>{% trans 'If you need to take over another colleague’s work, this is how you can release their credits:' %}</p>
+    <ol class="list list-number">
+      <li>{% trans 'Find your team member under ‘staff name’ and tick ‘Release’' %}</li>
+      <li>{% trans 'Click ‘Done’ to free up those credits' %}</li>
+      <li>{% trans 'Make sure none of the credits have been started or saved on P-NOMIS' %}</li>
+    </ol>
+  </div>
+</section>

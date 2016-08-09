@@ -28,10 +28,10 @@ class DashboardView(TemplateView):
             })
             if form.is_valid():
                 form.save()
-        return super(DashboardView, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        context_data = super(DashboardView, self).get_context_data(**kwargs)
+        context_data = super().get_context_data(**kwargs)
 
         # new credits == available + my locked
         credit_client = self.client.credits
@@ -49,16 +49,16 @@ class CreditBatchListView(FormView):
     success_url = reverse_lazy('dashboard')
 
     def get_form_kwargs(self):
-        form_kwargs = super(CreditBatchListView, self).get_form_kwargs()
+        form_kwargs = super().get_form_kwargs()
         form_kwargs['request'] = self.request
         return form_kwargs
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
-        return super(CreditBatchListView, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        context = super(CreditBatchListView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
 
         credit_choices = context['form'].credit_choices
         context['object_list'] = credit_choices
@@ -98,27 +98,22 @@ class CreditBatchListView(FormView):
         else:
             self.success_url = reverse('dashboard-batch-complete')
 
-        return super(CreditBatchListView, self).form_valid(form)
+        return super().form_valid(form)
 
 
+@method_decorator(login_required, name='dispatch')
 class CreditsLockedView(FormView):
-
     form_class = DiscardLockedCreditsForm
     template_name = 'cashbook/credits_locked.html'
     success_url = reverse_lazy('dashboard')
 
     def get_form_kwargs(self):
-        form_kwargs = super(CreditsLockedView, self).get_form_kwargs()
+        form_kwargs = super().get_form_kwargs()
         form_kwargs['request'] = self.request
         return form_kwargs
 
-    @method_decorator(login_required)
-    def dispatch(self, request, *args, **kwargs):
-        return super(CreditsLockedView, self).dispatch(request, *args, **kwargs)
-
     def get_context_data(self, **kwargs):
-        context = super(CreditsLockedView, self).get_context_data(**kwargs)
-
+        context = super().get_context_data(**kwargs)
         context['object_list'] = context['form'].grouped_credit_choices
         return context
 
@@ -154,9 +149,10 @@ class CreditsLockedView(FormView):
         if discarded_count:
             self.success_url = reverse('dashboard-unlocked-payments')
 
-        return super(CreditsLockedView, self).form_valid(form)
+        return super().form_valid(form)
 
 
+@method_decorator(login_required, name='dispatch')
 class CreditHistoryView(FormView):
     form_class = FilterCreditHistoryForm
     template_name = 'cashbook/credits_history.html'
@@ -177,10 +173,6 @@ class CreditHistoryView(FormView):
             'initial': self.get_initial(),
             'prefix': self.get_prefix(),
         }
-
-    @method_decorator(login_required)
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         form = self.get_form()

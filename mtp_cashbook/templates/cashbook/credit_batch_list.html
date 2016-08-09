@@ -35,15 +35,14 @@
           <div></div><a href="#">{% trans 'Help' %}</a>
         </div>
         <div class="panel panel-border-narrow help-box-contents" id="help-box-contents">
-          {% blocktrans trimmed %}
-            <p>How to use the Digital Cashbook with NOMIS:</p>
-            <ul>
-              <li>You can credit in NOMIS in the usual way but remember to select the <strong>‘Misc Receipt - Private Cash’ category as Credit Type</strong></li>
-              <li>You don’t need to use a reference</li>
-              <li>In the Digital Cashbook below, tick off the credits you’ve entered in NOMIS and click ‘Done’</li>
-              <li>You might find it easier to copy and paste the prisoner number from the Digital Cashbook into NOMIS</li>
-            </ul>
-         {% endblocktrans %}
+          <p>{% trans 'How to use the Digital Cashbook with NOMIS:' %}</p>
+          <ul>
+            <li>{% trans 'You can credit in NOMIS in the usual way but remember to select the <strong>‘Misc Receipt - Private Cash’ category as Credit Type</strong>' %}</li>
+            <li>{% trans 'You don’t need to use a reference' %}</li>
+            <li>{% trans 'In the Digital Cashbook below, tick off the credits you’ve entered in NOMIS and click ‘Done’' %}</li>
+            <li>{% trans 'You might find it easier to copy and paste the prisoner number from the Digital Cashbook into NOMIS' %}</li>
+            <li><a href="{% url 'training' page='new' %}">{% trans 'More information is available in the training section' %}</a></li>
+          </ul>
        </div>
       </div>
 

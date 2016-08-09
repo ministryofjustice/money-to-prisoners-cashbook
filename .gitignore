@@ -1,7 +1,7 @@
 *.pyc
 include/
 lib/
-static/
+/static/
 media/
 .build
 
@@ -13,7 +13,7 @@ media/
 *.sublime-project
 
 # Virtual env
-venv/
+/venv/
 
 # Mac crap
 *.DS_Store
@@ -26,7 +26,7 @@ node_modules
 npm-debug.log
 
 # App assets
-mtp_cashbook/assets/
+/mtp_cashbook/assets/
 
 # Docker make targets
 .dev_django_container

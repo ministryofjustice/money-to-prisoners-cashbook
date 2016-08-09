@@ -2,6 +2,7 @@ from django.conf.urls import url
 
 from .views import CreditBatchListView, CreditsLockedView, \
     CreditHistoryView, DashboardView
+from .views_training import ServiceOverview, Training
 
 urlpatterns = [
     url(r'^$', DashboardView.as_view(), name='dashboard'),
@@ -19,4 +20,7 @@ urlpatterns = [
     url(r'^batch/$', CreditBatchListView.as_view(), name='credit-list'),
 
     url(r'^history/$', CreditHistoryView.as_view(), name='credit-history'),
+
+    url(r'^service-overview/(?:(?P<page>[^/]+)/)?$', ServiceOverview.as_view(), name='service-overview'),
+    url(r'^training/(?:(?P<page>[^/]+)/)?$', Training.as_view(), name='training'),
 ]

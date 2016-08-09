@@ -1,0 +1,51 @@
+{% load i18n %}
+{% load static %}
+
+<h2 class="heading-large heading-training">{% trans 'Day 2' %}</h2>
+
+<section class="training-section">
+  <div class="training-section--image">
+    <img src="{% static 'images/service-overview--day-2a.png' %}"
+         srcset="{% static 'images/service-overview--day-2a@2x.png' %} 2x"
+         alt="{% trans 'A bank statement is received' %}" />
+  </div>
+  <div class="training-section--text">
+    <p>{% trans 'A bank statement is automatically received from NOMS bank account at 2.30am.' %}</p>
+  </div>
+</section>
+
+<section class="training-section">
+  <div class="training-section--image">
+    <img src="{% static 'images/service-overview--day-2b.png' %}"
+         srcset="{% static 'images/service-overview--day-2b@2x.png' %} 2x"
+         alt="{% trans 'Prisoner location report is uploaded' %}" />
+  </div>
+  <div class="training-section--text">
+    <p>{% trans 'NOMS HQ upload the prisoner location report to the system before 9am.' %}</p>
+    <p>{% trans 'If a payment reference doesn’t match a prisoner or is from an unknown sender, it’s marked for refund.' %}</p>
+  </div>
+</section>
+
+<section class="training-section">
+  <div class="training-section--image">
+    <img src="{% static 'images/service-overview--day-2c.png' %}"
+         srcset="{% static 'images/service-overview--day-2c@2x.png' %} 2x"
+         alt="{% trans 'SSCL staff download reports' %}" />
+  </div>
+  <div class="training-section--text">
+    <p>{% trans 'The SSCL cash management team performs reconciliation.' %}</p>
+    <p>{% trans 'The SSCL payment team processes refunds.' %}</p>
+  </div>
+</section>
+
+<section class="training-section">
+  <div class="training-section--image">
+    <img src="{% static 'images/service-overview--day-2d.png' %}"
+         srcset="{% static 'images/service-overview--day-2d@2x.png' %} 2x"
+         alt="{% trans 'Prison clerks credit valid payments in P-NOMIS' %}" />
+  </div>
+  <div class="training-section--text">
+    <p>{% trans 'Prison clerks credit valid payments in P-NOMIS.' %}</p>
+    <p>{% trans 'The prisoner is now credited with the £20.' %}</p>
+  </div>
+</section>
