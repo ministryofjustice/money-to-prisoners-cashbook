@@ -8,13 +8,9 @@
 
   {% include "mtp_common/includes/message_box.html" %}
 
+  <h1 class="heading-large">{% trans 'Digital cashbook' %}</h1>
   {% if ENVIRONMENT != 'prod' %}
-    <h1 class="heading-large">{% trans 'Digital cashbook' %} – {% trans 'training site' %}</h1>
-    <p>
-      {% trans 'Please try this site out – the credits and prisoners listed are not real.' %}
-    </p>
-  {% else %}
-    <h1 class="heading-large">{% trans 'Digital cashbook' %}</h1>
+    <p>{% trans 'Please try this site out – the credits and prisoners listed are not real.' %}</p>
   {% endif %}
 
   <div class="help-box">
