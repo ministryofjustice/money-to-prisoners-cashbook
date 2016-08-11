@@ -57,10 +57,10 @@ class Training(MultiPageView):
          'title': _('Introduction')},
         {'page': 'new',
          'title': _('New credits')},
-        {'page': 'in-progress',
-         'title': _('In progress')},
         {'page': 'history',
          'title': _('Credit history')},
+        {'page': 'in-progress',
+         'title': _('In progress')},
     ]
 
 
