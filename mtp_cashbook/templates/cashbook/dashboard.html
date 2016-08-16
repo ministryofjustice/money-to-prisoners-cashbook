@@ -10,7 +10,10 @@
 
   <h1 class="heading-large">{% trans 'Digital cashbook' %}</h1>
   {% if ENVIRONMENT != 'prod' %}
-    <p>{% trans 'Please try this site out – the credits and prisoners listed are not real. All data on the digital cashbook training site will be reset every hour, on the hour.' %}</p>
+    <p>
+      {% trans 'Please try out this site. The credits and prisoners listed are not real.' %}
+      {% trans 'All data on the digital cashbook training site will be reset every hour, on the hour.' %}
+    </p>
   {% endif %}
 
   <div class="help-box">
@@ -27,36 +30,30 @@
     </div>
   </div>
 
-  <ul class="SummaryBoxes">
-    <li class="SummaryBoxes--new-credits">
-      <a href="{% url 'credit-list' %}">
-        <h2>{% trans 'New' %}</h2>
-        <p>
-          {% blocktrans trimmed with payments_count=new_credits %}
-            <strong>{{ payments_count }}</strong> Credits to process
-          {% endblocktrans %}
-        </p>
-      </a>
-    </li>
-
-    <li class="SummaryBoxes--history">
-      <a href="{% url 'credit-history' %}">
-        <h2>{% trans 'History' %}</h2>
-        <p>{% trans 'Credits processed by the team' %}</p>
-      </a>
-    </li>
-
-    <li class="SummaryBoxes--locked">
-      <a href="{% url 'credits-locked' %}">
-        <h2>{% trans 'In progress' %}</h2>
-        <p>
-          {% blocktrans trimmed with payments_count=locked_credits %}
-            <strong>{{ payments_count }}</strong> Credits in progress
-          {% endblocktrans %}
-        </p>
-      </a>
-    </li>
-  </ul>
+  <div class="grid-row">
+    <div class="column-one-half">
+      <div class="status-box">
+        <a href="{% url 'credit-list' %}">
+          <div class="status-box__number">{{ new_credits }}</div>
+          <div class="status-box__title">{% trans 'New' %}</div>
+          <div class="status-box__secondary-text">{% trans 'Process credits into NOMIS' %}</div>
+        </a>
+      </div>
+      <div class="status-box">
+        <a href="{% url 'credit-list' %}">
+          <div class="status-box__number">{{ locked_credits }}</div>
+          <div class="status-box__title">{% trans 'In progress' %}</div>
+          <div class="status-box__secondary-text">{% trans 'Credits currently being processed' %}</div>
+        </a>
+      </div>
+      <div class="status-box">
+        <a href="{% url 'credit-history' %}">
+          <div class="status-box__title">{% trans 'Done' %}</div>
+          <div class="status-box__secondary-text">{% trans 'Credits already processed' %}</div>
+        </a>
+      </div>
+    </div>
+  </div>
 
   <div class="dashboard-training">
     <h2 class="heading-large">{% trans 'Training materials' %}</h2>
