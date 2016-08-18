@@ -18,3 +18,9 @@
     </ol>
   </div>
 </section>
+
+{% if ENVIRONMENT != 'prod' %}
+  <section class="training-section">
+    {% include 'training/survey-link.html' %}
+  </section>
+{% endif %}
