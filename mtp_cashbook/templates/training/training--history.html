@@ -41,9 +41,3 @@
     <p>{% trans 'There may be several pages of credits so if you’re printing, make sure you print all the pages you need.' %}</p>
   </div>
 </section>
-
-{% if ENVIRONMENT != 'prod' %}
-  <section class="training-section">
-    {% include 'training/survey-link.html' %}
-  </section>
-{% endif %}
