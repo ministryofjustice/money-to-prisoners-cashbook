@@ -35,7 +35,6 @@ class LoginTests(CashbookTestCase):
         self.driver.get(self.live_server_url)
         heading = self.driver.find_element_by_tag_name('h1')
         self.assertEqual('Money sent to prisoners', heading.text)
-        self.assertCssProperty('h1', 'font-size', '48px')
 
     def test_bad_login(self):
         self.login('test-prison-1', 'bad-password')
@@ -374,7 +373,6 @@ class AdminPagesTests(CashbookTestCase):
         self.assertCurrentUrl('/users/')
         self.assertInSource('Manage user accounts')
         self.assertInSource('Prison 1 Clerk')
-        self.assertCssProperty('div.edit-action', 'margin-right', '30px')
 
     def test_create_user_missing_fields(self):
         self.click_on_text('Add a new user')
