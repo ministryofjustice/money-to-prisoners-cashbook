@@ -353,7 +353,7 @@ class HistoryViewTestCase(MTPBaseTestCase):
 
         response = self.client.get(self.history_url)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context['page_range'], [])
+        self.assertSequenceEqual(response.context['page_range'], [1])
         self.assertEqual(response.context['current_page'], 1)
         self.assertEqual(len(response.context['object_list']), 2)
         self.assertEqual(response.context['credit_owner_name'], '%s %s' % (
@@ -398,7 +398,7 @@ class HistoryViewTestCase(MTPBaseTestCase):
 
         response = self.client.get(self.history_url)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context['page_range'], [1, 2])
+        self.assertSequenceEqual(response.context['page_range'], [1, 2])
         self.assertEqual(response.context['current_page'], 1)
         self.assertEqual(len(response.context['object_list']), 5)
         self.assertEqual(response.context['credit_owner_name'], '%s %s' % (
@@ -407,3 +407,42 @@ class HistoryViewTestCase(MTPBaseTestCase):
         ))
         self.assertContains(response, text='Total:', count=1)  # indicates 1 group of credited credits
         self.assertContains(response, text='9 credits received', count=1)
+
+    def test_many_paged_history_view(self):
+        self.login()
+        login_data = self._default_login_data
+
+        today = now()
+
+        self.mocked_get_connection().credits.get.return_value = {
+            'page': 7,
+            'page_count': 27,
+            'count': 133,
+            'results': [
+                {
+                    'id': 142 - credit_index,
+                    'prisoner_name': 'John Smith',
+                    'prisoner_number': 'A1234BC',
+                    'amount': 5200,
+                    'formatted_amount': '£52.00',
+                    'sender_name': 'Fred Smith',
+                    'prison': 14,
+                    'owner': login_data['user_pk'],
+                    'owner_name': '%s %s' % (
+                        login_data['user_data']['first_name'],
+                        login_data['user_data']['last_name'],
+                    ),
+                    'received_at': today - datetime.timedelta(days=2),
+                    'resolution': 'credited',
+                    'credited_at': today - datetime.timedelta(days=1),
+                    'refunded_at': None,
+                }
+                for credit_index in range(5)
+            ]
+        }
+
+        response = self.client.get(self.history_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['current_page'], 7)
+        self.assertSequenceEqual(response.context['page_range'], [1, 2, 3, None, 5, 6, 7, 8, 9, None, 25, 26, 27])
+        self.assertContains(response, text='…', count=2)

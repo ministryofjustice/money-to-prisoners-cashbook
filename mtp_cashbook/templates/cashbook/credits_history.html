@@ -136,20 +136,39 @@
         {% endfor %}
       {% endfor %}
 
-      {% if page_range %}
-        <ul class="Pagination">
-          {% if previous_page %}
-            <li><a href="{% url_with_query_param request 'page' previous_page %}">{% trans 'Previous' %}<span class="screenreader-only"> {% trans 'page' %}</span></a></li>
-          {% endif %}
-          {% for page in page_range %}
-            <li><a href="{% url_with_query_param request 'page' page %}" class="{% if page == current_page %}Pagination-current-page{% endif %}"><span class="screenreader-only">{% trans 'Page' %} </span>{{ page }}</a></li>
-          {% endfor %}
-          {% if next_page %}
-            <li><a href="{% url_with_query_param request 'page' next_page %}">{% trans 'Next' %}<span class="screenreader-only"> {% trans 'page' %}</span></a></li>
-          {% endif %}
-        </ul>
-        <p class="Pagination-print-description">{% blocktrans with page=current_page pages=page_count %}Page {{ page }} of {{ pages }}.{% endblocktrans %}</p>
-      {% endif %}
+      <ul class="Pagination">
+        {% if previous_page %}
+          <li>
+            <a href="{% url_with_query_param request 'page' previous_page %}">
+              {% trans 'Previous' %}
+              <span class="screenreader-only">{% trans 'page' %}</span>
+            </a>
+          </li>
+        {% endif %}
+        {% for page in page_range %}
+          <li>
+            {% if page %}
+              <a href="{% url_with_query_param request 'page' page %}" class="{% if page == current_page %}Pagination-current-page{% endif %}">
+                <span class="screenreader-only">{% trans 'Page' %}</span>
+                {{ page }}
+              </a>
+            {% else %}
+              …
+            {% endif %}
+          </li>
+        {% endfor %}
+        {% if next_page %}
+          <li>
+            <a href="{% url_with_query_param request 'page' next_page %}">
+              {% trans 'Next' %}
+              <span class="screenreader-only">{% trans 'page' %}</span>
+            </a>
+          </li>
+        {% endif %}
+      </ul>
+      <p class="Pagination-print-description">
+        {% blocktrans with page=current_page pages=page_count %}Page {{ page }} of {{ pages }}.{% endblocktrans %}
+      </p>
 
       <p><a href="#print-dialog" class="js-Dialog">{% trans 'Print this page of credits' %}</a></p>
       {% include 'cashbook/includes/print_dialog.html' %}

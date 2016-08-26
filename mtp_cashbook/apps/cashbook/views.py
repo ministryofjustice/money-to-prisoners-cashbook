@@ -1,3 +1,4 @@
+from itertools import chain
 import logging
 
 from django.conf import settings
@@ -159,6 +160,26 @@ class CreditHistoryView(FormView):
     success_url = reverse_lazy('credit-history')
     http_method_names = ['get', 'options']
 
+    @staticmethod
+    def make_page_range(page, page_count, end_padding=2, page_padding=2):
+        if page_count < 7:
+            return range(1, page_count + 1)
+        pages = sorted(set(chain(
+            range(1, end_padding + 2),
+            range(page - page_padding, page + page_padding + 1),
+            range(page_count - end_padding, page_count + 1),
+        )))
+        pages_with_ellipses = []
+        last_page = 0
+        for page in pages:
+            if page < 1 or page > page_count:
+                continue
+            if last_page + 1 < page:
+                pages_with_ellipses.append(None)
+            pages_with_ellipses.append(page)
+            last_page = page
+        return pages_with_ellipses
+
     def get_initial(self):
         initial = super().get_initial()
         initial.update({
@@ -189,10 +210,7 @@ class CreditHistoryView(FormView):
         object_list = form.credit_choices
         current_page = form.pagination['page']
         page_count = form.pagination['page_count']
-        if page_count > 1:
-            page_range = list(range(1, page_count + 1))
-        else:
-            page_range = []
+        page_range = self.make_page_range(current_page, page_count)
         previous_page = current_page - 1 if current_page > 1 else None
         next_page = current_page + 1 if page_range and page_range[-1] > current_page else None
         context.update({
