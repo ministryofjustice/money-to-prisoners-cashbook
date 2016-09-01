@@ -49,6 +49,11 @@ class LoginTests(CashbookTestCase):
         self.assertCurrentUrl('/')
         self.assertShowingView('dashboard')
 
+    def test_good_login_without_case_sensitivity(self):
+        self.login('Test-PRISON-1', 'test-prison-1')
+        self.assertCurrentUrl('/')
+        self.assertShowingView('dashboard')
+
     def test_logout(self):
         self.login('test-prison-1', 'test-prison-1')
         self.click_on_text('Sign out')
