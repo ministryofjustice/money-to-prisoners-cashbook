@@ -25,6 +25,9 @@ class CashbookTestCase(FunctionalTestCase):
         checkbox_id = self.get_element(xpath).get_attribute('id')
         self.get_element('//label[@for="%s"]' % checkbox_id).click()
 
+    def assertShowingView(self, view_name):  # noqa
+        self.assertInSource('<!--[%s]-->' % view_name)
+
 
 class LoginTests(CashbookTestCase):
     """
@@ -39,16 +42,18 @@ class LoginTests(CashbookTestCase):
     def test_bad_login(self):
         self.login('test-prison-1', 'bad-password')
         self.assertInSource('There was a problem')
+        self.assertShowingView('login')
 
     def test_good_login(self):
         self.login('test-prison-1', 'test-prison-1')
         self.assertCurrentUrl('/')
-        self.assertInSource('Credits to process')
+        self.assertShowingView('dashboard')
 
     def test_logout(self):
         self.login('test-prison-1', 'test-prison-1')
         self.click_on_text('Sign out')
         self.assertCurrentUrl('/login/')
+        self.assertShowingView('login')
 
 
 class LockedPaymentsPageTests(CashbookTestCase):
