@@ -1,9 +1,10 @@
 .status-box {
   background-color: $white;
   border: 2px solid $govuk-blue;
-  padding: $gutter-half;
   margin: $gutter-half 0;
   a {
+    display: block;
+    padding: $gutter-half;
     color: $govuk-blue;
     text-decoration: none;
   }
