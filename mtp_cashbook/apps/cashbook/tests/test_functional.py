@@ -25,6 +25,9 @@ class CashbookTestCase(FunctionalTestCase):
         checkbox_id = self.get_element(xpath).get_attribute('id')
         self.get_element('//label[@for="%s"]' % checkbox_id).click()
 
+    def assertShowingView(self, view_name):  # noqa
+        self.assertInSource('<!--[%s]-->' % view_name)
+
 
 class LoginTests(CashbookTestCase):
     """
@@ -39,16 +42,23 @@ class LoginTests(CashbookTestCase):
     def test_bad_login(self):
         self.login('test-prison-1', 'bad-password')
         self.assertInSource('There was a problem')
+        self.assertShowingView('login')
 
     def test_good_login(self):
         self.login('test-prison-1', 'test-prison-1')
         self.assertCurrentUrl('/')
-        self.assertInSource('Credits to process')
+        self.assertShowingView('dashboard')
+
+    def test_good_login_without_case_sensitivity(self):
+        self.login('Test-PRISON-1', 'test-prison-1')
+        self.assertCurrentUrl('/')
+        self.assertShowingView('dashboard')
 
     def test_logout(self):
         self.login('test-prison-1', 'test-prison-1')
         self.click_on_text('Sign out')
         self.assertCurrentUrl('/login/')
+        self.assertShowingView('login')
 
 
 class LockedPaymentsPageTests(CashbookTestCase):
@@ -66,7 +76,7 @@ class LockedPaymentsPageTests(CashbookTestCase):
         self.assertInSource('Time in progress')
 
     def test_releasing_credits(self):
-        self.get_element('//tbody//input[@type="checkbox"][1]').click()
+        self.get_element('//tbody//input[@type="checkbox"][1]/following-sibling::label').click()
         self.click_on_text('Done')
         self.assertCurrentUrl('/dashboard-unlocked-payments/')
         self.assertInSource('You have now returned')
@@ -193,13 +203,16 @@ class VisualTests(CashbookTestCase):
         self.assertEqual('Digital cashbook', self.driver.title)
 
     def test_search_focus(self):
+        def is_search_input_focused():
+            element_tag, element_id = self.driver.execute_script('return [document.activeElement.tagName, '
+                                                                 'document.activeElement.id];')
+            return element_tag == 'INPUT' and element_id == 'id_search'
+
         self.login_and_go_to('History')
-        focused_element = self.driver.find_element_by_css_selector('input:focus')
-        self.assertEqual('id_search', focused_element.get_attribute('id'))
+        self.assertTrue(is_search_input_focused())
         self.type_in('id_start', 'Today')
         self.click_on_text('Search')
-        focused_element = self.driver.find_element_by_css_selector('div:focus')
-        self.assertEqual('error-summary', focused_element.get_attribute('class'))
+        self.assertFalse(is_search_input_focused())
 
     def test_go_home_with_back_button(self):
         self.login_and_go_to('New')
@@ -306,7 +319,7 @@ class Journeys(CashbookTestCase):
     def test_journey_13(self):
         self.login('test-prison-1', 'test-prison-1')
         self.click_on_text('In progress')
-        self.get_element('//tbody//input[@type="checkbox"][1]').click()
+        self.get_element('//tbody//input[@type="checkbox"][1]/following-sibling::label').click()
         self.click_on_text('Release')
 
 

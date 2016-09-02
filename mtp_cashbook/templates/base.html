@@ -7,6 +7,11 @@
   {% sentry_js %}
 {% endblock %}
 
+{% block body_end %}
+  {{ block.super }}
+  <!--[{{ request.resolver_match.url_name }}]-->
+{% endblock %}
+
 {% block page_title %}{% trans 'Digital cashbook' %}{% endblock %}
 
 {% block proposition %}
