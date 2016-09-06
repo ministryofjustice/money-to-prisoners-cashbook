@@ -1,3 +1,4 @@
+from datetime import timedelta
 from functools import reduce
 from itertools import groupby
 
@@ -184,9 +185,14 @@ class FilterCreditHistoryForm(GARequestErrorReportingMixin, forms.Form):
     def clean(self):
         start = self.cleaned_data.get('start')
         end = self.cleaned_data.get('end')
-        if start and end and start > end:
+        if start and end and start >= end:
             self.add_error('end', gettext('The end date must be after the start date'))
         return super().clean()
+
+    def clean_end(self):
+        end = self.cleaned_data.get('end')
+        if end is not None:
+            return end + timedelta(days=1)
 
     @property
     def has_filters(self):
@@ -224,8 +230,8 @@ class FilterCreditHistoryForm(GARequestErrorReportingMixin, forms.Form):
             return []
 
         renames = (
-            ('start', 'received_at_0'),
-            ('end', 'received_at_1'),
+            ('start', 'received_at__gte'),
+            ('end', 'received_at__lt'),
         )
         for field_name, api_name in renames:
             if field_name in filters:
