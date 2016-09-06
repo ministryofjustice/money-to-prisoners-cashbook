@@ -237,8 +237,8 @@ class FilterCreditHistoryFormTestCase(SimpleTestCase):
 
     def test_valid_history_filter_form(self):
         self.assertValidForm({}, {
-            'received_at_0': None,
-            'received_at_1': None,
+            'received_at__gte': None,
+            'received_at__lt': None,
             'search': '',
             'ordering': '-received_at',
             'page': None,
@@ -250,8 +250,8 @@ class FilterCreditHistoryFormTestCase(SimpleTestCase):
             'end': '',
             'search': '',
         }, {
-            'received_at_0': None,
-            'received_at_1': None,
+            'received_at__gte': None,
+            'received_at__lt': None,
             'search': '',
             'ordering': '-received_at',
             'page': None,
@@ -263,8 +263,8 @@ class FilterCreditHistoryFormTestCase(SimpleTestCase):
             'end': '17/10/2015',
             'search': '',
         }, {
-            'received_at_0': datetime.date(2015, 10, 10),
-            'received_at_1': datetime.date(2015, 10, 17),
+            'received_at__gte': datetime.date(2015, 10, 10),
+            'received_at__lt': datetime.date(2015, 10, 18),
             'search': '',
             'ordering': '-received_at',
             'page': None,
@@ -276,8 +276,8 @@ class FilterCreditHistoryFormTestCase(SimpleTestCase):
             'end': '2015-10-17',
             'search': '',
         }, {
-            'received_at_0': datetime.date(2015, 10, 10),
-            'received_at_1': datetime.date(2015, 10, 17),
+            'received_at__gte': datetime.date(2015, 10, 10),
+            'received_at__lt': datetime.date(2015, 10, 18),
             'search': '',
             'ordering': '-received_at',
             'page': None,
@@ -289,8 +289,8 @@ class FilterCreditHistoryFormTestCase(SimpleTestCase):
             'end': '17/10/2015',
             'search': 'John',
         }, {
-            'received_at_0': datetime.date(2015, 10, 10),
-            'received_at_1': datetime.date(2015, 10, 17),
+            'received_at__gte': datetime.date(2015, 10, 10),
+            'received_at__lt': datetime.date(2015, 10, 18),
             'search': 'John',
             'ordering': '-received_at',
             'page': None,
@@ -303,8 +303,8 @@ class FilterCreditHistoryFormTestCase(SimpleTestCase):
             'search': 'John',
             'page': '1',
         }, {
-            'received_at_0': datetime.date(2015, 10, 10),
-            'received_at_1': datetime.date(2015, 10, 17),
+            'received_at__gte': datetime.date(2015, 10, 10),
+            'received_at__lt': datetime.date(2015, 10, 18),
             'search': 'John',
             'ordering': '-received_at',
             'page': 1,
@@ -317,8 +317,8 @@ class FilterCreditHistoryFormTestCase(SimpleTestCase):
             'search': 'John',
             'page': '2',
         }, {
-            'received_at_0': datetime.date(2015, 10, 10),
-            'received_at_1': datetime.date(2015, 10, 17),
+            'received_at__gte': datetime.date(2015, 10, 10),
+            'received_at__lt': datetime.date(2015, 10, 18),
             'search': 'John',
             'ordering': '-received_at',
             'page': 2,
