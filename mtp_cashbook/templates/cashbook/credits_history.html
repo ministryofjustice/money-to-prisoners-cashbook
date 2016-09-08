@@ -30,7 +30,7 @@
 
   {% include "mtp_common/includes/message_box.html" %}
 
-  <form method="get" class="HistorySearch" action="">
+  <form method="get" class="mtp-history__search" action="">
     {% include 'mtp_common/forms/error-summary.html' with form=form only %}
 
     <div class="form-inputs">
@@ -55,10 +55,10 @@
   </form>
 
 
-  <div class="mtp-batch batch-history">
+  <div class="mtp-batch mtp-batch__history">
     {% if object_list %}
 
-      <p class="HistoryDescription">{{ form.get_search_description }}</p>
+      <p class="mtp-history__description">{{ form.get_search_description }}</p>
 
       {% for credit_date, group in object_list|parse_date_fields|regroup_credits %}
         <h2 class="heading-medium">{{ credit_date|date:'DATE_FORMAT' }}</h2>

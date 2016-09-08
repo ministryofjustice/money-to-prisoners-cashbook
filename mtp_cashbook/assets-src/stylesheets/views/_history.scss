@@ -1,4 +1,6 @@
-form.HistorySearch {
+// Application specific
+
+.mtp-history__search {
 
   .date-fields {
     display: inline-block;
@@ -11,7 +13,9 @@ form.HistorySearch {
     .date-label, .date-start, .date-end {
       padding-left: .5em;
     }
-    input { width: 100% }
+    input {
+      width: 100%;
+    }
     .form-hint {
       color: #666;
     }
@@ -20,16 +24,17 @@ form.HistorySearch {
   .search-field {
     display: inline-block;
     margin-right: 1em;
-    input { width: 100% }
+    input {
+      width: 100%;
+    }
   }
 
   @media print {
     display: none;
   }
-
 }
 
-.batch-history {
+.mtp-batch__history {
   float: left;
   margin-top: 1em;
   h2 {
@@ -46,22 +51,24 @@ form.HistorySearch {
   }
 }
 
-.HistoryHeader-credited {
+.mtp-history-header__credited {
   background: #CDE2B7;
 }
 
-.HistoryHeader-uncredited {
+.mtp-history-header__uncredited {
   background: #575A96;
   color: $page-colour;
 }
 
-.HistoryHeader-refunded {
+.mtp-history-header__refunded {
   background: #FFD9D9;
 }
 
-.HistoryHeader-anonymous {
+.mtp-history-header__anonymous {
   background: $orange-50;
 }
+
+// govuk_elements overrides
 
 .inline .block-label {
   margin-top: 0;
