@@ -11,7 +11,7 @@
 
   {% include "mtp_common/includes/message_box.html" %}
 
-  <form method="post" action="" class="locked">
+  <form method="post" action="" class="mtp-locked">
     {% csrf_token %}
 
     {% if object_list %}
@@ -35,7 +35,7 @@
 
       {% include 'mtp_common/forms/error-summary.html' with form=form only %}
 
-      <div class="batch">
+      <div class="mtp-batch">
 
         {% include "cashbook/includes/locked_buttons.html" %}
 

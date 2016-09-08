@@ -58,11 +58,11 @@
     }
   }
 
-  .batch {
+  .mtp-batch {
     margin: 0;
   }
 
-  .batch-buttons {
+  .mtp-batch__buttons {
     margin: 1em 0 1em 0;
     width: 65%;
     padding: 10px 0 10px 0;
@@ -82,7 +82,7 @@
   }
 
   @media print {
-    h1, .check, .batch-buttons {
+    h1, .check, .mtp-batch__buttons {
       display: none;
     }
     table {
@@ -112,7 +112,7 @@
         margin-bottom: 1em;
       }
     }
-    .batch {
+    .mtp-batch {
       width: 100%;
       margin-bottom: 2em;
     }

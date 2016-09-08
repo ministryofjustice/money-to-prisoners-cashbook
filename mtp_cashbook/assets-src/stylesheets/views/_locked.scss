@@ -1,16 +1,15 @@
-.locked {
+// Application specific
 
+.mtp-locked {
   @include breakpoint($mobile) {
     width: 100%;
   }
+}
 
-  p.locked-help {
-    padding-bottom: 1em;
-    border-bottom: 2px solid $bg-color-alt;
-  }
+.mtp-batch {
+  margin-top: 1em;
+}
 
-  .batch { margin-top: 1em }
-  .batch-buttons span {
-    padding-right: 1em;
-  }
+.mtp-batch__buttons span {
+  padding-right: 1em;
 }
