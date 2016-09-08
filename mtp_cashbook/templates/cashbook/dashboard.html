@@ -32,30 +32,30 @@
 
   <div class="grid-row">
     <div class="column-one-half">
-      <div class="status-box">
+      <div class="mtp-status-box">
         <a href="{% url 'credit-list' %}">
-          <div class="status-box__number">{{ new_credits }}</div>
-          <div class="status-box__title">{% trans 'New' %}</div>
-          <div class="status-box__secondary-text">{% trans 'Process credits into NOMIS' %}</div>
+          <div class="mtp-status-box__number">{{ new_credits }}</div>
+          <div class="mtp-status-box__title">{% trans 'New' %}</div>
+          <div class="mtp-status-box__secondary-text">{% trans 'Process credits into NOMIS' %}</div>
         </a>
       </div>
-      <div class="status-box">
+      <div class="mtp-status-box">
         <a href="{% url 'credits-locked' %}">
-          <div class="status-box__number">{{ locked_credits }}</div>
-          <div class="status-box__title">{% trans 'In progress' %}</div>
-          <div class="status-box__secondary-text">{% trans 'Credits currently being processed' %}</div>
+          <div class="mtp-status-box__number">{{ locked_credits }}</div>
+          <div class="mtp-status-box__title">{% trans 'In progress' %}</div>
+          <div class="mtp-status-box__secondary-text">{% trans 'Credits currently being processed' %}</div>
         </a>
       </div>
-      <div class="status-box">
+      <div class="mtp-status-box">
         <a href="{% url 'credit-history' %}">
-          <div class="status-box__title">{% trans 'History' %}</div>
-          <div class="status-box__secondary-text">{% trans 'Credits already processed' %}</div>
+          <div class="mtp-status-box__title">{% trans 'History' %}</div>
+          <div class="mtp-status-box__secondary-text">{% trans 'Credits already processed' %}</div>
         </a>
       </div>
     </div>
   </div>
 
-  <div class="dashboard-training">
+  <div class="mtp-dashboard-training">
     <h2 class="heading-large">{% trans 'Training materials' %}</h2>
     <div class="grid-row">
       <div class="column-one-half">

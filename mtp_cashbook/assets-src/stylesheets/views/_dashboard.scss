@@ -1,4 +1,6 @@
-.status-box {
+// Application specific
+
+.mtp-status-box {
   background-color: $white;
   border: 2px solid $govuk-blue;
   margin: $gutter-half 0;
@@ -14,22 +16,22 @@
       color: $white;
     }
   }
-  .status-box__title {
+  .mtp-status-box__title {
     font-size: 24px;
     font-weight: bold;
   }
-  .status-box__number {
+  .mtp-status-box__number {
     font-size: 42px;
     font-weight: bold;
     float: right;
   }
-  .status-box__secondary-text {
+  .mtp-status-box__secondary-text {
     text-decoration: underline;
     font-size: 16px;
   }
 }
 
-.dashboard-training {
+.mtp-dashboard-training {
   clear: both;
   border-top: 1px solid $border-color;
 }

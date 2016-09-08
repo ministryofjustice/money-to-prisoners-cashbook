@@ -12,9 +12,10 @@ $images-dir: '/static/images/';
 @import 'views/training';
 @import 'views/pagination';
 
-// app-specific
+// mtp-common overrides
 .help-box div { width: 65% }
 
+// govuk_elements overrides
 .form-group {
   margin-bottom: 10px;
 }
