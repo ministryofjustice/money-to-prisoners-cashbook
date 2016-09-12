@@ -10,6 +10,14 @@
   margin-top: 1em;
 }
 
-.mtp-batch__buttons span {
-  padding-right: 1em;
+.mtp-batch__buttons {
+  margin: 1em 0 1em 0;
+  width: 65%;
+  padding: 10px 0 10px 0;
+  span {
+    padding-right: 1em;
+  }
+  @media print {
+    display: none;
+  }
 }
