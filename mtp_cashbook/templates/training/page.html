@@ -5,24 +5,24 @@
 {% block inner_content %}
   <header class="ContentHeader">
     <a href="{% url 'dashboard' %}" class="ContentHeader-back">{% trans 'Home' %}</a>
-    <h1 class="heading-large heading-training">{{ view.training_title }}</h1>
+    <h1 class="heading-large mtp-heading-training">{{ view.training_title }}</h1>
   </header>
 
   {% include 'mtp_common/includes/message_box.html' %}
 
-  <ul class="training-navigation print-hidden">
+  <ul class="mtp-training-navigation print-hidden">
     {% for page in pages %}
-      <li class="training-navigation--item {% if page.page == view.kwargs.page %}training-navigation--item-active{% endif %}">
+      <li class="mtp-training-navigation__item {% if page.page == view.kwargs.page %}mtp-training-navigation__item--active{% endif %}">
         <a href="{% url view.url_name page=page.page %}">{{ page.title }}</a>
       </li>
     {% endfor %}
-    <li class="training-navigation--item training-navigation--print">
+    <li class="mtp-training-navigation__item mtp-training-navigation__js-print">
       <a href="#">{% trans 'Print this training guide' %}</a>
     </li>
   </ul>
 
   {% for page in pages %}
-    <div class="training-content {% if page.page != current_page %}training-content--print-only{% endif %}">
+    <div class="mtp-training-content {% if page.page != current_page %}mtp-training-content__print{% endif %}">
       {% get_training_page_template page.page as page_template %}
       {% include page_template %}
     </div>

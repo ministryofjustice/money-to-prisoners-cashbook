@@ -1,14 +1,14 @@
 {% load i18n %}
 {% load static %}
 
-<h2 class="heading-large heading-training">{% trans 'In progress' %}</h2>
+<h2 class="heading-large mtp-heading-training">{% trans 'In progress' %}</h2>
 
-<section class="training-section">
-  <div class="training-section--image">
+<section class="mtp-training-section">
+  <div class="mtp-training-section__image">
     <img src="{% static 'images/screenshots/training--in-progress.png' %}"
          alt="{% trans 'In progress screen' %}" />
   </div>
-  <div class="training-section--text">
+  <div class="mtp-training-section__text">
     <p>{% trans 'Use the <strong>in progress</strong> page to see who is currently processing credits in your team.' %}</p>
     <p>{% trans 'If you need to take over another colleague’s work, this is how you can release their credits:' %}</p>
     <ol class="list list-number">
@@ -20,7 +20,7 @@
 </section>
 
 {% if ENVIRONMENT != 'prod' %}
-  <section class="training-section">
+  <section class="mtp-training-section">
     {% include 'training/survey-link.html' %}
   </section>
 {% endif %}
