@@ -30,19 +30,19 @@
 
   {% include "mtp_common/includes/message_box.html" %}
 
-  <form method="get" class="HistorySearch" action="">
+  <form method="get" class="mtp-history-search" action="">
     {% include 'mtp_common/forms/error-summary.html' with form=form only %}
 
-    <div class="form-inputs">
-      <div class="search-field">
+    <div class="mtp-history-search__inputs">
+      <div class="mtp-history-search__field">
         {% include 'mtp_common/forms/field.html' with field=form.search only %}
       </div>
-      <div class="date-fields">
-        <div class="date-label">Date received<div class="form-hint">eg 28/04/2016</div></div>
-        <div class="date-start">
+      <div class="mtp-history-search__dates">
+        <div class="mtp-history-search__date-label">Date received<div class="form-hint">eg 28/04/2016</div></div>
+        <div class="mtp-history-search__date-start">
           {% include 'mtp_common/forms/field.html' with field=form.start input_classes='js-FormDateControl' value=form.start.value|date:'d/m/Y'|default:form.start.value|default_if_none:'' only %}
         </div>
-        <div class="date-end">
+        <div class="mtp-history-search__date-end">
           {% include 'mtp_common/forms/field.html' with field=form.end input_classes='js-FormDateControl' value=form.end.value|date:'d/m/Y'|default:form.end.value|default_if_none:'' only %}
         </div>
       </div>
@@ -55,10 +55,10 @@
   </form>
 
 
-  <div class="mtp-batch batch-history">
+  <div class="mtp-batch mtp-batch__history">
     {% if object_list %}
 
-      <p class="HistoryDescription">{{ form.get_search_description }}</p>
+      <p class="mtp-history__description">{{ form.get_search_description }}</p>
 
       {% for credit_date, group in object_list|parse_date_fields|regroup_credits %}
         <h2 class="heading-medium">{{ credit_date|date:'DATE_FORMAT' }}</h2>

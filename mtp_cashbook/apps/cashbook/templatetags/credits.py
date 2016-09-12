@@ -77,7 +77,7 @@ def regroup_credits(credits):
 @register.simple_tag
 def credit_group_class(credit_status):
     if credit_status in ['credited', 'uncredited', 'refunded', 'anonymous']:
-        return 'HistoryHeader-%s' % credit_status
+        return 'mtp-history-header__%s' % credit_status
     return ''
 
 
