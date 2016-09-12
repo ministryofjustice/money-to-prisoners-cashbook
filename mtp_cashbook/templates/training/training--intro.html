@@ -1,14 +1,14 @@
 {% load i18n %}
 {% load static %}
 
-<h2 class="heading-large heading-training">{% trans 'Introduction' %}</h2>
+<h2 class="heading-large mtp-heading-training">{% trans 'Introduction' %}</h2>
 
-<section class="training-section">
-  <div class="training-section--image">
+<section class="mtp-training-section">
+  <div class="mtp-training-section__image">
     <img src="{% static 'images/screenshots/training--intro.png' %}"
          alt="{% trans 'Digital cashbook dashboard' %}" />
   </div>
-  <div class="training-section--text">
+  <div class="mtp-training-section__text">
     <p>{% trans 'There are 3 parts to the digital cashbook:' %}</p>
     <ul class="list list-bullet">
       <li><a href="{% url 'training' page='new' %}">{% trans 'New credits' %}</a> – {% trans 'where you go to process credits in P-NOMIS' %}</li>
@@ -21,7 +21,7 @@
 </section>
 
 {% if ENVIRONMENT != 'prod' %}
-  <section class="training-section">
+  <section class="mtp-training-section">
     <p>
       <strong>
         {% trans 'Please note – the training site details on here aren’t real so don’t try to process any of this prisoner information in P-NOMIS.' %}

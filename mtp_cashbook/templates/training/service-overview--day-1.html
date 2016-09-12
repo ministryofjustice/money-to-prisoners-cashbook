@@ -1,9 +1,9 @@
 {% load i18n %}
 {% load static %}
 
-<h2 class="heading-large heading-training">{% trans 'Day 1' %}</h2>
+<h2 class="heading-large mtp-heading-training">{% trans 'Day 1' %}</h2>
 
-<section class="training-section">
+<section class="mtp-training-section">
   <p>{% trans 'This tool explains how money is credited to prisoners or refunded to the sender in the 5-day process, using the digital cashbook.' %}</p>
   <p>
     {% trans 'Money is received and processed every working weekday.' %}
@@ -11,13 +11,13 @@
   </p>
 </section>
 
-<section class="training-section">
-  <div class="training-section--image">
+<section class="mtp-training-section">
+  <div class="mtp-training-section__image">
     <img src="{% static 'images/service-overview--day-1a.png' %}"
          srcset="{% static 'images/service-overview--day-1a@2x.png' %} 2x"
          alt="{% trans 'Money can be sent by internet, mobile or telephone banking' %}" />
   </div>
-  <div class="training-section--text">
+  <div class="mtp-training-section__text">
     <p>{% trans 'Citizens send money by bank transfer.' %}</p>
     <p>{% trans 'The sender sends money in 1 of 3 ways – internet, mobile or telephone banking.' %}</p>
     <p>
@@ -27,25 +27,25 @@
   </div>
 </section>
 
-<section class="training-section">
-  <div class="training-section--image">
+<section class="mtp-training-section">
+  <div class="mtp-training-section__image">
     <img src="{% static 'images/service-overview--day-1b.png' %}"
          srcset="{% static 'images/service-overview--day-1b@2x.png' %} 2x"
          alt="{% trans 'Citizens send money by bank transfer' %}" />
   </div>
-  <div class="training-section--text">
+  <div class="mtp-training-section__text">
     <p>{% trans 'The sender of £20 uses the RIGHT prisoner details (the correct number and correct date of birth).' %}</p>
     <p>{% trans 'The sender of £40 uses the WRONG prisoner details (the incorrect number and correct date of birth).' %}</p>
   </div>
 </section>
 
-<section class="training-section">
-  <div class="training-section--image">
+<section class="mtp-training-section">
+  <div class="mtp-training-section__image">
     <img src="{% static 'images/service-overview--day-1c.png' %}"
          srcset="{% static 'images/service-overview--day-1c@2x.png' %} 2x"
          alt="{% trans 'The money reaches the NOMS bank account' %}" />
   </div>
-  <div class="training-section--text">
+  <div class="mtp-training-section__text">
     <p>{% trans 'The money reaches the NOMS bank account.' %}</p>
   </div>
 </section>

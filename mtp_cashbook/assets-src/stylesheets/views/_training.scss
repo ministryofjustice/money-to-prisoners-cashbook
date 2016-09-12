@@ -1,4 +1,6 @@
-.training-navigation {
+// Application specific
+
+.mtp-training-navigation {
   display: block;
   list-style: none;
   overflow: hidden;
@@ -7,11 +9,10 @@
   border-right: none;
 }
 
-.training-navigation--item {
+.mtp-training-navigation__item {
   display: block;
   float: left;
   background: $page-colour;
-
   a {
     display: block;
     line-height: 2em;
@@ -26,7 +27,6 @@
         padding: 0.6em 1em;
       }
     }
-
     &:focus {
       outline: none;
     }
@@ -34,40 +34,37 @@
       text-decoration: underline;
     }
   }
+}
 
-  &.training-navigation--item-active {
-    background: $govuk-blue;
-
-    a {
-      color: $white;
-
-      &:focus {
-        color: $text-colour;
-      }
-    }
+.mtp-training-navigation__print {
+  display: none;
+  float: right;
+  .js-enabled & {
+    display: block;
   }
+  a {
+    padding-right: 0;
+    font-weight: normal;
 
-  &.training-navigation--print {
-    display: none;
-    float: right;
-
-    .js-enabled & {
-      display: block;
-    }
-
-    a {
-      padding-right: 0;
-      font-weight: normal;
-
-      &:focus {
-        background: none;
-        text-decoration: underline;
-      }
+    &:focus {
+      background: none;
+      text-decoration: underline;
     }
   }
 }
 
-.heading-training {
+.mtp-training-navigation__item--active {
+  background: $govuk-blue;
+  a {
+    color: $white;
+
+    &:focus {
+      color: $text-colour;
+    }
+  }
+}
+
+.mtp-heading-training {
   display: none;
 
   @media print {
@@ -75,7 +72,7 @@
   }
 }
 
-.training-content--print-only {
+.mtp-training-content__print {
   display: none;
 
   @media print {
@@ -83,12 +80,12 @@
   }
 }
 
-.training-section {
+.mtp-training-section {
   margin: 4em 0;
   clear: both;
   overflow: hidden;
 
-  .training-section--image {
+  .mtp-training-section__image {
     float: right;
     border: 1px solid $border-color;
 
@@ -96,17 +93,17 @@
       max-width: 465px;
     }
   }
-  .training-section--text {
+  .mtp-training-section__text {
     width: 22em;
     margin-right: 1em;
     float: left;
   }
 
   @media (max-width: 970px) {
-    .training-section--image {
+    .mtp-training-section__image {
       float: left;
     }
-    .training-section--text {
+    .mtp-training-section__text {
       width: 100%;
       margin-right: 0;
       margin-top: 1em;
@@ -114,7 +111,7 @@
   }
 }
 
-.survey-link-cta {
+.mtp-survey-link-cta {
   padding: 0.8em 0.5em;
   background: $panel-colour;
 

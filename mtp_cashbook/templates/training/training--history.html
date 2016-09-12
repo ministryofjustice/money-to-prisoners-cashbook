@@ -1,14 +1,14 @@
 {% load i18n %}
 {% load static %}
 
-<h2 class="heading-large heading-training">{% trans 'Credit history' %}</h2>
+<h2 class="heading-large mtp-heading-training">{% trans 'Credit history' %}</h2>
 
-<section class="training-section">
-  <div class="training-section--image">
+<section class="mtp-training-section">
+  <div class="mtp-training-section__image">
     <img src="{% static 'images/screenshots/training--history-a.png' %}"
          alt="{% trans 'Credit history screen' %}" />
   </div>
-  <div class="training-section--text">
+  <div class="mtp-training-section__text">
     <p>
       {% trans 'Use the <strong>credit history</strong> page to answer queries.' %}
       {% trans 'You can find all credits processed by the team in this section.' %}
@@ -23,12 +23,12 @@
   </div>
 </section>
 
-<section class="training-section">
-  <div class="training-section--image">
+<section class="mtp-training-section">
+  <div class="mtp-training-section__image">
     <img src="{% static 'images/screenshots/training--history-b.png' %}"
          alt="{% trans 'Credit history screen' %}" />
   </div>
-  <div class="training-section--text">
+  <div class="mtp-training-section__text">
     <p>{% trans 'Credits appear grouped by the date they were received.' %}</p>
     <p>{% trans 'They appear in chronological order with the most recent first.' %}</p>
     <p>{% trans 'For each date, you’ll find credits that have been processed in P-NOMIS in a section called ‘Credited’.' %}</p>

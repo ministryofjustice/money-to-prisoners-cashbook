@@ -3,7 +3,7 @@
 'use strict';
 
 exports.Training = {
-  selector: '.training-navigation--print',
+  selector: '.mtp-training-navigation__print',
 
   init: function () {
     $(this.selector).click(function(e) {
