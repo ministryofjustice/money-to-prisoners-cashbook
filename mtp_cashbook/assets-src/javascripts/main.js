@@ -13,6 +13,7 @@
   require('help-popup').HelpPopup.init();
   require('analytics').Analytics.init();
   require('track-printing').TrackPrinting.init();
+  require('selection-buttons').SelectionButtons.init();
 
   require('batch-validation').BatchValidation.init();
   require('sticky-header').StickyHeader.init();
