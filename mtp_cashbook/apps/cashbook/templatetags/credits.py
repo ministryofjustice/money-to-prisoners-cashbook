@@ -67,7 +67,7 @@ def regroup_credits(credits):
         # NB: listing out inner generators so that results can be iterated multiple times
         grouped = groupby(sorted(group, key=get_status_order), key=get_status_key)
         grouped = (
-            (status_key, list(sorted(items, key=lambda c: c['prisoner_number'])))
+            (status_key, list(sorted(items, key=lambda c: c['prisoner_number'] or '')))
             for (status_key, items) in grouped
         )
         grouped_credits[date] = grouped
