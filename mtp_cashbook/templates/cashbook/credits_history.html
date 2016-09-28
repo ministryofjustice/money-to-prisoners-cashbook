@@ -106,19 +106,13 @@
             <tbody>
               {% for credit in credits %}
                 <tr>
-                  <td>{{ credit.prisoner_number }}</td>
-                  <td>{{ credit.prisoner_name }}</td>
+                  <td>{{ credit.prisoner_number|default_if_none:'—' }}</td>
+                  <td>{{ credit.prisoner_name|default_if_none:'—' }}</td>
                   {% if DEBIT_CARD_ACTIVE %}
-                    <td>
-                      {% if credit.source == 'online' %}
-                        {{ credit.intended_recipient }}
-                      {% else %}
-                        –
-                      {% endif %}
-                    </td>
+                    <td>{{ credit.intended_recipient|default_if_none:'—' }}</td>
                   {% endif %}
                   <td class="numeric">{{ credit.amount|currency }}</td>
-                  <td>{{ credit.sender_name|default_if_none:'–' }}</td>
+                  <td>{{ credit.sender_name|default_if_none:'—' }}</td>
                   <td>{{ credit.owner_name|default_if_none:'—' }}</td>
                   {% if DEBIT_CARD_ACTIVE %}
                     <td>
