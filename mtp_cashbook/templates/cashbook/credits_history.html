@@ -83,12 +83,10 @@
               <tr>
                 <th>{% trans 'Prisoner no' %}</th>
                 <th>{% trans 'Prisoner name' %}</th>
-                {% if DEBIT_CARD_ACTIVE %}
-                  <th>
-                    {% trans 'Prisoner name' %}
-                    <span class="font-xsmall">({% trans 'as entered by sender' %})</span>
-                  </th>
-                {% endif %}
+                <th>
+                  {% trans 'Prisoner name' %}
+                  <span class="font-xsmall">({% trans 'as entered by sender' %})</span>
+                </th>
                 <th>{% trans 'Amount (£)' %}</th>
                 <th>{% trans 'Sender' %}</th>
                 <th>
@@ -98,9 +96,7 @@
                     {% trans 'Started by' %}
                   {% endif %}
                 </th>
-                {% if DEBIT_CARD_ACTIVE %}
-                  <th>{% trans 'Payment method' %}</th>
-                {% endif %}
+                <th>{% trans 'Payment method' %}</th>
               </tr>
             </thead>
             <tbody>
@@ -108,21 +104,17 @@
                 <tr>
                   <td>{{ credit.prisoner_number|default_if_none:'—' }}</td>
                   <td>{{ credit.prisoner_name|default_if_none:'—' }}</td>
-                  {% if DEBIT_CARD_ACTIVE %}
-                    <td>{{ credit.intended_recipient|default_if_none:'—' }}</td>
-                  {% endif %}
+                  <td>{{ credit.intended_recipient|default_if_none:'—' }}</td>
                   <td class="numeric">{{ credit.amount|currency }}</td>
                   <td>{{ credit.sender_name|default_if_none:'—' }}</td>
                   <td>{{ credit.owner_name|default_if_none:'—' }}</td>
-                  {% if DEBIT_CARD_ACTIVE %}
-                    <td>
-                      {% if credit.source == 'online' %}
-                        {% trans 'Debit card' %}
-                      {% else %}
-                        {% trans 'Bank transfer' %}
-                      {% endif %}
-                    </td>
-                  {% endif %}
+                  <td>
+                    {% if credit.source == 'online' %}
+                      {% trans 'Debit card' %}
+                    {% else %}
+                      {% trans 'Bank transfer' %}
+                    {% endif %}
+                  </td>
                 </tr>
               {% endfor %}
             </tbody>

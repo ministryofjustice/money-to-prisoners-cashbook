@@ -228,8 +228,6 @@ ZENDESK_CUSTOM_FIELDS = {
     'contact_email': 30769508,
 }
 
-DEBIT_CARD_ACTIVE = os.environ.get('DEBIT_CARD_ACTIVE', 'True') == 'True'
-
 try:
     from .local import *  # noqa
 except ImportError:
