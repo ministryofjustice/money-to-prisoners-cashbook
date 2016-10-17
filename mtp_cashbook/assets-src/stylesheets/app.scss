@@ -13,9 +13,21 @@ $images-dir: '/static/images/';
 @import 'views/pagination';
 
 // mtp-common overrides
-.help-box div { width: 65% }
+.help-box div {
+  width: 65%;
+}
 
 // govuk_elements overrides
 .form-group {
   margin-bottom: 10px;
+}
+
+.mtp-inactive__form {
+  .form-label {
+    color: $grey-2;
+  }
+
+  .form-control {
+    border: 2px solid $grey-2;
+  }
 }
