@@ -23,7 +23,11 @@
 
 {% block user_menu %}
   <li>
-    <a href="{% url 'password_change' %}">{% trans 'Change password' %}</a>
+    {% if ENVIRONMENT == 'test' %}
+      <a href="{% url 'inactive_password_change' %}">{% trans 'Change password' %}</a>
+    {% else %}
+      <a href="{% url 'password_change' %}">{% trans 'Change password' %}</a>
+    {% endif %}
   </li>
   {% if perms.auth.change_user %}
     <li>

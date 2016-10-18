@@ -8,11 +8,16 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import ngettext
 from django.views.generic import FormView, TemplateView
 from mtp_common.auth import api_client
+from django.shortcuts import render
 
 from .forms import ProcessCreditBatchForm, DiscardLockedCreditsForm, \
     FilterCreditHistoryForm
 
 logger = logging.getLogger('mtp')
+
+
+def inactive_password_change_view(request):
+    return render(request, 'cashbook/inactive_password_change.html')
 
 
 class DashboardView(TemplateView):

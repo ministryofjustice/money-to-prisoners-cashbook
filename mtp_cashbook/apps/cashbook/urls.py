@@ -1,7 +1,7 @@
 from django.conf.urls import url
 
 from .views import CreditBatchListView, CreditsLockedView, \
-    CreditHistoryView, DashboardView
+    CreditHistoryView, DashboardView, inactive_password_change_view
 from .views_training import ServiceOverview, Training
 
 urlpatterns = [
@@ -23,4 +23,6 @@ urlpatterns = [
 
     url(r'^service-overview/(?:(?P<page>[^/]+)/)?$', ServiceOverview.as_view(), name='service-overview'),
     url(r'^training/(?:(?P<page>[^/]+)/)?$', Training.as_view(), name='training'),
+
+    url(r'^inactive_password_change/$', inactive_password_change_view, name='inactive_password_change'),
 ]
