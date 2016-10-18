@@ -2,26 +2,36 @@
 
 .mtp-history-search {
   &__dates {
-    display: inline-block;
     background-color: $highlight-colour;
+    display: inline-block;
     padding: .5em 1em .5em .6em;
-    input { width: 100% }
-    .form-hint {
-      color: #666;
+
+    input {
+      width: 100%;
     }
   }
-  &__date-start, &__date-end {
-    display:inline-block;
+
+  &__date-start,
+  &__date-end {
+    display: inline-block;
     width: 6.7em;
   }
-  &__date-label, &__date-start, &__date-end {
+
+  &__date-label,
+  &__date-start,
+  &__date-end {
     padding-left: .5em;
   }
+
   &__field {
     display: inline-block;
     margin-right: 1em;
-    input { width: 100% }
+
+    input {
+      width: 100%;
+    }
   }
+
   @media print {
     display: none;
   }
@@ -29,13 +39,14 @@
 
 .mtp-batch__history {
   margin-top: 1em;
+
   h2 {
     margin-top: 0;
   }
 
   table {
-    width: 100%;
     margin-bottom: 1.5em;
+    width: 100%;
 
     thead th {
       border-top: 0;
@@ -45,15 +56,18 @@
 
 .mtp-history-header {
   &__credited {
-    background: #CDE2B7;
+    background: #cde2b7;
   }
+
   &__uncredited {
-    background: #575A96;
+    background: #575a96;
     color: $page-colour;
   }
+
   &__refunded {
-    background: #FFD9D9;
+    background: #ffd9d9;
   }
+
   &__anonymous {
     background: $orange-50;
   }

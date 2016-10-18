@@ -1,35 +1,36 @@
 // Application specific
 
 .mtp-training-navigation {
+  border: 1px solid $border-colour;
+  border-left: 0;
+  border-right: 0;
   display: block;
   list-style: none;
   overflow: hidden;
-  border: 1px solid $border-colour;
-  border-left: none;
-  border-right: none;
 }
 
 .mtp-training-navigation__item {
+  background: $page-colour;
   display: block;
   float: left;
-  background: $page-colour;
+
   a {
-    display: block;
-    line-height: 2em;
-    padding: 0.6em 2em;
-    font-size: 0.8em;
-    font-weight: bold;
     color: $text-colour;
+    display: block;
+    font-size: .8em;
+    font-weight: bold;
+    line-height: 2em;
+    padding: .6em 2em;
     text-decoration: none;
 
     @media (max-width: 640px) {
-      & {
-        padding: 0.6em 1em;
-      }
+      padding: .6em 1em;
     }
+
     &:focus {
       outline: none;
     }
+
     &:hover {
       text-decoration: underline;
     }
@@ -39,12 +40,14 @@
 .mtp-training-navigation__js-print {
   display: none;
   float: right;
+
   .js-enabled & {
     display: block;
   }
+
   a {
-    padding-right: 0;
     font-weight: normal;
+    padding-right: 0;
 
     &:focus {
       background: none;
@@ -55,6 +58,7 @@
 
 .mtp-training-navigation__item--active {
   background: $govuk-blue;
+
   a {
     color: $white;
 
@@ -81,39 +85,41 @@
 }
 
 .mtp-training-section {
-  margin: 4em 0;
   clear: both;
+  margin: 4em 0;
   overflow: hidden;
 
   .mtp-training-section__image {
-    float: right;
     border: 1px solid $border-color;
+    float: right;
 
     img {
       max-width: 465px;
     }
   }
+
   .mtp-training-section__text {
-    width: 22em;
-    margin-right: 1em;
     float: left;
+    margin-right: 1em;
+    width: 22em;
   }
 
   @media (max-width: 970px) {
     .mtp-training-section__image {
       float: left;
     }
+
     .mtp-training-section__text {
-      width: 100%;
       margin-right: 0;
       margin-top: 1em;
+      width: 100%;
     }
   }
 }
 
 .mtp-survey-link-cta {
-  padding: 0.8em 0.5em;
   background: $panel-colour;
+  padding: .8em .5em;
 
   &.important div.message {
     width: 85%;

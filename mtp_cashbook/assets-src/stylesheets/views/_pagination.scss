@@ -1,12 +1,10 @@
-.pagination {
-  display: block;
-  margin: 2em 0 0 0;
+.mtp-pagination {
   border-bottom: 1px solid $border-colour;
+  display: block;
+  margin: 2em 0 0;
 
   @media (max-width: 640px) {
-    & {
-      margin: 2em 0 0 0;
-    }
+    margin: 2em 0 0;
   }
 
   ul {
@@ -15,56 +13,33 @@
   }
 
   li {
+    float: left;
     font-family: "nta", Arial, sans-serif;
     font-size: 14px;
-    line-height: 1.14286;
+    font-size-adjust: .5;
     font-weight: 400;
-    text-transform: none;
-    font-size-adjust: 0.5;
-    float: left;
+    line-height: 1.14286;
     list-style: none;
-    text-align: right;
     margin: 0;
     padding: 0;
+    text-align: right;
+    text-transform: none;
     width: 49%;
 
     @media (min-width: 641px) {
-      & {
-        font-size: 16px;
-        line-height: 1.25;
-      }
+      font-size: 16px;
+      line-height: 1.25;
     }
 
     a {
       background-color: transparent;
-      display: block;
       color: $link-colour;
+      display: block;
       text-decoration: none;
 
-      &:hover, &:active {
+      &:hover,
+      &:active {
         background-color: $highlight-colour;
-      }
-
-      .pagination-label {
-        font-family: "nta", Arial, sans-serif;
-        font-size: 20px;
-        line-height: 1.11111;
-        font-weight: 400;
-        text-transform: none;
-        font-size-adjust: 0.5;
-        margin-bottom: 0.1em;
-        display: block;
-
-        @media (min-width: 641px) {
-          & {
-            font-size: 27px;
-            line-height: 1.25;
-          }
-        }
-      }
-
-      .pagination-part-title {
-        text-decoration: underline
       }
     }
 
@@ -73,16 +48,16 @@
       text-align: right;
 
       a {
-        padding: 0.75em 3em 0.75em 0;
+        padding: .75em 3em .75em 0;
 
         &:before {
-          background: transparent url(/static/images/arrow-sprite.png) no-repeat -102px -11px;
-          margin: -4px -32px 0 0;
+          background: transparent url('/static/images/arrow-sprite.png') no-repeat -102px -11px;
+          content: ' ';
           display: block;
           float: right;
-          width: 30px;
           height: 38px;
-          content: " "
+          margin: -4px -32px 0 0;
+          width: 30px;
         }
       }
     }
@@ -92,29 +67,51 @@
       text-align: left;
 
       a {
-        padding: 0.75em 0 0.75em 3em;
+        padding: .75em 0 .75em 3em;
 
         &:before {
-          background: transparent url(/static/images/arrow-sprite.png) no-repeat -20px -11px;
-          margin: -4px 0 0 -32px;
+          background: transparent url('/static/images/arrow-sprite.png') no-repeat -20px -11px;
+          content: ' ';
           display: block;
           float: left;
-          width: 30px;
           height: 38px;
-          content: " "
+          margin: -4px 0 0 -32px;
+          width: 30px;
         }
       }
     }
 
     @media (max-width: 640px) {
-      &.previous, &.next {
+      &.previous,
+      &.next {
         float: none;
-        width: 100%
+        width: 100%;
       }
 
       &.next a {
-        text-align: right
+        text-align: right;
       }
     }
   }
 }
+
+.mtp-pagination__label {
+  display: block;
+  font-family: "nta", Arial, sans-serif;
+  font-size: 20px;
+  font-size-adjust: .5;
+  font-weight: 400;
+  line-height: 1.11111;
+  margin-bottom: .1em;
+  text-transform: none;
+
+  @media (min-width: 641px) {
+    font-size: 27px;
+    line-height: 1.25;
+  }
+}
+
+.mtp-pagination__part-title {
+  text-decoration: underline;
+}
+
