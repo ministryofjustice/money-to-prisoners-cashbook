@@ -14,37 +14,39 @@
 
       span {
         display: inline-block;
+
         &.label {
           width: 310px;
         }
+
         &.total {
-          width: 200px;
-          text-align: right;
           font-weight: bold;
+          text-align: right;
+          width: 200px;
         }
       }
     }
 
     .container {
+      margin: 1.5em auto 0;
       max-width: $site-width;
-      margin: 1.5em auto 0 auto;
     }
 
     &.is-sticky {
-      position: fixed;
-      z-index: 1000;
-      top: 0;
+      background: #fded95;
+      border: 0;
       left: 0;
-      width: 100%;
       margin: 0;
       padding: .5em 1em;
-      border: 0;
-      background: #FDED95;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
 
       p {
         font-size: 1.2em;
-        margin-top: 0;
         margin-bottom: 0;
+        margin-top: 0;
         span:nth-child(2) {
           width: 20%;
         }
@@ -63,12 +65,14 @@
   }
 
   .mtp-batch__buttons {
-    margin: 1em 0 1em 0;
+    margin: 1em 0;
+    padding: 10px 0;
     width: 65%;
-    padding: 10px 0 10px 0;
+
     span {
       padding-right: 1em;
     }
+
     @media print {
       display: none;
     }
@@ -82,40 +86,50 @@
   }
 
   @media print {
-    h1, .check, .mtp-batch__buttons {
+    h1,
+    .check,
+    .mtp-batch__buttons {
       display: none;
     }
+
     table {
       width: 100%;
+
       tr {
-        height: 2em;
         border-bottom: 1px solid $text-colour;
+        height: 2em;
       }
+
       td.numeric {
         padding-right: 5em;
         width: 4em;
       }
     }
+
     .totals {
-      margin-top: 0;
       border-bottom: 0;
+      margin-top: 0;
       p span {
+        margin-bottom: 1em;
         &.label {
           font-size: em(10);
           width: 7em;
         }
+
         &.total {
-          width: 10%;
           font-size: em(10);
           font-weight: bold;
+          width: 10%;
         }
-        margin-bottom: 1em;
+
       }
     }
+
     .mtp-batch {
-      width: 100%;
       margin-bottom: 2em;
+      width: 100%;
     }
+
     .select-all,
     .print,
     .button {
