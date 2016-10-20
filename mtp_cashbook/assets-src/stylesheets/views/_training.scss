@@ -92,9 +92,10 @@
   .mtp-training-section__image {
     border: 1px solid $border-color;
     float: right;
+    max-width: 465px;
 
     img {
-      max-width: 465px;
+      max-width: 100%;
     }
   }
 
