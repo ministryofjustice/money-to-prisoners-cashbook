@@ -180,7 +180,7 @@ class VisualTests(CashbookTestCase):
     Tests that need to be run with a visual browser as they require interacting
     with browser controls (alerts or onbeforeunload)
     """
-    required_webdriver = 'firefox'
+    required_webdrivers = ('chrome', 'firefox')
 
     def setUp(self):
         super().setUp()
@@ -226,7 +226,7 @@ class Journeys(CashbookTestCase):
     sessions as a real user would do. This is used to automatically
     populate analytics with semi-realistic data
     """
-    required_webdriver = 'firefox'
+    required_webdrivers = ('chrome', 'firefox')
 
     # Route: 1, 2
     def test_journey_1(self):
