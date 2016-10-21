@@ -370,7 +370,7 @@ class AdminPagesTests(CashbookTestCase):
 
     def setUp(self):
         super().setUp()
-        self.login('test-prison-1-user-admin', 'test-prison-1-user-admin')
+        self.login('test-prison-1-ua', 'test-prison-1-ua')
         self.click_on_text('Manage users')
 
     def _create_dummy_user(self, username):
