@@ -34,5 +34,6 @@ npm-debug.log
 # failed test screenshots
 test/errorshots/
 
-# ghostdriver
+# phantom/selenium
+geckodriver.log
 ghostdriver.log

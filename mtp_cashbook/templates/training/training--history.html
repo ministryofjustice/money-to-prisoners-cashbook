@@ -1,17 +1,17 @@
 {% load i18n %}
 {% load static %}
 
-<h2 class="heading-large mtp-heading-training">{% trans 'Credit history' %}</h2>
+<h2 class="heading-large mtp-heading-training">{% trans 'All credits' %}</h2>
 
 <section class="mtp-training-section">
   <div class="mtp-training-section__image">
     <img src="{% static 'images/screenshots/training--history-a.png' %}"
-         alt="{% trans 'Credit history screen' %}" />
+         alt="{% trans 'All credits' %}" />
   </div>
   <div class="mtp-training-section__text">
     <p>
-      {% trans 'Use the <strong>credit history</strong> page to answer queries.' %}
-      {% trans 'You can find all credits processed by the team in this section.' %}
+      {% trans 'Use <strong>All credits</strong> to answer queries.' %}
+      {% trans 'You can find all the credits processed by the team in this section.' %}
     </p>
     <p>{% trans 'To find a credit, enter as much information as you have – for example, the prisoner name, prisoner number, sender name or amount.' %}</p>
     <p>
@@ -26,13 +26,13 @@
 <section class="mtp-training-section">
   <div class="mtp-training-section__image">
     <img src="{% static 'images/screenshots/training--history-b.png' %}"
-         alt="{% trans 'Credit history screen' %}" />
+         alt="{% trans 'All credits' %}" />
   </div>
   <div class="mtp-training-section__text">
     <p>{% trans 'Credits appear grouped by the date they were received.' %}</p>
     <p>{% trans 'They appear in chronological order with the most recent first.' %}</p>
-    <p>{% trans 'For each date, you’ll find credits that have been processed in P-NOMIS in a section called ‘Credited’.' %}</p>
-    <p>{% trans 'Credits waiting to be processed appear in the section called ‘Uncredited’.' %}</p>
+    <p>{% trans 'For each date, you’ll find credits that have been entered in NOMIS in a section called ‘Credited’.' %}</p>
+    <p>{% trans 'Credits waiting to be entered appear in the section called ‘Uncredited’.' %}</p>
     <p>
       {% trans 'Unknown sender credits are those where we don’t have complete sender information but we could match them to a prisoner in your prison.' %}
       {% trans 'They can’t be credited to prisoners so the senders will have to reclaim them.' %}

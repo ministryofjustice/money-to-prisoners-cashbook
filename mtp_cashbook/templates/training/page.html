@@ -32,21 +32,25 @@
     <ul class="group">
       {% if prev_page %}
         <li class="previous">
-          <a title="Navigate to previous part" rel="prev" href="{% url view.url_name page=prev_page.page %}">
+          <a title="{% trans 'Navigate to previous part' %}" rel="prev" href="{% url view.url_name page=prev_page.page %}">
             <span class="mtp-pagination__label">{% trans 'Previous' %}</span>
             <span class="mtp-pagination__part-title">{{ prev_page.title }}</span>
           </a>
         </li>
       {% endif %}
 
-      {% if next_page %}
-        <li class="next">
-          <a title="Navigate to next part" rel="next" href="{% url view.url_name page=next_page.page %}">
+      <li class="next">
+        {% if next_page %}
+          <a title="{% trans 'Navigate to next part' %}" rel="next" href="{% url view.url_name page=next_page.page %}">
             <span class="mtp-pagination__label">{% trans 'Next' %}</span>
             <span class="mtp-pagination__part-title">{{ next_page.title }}</span>
           </a>
-        </li>
-      {% endif %}
+        {% else %}
+          <a title="{% trans 'Return to home page' %}" rel="next" href="{% url 'dashboard' %}">
+            <span class="mtp-pagination__label">{% trans 'Home' %}</span>
+          </a>
+        {% endif %}
+      </li>
     </ul>
   </nav>
 
