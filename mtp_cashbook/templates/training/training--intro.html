@@ -4,6 +4,15 @@
 <h2 class="heading-large mtp-heading-training">{% trans 'Introduction' %}</h2>
 
 <section class="mtp-training-section">
+  <p>
+    {% trans 'This is the new digital cashbook.' %}
+    {% blocktrans trimmed with start_page_url='http://sendmoneytoaprisoner.service.justice.gov.uk/' %}
+      It will help you to process money as senders use the new <a href="{{ start_page_url }}">‘Send money to a prisoner’</a> service.
+    {% endblocktrans %}
+  </p>
+</section>
+
+<section class="mtp-training-section">
   <div class="mtp-training-section__image">
     <img src="{% static 'images/screenshots/training--intro.png' %}"
          alt="{% trans 'Digital cashbook dashboard' %}" />
@@ -11,20 +20,27 @@
   <div class="mtp-training-section__text">
     <p>{% trans 'There are 3 parts to the digital cashbook:' %}</p>
     <ul class="list list-bullet">
-      <li><a href="{% url 'training' page='new' %}">{% trans 'New credits' %}</a> – {% trans 'where you go to process credits in P-NOMIS' %}</li>
-      <li><a href="{% url 'training' page='history' %}">{% trans 'Credit history' %}</a> – {% trans 'where you view all credits received' %}</li>
-      <li><a href="{% url 'training' page='in-progress' %}">{% trans 'In progress' %}</a> – {% trans 'where you view colleagues working on credits and can take over their work' %}</li>
+      <li>{% trans 'New credits to enter into NOMIS' %} – {% trans 'this is where you’ll find all the credits you need to enter into NOMIS' %}</li>
+      <li>{% trans 'Credits currently being processed' %} – {% trans 'where you view colleagues working on credits and can take over their work' %}</li>
+      <li>{% trans 'All credits' %} – {% trans 'where you view all credits received including those from unknown senders* which you don’t have to deal with' %}</li>
     </ul>
     <p>{% trans 'On the home page, click on one of the boxes to open that section.' %}</p>
     <p>{% trans '‘Help’ text is available in each section.' %}</p>
   </div>
 </section>
 
+<section class="mtp-training-section">
+  <p>
+    * {% trans 'Payments from unknown senders will show up on the ‘all credits’ page.' %}
+    {% trans 'These will be reconciled under a specific code and the sender will be able to write to the prison to ask for a refund in the usual way.' %}
+  </p>
+</section>
+
 {% if ENVIRONMENT != 'prod' %}
   <section class="mtp-training-section">
     <p>
       <strong>
-        {% trans 'Please note – the training site details on here aren’t real so don’t try to process any of this prisoner information in P-NOMIS.' %}
+        {% trans 'Please note – the training site details on here aren’t real so don’t try to enter any of this prisoner information into NOMIS.' %}
       </strong>
     </p>
   </section>

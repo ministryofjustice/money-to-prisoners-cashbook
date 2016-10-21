@@ -18,12 +18,10 @@
          alt="{% trans 'Money can be sent by internet, mobile or telephone banking' %}" />
   </div>
   <div class="mtp-training-section__text">
-    <p>{% trans 'Citizens send money by bank transfer.' %}</p>
-    <p>{% trans 'The sender sends money in 1 of 3 ways – internet, mobile or telephone banking.' %}</p>
-    <p>
-      {% trans 'They can’t do this in person at their bank branch or internationally.' %}
-      {% trans 'You’ll be informed when international payments become possible.' %}
-    </p>
+    <p>{% trans 'Citizens can send money by bank transfer or debit card.' %}</p>
+    <p>{% trans 'If a sender chooses to send money by bank transfer, they can do this in 1 of 3 ways – by mobile app or using internet or telephone banking.' %}</p>
+    <p>{% trans 'They can’t do this in person at their bank branch or by international bank transfer.' %}</p>
+    <p>{% trans 'International payments must be done by debit card.' %}</p>
   </div>
 </section>
 
@@ -34,8 +32,13 @@
          alt="{% trans 'Citizens send money by bank transfer' %}" />
   </div>
   <div class="mtp-training-section__text">
+    <p>
+      {% trans 'Any incorrect bank transfers will not reach you.' %}
+      {% trans 'For example:' %}
+    </p>
     <p>{% trans 'The sender of £20 uses the RIGHT prisoner details (the correct number and correct date of birth).' %}</p>
     <p>{% trans 'The sender of £40 uses the WRONG prisoner details (the incorrect number and correct date of birth).' %}</p>
+    <p>{% trans 'Payments made by debit card will always have the correct prisoner details.' %}</p>
   </div>
 </section>
 
@@ -46,6 +49,6 @@
          alt="{% trans 'The money reaches the NOMS bank account' %}" />
   </div>
   <div class="mtp-training-section__text">
-    <p>{% trans 'The money reaches the NOMS bank account.' %}</p>
+    <p>{% trans 'The money reaches the National Offender Management Service (NOMS) bank account.' %}</p>
   </div>
 </section>
