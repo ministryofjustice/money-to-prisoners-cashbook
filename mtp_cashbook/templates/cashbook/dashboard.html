@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load numbers %}
 
 {% block inner_content %}
   <header class="ContentHeader">
@@ -9,6 +10,9 @@
   {% include "mtp_common/includes/message_box.html" %}
 
   <h1 class="heading-large">{% trans 'Digital cashbook' %}</h1>
+  <p>
+    {% trans 'Credits received from the Send Money to a Prisoner service.' %}
+  </p>
   {% if ENVIRONMENT != 'prod' %}
     <p>
       {% trans 'Please try out this site. The credits and prisoners listed are not real.' %}
@@ -16,44 +20,30 @@
     </p>
   {% endif %}
 
-  <div class="help-box">
-    <div class="help-box-title" aria-controls="help-box-contents" aria-expanded="true" role="heading">
-      <div></div><a href="#">{% trans 'Help' %}</a>
-    </div>
-    <div class="panel panel-border-narrow help-box-contents" id="help-box-contents">
-      <p>{% trans 'You can click on:' %}</p>
-      <ul class="list list-bullet">
-        <li>{% trans '‘New’ to process credits in NOMIS' %}</li>
-        <li>{% trans '‘History’ to view all credits processed' %}</li>
-        <li>{% trans '‘In progress’ to view credits currently being processed by your team' %}</li>
-      </ul>
-    </div>
-  </div>
-
   <div class="grid-row">
-    <div class="column-one-half">
-      <div class="mtp-status-box">
-        <a href="{% url 'credit-list' %}">
-          <div class="mtp-status-box__number">{{ new_credits }}</div>
-          <div class="mtp-status-box__title">{% trans 'New' %}</div>
-          <div class="mtp-status-box__secondary-text">{% trans 'Process credits into NOMIS' %}</div>
-        </a>
+    <div class="mtp-status-box"></div>
+    <div class="mtp-status-box">
+      <div class="mtp-status-box__title">{% trans 'New credits to enter into NOMIS' %}</div>
+      <div class="mtp-status-box__number">{{ new_credits|shortenint }}</div>
+      <div class="mtp-status-box__button">
+        <a class="button" href="{% url 'credit-list' %}">{% trans 'Enter next 20' %}</a>
       </div>
-      {% if locked_credits %}
-      <div class="mtp-status-box">
-        <a href="{% url 'credits-locked' %}">
-          <div class="mtp-status-box__number">{{ locked_credits }}</div>
-          <div class="mtp-status-box__title">{% trans 'In progress' %}</div>
-          <div class="mtp-status-box__secondary-text">{% trans 'Credits currently being processed' %}</div>
-        </a>
+    </div>
+    {% if locked_credits %}
+    <div class="mtp-status-box">
+      <div class="mtp-status-box__title">{% trans 'Currently being entered' %}</div>
+      <div class="mtp-status-box__secondary-text">{% trans 'Look at credits being entered into NOMIS now and release them, if needed' %}</div>
+      <div class="mtp-status-box__number">{{ locked_credits|shortenint }}</div>
+      <div class="mtp-status-box__link">
+        <a href="{% url 'credits-locked' %}">{% trans 'View' %}</a>
       </div>
-      {% endif %}
-      <div class="mtp-status-box">
-        <a href="{% url 'credit-history' %}">
-          <div class="mtp-status-box__number">{{ all_credits }}</div>
-          <div class="mtp-status-box__title">{% trans 'History' %}</div>
-          <div class="mtp-status-box__secondary-text">{% trans 'Credits already processed' %}</div>
-        </a>
+    </div>
+    {% endif %}
+    <div class="mtp-status-box">
+      <div class="mtp-status-box__title">{% trans 'All credits' %}</div>
+      <div class="mtp-status-box__number">{{ all_credits|shortenint }}</div>
+      <div class="mtp-status-box__link">
+        <a href="{% url 'credit-history' %}">{% trans 'View all credits' %}</a>
       </div>
     </div>
   </div>

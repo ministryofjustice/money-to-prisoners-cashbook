@@ -1,44 +1,41 @@
 // Application specific
 
 .mtp-status-box {
-  background-color: $white;
-  border: 2px solid $govuk-blue;
-  margin: $gutter-half 0;
-
-  a {
-    color: $govuk-blue;
-    display: block;
-    padding: $gutter-half;
-    text-decoration: none;
-  }
-
-  &:hover,
-  &:focus {
-    background-color: $govuk-blue;
-
-    a {
-      color: $white;
-    }
-  }
-
-  .mtp-status-box__title {
-    font-size: 24px;
-    font-weight: bold;
-  }
-
-  .mtp-status-box__number {
-    float: right;
-    font-size: 42px;
-    font-weight: bold;
-  }
+  overflow: hidden;
+  margin: $gutter $gutter-half;
+  padding-bottom: $gutter-half;
+  border-bottom: 1px solid $grey-1;
 
   .mtp-status-box__secondary-text {
     font-size: 16px;
-    text-decoration: underline;
+    padding-top: 8px;
+  }
+
+  .mtp-status-box__number {
+    float: left;
+    display: block;
+    min-width: 12%;
+    font-size: 42px;
+    font-weight: bold;
+    padding-top: 8px;
+  }
+
+  .mtp-status-box__link {
+    overflow: hidden;
+    padding: 29px 0 0 10px;
+
+    a {
+      color: $govuk-blue;
+      text-decoration: underline;
+    }
+  }
+
+  .mtp-status-box__button {
+    overflow: hidden;
+    padding: 16px 0 0 10px;
   }
 }
 
 .mtp-dashboard-training {
-  border-top: 1px solid $border-color;
   clear: both;
 }
