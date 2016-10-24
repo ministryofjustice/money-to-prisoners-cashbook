@@ -39,6 +39,7 @@
           <div class="mtp-status-box__secondary-text">{% trans 'Process credits into NOMIS' %}</div>
         </a>
       </div>
+      {% if locked_credits %}
       <div class="mtp-status-box">
         <a href="{% url 'credits-locked' %}">
           <div class="mtp-status-box__number">{{ locked_credits }}</div>
@@ -46,6 +47,7 @@
           <div class="mtp-status-box__secondary-text">{% trans 'Credits currently being processed' %}</div>
         </a>
       </div>
+      {% endif %}
       <div class="mtp-status-box">
         <a href="{% url 'credit-history' %}">
           <div class="mtp-status-box__title">{% trans 'History' %}</div>
