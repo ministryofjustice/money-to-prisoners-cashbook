@@ -54,7 +54,7 @@ class DashboardViewTestCase(MTPBaseTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertFalse(response.context['form'].is_valid())
 
-    def _generate_mock_response(self, available, locked_by_user, overall_locked):
+    def _generate_mock_response(self, available, locked_by_user, overall_locked, all_credits):
         def mock_response(*args, **kwargs):
             if 'user' in kwargs:
                 return {'count': locked_by_user}
@@ -63,6 +63,8 @@ class DashboardViewTestCase(MTPBaseTestCase):
                 return {'count': overall_locked}
             elif status == 'available':
                 return {'count': available}
+            else:
+                return {'count': all_credits}
             return None
         return mock_response
 
@@ -70,7 +72,7 @@ class DashboardViewTestCase(MTPBaseTestCase):
         self.login()
 
         conn = self.mocked_api_client.get_connection().credits
-        conn.get.side_effect = self._generate_mock_response(0, 0, 0)
+        conn.get.side_effect = self._generate_mock_response(0, 0, 0, 50)
 
         response = self.client.get(self.dashboard_url)
         self.assertEqual(response.status_code, 200)
@@ -80,7 +82,7 @@ class DashboardViewTestCase(MTPBaseTestCase):
         self.login()
 
         conn = self.mocked_api_client.get_connection().credits
-        conn.get.side_effect = self._generate_mock_response(21, 0, 0)
+        conn.get.side_effect = self._generate_mock_response(21, 0, 0, 50)
 
         response = self.client.get(self.dashboard_url)
         self.assertEqual(response.status_code, 200)
@@ -90,7 +92,7 @@ class DashboardViewTestCase(MTPBaseTestCase):
         self.login()
 
         conn = self.mocked_api_client.get_connection().credits
-        conn.get.side_effect = self._generate_mock_response(0, 3, 0)
+        conn.get.side_effect = self._generate_mock_response(0, 3, 0, 50)
 
         response = self.client.get(self.dashboard_url)
         self.assertEqual(response.status_code, 200)
@@ -100,7 +102,7 @@ class DashboardViewTestCase(MTPBaseTestCase):
         self.login()
 
         conn = self.mocked_api_client.get_connection().credits
-        conn.get.side_effect = self._generate_mock_response(21, 3, 0)
+        conn.get.side_effect = self._generate_mock_response(21, 3, 0, 50)
 
         response = self.client.get(self.dashboard_url)
         self.assertEqual(response.status_code, 200)
@@ -110,7 +112,7 @@ class DashboardViewTestCase(MTPBaseTestCase):
         self.login()
 
         conn = self.mocked_api_client.get_connection().credits
-        conn.get.side_effect = self._generate_mock_response(21, 3, 19)
+        conn.get.side_effect = self._generate_mock_response(21, 3, 19, 50)
 
         response = self.client.get(self.dashboard_url)
         self.assertEqual(response.status_code, 200)
