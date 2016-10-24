@@ -68,7 +68,7 @@ class LockedPaymentsPageTests(CashbookTestCase):
 
     def setUp(self):
         super().setUp()
-        self.login_and_go_to('In progress')
+        self.login_and_go_to('View')
 
     def test_going_to_the_locked_payments_page(self):
         self.assertInSource('Credits in progress')
@@ -107,7 +107,7 @@ class NewPaymentsPageTests(CashbookTestCase):
 
     def setUp(self):
         super().setUp()
-        self.login_and_go_to('New')
+        self.login_and_go_to('Enter next 20')
 
     def test_going_to_the_credits_page(self):
         self.assertInSource('New credits')
@@ -188,7 +188,7 @@ class VisualTests(CashbookTestCase):
 
     def test_leaving_confirming_incomplete_batch(self):
         # we need firefox as this is using a native dialog
-        self.login_and_go_to('New')
+        self.login_and_go_to('Enter next 20')
         self.select_first_payment()
         self.click_on_text('Home')
         self.driver.switch_to.alert.dismiss()
@@ -196,7 +196,7 @@ class VisualTests(CashbookTestCase):
 
     def test_leaving_not_confirming_incomplete_batch(self):
         # we need firefox as this is using a native dialog
-        self.login_and_go_to('New')
+        self.login_and_go_to('Enter next 20')
         self.select_first_payment()
         self.click_on_text('Home')
         self.driver.switch_to.alert.accept()
@@ -208,14 +208,14 @@ class VisualTests(CashbookTestCase):
                                                                  'document.activeElement.id];')
             return element_tag == 'INPUT' and element_id == 'id_search'
 
-        self.login_and_go_to('History')
+        self.login_and_go_to('View all credits')
         self.assertTrue(is_search_input_focused())
         self.type_in('id_start', 'Today')
         self.click_on_text('Search')
         self.assertFalse(is_search_input_focused())
 
     def test_go_home_with_back_button(self):
-        self.login_and_go_to('New')
+        self.login_and_go_to('Enter next 20')
         self.driver.execute_script('window.history.go(-1)')
         self.assertCurrentUrl('/')
 
@@ -231,7 +231,7 @@ class Journeys(CashbookTestCase):
     # Route: 1, 2
     def test_journey_1(self):
         self.login('test-prison-1', 'test-prison-1')
-        self.click_on_text('New')
+        self.click_on_text('Enter next 20')
         self.select_all_payments()
         self.click_on_text('Done')
         self.assertCurrentUrl('/dashboard-batch-complete/')
@@ -239,14 +239,14 @@ class Journeys(CashbookTestCase):
     # Route: 1, 3
     def test_journey_2(self):
         self.login('test-prison-1', 'test-prison-1')
-        self.click_on_text('New')
+        self.click_on_text('Enter next 20')
         self.click_on_text('Home')
         self.assertCurrentUrl('/dashboard-batch-discard/')
 
     # Route: 1, 4, 5
     def test_journey_3(self):
         self.login('test-prison-1', 'test-prison-1')
-        self.click_on_text('New')
+        self.click_on_text('Enter next 20')
         self.select_first_payment()
         self.click_on_text('Done')
         self.click_on_text('Yes')
@@ -255,7 +255,7 @@ class Journeys(CashbookTestCase):
     # Route: 1, 4, 6
     def test_journey_4(self):
         self.login('test-prison-1', 'test-prison-1')
-        self.click_on_text('New')
+        self.click_on_text('Enter next 20')
         self.select_first_payment()
         self.click_on_text('Done')
         self.click_on_text('No, continue processing')
@@ -264,7 +264,7 @@ class Journeys(CashbookTestCase):
     # Route 1, 7, 8
     def test_journey_5(self):
         self.login('test-prison-1', 'test-prison-1')
-        self.click_on_text('New')
+        self.click_on_text('Enter next 20')
         self.select_first_payment()
         self.click_on_text('Home')
         self.driver.switch_to.alert.accept()
@@ -273,7 +273,7 @@ class Journeys(CashbookTestCase):
     # Route 1, 7, 9
     def test_journey_6(self):
         self.login('test-prison-1', 'test-prison-1')
-        self.click_on_text('New')
+        self.click_on_text('Enter next 20')
         self.select_first_payment()
         self.click_on_text('Home')
         self.driver.switch_to.alert.dismiss()
@@ -281,44 +281,44 @@ class Journeys(CashbookTestCase):
 
     def test_journey_7(self):
         self.login('test-prison-1', 'test-prison-1')
-        self.click_on_text('New')
+        self.click_on_text('Enter next 20')
         self.click_on_text('Help')
         self.click_on_text('Home')
 
     def test_journey_8(self):
         self.login('test-prison-1', 'test-prison-1')
-        self.click_on_text('New')
+        self.click_on_text('Enter next 20')
         self.click_on_text('Help')
         self.click_on_text('Help')
         self.click_on_text('Home')
 
     def test_journey_9(self):
         self.login('test-prison-1', 'test-prison-1')
-        self.click_on_text('New')
+        self.click_on_text('Enter next 20')
         self.click_on_text('Help')
         self.click_on_text('Help')
         self.click_on_text('Home')
 
     def test_journey_10(self):
         self.login('test-prison-1', 'test-prison-1')
-        self.click_on_text('New')
+        self.click_on_text('Enter next 20')
         self.click_on_text('Home')
         self.click_on_text('Sign out')
 
     def test_journey_11(self):
         self.login('test-prison-1', 'test-prison-1')
-        self.click_on_text('New')
+        self.click_on_text('Enter next 20')
         self.driver.execute_script('window.history.go(-1)')
         self.click_on_text('Sign out')
 
     def test_journey_12(self):
         self.login('test-prison-1', 'test-prison-1')
-        self.click_on_text('In progress')
+        self.click_on_text('View')
         self.click_on_text('Release')
 
     def test_journey_13(self):
         self.login('test-prison-1', 'test-prison-1')
-        self.click_on_text('In progress')
+        self.click_on_text('View')
         self.get_element('//tbody//input[@type="checkbox"][1]/following-sibling::label').click()
         self.click_on_text('Release')
 
@@ -330,7 +330,7 @@ class HistoryPageTests(CashbookTestCase):
 
     def setUp(self):
         super().setUp()
-        self.login_and_go_to('History')
+        self.login_and_go_to('View all credits')
 
     def get_search_button(self):
         button = self.driver.find_element_by_xpath('//input[@value="Search"]')

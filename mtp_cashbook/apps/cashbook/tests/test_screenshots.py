@@ -44,6 +44,8 @@ class DashboardScreenshotGenerator(ScreenshotGenerator):
                         return {'count': 0}
                     if kwargs.get('status') == 'locked':
                         return {'count': 20}
+                    else:
+                        return {'count': 234}
                 credits_client.get.side_effect = api_calls
 
                 super().run()
@@ -110,7 +112,7 @@ class NewCreditsScreenshotGenerator(ScreenshotGenerator):
 
     def test_setup_screenshot(self):
         self.login('username', 'password')
-        self.click_on_text('New')
+        self.click_on_text('Enter next 20')
 
 
 class NewCreditsTickedScreenshotGenerator(ScreenshotGenerator):
@@ -119,7 +121,7 @@ class NewCreditsTickedScreenshotGenerator(ScreenshotGenerator):
 
     def test_setup_screenshot(self):
         self.login('username', 'password')
-        self.click_on_text('New')
+        self.click_on_text('Enter next 20')
         xpath = '//input[@type="checkbox" and @data-amount][1]'
         checkbox_id = self.get_element(xpath).get_attribute('id')
         self.get_element('//label[@for="%s"]' % checkbox_id).click()
@@ -151,7 +153,7 @@ class InProgressScreenshotGenerator(ScreenshotGenerator):
 
     def test_setup_screenshot(self):
         self.login('username', 'password')
-        self.click_on_text('In progress')
+        self.click_on_text('View')
         self.set_screenshot_size(top=330, left=40)
 
 
@@ -170,7 +172,7 @@ class HistorySearchScreenshotGenerator(ScreenshotGenerator):
 
     def test_setup_screenshot(self):
         self.login('username', 'password')
-        self.click_on_text('History')
+        self.click_on_text('View all credits')
         self.type_in('id_search', 'A1409AE')
         self.type_in('id_start', datetime.now().strftime('%d/%m/%y'))
         self.set_screenshot_size(top=300, left=40)
@@ -279,6 +281,6 @@ class HistoryResultsScreenshotGenerator(ScreenshotGenerator):
 
     def test_setup_screenshot(self):
         self.login('username', 'password')
-        self.click_on_text('History')
+        self.click_on_text('View all credits')
         self.driver.find_elements_by_xpath('//*[text() = "Collapse"]')[1].click()
         self.set_screenshot_size(top=1130)

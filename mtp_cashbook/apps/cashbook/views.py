@@ -43,8 +43,10 @@ class DashboardView(TemplateView):
         available = credit_client.get(status='available')
         my_locked = credit_client.get(user=self.request.user.pk, status='locked')
         locked = credit_client.get(status='locked')
+        all_credits = credit_client.get()
         context_data['new_credits'] = available['count'] + my_locked['count']
         context_data['locked_credits'] = locked['count']
+        context_data['all_credits'] = all_credits['count']
         return context_data
 
 
