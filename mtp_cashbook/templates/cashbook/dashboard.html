@@ -11,7 +11,9 @@
 
   <h1 class="heading-large">{% trans 'Digital cashbook' %}</h1>
   <p>
-    {% trans 'Credits received from the Send Money to a Prisoner service.' %}
+    {% blocktrans%}
+      Credits received from the <a href="http://sendmoneytoaprisoner.service.justice.gov.uk/">Send Money to a Prisoner</a> service.
+    {% endblocktrans %}
   </p>
   {% if ENVIRONMENT != 'prod' %}
     <p>
