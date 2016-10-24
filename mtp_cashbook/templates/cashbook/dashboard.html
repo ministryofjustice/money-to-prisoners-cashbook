@@ -50,6 +50,7 @@
       {% endif %}
       <div class="mtp-status-box">
         <a href="{% url 'credit-history' %}">
+          <div class="mtp-status-box__number">{{ all_credits }}</div>
           <div class="mtp-status-box__title">{% trans 'History' %}</div>
           <div class="mtp-status-box__secondary-text">{% trans 'Credits already processed' %}</div>
         </a>
