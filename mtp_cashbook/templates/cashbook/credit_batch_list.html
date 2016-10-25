@@ -26,13 +26,11 @@
       {% include 'mtp_common/forms/error-summary.html' with form=form only %}
 
       <div class="help-box">
-        <p>{% trans "These credits are ready to be processed in NOMIS. When you’ve finished crediting, click ‘Done’." %}</p>
-
+        <p>{% trans "Here are the next 20 of 203 new credits to be processed in NOMIS. Enter credits into NOMIS, tick the box then click the green confirm button. These credits are locked to you until completed or released by a colleague." %}</p>
         <div class="help-box-title" aria-controls="help-box-contents" aria-expanded="true" role="heading">
-          <div></div><a href="#">{% trans 'Help' %}</a>
+          <div></div><a href="#">{% trans 'How to use this with NOMIS' %}</a>
         </div>
         <div class="panel panel-border-narrow help-box-contents" id="help-box-contents">
-          <p>{% trans 'How to use the Digital Cashbook with NOMIS:' %}</p>
           <ul>
             <li>{% trans 'You can credit in NOMIS in the usual way but remember to select the <strong>‘Misc Receipt - Private Cash’ category as Credit Type</strong>' %}</li>
             <li>{% trans 'You don’t need to use a reference' %}</li>
@@ -54,25 +52,28 @@
         </div>
 
         <div class="totals js-StickyHeader">
-          <div class="container js-RunningTotal" data-label="{% trans 'Credits processed in NOMIS' %}">
+          <div class="container js-RunningTotal" data-label="{% trans 'Entered into NOMIS by you ()' %}">
             <p>
-              <span class='label'>{% trans 'Control total' %}</span><span class='total'>&pound;{{total|currency}}</span>
+              <span class='label'>{% trans 'Control total ()' %}</span><span class='total'>&pound;{{total|currency}}</span>
             </p>
+            <div class="mtp-confirm__button">
+              {% if object_list %}
+              <button type="submit" name="submit" value="submit" class="button">{% trans "Confirm entered in NOMIS" %}</button>
+              {% endif %}
+            </div>
           </div>
         </div>
 
-        {% include "cashbook/includes/batch_buttons.html" %}
-
         <table>
           <thead>
-            {% include "cashbook/includes/table_actions.html" with location='header' field_name=form.credits.html_name %}
+            {% include "cashbook/includes/batch_table_actions.html" with location='header' field_name=form.credits.html_name %}
 
             <tr>
               <th>{% trans "Prisoner no" %}</th>
               <th>{% trans "Prisoner name" %}</th>
-              <th>{% trans "Amount&nbsp;(&pound;)" %}</th>
+              <th>{% trans "Amount" %}</th>
               <th>{% trans "Sender" %}</th>
-              <th class="check"><span id="id_credits-label">{% trans "Processed" %}</span></th>
+              <th class="check"><span id="id_credits-label">{% trans "Entered in NOMIS?" %}</span></th>
             </tr>
           </thead>
 
@@ -81,7 +82,7 @@
               <tr>
                 <td>{{ credit.prisoner_number }}</td>
                 <td>{{ credit.prisoner_name }}</td>
-                <td class="numeric">{{ credit.amount|currency }}</td>
+                <td class="numeric">&pound;{{ credit.amount|currency }}</td>
                 <td>{{ credit.sender_name }}</td>
                 <td class="check">
                   <input
@@ -99,11 +100,9 @@
           </tbody>
 
           <tfoot>
-            {% include "cashbook/includes/table_actions.html" with location='footer' field_name=form.credits.html_name %}
+            {% include "cashbook/includes/batch_table_actions.html" with location='footer' field_name=form.credits.html_name %}
           </tfoot>
         </table>
-
-        {% include "cashbook/includes/batch_buttons.html" %}
 
       </div>
     {% else %}

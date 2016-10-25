@@ -1,14 +1,36 @@
 .v-batch {
 
+  table {
+    width: 100%;
+
+    td:nth-child(3) {
+      text-align: left;
+    }
+
+    .mtp-select-all {
+      text-align: center;
+    }
+  }
+
+  .help-box {
+    padding-bottom: 15px;
+
+    .help-box-title {
+      padding-top: 15px;
+    }
+  }
+
   .totals {
-    border-bottom: 2px solid $bg-color-alt;
+    border-bottom: 4px solid $text-colour;
+    border-top: 4px solid $text-colour;
+    margin: 20px 0;
+    padding: 20px 0;
 
     p {
-      font-size: em(24);
+      font-size: em(22);
       margin-bottom: 1em;
 
       &:first-child {
-        font-size: em(36);
         margin-bottom: .1em;
       }
 
@@ -20,9 +42,9 @@
         }
 
         &.total {
-          font-weight: bold;
           text-align: right;
           width: 200px;
+          font-weight: bold;
         }
       }
     }
