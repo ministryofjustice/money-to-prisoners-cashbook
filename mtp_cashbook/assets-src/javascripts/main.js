@@ -18,6 +18,7 @@
   require('batch-validation').BatchValidation.init();
   require('sticky-header').StickyHeader.init();
   require('running-total').RunningTotal.init();
+  require('confirmation-button').ConfirmationButton.init();
   require('search-focus').SearchFocus.init();
   require('training').Training.init();
   require('selection-buttons').SelectionButtons.init();
