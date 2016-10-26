@@ -1,6 +1,7 @@
 from itertools import chain
 import logging
 
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy, reverse
@@ -44,9 +45,12 @@ class DashboardView(TemplateView):
         my_locked = credit_client.get(user=self.request.user.pk, status='locked')
         locked = credit_client.get(status='locked')
         all_credits = credit_client.get()
-        context_data['new_credits'] = available['count'] + my_locked['count']
-        context_data['locked_credits'] = locked['count']
-        context_data['all_credits'] = all_credits['count']
+        context_data.update({
+            'start_page_url': settings.START_PAGE_URL,
+            'new_credits': available['count'] + my_locked['count'],
+            'locked_credits': locked['count'],
+            'all_credits': all_credits['count'],
+        })
         return context_data
 
 

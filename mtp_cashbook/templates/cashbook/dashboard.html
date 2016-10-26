@@ -10,8 +10,8 @@
   {% include "mtp_common/includes/message_box.html" %}
 
   <p>
-    {% blocktrans%}
-      Credits received from the <a href="http://sendmoneytoaprisoner.service.justice.gov.uk/">Send Money to a Prisoner</a> service.
+    {% blocktrans trimmed %}
+      Credits received from the <a href="{{ start_page_url }}" target="_blank">‘Send money to a prisoner’</a> service.
     {% endblocktrans %}
   </p>
   {% if ENVIRONMENT != 'prod' %}

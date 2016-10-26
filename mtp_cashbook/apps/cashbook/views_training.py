@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.shortcuts import redirect
@@ -49,6 +50,7 @@ class MultiPageView(TemplateView):
                 {'name': _('Home'), 'url': '/'},
                 {'name': self.training_title}
             ],
+            'start_page_url': settings.START_PAGE_URL,
         })
         return kwargs
 
