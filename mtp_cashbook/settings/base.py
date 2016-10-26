@@ -228,6 +228,8 @@ ZENDESK_CUSTOM_FIELDS = {
     'contact_email': 30769508,
 }
 
+START_PAGE_URL = os.environ.get('START_PAGE_URL', 'http://sendmoneytoaprisoner.service.justice.gov.uk/')
+
 try:
     from .local import *  # noqa
 except ImportError:
