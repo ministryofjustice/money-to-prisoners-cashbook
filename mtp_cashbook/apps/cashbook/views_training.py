@@ -45,6 +45,10 @@ class MultiPageView(TemplateView):
             'prev_page': prev_page,
             'next_page': next_page,
             'pages': self.pages,
+            'breadcrumbs': [
+                {'name': _('Home'), 'url': '/'},
+                {'name': self.training_title}
+            ],
         })
         return kwargs
 

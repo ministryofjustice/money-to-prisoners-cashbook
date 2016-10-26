@@ -10,8 +10,7 @@
 {% block inner_content %}
 
   <header class="ContentHeader">
-    <a id="header-home-link" href="{% url 'dashboard-batch-discard' %}" class="ContentHeader-back">{% trans 'Home' %}</a>
-    <h1 class="heading-xlarge">{% trans 'New credits' %}</h1>
+    <h1 class="heading-large">{{ view.title }}</h1>
   </header>
 
   {% include "mtp_common/includes/message_box.html" %}

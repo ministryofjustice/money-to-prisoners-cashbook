@@ -13,6 +13,13 @@ class CashbookTestCase(FunctionalTestCase):
     auto_load_test_data = True
     accessibility_scope_selector = '#content'
 
+    def click_logout(self):
+        """
+        Finds and clicks the log-out link
+        NB: assumed to be last link; can't use click_on_text('Sign out [name]') due to whitespace
+        """
+        self.driver.find_element_by_css_selector('#proposition-links li:last-child a').click()
+
     def login_and_go_to(self, link_text):
         self.login('test-prison-1', 'test-prison-1')
         self.click_on_text(link_text)
@@ -56,7 +63,7 @@ class LoginTests(CashbookTestCase):
 
     def test_logout(self):
         self.login('test-prison-1', 'test-prison-1')
-        self.click_on_text('Sign out')
+        self.click_logout()
         self.assertCurrentUrl('/login/')
         self.assertShowingView('login')
 
@@ -71,7 +78,7 @@ class LockedPaymentsPageTests(CashbookTestCase):
         self.login_and_go_to('View')
 
     def test_going_to_the_locked_payments_page(self):
-        self.assertInSource('Credits in progress')
+        self.assertInSource('Currently being entered')
         self.assertInSource('Staff name')
         self.assertInSource('Time in progress')
 
@@ -303,13 +310,13 @@ class Journeys(CashbookTestCase):
         self.login('test-prison-1', 'test-prison-1')
         self.click_on_text('Enter next 20')
         self.click_on_text('Home')
-        self.click_on_text('Sign out')
+        self.click_logout()
 
     def test_journey_11(self):
         self.login('test-prison-1', 'test-prison-1')
         self.click_on_text('Enter next 20')
         self.driver.execute_script('window.history.go(-1)')
-        self.click_on_text('Sign out')
+        self.click_logout()
 
     def test_journey_12(self):
         self.login('test-prison-1', 'test-prison-1')
@@ -338,7 +345,7 @@ class HistoryPageTests(CashbookTestCase):
         return button
 
     def test_going_to_history_page(self):
-        self.assertInSource('Credit history')
+        self.assertInSource('All credits')
         self.get_search_button()
 
     def test_do_a_search_and_make_sure_it_takes_you_back_to_history_page(self):
