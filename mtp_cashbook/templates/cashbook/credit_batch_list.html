@@ -52,11 +52,23 @@
         </div>
 
         <div class="totals js-StickyHeader">
-          <div class="container js-RunningTotal" data-label="{% trans 'Entered into NOMIS by you ()' %}">
-            <p>
-              <span class='label'>{% trans 'Control total ()' %}</span><span class='total'>&pound;{{total|currency}}</span>
-            </p>
-            <div class="mtp-confirm__button">
+          <div class="grid-row">
+            <div class="column-one-third">
+              <p class='label'>{% trans 'Control total ()' %}</p>
+            </div>
+
+            <div class="column-two-thirds">
+              <p class='total'>&pound;{{total|currency}}</p>
+            </div>
+
+            <div class="column-one-third">
+              <p>{% trans 'Entered into NOMIS by you ()' %}</p>
+            </div>
+
+            <div class="column-one-third label container js-RunningTotal" data-label="">
+            </div>
+
+            <div class="column-one-third mtp-confirm__button">
               {% if object_list %}
               <button type="submit" name="submit" value="submit" class="button">{% trans "Confirm entered in NOMIS" %}</button>
               {% endif %}
@@ -69,7 +81,7 @@
             {% include "cashbook/includes/batch_table_actions.html" with location='header' field_name=form.credits.html_name %}
 
             <tr>
-              <th>{% trans "Prisoner no" %}</th>
+              <th>{% trans "Prisoner number" %}</th>
               <th>{% trans "Prisoner name" %}</th>
               <th>{% trans "Amount" %}</th>
               <th>{% trans "Sender" %}</th>

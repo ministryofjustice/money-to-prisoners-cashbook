@@ -1,74 +1,66 @@
 .v-batch {
 
-  table {
-    width: 100%;
-
-    td:nth-child(3) {
-      text-align: left;
-    }
-
-    .mtp-select-all {
-      text-align: center;
-    }
-  }
-
-  .help-box {
-    padding-bottom: 15px;
-
-    .help-box-title {
-      padding-top: 15px;
-    }
+  .help-box-title {
+    padding: 20px 0 20px;
   }
 
   .totals {
     border-bottom: 4px solid $text-colour;
     border-top: 4px solid $text-colour;
     margin: 20px 0;
-    padding: 20px 0;
+    padding: 40px 0 20px 0;
 
     p {
-      font-size: em(22);
-      margin-bottom: 1em;
-
-      &:first-child {
-        margin-bottom: .1em;
-      }
-
-      span {
-        display: inline-block;
-
-        &.label {
-          width: 310px;
-        }
-
-        &.total {
-          text-align: right;
-          width: 200px;
-          font-weight: bold;
-        }
-      }
+      font-size: 1.1em;
     }
 
-    .container {
-      margin: 1.5em auto 0;
-      max-width: $site-width;
+    .label, .total {
+      margin: 5px 0 5px;
+    }
+
+    .grid-row {
+      width: 100%;
+      margin: 0;
+    }
+
+    .column-two-thirds {
+      margin-top: 0;
+    }
+
+    .total {
+      font-weight: bold;
+      padding-left: 80px;
+    }
+
+    .mtp-confirm__button {
+      padding-right: 5px;
+      text-align: right;
     }
 
     &.is-sticky {
-      background: #fded95;
-      border: 0;
-      left: 0;
-      margin: 0;
-      padding: .5em 1em;
+      background: $page-colour;
+      border-top: 0;
+      border-bottom: solid $text-colour;
       position: fixed;
-      top: 0;
-      width: 100%;
       z-index: 1000;
+      top: 0;
+      left: 0;
+      width: 100%;
+      margin: 0;
+      padding: 20px 155px;
+
+      .grid-row {
+        width: 80%;
+      }
+
+      .mtp-confirm__button {
+        padding-right: 50px;
+      }
 
       p {
         font-size: 1.2em;
-        margin-bottom: 0;
         margin-top: 0;
+        margin-bottom: 0;
         span:nth-child(2) {
           width: 20%;
         }
@@ -84,19 +76,18 @@
 
   .mtp-batch {
     margin: 0;
-  }
 
-  .mtp-batch__buttons {
-    margin: 1em 0;
-    padding: 10px 0;
-    width: 65%;
+    table {
+      width: 100%;
 
-    span {
-      padding-right: 1em;
-    }
+      .numeric {
+        font-size: 19px;
+      }
 
-    @media print {
-      display: none;
+      .mtp-all {
+        text-align: center;
+        padding-left: 80px;
+      }
     }
   }
 
@@ -108,50 +99,40 @@
   }
 
   @media print {
-    h1,
-    .check,
-    .mtp-batch__buttons {
+    h1, .check, {
       display: none;
     }
-
     table {
       width: 100%;
-
       tr {
-        border-bottom: 1px solid $text-colour;
         height: 2em;
+        border-bottom: 1px solid $text-colour;
       }
-
       td.numeric {
         padding-right: 5em;
         width: 4em;
       }
     }
-
     .totals {
-      border-bottom: 0;
       margin-top: 0;
+      border-bottom: 0;
       p span {
-        margin-bottom: 1em;
         &.label {
           font-size: em(10);
           width: 7em;
         }
-
         &.total {
+          width: 10%;
           font-size: em(10);
           font-weight: bold;
-          width: 10%;
         }
-
+        margin-bottom: 1em;
       }
     }
-
     .mtp-batch {
-      margin-bottom: 2em;
       width: 100%;
+      margin-bottom: 2em;
     }
-
     .select-all,
     .print,
     .button {

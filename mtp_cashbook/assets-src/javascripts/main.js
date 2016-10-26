@@ -14,11 +14,11 @@
   require('help-popup').HelpPopup.init();
   require('analytics').Analytics.init();
   require('track-printing').TrackPrinting.init();
-  require('selection-buttons').SelectionButtons.init();
 
   require('batch-validation').BatchValidation.init();
   require('sticky-header').StickyHeader.init();
   require('running-total').RunningTotal.init();
   require('search-focus').SearchFocus.init();
   require('training').Training.init();
+  require('selection-buttons').SelectionButtons.init();
 }());
