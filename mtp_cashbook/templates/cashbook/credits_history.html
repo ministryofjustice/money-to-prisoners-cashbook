@@ -6,8 +6,7 @@
 
 {% block inner_content %}
   <header class="ContentHeader">
-    <a href="{% url 'dashboard' %}" class="ContentHeader-back">{% trans 'Home' %}</a>
-    <h1 class="heading-large">{% trans 'Credit history' %}</h1>
+    <h1 class="heading-large">{{ view.title }}</h1>
   </header>
 
   <div class="help-box">

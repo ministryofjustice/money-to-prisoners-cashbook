@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
-from django.utils.translation import ngettext
+from django.utils.translation import gettext_lazy as _, ngettext
 from django.views.generic import FormView, TemplateView
 from mtp_common.auth import api_client
 from django.shortcuts import render
@@ -50,10 +50,25 @@ class DashboardView(TemplateView):
         return context_data
 
 
-class CreditBatchListView(FormView):
+class CashbookSubviewMixin(TemplateView):
+    title = NotImplemented
+    home_url = reverse_lazy('dashboard')
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data['breadcrumbs'] = [
+            {'name': _('Home'), 'url': self.home_url},
+            {'name': self.title}
+        ]
+        return context_data
+
+
+class CreditBatchListView(FormView, CashbookSubviewMixin):
+    title = _('New credits to enter')
     form_class = ProcessCreditBatchForm
     template_name = 'cashbook/credit_batch_list.html'
     success_url = reverse_lazy('dashboard')
+    home_url = reverse_lazy('dashboard-batch-discard')
 
     def get_form_kwargs(self):
         form_kwargs = super().get_form_kwargs()
@@ -109,7 +124,8 @@ class CreditBatchListView(FormView):
 
 
 @method_decorator(login_required, name='dispatch')
-class CreditsLockedView(FormView):
+class CreditsLockedView(FormView, CashbookSubviewMixin):
+    title = _('Currently being entered')
     form_class = DiscardLockedCreditsForm
     template_name = 'cashbook/credits_locked.html'
     success_url = reverse_lazy('dashboard')
@@ -160,7 +176,8 @@ class CreditsLockedView(FormView):
 
 
 @method_decorator(login_required, name='dispatch')
-class CreditHistoryView(FormView):
+class CreditHistoryView(FormView, CashbookSubviewMixin):
+    title = _('All credits')
     form_class = FilterCreditHistoryForm
     template_name = 'cashbook/credits_history.html'
     success_url = reverse_lazy('credit-history')
