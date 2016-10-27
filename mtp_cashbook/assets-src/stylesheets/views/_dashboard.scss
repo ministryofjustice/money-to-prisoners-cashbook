@@ -15,12 +15,14 @@
     float: left;
     display: block;
     min-width: 12%;
-    font-size: 42px;
-    font-weight: bold;
     padding-top: 8px;
 
     @media (max-width: 769px) {
       min-width: 2.2em;
+    }
+
+    @include breakpoint($mobile) {
+      padding-top: 18px;
     }
   }
 
