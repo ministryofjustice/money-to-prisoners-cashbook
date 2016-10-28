@@ -89,6 +89,13 @@ class CreditBatchListView(FormView, CashbookSubviewMixin):
         credit_choices = context['form'].credit_choices
         context['object_list'] = credit_choices
         context['total'] = sum([x[1]['amount'] for x in credit_choices])
+        context['batch_size'] = len(credit_choices)
+
+        credit_client = context['form'].client.credits
+        available = credit_client.get(status='available')
+        my_locked = credit_client.get(user=self.request.user.pk, status='locked')
+        context['new_credits'] = available['count'] + my_locked['count']
+
         return context
 
     def form_valid(self, form):

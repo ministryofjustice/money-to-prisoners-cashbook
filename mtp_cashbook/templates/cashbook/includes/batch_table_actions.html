@@ -1,14 +1,18 @@
 {% load i18n %}
 <tr class="print-hidden">
-  <td colspan="3" class="cell--compact">
+  <td colspan="4">
     {% if print != False %}
       <a href="#print-dialog" class="js-Dialog">{% trans "Print these credits" %}</a>
     {% endif %}
-  </td>
-  <td colspan="2" class="cell--compact cell--bold flush-right">
+  </th>
+  <td class="mtp-all" colspan="1">
     {% if select_all != False %}
       <input type="checkbox" id="select-all-{{ location }}" class="Checkbox Checkbox--left js-SelectAll" data-name="{{ field_name }}">
-      <label data-analytics="event,select-all,{{ location }}" for="select-all-{{ location }}">{% trans "Select all" %}</label>
+      <label data-analytics="event,select-all,{{ location }}" for="select-all-{{ location }}">
+        {% blocktrans trimmed %}
+        All {{ batch_size }}
+        {% endblocktrans %}
+      </label>
     {% endif %}
   </td>
 </tr>

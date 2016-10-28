@@ -26,13 +26,25 @@
       {% include 'mtp_common/forms/error-summary.html' with form=form only %}
 
       <div class="help-box">
-        <p>{% trans "These credits are ready to be processed in NOMIS. When you’ve finished crediting, click ‘Done’." %}</p>
-
+        <p>
+          {% if batch_size == 1 %}
+            {% trans 'Here is the only new credit to be processed in NOMIS.' %}
+          {% elif batch_size == new_credits %}
+            {% blocktrans trimmed %}
+            Here are the {{ batch_size }} new credits to be processed in NOMIS.
+            {% endblocktrans %}
+          {% else %}
+            {% blocktrans trimmed %}
+            Here are the next {{ batch_size }} of {{ new_credits }} new credits to be processed in NOMIS.
+            {% endblocktrans %}
+          {% endif %}
+          {% trans 'Enter credits into NOMIS, tick the box then click the green confirm button.' %}
+          {% trans 'These credits are locked to you until completed or released by a colleague.' %}
+        </p>
         <div class="help-box-title" aria-controls="help-box-contents" aria-expanded="true" role="heading">
-          <div></div><a href="#">{% trans 'Help' %}</a>
+          <div></div><a href="#">{% trans 'How to use this with NOMIS' %}</a>
         </div>
         <div class="panel panel-border-narrow help-box-contents" id="help-box-contents">
-          <p>{% trans 'How to use the Digital Cashbook with NOMIS:' %}</p>
           <ul>
             <li>{% trans 'You can credit in NOMIS in the usual way but remember to select the <strong>‘Misc Receipt - Private Cash’ category as Credit Type</strong>' %}</li>
             <li>{% trans 'You don’t need to use a reference' %}</li>
@@ -54,25 +66,44 @@
         </div>
 
         <div class="totals js-StickyHeader">
-          <div class="container js-RunningTotal" data-label="{% trans 'Credits processed in NOMIS' %}">
-            <p>
-              <span class='label'>{% trans 'Control total' %}</span><span class='total'>&pound;{{total|currency}}</span>
-            </p>
+          <div class="grid-row">
+            <div class="column-one-third">
+              <p class='label'>
+                {% blocktrans trimmed %}
+                  Control total ({{ batch_size }})
+                {% endblocktrans %}
+              </p>
+            </div>
+
+            <div class="column-two-thirds">
+              <p id="control-total" class='total'>&pound;{{total|currency}}</p>
+            </div>
+
+            <div class="column-one-third">
+              <p>{% trans 'Entered into NOMIS by you' %}(<span class="count-checked-checkboxes">0</span>)</p>
+            </div>
+
+            <div id="entered-total" class="column-one-third label container js-RunningTotal" data-label="">
+            </div>
+
+            <div class="column-one-third mtp-confirm__button">
+              {% if object_list %}
+              <button type="submit" name="submit" value="submit" class="button">{% trans "Confirm entered in NOMIS" %}</button>
+              {% endif %}
+            </div>
           </div>
         </div>
 
-        {% include "cashbook/includes/batch_buttons.html" %}
-
         <table>
           <thead>
-            {% include "cashbook/includes/table_actions.html" with location='header' field_name=form.credits.html_name %}
+            {% include "cashbook/includes/batch_table_actions.html" with location='header' field_name=form.credits.html_name batch_size=batch_size %}
 
             <tr>
-              <th>{% trans "Prisoner no" %}</th>
+              <th>{% trans "Prisoner number" %}</th>
               <th>{% trans "Prisoner name" %}</th>
-              <th>{% trans "Amount&nbsp;(&pound;)" %}</th>
+              <th>{% trans "Amount" %}</th>
               <th>{% trans "Sender" %}</th>
-              <th class="check"><span id="id_credits-label">{% trans "Processed" %}</span></th>
+              <th class="check"><span id="id_credits-label">{% trans "Entered in NOMIS?" %}</span></th>
             </tr>
           </thead>
 
@@ -81,7 +112,7 @@
               <tr>
                 <td>{{ credit.prisoner_number }}</td>
                 <td>{{ credit.prisoner_name }}</td>
-                <td class="numeric">{{ credit.amount|currency }}</td>
+                <td class="numeric">&pound;{{ credit.amount|currency }}</td>
                 <td>{{ credit.sender_name }}</td>
                 <td class="check">
                   <input
@@ -99,11 +130,9 @@
           </tbody>
 
           <tfoot>
-            {% include "cashbook/includes/table_actions.html" with location='footer' field_name=form.credits.html_name %}
+            {% include "cashbook/includes/batch_table_actions.html" with location='footer' field_name=form.credits.html_name batch_size=batch_size %}
           </tfoot>
         </table>
-
-        {% include "cashbook/includes/batch_buttons.html" %}
 
       </div>
     {% else %}
