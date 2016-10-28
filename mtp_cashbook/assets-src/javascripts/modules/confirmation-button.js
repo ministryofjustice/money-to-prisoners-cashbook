@@ -9,12 +9,14 @@ exports.ConfirmationButton = {
     $('.mtp-confirm__button').hide();
 
     $(document).on('change', '.Checkbox', function() {
-      $('.mtp-confirm__button').toggle();
-    });
-
-    $(document).on('change', '.Checkbox', function() {
       this.$items = $('.js-RunningTotal-item').length;
       this.$completeItems = $('.js-RunningTotal-item:checked').length;
+
+      if (this.$completeItems > 0) {
+        $('.mtp-confirm__button').show();
+      } else {
+        $('.mtp-confirm__button').hide();
+      };
 
       if (this.$items === this.$completeItems) {
         $('#control-total, #entered-total').addClass('green');
