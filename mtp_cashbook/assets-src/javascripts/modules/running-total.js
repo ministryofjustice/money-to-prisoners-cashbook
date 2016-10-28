@@ -33,6 +33,8 @@ exports.RunningTotal = {
     var total = this.calculateTotal();
 
     $('.js-RunningTotal-total').html('&pound;' + total);
+    this.$noItems = $('.js-RunningTotal-item:checked').length;
+    $('.count-checked-checkboxes').html(this.$noItems);
   },
 
   calculateTotal: function () {

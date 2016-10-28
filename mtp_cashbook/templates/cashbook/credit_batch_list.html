@@ -54,18 +54,18 @@
         <div class="totals js-StickyHeader">
           <div class="grid-row">
             <div class="column-one-third">
-              <p class='label'>{% trans 'Control total ()' %}</p>
+              <p class='label'>{% trans 'Control total (20)' %}</p>
             </div>
 
             <div class="column-two-thirds">
-              <p class='total'>&pound;{{total|currency}}</p>
+              <p id="control-total" class='total'>&pound;{{total|currency}}</p>
             </div>
 
             <div class="column-one-third">
-              <p>{% trans 'Entered into NOMIS by you ()' %}</p>
+              <p>{% trans 'Entered into NOMIS by you (' %}<span class="count-checked-checkboxes">0</span>{% trans ')' %}</p>
             </div>
 
-            <div class="column-one-third label container js-RunningTotal" data-label="">
+            <div id="entered-total" class="column-one-third label container js-RunningTotal" data-label="">
             </div>
 
             <div class="column-one-third mtp-confirm__button">
