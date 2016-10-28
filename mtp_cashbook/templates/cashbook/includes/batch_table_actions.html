@@ -8,7 +8,11 @@
   <td class="mtp-all" colspan="1">
     {% if select_all != False %}
       <input type="checkbox" id="select-all-{{ location }}" class="Checkbox Checkbox--left js-SelectAll" data-name="{{ field_name }}">
-      <label data-analytics="event,select-all,{{ location }}" for="select-all-{{ location }}">{% trans "All 20" %}</label>
+      <label data-analytics="event,select-all,{{ location }}" for="select-all-{{ location }}">
+        {% blocktrans trimmed %}
+        All {{ batch_size }}
+        {% endblocktrans %}
+      </label>
     {% endif %}
   </td>
 </tr>

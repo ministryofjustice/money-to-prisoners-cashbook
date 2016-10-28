@@ -26,7 +26,21 @@
       {% include 'mtp_common/forms/error-summary.html' with form=form only %}
 
       <div class="help-box">
-        <p>{% trans "Here are the next 20 of 203 new credits to be processed in NOMIS. Enter credits into NOMIS, tick the box then click the green confirm button. These credits are locked to you until completed or released by a colleague." %}</p>
+        <p>
+          {% if batch_size == 1 %}
+            {% trans 'Here is the only new credit to be processed in NOMIS.' %}
+          {% elif batch_size == new_credits %}
+            {% blocktrans trimmed %}
+            Here are the {{ batch_size }} new credits to be processed in NOMIS.
+            {% endblocktrans %}
+          {% else %}
+            {% blocktrans trimmed %}
+            Here are the next {{ batch_size }} of {{ new_credits }} new credits to be processed in NOMIS.
+            {% endblocktrans %}
+          {% endif %}
+          {% trans 'Enter credits into NOMIS, tick the box then click the green confirm button.' %}
+          {% trans 'These credits are locked to you until completed or released by a colleague.' %}
+        </p>
         <div class="help-box-title" aria-controls="help-box-contents" aria-expanded="true" role="heading">
           <div></div><a href="#">{% trans 'How to use this with NOMIS' %}</a>
         </div>
@@ -54,7 +68,11 @@
         <div class="totals js-StickyHeader">
           <div class="grid-row">
             <div class="column-one-third">
-              <p class='label'>{% trans 'Control total (20)' %}</p>
+              <p class='label'>
+                {% blocktrans trimmed %}
+                  Control total ({{ batch_size }})
+                {% endblocktrans %}
+              </p>
             </div>
 
             <div class="column-two-thirds">
@@ -78,7 +96,7 @@
 
         <table>
           <thead>
-            {% include "cashbook/includes/batch_table_actions.html" with location='header' field_name=form.credits.html_name %}
+            {% include "cashbook/includes/batch_table_actions.html" with location='header' field_name=form.credits.html_name batch_size=batch_size %}
 
             <tr>
               <th>{% trans "Prisoner number" %}</th>
@@ -112,7 +130,7 @@
           </tbody>
 
           <tfoot>
-            {% include "cashbook/includes/batch_table_actions.html" with location='footer' field_name=form.credits.html_name %}
+            {% include "cashbook/includes/batch_table_actions.html" with location='footer' field_name=form.credits.html_name batch_size=batch_size %}
           </tfoot>
         </table>
 
