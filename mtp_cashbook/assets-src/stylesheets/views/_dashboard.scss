@@ -3,7 +3,7 @@
 .mtp-status-box {
   overflow: hidden;
   margin: $gutter $gutter-half;
-  padding-bottom: $gutter-half;
+  padding: 0 $gutter-half $gutter-half $gutter-half;
   border-bottom: 1px solid $grey-1;
 
   .mtp-status-box__secondary-text {
