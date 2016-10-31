@@ -49,7 +49,7 @@ exports.RunningTotal = {
       }
     });
 
-    return total.toFixed(2);
+    return total.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
   },
 
   render: function () {
