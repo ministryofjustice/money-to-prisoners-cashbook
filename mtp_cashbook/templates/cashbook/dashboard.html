@@ -4,21 +4,15 @@
 
 {% block inner_content %}
 
-  <h1 class="heading-xlarge">{% trans 'Digital cashbook' %}</h1>
+  <h1 class="heading-xlarge__chopped">{% trans 'Digital cashbook' %}</h1>
+
+  <div>
+      {% blocktrans trimmed %}
+        Credits received from the <a href="{{ start_page_url }}" target="_blank">‘Send money to a prisoner’</a> service
+      {% endblocktrans %}
+    </div>
 
   {% include "mtp_common/includes/message_box.html" %}
-
-  <p>
-    {% blocktrans trimmed %}
-      Credits received from the <a href="{{ start_page_url }}" target="_blank">‘Send money to a prisoner’</a> service.
-    {% endblocktrans %}
-  </p>
-  {% if ENVIRONMENT != 'prod' %}
-    <p>
-      {% trans 'Please try out this site. The credits and prisoners listed are not real.' %}
-      {% trans 'All data on the digital cashbook training site will be reset every hour, on the hour.' %}
-    </p>
-  {% endif %}
 
   <div class="grid-row">
     <div class="mtp-status-box"></div>
