@@ -48,6 +48,11 @@
   }
 }
 
+.heading-xlarge__chopped {
+  @extend .heading-xlarge;
+  margin-bottom: 20px;
+}
+
 .mtp-dashboard-training {
   clear: both;
 }
