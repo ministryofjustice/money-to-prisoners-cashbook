@@ -13,6 +13,7 @@ class MultiPageView(TemplateView):
     training_title = NotImplemented
     url_name = NotImplemented
     pages = []
+    next_training = None
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -85,3 +86,4 @@ class ServiceOverview(MultiPageView):
         {'page': 'day-5',
          'title': _('Day 5')},
     ]
+    next_training = Training
