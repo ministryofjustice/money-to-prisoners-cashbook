@@ -16,13 +16,13 @@ exports.ConfirmationButton = {
         $('.mtp-confirm__button').show();
       } else {
         $('.mtp-confirm__button').hide();
-      };
+      }
 
       if (items === completeItems) {
         $('#control-total, #entered-total').addClass('green');
       } else {
         $('#control-total, #entered-total').removeClass('green');
-      };
-    })
+      }
+    });
   }
 };
