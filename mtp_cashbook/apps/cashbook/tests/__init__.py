@@ -54,10 +54,10 @@ class MTPBaseTestCase(SimpleTestCase):
         }
 
         response = self.client.post(
-            self.login_url, data=login_data['credentials'], follow=True
+            self.login_url, data=login_data['credentials'], follow=False
         )
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
 
     def logout(self):
         response = self.client.post(self.logout_url, follow=True)

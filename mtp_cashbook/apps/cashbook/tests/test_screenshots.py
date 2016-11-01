@@ -12,7 +12,8 @@ from mtp_common.screenshots import ScreenshotGenerator
 def prepare():
     env = settings.ENVIRONMENT
     settings.ENVIRONMENT = 'prod'
-    with mock.patch('mtp_common.auth.api_client.authenticate') as mock_authenticate:
+    with mock.patch('mtp_common.auth.api_client.authenticate') as mock_authenticate,\
+            mock.patch('cashbook.views.api_client') as mock_client:
         user_pk = 1
         token = '???????????????'
         user_data = {
@@ -25,7 +26,20 @@ def prepare():
             'token': token,
             'user_data': user_data
         }
-        yield
+        credits_client = mock_client.get_connection().credits
+
+        def api_calls(*args, **kwargs):
+            if kwargs.get('status') == 'available':
+                return {'count': 26}
+            if kwargs.get('status') == 'locked' and kwargs.get('user') == 1:
+                return {'count': 0}
+            if kwargs.get('status') == 'locked':
+                return {'count': 20}
+            else:
+                return {'count': 234}
+
+        credits_client.get.side_effect = api_calls
+        yield mock_client
     settings.ENVIRONMENT = env
 
 
@@ -34,20 +48,7 @@ class DashboardScreenshotGenerator(ScreenshotGenerator):
 
     class MockedServerThread(LiveServerThread):
         def run(self):
-            with prepare(), mock.patch('cashbook.views.api_client') as mock_client:
-                credits_client = mock_client.get_connection().credits
-
-                def api_calls(*args, **kwargs):
-                    if kwargs.get('status') == 'available':
-                        return {'count': 26}
-                    if kwargs.get('status') == 'locked' and kwargs.get('user') == 1:
-                        return {'count': 0}
-                    if kwargs.get('status') == 'locked':
-                        return {'count': 20}
-                    else:
-                        return {'count': 234}
-                credits_client.get.side_effect = api_calls
-
+            with prepare():
                 super().run()
     thread_class = MockedServerThread
 
@@ -60,10 +61,10 @@ class NewCreditsScreenshotGenerator(ScreenshotGenerator):
 
     class MockedServerThread(LiveServerThread):
         def run(self):
-            with prepare(), mock.patch('cashbook.views.api_client'),\
+            with prepare(),\
                     mock.patch('cashbook.forms.get_connection') as mock_get_connection:
                 credits_client = mock_get_connection().credits
-                credits_client.get.return_value = {'count': 6, 'results': [
+                credits_client.get.return_value = {'count': 20, 'results': [
                     {
                         'id': 1,
                         'prisoner_number': 'A1409AE',
@@ -133,7 +134,7 @@ class InProgressScreenshotGenerator(ScreenshotGenerator):
 
     class MockedServerThread(LiveServerThread):
         def run(self):
-            with prepare(), mock.patch('cashbook.views.api_client'),\
+            with prepare(),\
                     mock.patch('cashbook.forms.get_connection') as mock_get_connection:
                 locked_credits_client = mock_get_connection().credits.locked
                 locked_date = datetime.now() - timedelta(hours=3)
@@ -162,7 +163,7 @@ class HistorySearchScreenshotGenerator(ScreenshotGenerator):
 
     class MockedServerThread(LiveServerThread):
         def run(self):
-            with prepare(), mock.patch('cashbook.views.api_client'),\
+            with prepare(),\
                     mock.patch('cashbook.forms.get_connection') as mock_get_connection:
                 credits_client = mock_get_connection().credits
                 credits_client.get.return_value = {'count': 0}
@@ -183,7 +184,7 @@ class HistoryResultsScreenshotGenerator(ScreenshotGenerator):
 
     class MockedServerThread(LiveServerThread):
         def run(self):
-            with prepare(), mock.patch('cashbook.views.api_client'),\
+            with prepare(),\
                     mock.patch('cashbook.forms.get_connection') as mock_get_connection:
                 received_at = datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')
                 credits_client = mock_get_connection().credits

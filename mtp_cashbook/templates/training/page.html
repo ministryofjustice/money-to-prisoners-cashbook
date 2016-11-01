@@ -42,6 +42,11 @@
             <span class="mtp-pagination__label">{% trans 'Next' %}</span>
             <span class="mtp-pagination__part-title">{{ next_page.title }}</span>
           </a>
+        {% elif view.next_training %}
+          <a title="{% trans 'Navigate to next training course' %}" rel="next" href="{% url view.next_training.url_name %}">
+            <span class="mtp-pagination__label">{% trans 'Next' %}</span>
+            <span class="mtp-pagination__part-title">{{ view.next_training.training_title }}</span>
+          </a>
         {% else %}
           <a title="{% trans 'Return to home page' %}" rel="next" href="{% url 'dashboard' %}">
             <span class="mtp-pagination__label">{% trans 'Home' %}</span>

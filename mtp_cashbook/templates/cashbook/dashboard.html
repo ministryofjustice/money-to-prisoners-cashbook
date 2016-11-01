@@ -20,7 +20,7 @@
       <div class="mtp-status-box__title">{% trans 'New credits to enter into NOMIS' %}</div>
       <div class="bold-xlarge mtp-status-box__number">{{ new_credits|shortenint }}</div>
       <div class="mtp-status-box__button">
-        <a class="button" href="{% url 'credit-list' %}">{% trans 'Enter next 20' %}</a>
+        <a class="button" href="{% url 'credit-list' %}">{% blocktrans %}Enter next {{ batch_size }}{% endblocktrans %}</a>
       </div>
     </div>
     {% if locked_credits %}
