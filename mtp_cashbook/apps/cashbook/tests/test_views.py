@@ -248,8 +248,12 @@ class BatchListView(MTPBaseTestCase):
         )
         self.assertEqual(response.status_code, 200)
 
+    @mock.patch('cashbook.views.api_client')
     @mock.patch('cashbook.views.CreditBatchListView.form_class')
-    def test_incomplete_batch_submitted(self, mocked_form_class):
+    def test_incomplete_batch_submitted(self, mocked_form_class, mock_api_client):
+        credits_client = mock_api_client.get_connection().credits
+        credits_client.get.return_value = {'count': 26}
+
         mocked_form = mocked_form_class()
         mocked_form.credit_choices = [
             (1, {'id': 1,
@@ -269,8 +273,12 @@ class BatchListView(MTPBaseTestCase):
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('dashboard-batch-incomplete'))
 
+    @mock.patch('cashbook.views.api_client')
     @mock.patch('cashbook.views.CreditBatchListView.form_class')
-    def test_complete_batch_submitted(self, mocked_form_class):
+    def test_complete_batch_submitted(self, mocked_form_class, mock_api_client):
+        credits_client = mock_api_client.get_connection().credits
+        credits_client.get.return_value = {'count': 26}
+
         mocked_form = mocked_form_class()
         mocked_form.credit_choices = [
             (1, {'id': 1,

@@ -50,6 +50,7 @@ class DashboardView(TemplateView):
             'new_credits': available['count'] + my_locked['count'],
             'locked_credits': locked['count'],
             'all_credits': all_credits['count'],
+            'batch_size': min(available['count'], 20)
         })
         return context_data
 
