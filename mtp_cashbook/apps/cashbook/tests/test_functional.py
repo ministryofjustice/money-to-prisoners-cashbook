@@ -20,9 +20,12 @@ class CashbookTestCase(FunctionalTestCase):
         """
         self.driver.find_element_by_css_selector('#proposition-links li:last-child a').click()
 
-    def login_and_go_to(self, link_text):
+    def login_and_go_to(self, link_text, substring=False):
         self.login('test-prison-1', 'test-prison-1')
-        self.click_on_text(link_text)
+        if substring:
+            self.click_on_text_substring(link_text)
+        else:
+            self.click_on_text(link_text)
 
     def select_all_payments(self):
         self.get_element('//label[@for="select-all-header"]').click()
@@ -84,16 +87,9 @@ class LockedPaymentsPageTests(CashbookTestCase):
 
     def test_releasing_credits(self):
         self.get_element('//tbody//input[@type="checkbox"][1]/following-sibling::label').click()
-        self.click_on_text('Done')
+        self.click_on_text('Release selected credits')
         self.assertCurrentUrl('/dashboard-unlocked-payments/')
         self.assertInSource('You have now returned')
-
-    def test_clicking_done_with_no_payments_released(self):
-        self.click_on_text('Done')
-        self.assertIsNotNone(self.driver.find_element_by_xpath(
-            '//div[@class="error-summary"]//li[text()='
-            '"Only click ‘Done’ when you’ve selected the row of credits you want to release"]'
-        ))
 
     def test_help_popup(self):
         help_box_heading = self.driver.find_element_by_css_selector('.help-box-title')
@@ -114,7 +110,7 @@ class NewPaymentsPageTests(CashbookTestCase):
 
     def setUp(self):
         super().setUp()
-        self.login_and_go_to('Enter next 20')
+        self.login_and_go_to('Enter next', substring=True)
 
     def test_going_to_the_credits_page(self):
         self.assertInSource('New credits')
@@ -122,29 +118,23 @@ class NewPaymentsPageTests(CashbookTestCase):
 
     def test_submitting_payments_credited(self):
         self.select_first_payment()
-        self.click_on_text('Done')
+        self.click_on_text('Confirm entered in NOMIS')
         self.assertIsNotNone(self.driver.find_element_by_xpath(
             '//div[@class="Dialog-inner"]/p/strong[text()="Do you want to submit only the selected credits?"]'
         ))
 
     def test_submitting_and_confirming_partial_batch(self):
         self.select_first_payment()
-        self.click_on_text('Done')
+        self.click_on_text('Confirm entered in NOMIS')
         self.click_on_text('Yes')
         self.assertInSource('You’ve added 1 credit to NOMIS.')
         self.assertEqual('Digital cashbook', self.driver.title)
 
     def test_submitting_and_not_confirming_partial_batch(self):
         self.select_first_payment()
-        self.click_on_text('Done')
+        self.click_on_text('Confirm entered in NOMIS')
         self.click_on_text('No, continue processing')
         self.assertEqual('New credits - Digital cashbook', self.driver.title)
-
-    def test_clicking_done_with_no_payments_credited(self):
-        self.click_on_text('Done')
-        self.assertIsNotNone(self.driver.find_element_by_xpath(
-            '//div[@class="error-summary"]//li[text()="Only click ‘Done’ when you’ve selected credits"]'
-        ))
 
     def test_printing(self):
         self.click_on_text('Print these credits')
@@ -156,10 +146,10 @@ class NewPaymentsPageTests(CashbookTestCase):
         help_box_heading = self.driver.find_element_by_css_selector('.help-box-title')
         self.assertCssProperty('.help-box-contents', 'display', 'none')
         self.assertEqual('false', help_box_heading.get_attribute('aria-expanded'))
-        self.click_on_text('Help')
+        self.click_on_text('How to use this with NOMIS')
         self.assertCssProperty('.help-box-contents', 'display', 'block')
         self.assertEqual('true', help_box_heading.get_attribute('aria-expanded'))
-        self.click_on_text('Help')
+        self.click_on_text('How to use this with NOMIS')
         self.assertCssProperty('.help-box-contents', 'display', 'none')
         self.assertEqual('false', help_box_heading.get_attribute('aria-expanded'))
 
@@ -170,16 +160,9 @@ class NewPaymentsPageTests(CashbookTestCase):
 
     def test_submitting_complete_batch(self):
         self.select_all_payments()
-        self.click_on_text('Done')
+        self.click_on_text('Confirm entered in NOMIS')
         self.assertEqual('Digital cashbook', self.driver.title)
         self.assertInSource('You’ve added')
-
-    def test_checkboxes_style(self):
-        # Regression tests for https://www.pivotaltracker.com/story/show/115328657
-        self.click_on_text('Print these credits')
-        self.assertCssProperty('label[for=remove-print-prompt]', 'background-position', '0% 0%')
-        self.click_on_text('close')
-        self.assertCssProperty('label[for=select-all-header]', 'background-position', '100% 10%')
 
 
 class VisualTests(CashbookTestCase):
@@ -195,7 +178,7 @@ class VisualTests(CashbookTestCase):
 
     def test_leaving_confirming_incomplete_batch(self):
         # we need firefox as this is using a native dialog
-        self.login_and_go_to('Enter next 20')
+        self.login_and_go_to('Enter next', substring=True)
         self.select_first_payment()
         self.click_on_text('Home')
         self.driver.switch_to.alert.dismiss()
@@ -203,7 +186,7 @@ class VisualTests(CashbookTestCase):
 
     def test_leaving_not_confirming_incomplete_batch(self):
         # we need firefox as this is using a native dialog
-        self.login_and_go_to('Enter next 20')
+        self.login_and_go_to('Enter next', substring=True)
         self.select_first_payment()
         self.click_on_text('Home')
         self.driver.switch_to.alert.accept()
@@ -222,7 +205,7 @@ class VisualTests(CashbookTestCase):
         self.assertFalse(is_search_input_focused())
 
     def test_go_home_with_back_button(self):
-        self.login_and_go_to('Enter next 20')
+        self.login_and_go_to('Enter next', substring=True)
         self.driver.execute_script('window.history.go(-1)')
         self.assertCurrentUrl('/')
 
@@ -238,40 +221,40 @@ class Journeys(CashbookTestCase):
     # Route: 1, 2
     def test_journey_1(self):
         self.login('test-prison-1', 'test-prison-1')
-        self.click_on_text('Enter next 20')
+        self.click_on_text_substring('Enter next')
         self.select_all_payments()
-        self.click_on_text('Done')
+        self.click_on_text('Confirm entered in NOMIS')
         self.assertCurrentUrl('/dashboard-batch-complete/')
 
     # Route: 1, 3
     def test_journey_2(self):
         self.login('test-prison-1', 'test-prison-1')
-        self.click_on_text('Enter next 20')
+        self.click_on_text_substring('Enter next')
         self.click_on_text('Home')
         self.assertCurrentUrl('/dashboard-batch-discard/')
 
     # Route: 1, 4, 5
     def test_journey_3(self):
         self.login('test-prison-1', 'test-prison-1')
-        self.click_on_text('Enter next 20')
+        self.click_on_text_substring('Enter next')
         self.select_first_payment()
-        self.click_on_text('Done')
+        self.click_on_text('Confirm entered in NOMIS')
         self.click_on_text('Yes')
         self.assertCurrentUrl('/dashboard-batch-incomplete/')
 
     # Route: 1, 4, 6
     def test_journey_4(self):
         self.login('test-prison-1', 'test-prison-1')
-        self.click_on_text('Enter next 20')
+        self.click_on_text_substring('Enter next')
         self.select_first_payment()
-        self.click_on_text('Done')
+        self.click_on_text('Confirm entered in NOMIS')
         self.click_on_text('No, continue processing')
         self.assertCurrentUrl('/batch/')
 
     # Route 1, 7, 8
     def test_journey_5(self):
         self.login('test-prison-1', 'test-prison-1')
-        self.click_on_text('Enter next 20')
+        self.click_on_text_substring('Enter next')
         self.select_first_payment()
         self.click_on_text('Home')
         self.driver.switch_to.alert.accept()
@@ -280,7 +263,7 @@ class Journeys(CashbookTestCase):
     # Route 1, 7, 9
     def test_journey_6(self):
         self.login('test-prison-1', 'test-prison-1')
-        self.click_on_text('Enter next 20')
+        self.click_on_text_substring('Enter next')
         self.select_first_payment()
         self.click_on_text('Home')
         self.driver.switch_to.alert.dismiss()
@@ -288,33 +271,33 @@ class Journeys(CashbookTestCase):
 
     def test_journey_7(self):
         self.login('test-prison-1', 'test-prison-1')
-        self.click_on_text('Enter next 20')
-        self.click_on_text('Help')
+        self.click_on_text_substring('Enter next')
+        self.click_on_text('How to use this with NOMIS')
         self.click_on_text('Home')
 
     def test_journey_8(self):
         self.login('test-prison-1', 'test-prison-1')
-        self.click_on_text('Enter next 20')
-        self.click_on_text('Help')
-        self.click_on_text('Help')
+        self.click_on_text_substring('Enter next')
+        self.click_on_text('How to use this with NOMIS')
+        self.click_on_text('How to use this with NOMIS')
         self.click_on_text('Home')
 
     def test_journey_9(self):
         self.login('test-prison-1', 'test-prison-1')
-        self.click_on_text('Enter next 20')
-        self.click_on_text('Help')
-        self.click_on_text('Help')
+        self.click_on_text_substring('Enter next')
+        self.click_on_text('How to use this with NOMIS')
+        self.click_on_text('How to use this with NOMIS')
         self.click_on_text('Home')
 
     def test_journey_10(self):
         self.login('test-prison-1', 'test-prison-1')
-        self.click_on_text('Enter next 20')
+        self.click_on_text_substring('Enter next')
         self.click_on_text('Home')
         self.click_logout()
 
     def test_journey_11(self):
         self.login('test-prison-1', 'test-prison-1')
-        self.click_on_text('Enter next 20')
+        self.click_on_text_substring('Enter next')
         self.driver.execute_script('window.history.go(-1)')
         self.click_logout()
 
