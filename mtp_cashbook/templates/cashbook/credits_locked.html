@@ -25,7 +25,7 @@
           <ul>
             <li>{% trans 'Find your team member under ‘staff name’' %}</li>
             <li>{% trans 'Select the box at the end of the row' %}</li>
-            <li>{% trans 'Click ‘Release’ to free up their work' %}</li>
+            <li>{% trans 'Click ‘Release selected credits’ to free up their work' %}</li>
             <li><a href="{% url 'training' page='in-progress' %}">{% trans 'More information is available in the training section' %}</a></li>
           </ul>
         </div>
@@ -43,8 +43,8 @@
 
             <tr>
               <th>{% trans "Staff name" %}</th>
-              <th>{% trans "Credits" %}</th>
-              <th>{% trans "Amount (£)" %}</th>
+              <th class="mtp-right-align">{% trans "Credits" %}</th>
+              <th class="mtp-right-align">{% trans "Amount" %}</th>
               <th>{% trans "Time in progress" %}</th>
               <th>{% trans "Release" %}</th>
             </tr>
@@ -55,7 +55,7 @@
               <tr>
                 <td title="{{ credit_group.owner_prison }}">{{ credit_group.owner_name }}</td>
                 <td class="numeric">{{ credit_group.locked_count }}</td>
-                <td class="numeric">{{ credit_group.locked_amount|currency }}</td>
+                <td class="numeric">&pound;{{ credit_group.locked_amount|currency }}</td>
                 <td>{{ credit_group.locked_at_earliest|timesince }}</td>
                 <td class="check">
                   <input

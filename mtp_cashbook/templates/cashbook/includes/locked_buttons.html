@@ -1,7 +1,6 @@
 {% load i18n %}
 <div class="mtp-batch__buttons">
   {% if object_list %}
-    <span>{% trans "Release selected credits" %}</span>
-    <button type="submit" name="submit" value="submit" class="button">{% trans "Done" %}</button>
+    <button type="submit" name="submit" value="submit" class="mtp-confirm__button button">{% trans "Release selected credits" %}</button>
   {% endif %}
 </div>

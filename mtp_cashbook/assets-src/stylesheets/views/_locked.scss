@@ -6,8 +6,30 @@
   }
 }
 
-.mtp-batch {
+.mtp-locked {
   margin-top: 1em;
+
+  .mtp-batch__buttons {
+    width: 100%;
+    height: 10px;
+  }
+
+  table {
+    width: 100%;
+
+    .numeric {
+      font-size: 19px;
+    }
+
+    .mtp-right-align {
+      text-align: right;
+    }
+
+    td.check {
+      text-align: left;
+      padding-left: 25px;
+    }
+  }
 }
 
 .mtp-batch__buttons {

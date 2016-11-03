@@ -10,15 +10,16 @@ exports.ConfirmationButton = {
 
     $(document).on('change', '.Checkbox', function() {
       var items = $('.js-RunningTotal-item').length;
-      var completeItems = $('.js-RunningTotal-item:checked').length;
+      var checkedPayments = $('.js-RunningTotal-item:checked').length;
+      var checkedItems = $('.Checkbox:checked').length;
 
-      if (completeItems > 0) {
+      if (checkedItems > 0) {
         $('.mtp-confirm__button').show();
       } else {
         $('.mtp-confirm__button').hide();
       }
 
-      if (items === completeItems) {
+      if (items === checkedPayments) {
         $('#control-total, #entered-total').addClass('green');
       } else {
         $('#control-total, #entered-total').removeClass('green');
