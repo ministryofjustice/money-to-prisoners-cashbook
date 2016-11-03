@@ -199,6 +199,7 @@ def find_api_url():
 
 # control the time a session exists for; should match api's access token expiry
 SESSION_COOKIE_AGE = 60 * 60  # 1 hour
+SESSION_SAVE_EVERY_REQUEST = True
 
 
 API_CLIENT_ID = 'cashbook'
