@@ -15,7 +15,10 @@
     {% if object_list %}
 
       <div class="help-box">
-        <p>{% trans 'Here you can see who is currently processing the credits in your team. You can release them if you need to take over their work.' %}</p>
+        <p>
+          {% trans 'Here you can see who is currently processing the credits in your team.' %}
+          {% trans 'You can release them if you need to take over their work.' %}
+        </p>
 
         <div class="help-box-title" aria-controls="help-box-contents" aria-expanded="false" role="heading">
           <div></div><a href="#">{% trans 'Help' %}</a>

@@ -18,7 +18,7 @@
     action=""
     class="js-BeforeUnload js-BatchValidation"
     data-credits-name="{{ form.credits.html_name }}"
-    data-unload-msg="{% trans "You are leaving this page, but have ticked credits. &#x0A;&#x0A; Click ‘Done’ if credits have been processed in NOMIS." %}">
+    data-unload-msg="{% trans 'You are leaving this page, but have ticked credits.' %} &#x0A;&#x0A; {% trans 'Click ‘Done’ if credits have been processed in NOMIS.' %}">
     {% csrf_token %}
 
 
