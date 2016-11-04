@@ -1,4 +1,6 @@
-*.pyc
+*.py[cod]
+*.mo
+*.pot
 include/
 lib/
 /static/
@@ -34,6 +36,6 @@ npm-debug.log
 # failed test screenshots
 test/errorshots/
 
-# phantom/selenium
+# selenium
 geckodriver.log
 ghostdriver.log

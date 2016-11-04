@@ -18,7 +18,6 @@ make start
 
 This will build everything (which will initially take a while) and run
 the local server at [http://localhost:8001](http://localhost:8001).
-```
 
 ### Alternative: Docker
 
@@ -50,6 +49,13 @@ make test
 
 Runs all the application tests.
 
+### Translating
+
+Update translation files with `cd mtp_cashbook; ../manage.py makemessages --all --keep-pot --no-wrap`.
+
+Pull updates from Transifex with `tx pull`. You'll need to update translation files afterwards.
+
+Push latest English to Transifex with `tx push -s`. NB: always pull updates before pushing to merge correctly.
 
 ## Deploying
 
