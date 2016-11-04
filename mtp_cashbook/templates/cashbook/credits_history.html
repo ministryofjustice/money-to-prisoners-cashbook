@@ -9,7 +9,10 @@
   <h1 class="heading-xlarge">{{ view.title }}</h1>
 
   <div class="help-box">
-    <p>{% trans 'Below you’ll find all the credits listed to date. You can also use the search to find specific credits.' %}</p>
+    <p>
+      {% trans 'Below you’ll find all the credits listed to date.' %}
+      {% trans 'You can also use the search to find specific credits.' %}
+    </p>
 
     <div class="help-box-title" aria-controls="help-box-contents" aria-expanded="false" role="heading">
       <div></div><a href="#">{% trans 'Help' %}</a>
