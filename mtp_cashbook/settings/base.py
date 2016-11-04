@@ -43,6 +43,7 @@ PROJECT_APPS = (
 )
 INSTALLED_APPS += PROJECT_APPS
 
+X = 1
 
 WSGI_APPLICATION = 'mtp_cashbook.wsgi.application'
 ROOT_URLCONF = 'mtp_cashbook.urls'
