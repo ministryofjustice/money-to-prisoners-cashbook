@@ -37,7 +37,6 @@ RUN venv/bin/pip install -r requirements/docker.txt
 
 ADD . /app
 RUN make build python_requirements=requirements/docker.txt
-RUN cd mtp_cashbook && ../venv/bin/python ../manage.py compilemessages && cd ..
 
 EXPOSE 8080
 CMD make uwsgi python_requirements=requirements/docker.txt
