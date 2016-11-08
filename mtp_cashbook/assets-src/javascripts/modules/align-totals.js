@@ -6,7 +6,9 @@ exports.AlignTotals = {
 
   init: function () {
     this.cacheEls();
-    this.bindEvents();
+    if (this.ctrlTotal.length) {
+      this.bindEvents();
+    }
   },
 
   cacheEls: function () {
