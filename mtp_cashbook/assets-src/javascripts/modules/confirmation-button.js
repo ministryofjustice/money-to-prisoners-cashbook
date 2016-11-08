@@ -20,9 +20,9 @@ exports.ConfirmationButton = {
       }
 
       if (items === checkedPayments) {
-        $('#control-total, #entered-total').addClass('green');
+        $('.control-total, .entered-total').addClass('green');
       } else {
-        $('#control-total, #entered-total').removeClass('green');
+        $('.control-total, .entered-total').removeClass('green');
       }
     });
   }

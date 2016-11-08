@@ -16,6 +16,7 @@
   require('track-printing').TrackPrinting.init();
 
   require('sticky-header').StickyHeader.init();
+  require('align-totals').AlignTotals.init();
   require('batch-validation').BatchValidation.init();
   require('running-total').RunningTotal.init();
   require('confirmation-button').ConfirmationButton.init();

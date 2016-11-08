@@ -16,13 +16,26 @@
     padding: 40px 0 20px 0;
 
     p {
-      font-size: 1.1em;
+      font-size: 19px;
     }
 
+    span.total {
+      font-weight: bold;
+      padding: .75em 1em;
+    }
+
+    .ctrl-total, .entered-total {
+      width: 120px;
+      text-align: right;
+    }
 
     .grid-row {
       width: 100%;
       margin: 0;
+    }
+
+    .column-one-third {
+      padding: 0;
     }
 
     .column-two-thirds {
@@ -31,7 +44,6 @@
 
     .total {
       font-weight: bold;
-      padding-left: 80px;
     }
 
     .green {
@@ -53,16 +65,14 @@
       left: 0;
       width: 100%;
       margin: 0;
-      padding: 20px 155px;
 
       .grid-row {
-        width: 75%;
-        padding-left: 5%;
-        padding-right: 20%;
+        width: 960px;
+        margin: 0 auto;
       }
 
       .mtp-confirm__button {
-        text-align: left;
+        text-align: right;
         font-size: 1.1em;
       }
 
@@ -70,15 +80,10 @@
         font-size: 1.2em;
         margin-top: 0;
         margin-bottom: 0;
-        span:nth-child(2) {
-          width: 20%;
-        }
       }
 
-      .container {
-        margin-top: 0;
-        padding-left: 15px;
-        padding-right: 15px;
+      .column-two-thirds {
+        padding: 0;
       }
     }
   }
