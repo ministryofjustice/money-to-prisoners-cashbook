@@ -76,14 +76,18 @@
             </div>
 
             <div class="column-two-thirds">
-              <p id="control-total" class='total'>&pound;{{total|currency}}</p>
+              <div class="ctrl-total">
+                <p><span class='total control-total'>&pound;{{total|currency}}</span></p>
+              </div>
             </div>
 
             <div class="column-one-third">
               <p>{% trans 'Entered into NOMIS by you' %} (<span class="count-checked-checkboxes">0</span>)</p>
             </div>
 
-            <div id="entered-total" class="column-one-third label container js-RunningTotal" data-label="">
+            <div class="column-one-third">
+              <div class="label container js-RunningTotal entered-total" data-label="">
+              </div>
             </div>
 
             <div class="column-one-third mtp-confirm__button">
