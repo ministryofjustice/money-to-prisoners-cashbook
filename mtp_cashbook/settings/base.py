@@ -36,7 +36,6 @@ INSTALLED_APPS = (
 )
 PROJECT_APPS = (
     'mtp_common',
-    'mtp_auth',
     'widget_tweaks',
     'cashbook',
     'zendesk_tickets',
@@ -48,6 +47,7 @@ WSGI_APPLICATION = 'mtp_cashbook.wsgi.application'
 ROOT_URLCONF = 'mtp_cashbook.urls'
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'mtp_common.auth.csrf.CsrfViewMiddleware',
     'mtp_common.auth.middleware.AuthenticationMiddleware',

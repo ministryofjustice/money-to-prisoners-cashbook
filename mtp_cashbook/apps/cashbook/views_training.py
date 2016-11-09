@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
@@ -48,7 +49,7 @@ class MultiPageView(TemplateView):
             'next_page': next_page,
             'pages': self.pages,
             'breadcrumbs': [
-                {'name': _('Home'), 'url': '/'},
+                {'name': _('Home'), 'url': reverse('dashboard')},
                 {'name': self.training_title}
             ],
             'start_page_url': settings.START_PAGE_URL,

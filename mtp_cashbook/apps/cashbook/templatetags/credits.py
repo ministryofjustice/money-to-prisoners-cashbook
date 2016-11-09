@@ -84,7 +84,7 @@ def credit_group_class(credit_status):
 @register.filter
 def sum_credits(credits):
     """
-    Returns the total sum of payment amounts (irrespective of status)
+    Returns the total sum of credit amounts (irrespective of status)
     """
     return sum(map(lambda c: c['amount'] or 0, credits))
 

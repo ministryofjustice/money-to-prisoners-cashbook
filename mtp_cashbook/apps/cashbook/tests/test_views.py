@@ -1,4 +1,5 @@
 import datetime
+import logging
 from unittest import mock
 
 from django.core.exceptions import ValidationError
@@ -6,7 +7,27 @@ from django.core.urlresolvers import reverse
 from django.utils.timezone import now, utc
 from mtp_common.auth.exceptions import Forbidden
 
-from cashbook.tests import MTPBaseTestCase
+from cashbook.tests import MTPBaseTestCase, silence_logger
+
+
+class LocaleTestCase(MTPBaseTestCase):
+    def test_locale_switches_based_on_browser_language(self):
+        languages = (
+            ('*', 'en-gb'),
+            ('en', 'en-gb'),
+            ('en-gb', 'en-gb'),
+            ('en-GB, en, *', 'en-gb'),
+            ('cy', 'cy'),
+            ('cy, en-GB, en, *', 'cy'),
+            ('en, cy, *', 'en-gb'),
+            ('es', 'en-gb'),
+        )
+        with silence_logger(name='django.request', level=logging.ERROR):
+            for accept_language, expected_slug in languages:
+                response = self.client.get('/', HTTP_ACCEPT_LANGUAGE=accept_language)
+                self.assertRedirects(response, '/%s/' % expected_slug, fetch_redirect_response=False)
+                response = self.client.get('/login/', HTTP_ACCEPT_LANGUAGE=accept_language)
+                self.assertRedirects(response, '/%s/login/' % expected_slug, fetch_redirect_response=True)
 
 
 class DashboardViewTestCase(MTPBaseTestCase):
@@ -265,11 +286,12 @@ class BatchListView(MTPBaseTestCase):
         mocked_form.save.return_value = ({1}, {2})
 
         self.login()
-        response = self.client.post(
-            self.list_url,
-            data={'credits': [1]},
-            follow=False,
-        )
+        with silence_logger(name='mtp', level=logging.WARNING):
+            response = self.client.post(
+                self.list_url,
+                data={'credits': [1]},
+                follow=False,
+            )
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('dashboard-batch-incomplete'))
 
@@ -290,11 +312,12 @@ class BatchListView(MTPBaseTestCase):
         mocked_form.save.return_value = ({1, 2}, {})
 
         self.login()
-        response = self.client.post(
-            self.list_url,
-            data={'credits': [1, 2]},
-            follow=False,
-        )
+        with silence_logger(name='mtp', level=logging.WARNING):
+            response = self.client.post(
+                self.list_url,
+                data={'credits': [1, 2]},
+                follow=False,
+            )
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('dashboard-batch-complete'))
 

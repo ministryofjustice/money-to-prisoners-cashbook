@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MTP cashbook\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-04 12:36+0000\n"
+"POT-Creation-Date: 2016-11-09 15:43+0000\n"
 "PO-Revision-Date: 2016-11-04 10:00+0000\n"
 "Last-Translator: Welsh Language Unit <welsh.language.unit.manager@hmcts.gsi.gov.uk>\n"
 "Language-Team: Welsh (http://www.transifex.com/ministry-of-justice/mtp/language/cy/)\n"
@@ -88,8 +88,8 @@ msgstr ""
 msgid "%(credits)s received"
 msgstr ""
 
-#: apps/cashbook/views.py:65 apps/cashbook/views_training.py:51
-#: templates/base.html:27 templates/training/page.html:52
+#: apps/cashbook/views.py:65 apps/cashbook/views_training.py:52
+#: templates/base.html:29 templates/training/page.html:52
 msgid "Home"
 msgstr ""
 
@@ -115,7 +115,7 @@ msgid_plural "You have now returned the %(discarded)s credits your colleagues we
 msgstr[0] ""
 msgstr[1] ""
 
-#: apps/cashbook/views.py:192 apps/cashbook/views_training.py:70
+#: apps/cashbook/views.py:192 apps/cashbook/views_training.py:71
 #: templates/cashbook/dashboard.html:37
 #: templates/training/training--history.html:4
 #: templates/training/training--history.html:9
@@ -124,47 +124,47 @@ msgstr[1] ""
 msgid "All credits"
 msgstr ""
 
-#: apps/cashbook/views_training.py:60 templates/cashbook/dashboard.html:56
+#: apps/cashbook/views_training.py:61 templates/cashbook/dashboard.html:56
 msgid "How to use the digital cashbook"
 msgstr ""
 
-#: apps/cashbook/views_training.py:64
+#: apps/cashbook/views_training.py:65
 msgid "Intro"
 msgstr ""
 
-#: apps/cashbook/views_training.py:66
+#: apps/cashbook/views_training.py:67
 msgid "New credits"
 msgstr ""
 
-#: apps/cashbook/views_training.py:68
+#: apps/cashbook/views_training.py:69
 msgid "Credits being entered"
 msgstr ""
 
-#: apps/cashbook/views_training.py:75 templates/cashbook/dashboard.html:51
+#: apps/cashbook/views_training.py:76 templates/cashbook/dashboard.html:51
 msgid "Overview – sending money to prisoners online"
 msgstr ""
 
-#: apps/cashbook/views_training.py:79
+#: apps/cashbook/views_training.py:80
 #: templates/training/service-overview--day-1.html:4
 msgid "Day 1"
 msgstr ""
 
-#: apps/cashbook/views_training.py:81
+#: apps/cashbook/views_training.py:82
 #: templates/training/service-overview--day-2.html:4
 msgid "Day 2"
 msgstr ""
 
-#: apps/cashbook/views_training.py:83
+#: apps/cashbook/views_training.py:84
 #: templates/training/service-overview--day-3.html:4
 msgid "Day 3"
 msgstr ""
 
-#: apps/cashbook/views_training.py:85
+#: apps/cashbook/views_training.py:86
 #: templates/training/service-overview--day-4.html:3
 msgid "Day 4"
 msgstr ""
 
-#: apps/cashbook/views_training.py:87
+#: apps/cashbook/views_training.py:88
 #: templates/training/service-overview--day-5.html:4
 msgid "Day 5"
 msgstr ""
@@ -178,40 +178,40 @@ msgstr ""
 msgid "TRAINING SITE"
 msgstr ""
 
-#: templates/base.html:28 templates/cashbook/dashboard.html:46
+#: templates/base.html:31 templates/cashbook/dashboard.html:46
 msgid "Training materials"
 msgstr ""
 
-#: templates/base.html:31
+#: templates/base.html:34
 msgid "Manage users"
 msgstr ""
 
-#: templates/base.html:36 templates/base.html:38
+#: templates/base.html:39 templates/base.html:41
 msgid "Change password"
 msgstr ""
 
-#: templates/base.html:43
+#: templates/base.html:46
 #, python-format
 msgid "Sign out %(full_name)s"
 msgstr ""
 
-#: templates/base.html:56
+#: templates/base.html:59
 msgid "Beta"
 msgstr ""
 
-#: templates/base.html:63
+#: templates/base.html:66
 msgid "This is a new service."
 msgstr ""
 
-#: templates/base.html:65
+#: templates/base.html:68
 msgid "Please try out this site. The credits and prisoners listed are not real."
 msgstr ""
 
-#: templates/base.html:66
+#: templates/base.html:69
 msgid "All data on the digital cashbook training site will be reset at the start of each day."
 msgstr ""
 
-#: templates/base.html:68
+#: templates/base.html:71
 #, python-format
 msgid "If you have any comments or need help please <a href=\"%(ticket_url)s\">contact us</a>."
 msgstr ""
@@ -713,7 +713,7 @@ msgid "NOMS HQ upload the prisoner location report to the system before 9am."
 msgstr ""
 
 #: templates/training/service-overview--day-2.html:25
-msgid "If a payment reference doesn’t match a prisoner or is from an unknown sender, it’s marked for refund."
+msgid "If a bank transfer reference doesn’t match a prisoner or is from an unknown sender, it’s marked for refund."
 msgstr ""
 
 #: templates/training/service-overview--day-2.html:33
@@ -733,11 +733,11 @@ msgid "The SSCL payment team processes refunds."
 msgstr ""
 
 #: templates/training/service-overview--day-2.html:55
-msgid "Prison clerks credit valid payments in NOMIS"
+msgid "Prison clerks credit valid credits in NOMIS"
 msgstr ""
 
 #: templates/training/service-overview--day-2.html:58
-msgid "Prison clerks credit valid payments in NOMIS."
+msgid "Prison clerks credit valid credits in NOMIS."
 msgstr ""
 
 #: templates/training/service-overview--day-2.html:59
@@ -911,7 +911,7 @@ msgid "‘Help’ text is available in each section."
 msgstr ""
 
 #: templates/training/training--intro.html:34
-msgid "Payments from unknown senders will show up on the ‘all credits’ page."
+msgid "Credits from unknown senders will show up on the ‘all credits’ page."
 msgstr ""
 
 #: templates/training/training--intro.html:35
