@@ -8,7 +8,7 @@
 
   <div>
     {% blocktrans trimmed %}
-      Credits received from the <a href="{{ start_page_url }}" target="_blank">‘Send  money to a prisoner’</a> service
+      Credits received from the <a href="{{ start_page_url }}" target="_blank">‘Send money to a prisoner’</a> service
     {% endblocktrans %}
   </div>
 
@@ -21,6 +21,17 @@
       <div class="bold-xlarge mtp-status-box__number">{{ new_credits|shortenint }}</div>
       <div class="mtp-status-box__button">
         <a class="button" href="{% url 'credit-list' %}">{% blocktrans %}Enter next {{ batch_size }}{% endblocktrans %}</a>
+        {% if pre_approval_required %}
+          <span class="mtp-status__approval">
+            {% if reviewed == new_credits %}
+              <span class="mtp-status__approval--checked">{% trans 'All checked by security' %}</span>
+            {% elif reviewed <= 0 %}
+              <span class="mtp-status__approval--unchecked">{% trans 'Not checked by security' %}</span>
+            {% else %}
+              <span class="mtp-status__approval--part-checked">{% trans 'Some checked by security' %}</span>
+            {% endif %}
+          </span>
+        {% endif %}
       </div>
     </div>
     {% if locked_credits %}

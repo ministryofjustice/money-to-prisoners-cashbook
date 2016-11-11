@@ -38,7 +38,9 @@
             Here are the next {{ batch_size }} of {{ new_credits }} new credits to be processed in NOMIS.
             {% endblocktrans %}
           {% endif %}
-          {% trans 'Enter credits into NOMIS, tick the box then click the green confirm button.' %}
+          <br />
+          {% trans 'Enter credits into NOMIS, tick the box then click the green button, ‘Confirm entered in NOMIS’.' %}
+          <br />
           {% trans 'These credits are locked to you until completed or released by a colleague.' %}
         </p>
         <div class="help-box-title" aria-controls="help-box-contents" aria-expanded="false" role="heading">
@@ -48,8 +50,8 @@
           <ul>
             <li>{% trans 'You can credit in NOMIS in the usual way but remember to select the <strong>‘Misc Receipt - Private Cash’ category as Credit Type</strong>' %}</li>
             <li>{% trans 'You don’t need to use a reference' %}</li>
-            <li>{% trans 'In the Digital Cashbook below, tick off the credits you’ve entered in NOMIS and click ‘Confirm entered in NOMIS’' %}</li>
-            <li>{% trans 'You might find it easier to copy and paste the prisoner number from the Digital Cashbook into NOMIS' %}</li>
+            <li>{% trans 'In the digital cashbook below, tick off the credits you’ve entered in NOMIS and click ‘Confirm entered in NOMIS’' %}</li>
+            <li>{% trans 'You might find it easier to copy and paste the prisoner number from the digital cashbook into NOMIS' %}</li>
             <li><a href="{% url 'training' page='new' %}">{% trans 'More information is available in the training section' %}</a></li>
           </ul>
        </div>
@@ -107,6 +109,9 @@
               <th>{% trans "Prisoner name" %}</th>
               <th>{% trans "Amount" %}</th>
               <th>{% trans "Sender" %}</th>
+              {% if pre_approval_required %}
+                <th>{% trans "Security" %}</th>
+              {% endif %}
               <th class="check"><span id="id_credits-label">{% trans "Entered in NOMIS?" %}</span></th>
             </tr>
           </thead>
@@ -118,6 +123,15 @@
                 <td>{{ credit.prisoner_name }}</td>
                 <td class="numeric">&pound;{{ credit.amount|currency }}</td>
                 <td>{{ credit.sender_name }}</td>
+                {% if pre_approval_required %}
+                  <td>
+                    {% if credit.reviewed %}
+                      {% trans 'Checked' %}
+                    {% else %}
+                      {% trans 'Not checked' %}
+                    {% endif %}
+                  </td>
+                {% endif %}
                 <td class="check">
                   <input
                     type="checkbox"
@@ -130,6 +144,17 @@
                   <label for="check-{{ credit.id }}">{% trans "Credited" %}</label>
                 </td>
               </tr>
+              {% if credit.comments %}
+                <tr>
+                  <td class="mtp-security" colspan=6>
+                    <div class="mtp-security__comment">
+                      {% for comment in credit.comments %}
+                      <p>{{ comment }}</p>
+                      {% endfor %}
+                    </div>
+                  </td>
+                </tr>
+              {% endif %}
             {% endfor %}
           </tbody>
 

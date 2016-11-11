@@ -1,10 +1,14 @@
 {% load i18n %}
 <tr class="print-hidden">
-  <td colspan="4">
+  {% if pre_approval_required %}
+    <td colspan="5">
+  {% else %}
+    <td colspan="4">
+  {% endif %}
     {% if print != False %}
       <a href="#print-dialog" class="js-Dialog">{% trans "Print these credits" %}</a>
     {% endif %}
-  </th>
+    </td>
   <td class="mtp-all" colspan="1">
     {% if select_all != False %}
       <input type="checkbox" id="select-all-{{ location }}" class="Checkbox Checkbox--left js-SelectAll" data-name="{{ field_name }}">

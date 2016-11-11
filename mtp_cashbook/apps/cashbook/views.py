@@ -45,12 +45,22 @@ class DashboardView(TemplateView):
         my_locked = credit_client.get(user=self.request.user.pk, status='locked')
         locked = credit_client.get(status='locked')
         all_credits = credit_client.get()
+
+        pre_approval_required = any((
+            prison['pre_approval_required']
+            for prison in self.request.user.user_data.get('prisons', [])
+        ))
+        if pre_approval_required:
+            reviewed = credit_client.get(status='available', reviewed=True)
+            context_data['reviewed'] = reviewed['count']
+
         context_data.update({
             'start_page_url': settings.START_PAGE_URL,
             'new_credits': available['count'] + my_locked['count'],
             'locked_credits': locked['count'],
             'all_credits': all_credits['count'],
-            'batch_size': min(available['count'], 20)
+            'batch_size': min(available['count'], 20),
+            'pre_approval_required': pre_approval_required
         })
         return context_data
 
@@ -91,6 +101,11 @@ class CreditBatchListView(FormView, CashbookSubviewMixin):
         context['object_list'] = credit_choices
         context['total'] = sum([x[1]['amount'] for x in credit_choices])
         context['batch_size'] = len(credit_choices)
+
+        context['pre_approval_required'] = any((
+            prison['pre_approval_required']
+            for prison in self.request.user.user_data.get('prisons', [])
+        ))
 
         credit_client = context['form'].client.credits
         available = credit_client.get(status='available')

@@ -36,6 +36,36 @@
     }
   }
 
+  .mtp-status__approval {
+    padding-top: 5px;
+
+    span:before {
+      content: '\2022';
+      font-size: 42px;
+      line-height: 40px;
+      padding-left: 10px;
+      padding-right: 5px;
+      vertical-align: middle;
+    }
+
+    .mtp-status__approval--checked:before {
+      color: $button-colour;
+    }
+
+    .mtp-status__approval--part-checked:before {
+      color: $beta-colour;
+    }
+
+    .mtp-status__approval--unchecked:before {
+      color: $error-colour;
+    }
+
+    span {
+      line-height: 40px;
+      vertical-align: middle;
+    }
+  }
+
   .mtp-status-box__button {
     overflow: hidden;
     padding: 16px 0 10px 10px;
