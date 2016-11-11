@@ -1,9 +1,14 @@
 {% load i18n %}
 <tr class="print-hidden">
-  <td colspan="4">
+  {% if pre_approval_required %}
+    <td colspan="5">
+  {% else %}
+    <td colspan="4">
+  {% endif %}
     {% if print != False %}
       <a href="#print-dialog" class="js-Dialog">{% trans "Print these credits" %}</a>
     {% endif %}
+    </td>
   </th>
   <td class="mtp-all" colspan="1">
     {% if select_all != False %}

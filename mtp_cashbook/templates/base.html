@@ -2,14 +2,10 @@
 {% load i18n %}
 {% load mtp_common %}
 
-{% block main_js %}
-  {{ block.super }}
-  {% sentry_js %}
-{% endblock %}
-
 {% block body_end %}
   {{ block.super }}
   <!--[{{ request.resolver_match.url_name }}]-->
+  {% sentry_js %}
 {% endblock %}
 
 {% block page_title %}{% trans 'Digital cashbook' %}{% endblock %}
