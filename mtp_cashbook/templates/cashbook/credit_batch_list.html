@@ -142,12 +142,14 @@
                   <label for="check-{{ credit.id }}">{% trans "Credited" %}</label>
                 </td>
               </tr>
-              <tr>
-                {% if credit.comments %}
+              {% if credit.comments %}
+                <tr>
                   <td class="mtp-security" colspan=6>
-                      <div class="mtp-security__comment">
-                        <p>{{ credit.comments.0 }}</p>
-                      </div>
+                    <div class="mtp-security__comment">
+                      {% for comment in credit.comments %}
+                      <p>{{ comment }}</p>
+                      {% endfor %}
+                    </div>
                   </td>
                 </tr>
               {% endif %}
