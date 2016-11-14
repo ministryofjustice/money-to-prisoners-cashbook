@@ -1,11 +1,17 @@
 {% extends 'base.html' %}
 {% load i18n %}
+{% load mtp_common %}
 {% load training %}
 
 {% block inner_content %}
-  <h1 class="heading-xlarge mtp-heading-training">{{ view.training_title }}</h1>
+  <header>
+    {% language_switch %}
+    <h1 class="heading-xlarge">{{ view.training_title }}</h1>
+  </header>
 
   {% include 'mtp_common/includes/message_box.html' %}
+
+  <span class="print-hidden"><a class="mtp-training__print-link" href="#">{% trans 'Print this training guide' %}</a></span>
 
   <ul class="mtp-training-navigation print-hidden">
     {% for page in pages %}
@@ -13,13 +19,10 @@
         <a href="{% url view.url_name page=page.page %}">{{ page.title }}</a>
       </li>
     {% endfor %}
-    <li class="mtp-training-navigation__item mtp-training-navigation__js-print">
-      <a href="#">{% trans 'Print this training guide' %}</a>
-    </li>
   </ul>
 
   {% for page in pages %}
-    <div class="mtp-training-content {% if page.page != current_page %}mtp-training-content__print{% endif %}">
+    <div class="mtp-training-content {% if page.page != current_page %}mtp-training-content__print-only{% endif %}">
       {% get_training_page_template page.page as page_template %}
       {% include page_template %}
     </div>

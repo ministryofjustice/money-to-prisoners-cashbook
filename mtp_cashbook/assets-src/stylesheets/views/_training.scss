@@ -1,11 +1,20 @@
 // Application specific
 
+.mtp-training__print-link {
+  display: none;
+
+  .js-enabled & {
+    display: inline;
+  }
+}
+
 .mtp-training-navigation {
   border: 1px solid $border-colour;
   border-left: 0;
   border-right: 0;
   display: block;
   list-style: none;
+  margin-top: 1em;
   overflow: hidden;
 }
 
@@ -37,25 +46,6 @@
   }
 }
 
-.mtp-training-navigation__js-print {
-  display: none;
-  float: right;
-
-  .js-enabled & {
-    display: block;
-  }
-
-  a {
-    font-weight: normal;
-    padding-right: 0;
-
-    &:focus {
-      background: none;
-      text-decoration: underline;
-    }
-  }
-}
-
 .mtp-training-navigation__item--active {
   background: $govuk-blue;
 
@@ -68,15 +58,7 @@
   }
 }
 
-.mtp-heading-training {
-  display: none;
-
-  @media print {
-    display: block;
-  }
-}
-
-.mtp-training-content__print {
+.mtp-training-content__print-only {
   display: none;
 
   @media print {

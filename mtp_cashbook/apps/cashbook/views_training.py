@@ -62,7 +62,7 @@ class Training(MultiPageView):
     url_name = 'training'
     pages = [
         {'page': 'intro',
-         'title': _('Intro')},
+         'title': _('Introduction')},
         {'page': 'new',
          'title': _('New credits')},
         {'page': 'in-progress',

@@ -1,15 +1,18 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load i18n %}
 {% load currency %}
 {% load mtp_common %}
 
-{% block page_title %}{% trans "New credits - Digital cashbook" %}{% endblock %}
+{% block page_title %}{% trans 'New credits - Digital cashbook' %}{% endblock %}
 
 {% block body_classes %}v-batch{% endblock %}
 
 {% block inner_content %}
 
-  <h1 class="heading-xlarge">{{ view.title }}</h1>
+  <header>
+    {% language_switch %}
+    <h1 class="heading-xlarge">{{ view.title }}</h1>
+  </header>
 
   {% include "mtp_common/includes/message_box.html" %}
 
