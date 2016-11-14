@@ -236,6 +236,7 @@ ZENDESK_CUSTOM_FIELDS = {
 }
 
 START_PAGE_URL = os.environ.get('START_PAGE_URL', 'http://sendmoneytoaprisoner.service.justice.gov.uk/')
+SHOW_LANGUAGE_SWITCH = os.environ.get('SHOW_LANGUAGE_SWITCH', 'False') == 'True'
 
 try:
     from .local import *  # noqa

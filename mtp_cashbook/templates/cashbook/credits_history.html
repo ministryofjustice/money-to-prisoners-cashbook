@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load i18n %}
 {% load currency %}
 {% load mtp_common %}
@@ -6,7 +6,10 @@
 
 {% block inner_content %}
 
-  <h1 class="heading-xlarge">{{ view.title }}</h1>
+  <header>
+    {% language_switch %}
+    <h1 class="heading-xlarge">{{ view.title }}</h1>
+  </header>
 
   <div class="help-box">
     <p>
