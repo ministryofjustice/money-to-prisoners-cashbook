@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MTP cashbook\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-11 15:34+0000\n"
+"POT-Creation-Date: 2016-11-15 16:50+0000\n"
 "PO-Revision-Date: 2016-11-04 10:00+0000\n"
 "Last-Translator: Welsh Language Unit <welsh.language.unit.manager@hmcts.gsi.gov.uk>\n"
 "Language-Team: Welsh (http://www.transifex.com/ministry-of-justice/mtp/language/cy/)\n"
@@ -88,35 +88,35 @@ msgstr ""
 msgid "%(credits)s received"
 msgstr ""
 
-#: apps/cashbook/views.py:75 apps/cashbook/views_training.py:52
-#: templates/base.html:25 templates/training/page.html:52
+#: apps/cashbook/views.py:74 apps/cashbook/views_training.py:52
+#: templates/base.html:25 templates/training/page.html:55
 msgid "Home"
 msgstr ""
 
-#: apps/cashbook/views.py:82
+#: apps/cashbook/views.py:81
 msgid "New credits to enter"
 msgstr ""
 
-#: apps/cashbook/views.py:126
+#: apps/cashbook/views.py:125
 #, python-format
 msgid "You’ve added 1 credit to NOMIS."
 msgid_plural "You’ve added %(credited)s credits to NOMIS."
 msgstr[0] ""
 msgstr[1] ""
 
-#: apps/cashbook/views.py:155 templates/cashbook/dashboard.html:39
+#: apps/cashbook/views.py:154 templates/cashbook/dashboard.html:43
 msgid "Currently being entered"
 msgstr ""
 
-#: apps/cashbook/views.py:178
+#: apps/cashbook/views.py:177
 #, python-format
 msgid "You have now returned the credit your colleagues were processing to ‘New’ credits."
 msgid_plural "You have now returned the %(discarded)s credits your colleagues were processing to ‘New’ credits."
 msgstr[0] ""
 msgstr[1] ""
 
-#: apps/cashbook/views.py:207 apps/cashbook/views_training.py:71
-#: templates/cashbook/dashboard.html:48
+#: apps/cashbook/views.py:206 apps/cashbook/views_training.py:71
+#: templates/cashbook/dashboard.html:52
 #: templates/training/training--history.html:4
 #: templates/training/training--history.html:9
 #: templates/training/training--history.html:29
@@ -124,12 +124,12 @@ msgstr[1] ""
 msgid "All credits"
 msgstr ""
 
-#: apps/cashbook/views_training.py:61 templates/cashbook/dashboard.html:67
+#: apps/cashbook/views_training.py:61 templates/cashbook/dashboard.html:71
 msgid "How to use the digital cashbook"
 msgstr ""
 
-#: apps/cashbook/views_training.py:65
-msgid "Intro"
+#: apps/cashbook/views_training.py:65 templates/training/training--intro.html:4
+msgid "Introduction"
 msgstr ""
 
 #: apps/cashbook/views_training.py:67
@@ -140,7 +140,7 @@ msgstr ""
 msgid "Credits being entered"
 msgstr ""
 
-#: apps/cashbook/views_training.py:76 templates/cashbook/dashboard.html:62
+#: apps/cashbook/views_training.py:76 templates/cashbook/dashboard.html:66
 msgid "Overview – sending money to prisoners online"
 msgstr ""
 
@@ -170,7 +170,7 @@ msgid "Day 5"
 msgstr ""
 
 #: templates/base.html:11 templates/base.html:14
-#: templates/cashbook/dashboard.html:7 templates/mtp_auth/login.html:4
+#: templates/cashbook/dashboard.html:10 templates/mtp_auth/login.html:4
 msgid "Digital cashbook"
 msgstr ""
 
@@ -178,7 +178,7 @@ msgstr ""
 msgid "TRAINING SITE"
 msgstr ""
 
-#: templates/base.html:27 templates/cashbook/dashboard.html:57
+#: templates/base.html:27 templates/cashbook/dashboard.html:61
 msgid "Training materials"
 msgstr ""
 
@@ -220,314 +220,291 @@ msgstr ""
 msgid "New credits - Digital cashbook"
 msgstr ""
 
-#: templates/cashbook/credit_batch_list.html:21
+#: templates/cashbook/credit_batch_list.html:24
 msgid "You are leaving this page, but have ticked credits."
 msgstr ""
 
-#: templates/cashbook/credit_batch_list.html:21
+#: templates/cashbook/credit_batch_list.html:24
 msgid "Click ‘Done’ if credits have been processed in NOMIS."
 msgstr ""
 
-#: templates/cashbook/credit_batch_list.html:31
+#: templates/cashbook/credit_batch_list.html:34
 msgid "Here is the only new credit to be processed in NOMIS."
 msgstr ""
 
-#: templates/cashbook/credit_batch_list.html:33
+#: templates/cashbook/credit_batch_list.html:36
 #, python-format
 msgid "Here are the %(batch_size)s new credits to be processed in NOMIS."
 msgstr ""
 
-#: templates/cashbook/credit_batch_list.html:37
+#: templates/cashbook/credit_batch_list.html:40
 #, python-format
 msgid "Here are the next %(batch_size)s of %(new_credits)s new credits to be processed in NOMIS."
 msgstr ""
 
-#: templates/cashbook/credit_batch_list.html:42
+#: templates/cashbook/credit_batch_list.html:45
 msgid "Enter credits into NOMIS, tick the box then click the green button, ‘Confirm entered in NOMIS’."
 msgstr ""
 
-#: templates/cashbook/credit_batch_list.html:44
+#: templates/cashbook/credit_batch_list.html:47
 msgid "These credits are locked to you until completed or released by a colleague."
 msgstr ""
 
-#: templates/cashbook/credit_batch_list.html:47
+#: templates/cashbook/credit_batch_list.html:50
 msgid "How to use this with NOMIS"
 msgstr ""
 
-#: templates/cashbook/credit_batch_list.html:51
+#: templates/cashbook/credit_batch_list.html:54
 msgid "You can credit in NOMIS in the usual way but remember to select the <strong>‘Misc Receipt - Private Cash’ category as Credit Type</strong>"
 msgstr ""
 
-#: templates/cashbook/credit_batch_list.html:52
+#: templates/cashbook/credit_batch_list.html:55
 msgid "You don’t need to use a reference"
 msgstr ""
 
-#: templates/cashbook/credit_batch_list.html:53
+#: templates/cashbook/credit_batch_list.html:56
 msgid "In the digital cashbook below, tick off the credits you’ve entered in NOMIS and click ‘Confirm entered in NOMIS’"
 msgstr ""
 
-#: templates/cashbook/credit_batch_list.html:54
+#: templates/cashbook/credit_batch_list.html:57
 msgid "You might find it easier to copy and paste the prisoner number from the digital cashbook into NOMIS"
 msgstr ""
 
-#: templates/cashbook/credit_batch_list.html:55
-#: templates/cashbook/credits_history.html:27
-#: templates/cashbook/credits_locked.html:32
+#: templates/cashbook/credit_batch_list.html:58
+#: templates/cashbook/credits_history.html:30
+#: templates/cashbook/credits_locked.html:35
 msgid "More information is available in the training section"
 msgstr ""
 
-#: templates/cashbook/credit_batch_list.html:63
+#: templates/cashbook/credit_batch_list.html:66
 msgid "CONFIDENTIAL: dispose of securely"
 msgstr ""
 
-#: templates/cashbook/credit_batch_list.html:66
+#: templates/cashbook/credit_batch_list.html:69
 msgid "When you’ve processed these credits in NOMIS, select them in the digital cashbook and click ‘Done’."
 msgstr ""
 
-#: templates/cashbook/credit_batch_list.html:74
+#: templates/cashbook/credit_batch_list.html:77
 #, python-format
 msgid "Control total (%(batch_size)s)"
 msgstr ""
 
-#: templates/cashbook/credit_batch_list.html:87
+#: templates/cashbook/credit_batch_list.html:90
 msgid "Entered into NOMIS by you"
 msgstr ""
 
-#: templates/cashbook/credit_batch_list.html:97
+#: templates/cashbook/credit_batch_list.html:100
 msgid "Confirm entered in NOMIS"
 msgstr ""
 
-#: templates/cashbook/credit_batch_list.html:108
+#: templates/cashbook/credit_batch_list.html:111
 msgid "Prisoner number"
 msgstr ""
 
-#: templates/cashbook/credit_batch_list.html:109
-#: templates/cashbook/credits_history.html:86
-#: templates/cashbook/credits_history.html:88
+#: templates/cashbook/credit_batch_list.html:112
+#: templates/cashbook/credits_history.html:89
+#: templates/cashbook/credits_history.html:91
 msgid "Prisoner name"
 msgstr ""
 
-#: templates/cashbook/credit_batch_list.html:110
-#: templates/cashbook/credits_locked.html:50
+#: templates/cashbook/credit_batch_list.html:113
+#: templates/cashbook/credits_locked.html:53
 msgid "Amount"
 msgstr ""
 
-#: templates/cashbook/credit_batch_list.html:111
-#: templates/cashbook/credits_history.html:92
+#: templates/cashbook/credit_batch_list.html:114
+#: templates/cashbook/credits_history.html:95
 msgid "Sender"
 msgstr ""
 
-#: templates/cashbook/credit_batch_list.html:113
+#: templates/cashbook/credit_batch_list.html:116
 msgid "Security"
 msgstr ""
 
-#: templates/cashbook/credit_batch_list.html:115
+#: templates/cashbook/credit_batch_list.html:118
 msgid "Entered in NOMIS?"
 msgstr ""
 
-#: templates/cashbook/credit_batch_list.html:129
+#: templates/cashbook/credit_batch_list.html:132
 msgid "Checked"
 msgstr ""
 
-#: templates/cashbook/credit_batch_list.html:131
+#: templates/cashbook/credit_batch_list.html:134
 msgid "Not checked"
 msgstr ""
 
-#: templates/cashbook/credit_batch_list.html:144
-#: templates/cashbook/credits_history.html:71
+#: templates/cashbook/credit_batch_list.html:147
+#: templates/cashbook/credits_history.html:74
 msgid "Credited"
 msgstr ""
 
-#: templates/cashbook/credit_batch_list.html:168
+#: templates/cashbook/credit_batch_list.html:171
 msgid "There aren’t any credits available"
 msgstr ""
 
-#: templates/cashbook/credit_batch_list.html:177
+#: templates/cashbook/credit_batch_list.html:180
 msgid "Do you want to submit only the selected credits?"
 msgstr ""
 
-#: templates/cashbook/credit_batch_list.html:180
+#: templates/cashbook/credit_batch_list.html:183
 msgid "Yes"
 msgstr ""
 
-#: templates/cashbook/credit_batch_list.html:183
+#: templates/cashbook/credit_batch_list.html:186
 msgid "No, continue processing"
 msgstr ""
 
-#: templates/cashbook/credits_history.html:13
+#: templates/cashbook/credits_history.html:16
 msgid "Below you’ll find all the credits listed to date."
 msgstr ""
 
-#: templates/cashbook/credits_history.html:14
+#: templates/cashbook/credits_history.html:17
 msgid "You can also use the search to find specific credits."
 msgstr ""
 
-#: templates/cashbook/credits_history.html:18
-#: templates/cashbook/credits_locked.html:24
+#: templates/cashbook/credits_history.html:21
+#: templates/cashbook/credits_locked.html:27
 msgid "Help"
 msgstr ""
 
-#: templates/cashbook/credits_history.html:21
+#: templates/cashbook/credits_history.html:24
 msgid "To help with your search:"
 msgstr ""
 
-#: templates/cashbook/credits_history.html:23
+#: templates/cashbook/credits_history.html:26
 msgid "Search by prisoner name, prisoner number, sender name or amount"
 msgstr ""
 
-#: templates/cashbook/credits_history.html:24
+#: templates/cashbook/credits_history.html:27
 msgid "To bring up the whole history, don’t enter search dates although you can enter start and finish dates if you have a specific search"
 msgstr ""
 
-#: templates/cashbook/credits_history.html:25
+#: templates/cashbook/credits_history.html:28
 msgid "Click on ‘Expand’ to see a list of credits for that day, then click on ‘Collapse’ to go back"
 msgstr ""
 
-#: templates/cashbook/credits_history.html:26
+#: templates/cashbook/credits_history.html:29
 msgid "Remember the credits in ‘Uncredited’ haven’t been processed yet"
 msgstr ""
 
-#: templates/cashbook/credits_history.html:55
+#: templates/cashbook/credits_history.html:58
 msgid "Search"
 msgstr ""
 
-#: templates/cashbook/credits_history.html:69
+#: templates/cashbook/credits_history.html:72
 msgid "Collapse"
 msgstr ""
 
-#: templates/cashbook/credits_history.html:69
+#: templates/cashbook/credits_history.html:72
 msgid "Expand"
 msgstr ""
 
-#: templates/cashbook/credits_history.html:73
+#: templates/cashbook/credits_history.html:76
 msgid "Refunded"
 msgstr ""
 
-#: templates/cashbook/credits_history.html:75
+#: templates/cashbook/credits_history.html:78
 msgid "Unknown sender (uncredited)"
 msgstr ""
 
-#: templates/cashbook/credits_history.html:77
+#: templates/cashbook/credits_history.html:80
 msgid "Uncredited"
 msgstr ""
 
-#: templates/cashbook/credits_history.html:80
+#: templates/cashbook/credits_history.html:83
 msgid "Total"
 msgstr ""
 
-#: templates/cashbook/credits_history.html:85
+#: templates/cashbook/credits_history.html:88
 msgid "Prisoner no"
 msgstr ""
 
-#: templates/cashbook/credits_history.html:89
+#: templates/cashbook/credits_history.html:92
 msgid "as entered by sender"
 msgstr ""
 
-#: templates/cashbook/credits_history.html:91
+#: templates/cashbook/credits_history.html:94
 msgid "Amount (£)"
 msgstr ""
 
-#: templates/cashbook/credits_history.html:95
+#: templates/cashbook/credits_history.html:98
 msgid "Credited by"
 msgstr ""
 
-#: templates/cashbook/credits_history.html:97
+#: templates/cashbook/credits_history.html:100
 msgid "Started by"
 msgstr ""
 
-#: templates/cashbook/credits_history.html:100
+#: templates/cashbook/credits_history.html:103
 msgid "Payment method"
 msgstr ""
 
-#: templates/cashbook/credits_history.html:114
+#: templates/cashbook/credits_history.html:117
 msgid "Debit card"
 msgstr ""
 
-#: templates/cashbook/credits_history.html:116
+#: templates/cashbook/credits_history.html:119
 msgid "Bank transfer"
 msgstr ""
 
-#: templates/cashbook/credits_history.html:130 templates/training/page.html:33
-msgid "Previous"
-msgstr ""
-
 #: templates/cashbook/credits_history.html:131
-#: templates/cashbook/credits_history.html:151
-msgid "page"
-msgstr ""
-
-#: templates/cashbook/credits_history.html:139
-msgid "Page"
-msgstr ""
-
-#: templates/cashbook/credits_history.html:150 templates/training/page.html:42
-#: templates/training/page.html:47
-msgid "Next"
-msgstr ""
-
-#: templates/cashbook/credits_history.html:157
-#, python-format
-msgid "Page %(page)s of %(pages)s."
-msgstr ""
-
-#: templates/cashbook/credits_history.html:160
 msgid "Print this page of credits"
 msgstr ""
 
-#: templates/cashbook/credits_locked.html:19
+#: templates/cashbook/credits_locked.html:22
 msgid "Here you can see who is currently processing the credits in your team."
 msgstr ""
 
-#: templates/cashbook/credits_locked.html:20
+#: templates/cashbook/credits_locked.html:23
 msgid "You can release them if you need to take over their work."
 msgstr ""
 
-#: templates/cashbook/credits_locked.html:27
+#: templates/cashbook/credits_locked.html:30
 msgid "If you want to release credits:"
 msgstr ""
 
-#: templates/cashbook/credits_locked.html:29
+#: templates/cashbook/credits_locked.html:32
 msgid "Find your team member under ‘staff name’"
 msgstr ""
 
-#: templates/cashbook/credits_locked.html:30
+#: templates/cashbook/credits_locked.html:33
 msgid "Select the box at the end of the row"
 msgstr ""
 
-#: templates/cashbook/credits_locked.html:31
+#: templates/cashbook/credits_locked.html:34
 msgid "Click ‘Release selected credits’ to free up their work"
 msgstr ""
 
-#: templates/cashbook/credits_locked.html:48
+#: templates/cashbook/credits_locked.html:51
 msgid "Staff name"
 msgstr ""
 
-#: templates/cashbook/credits_locked.html:49
+#: templates/cashbook/credits_locked.html:52
 msgid "Credits"
 msgstr ""
 
-#: templates/cashbook/credits_locked.html:51
+#: templates/cashbook/credits_locked.html:54
 msgid "Time in progress"
 msgstr ""
 
-#: templates/cashbook/credits_locked.html:52
+#: templates/cashbook/credits_locked.html:55
 msgid "Release"
 msgstr ""
 
-#: templates/cashbook/credits_locked.html:71
+#: templates/cashbook/credits_locked.html:74
 msgid "Select"
 msgstr ""
 
-#: templates/cashbook/credits_locked.html:87
+#: templates/cashbook/credits_locked.html:90
 msgid "No credits in progress"
 msgstr ""
 
-#: templates/cashbook/dashboard.html:10
+#: templates/cashbook/dashboard.html:14
 #, python-format
 msgid "Credits received from the <a href=\"%(start_page_url)s\" target=\"_blank\">‘Send money to a prisoner’</a> service"
 msgstr ""
 
-#: templates/cashbook/dashboard.html:20
+#: templates/cashbook/dashboard.html:24
 #: templates/training/training--intro.html:23
 #: templates/training/training--new.html:4
 #: templates/training/training--new.html:9
@@ -537,52 +514,52 @@ msgstr ""
 msgid "New credits to enter into NOMIS"
 msgstr ""
 
-#: templates/cashbook/dashboard.html:23
+#: templates/cashbook/dashboard.html:27
 #, python-format
 msgid "Enter next %(batch_size)s"
 msgstr ""
 
-#: templates/cashbook/dashboard.html:27
+#: templates/cashbook/dashboard.html:31
 msgid "All checked by security"
 msgstr ""
 
-#: templates/cashbook/dashboard.html:29
+#: templates/cashbook/dashboard.html:33
 msgid "Not checked by security"
 msgstr ""
 
-#: templates/cashbook/dashboard.html:31
+#: templates/cashbook/dashboard.html:35
 msgid "Some checked by security"
 msgstr ""
 
-#: templates/cashbook/dashboard.html:40
+#: templates/cashbook/dashboard.html:44
 msgid "Look at credits being entered into NOMIS now and release them, if needed"
 msgstr ""
 
-#: templates/cashbook/dashboard.html:43
+#: templates/cashbook/dashboard.html:47
 msgid "View"
 msgstr ""
 
-#: templates/cashbook/dashboard.html:51
+#: templates/cashbook/dashboard.html:55
 msgid "View all credits"
 msgstr ""
 
-#: templates/cashbook/inactive_password_change.html:7
+#: templates/cashbook/inactive_password_change.html:9
 msgid "Change your password"
 msgstr ""
 
-#: templates/cashbook/inactive_password_change.html:11
+#: templates/cashbook/inactive_password_change.html:14
 msgid "Old password"
 msgstr ""
 
-#: templates/cashbook/inactive_password_change.html:15
+#: templates/cashbook/inactive_password_change.html:18
 msgid "New password"
 msgstr ""
 
-#: templates/cashbook/inactive_password_change.html:19
+#: templates/cashbook/inactive_password_change.html:22
 msgid "New password confirmation"
 msgstr ""
 
-#: templates/cashbook/inactive_password_change.html:23
+#: templates/cashbook/inactive_password_change.html:26
 msgid "During training it is not possible to change your password"
 msgstr ""
 
@@ -636,23 +613,31 @@ msgstr ""
 msgid "Select all"
 msgstr ""
 
-#: templates/training/page.html:17
+#: templates/training/page.html:14
 msgid "Print this training guide"
 msgstr ""
 
-#: templates/training/page.html:32
-msgid "Navigate to previous part"
+#: templates/training/page.html:35
+msgid "Navigate to previous page"
 msgstr ""
 
-#: templates/training/page.html:41
-msgid "Navigate to next part"
+#: templates/training/page.html:36
+msgid "Previous"
 msgstr ""
 
-#: templates/training/page.html:46
+#: templates/training/page.html:44
+msgid "Navigate to next page"
+msgstr ""
+
+#: templates/training/page.html:45 templates/training/page.html:50
+msgid "Next"
+msgstr ""
+
+#: templates/training/page.html:49
 msgid "Navigate to next training course"
 msgstr ""
 
-#: templates/training/page.html:51
+#: templates/training/page.html:54
 msgid "Return to home page"
 msgstr ""
 
@@ -887,10 +872,6 @@ msgstr ""
 
 #: templates/training/training--in-progress.html:21
 msgid "Make sure none of the credits have been started or saved on NOMIS"
-msgstr ""
-
-#: templates/training/training--intro.html:4
-msgid "Introduction"
 msgstr ""
 
 #: templates/training/training--intro.html:8

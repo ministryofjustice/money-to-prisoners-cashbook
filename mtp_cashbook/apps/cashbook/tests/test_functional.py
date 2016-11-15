@@ -57,7 +57,7 @@ class LoginTests(CashbookTestCase):
     def test_title(self):
         self.driver.get(self.live_server_url + '/en-gb/')
         heading = self.driver.find_element_by_tag_name('h1')
-        self.assertEqual('Digital cashbook', heading.text)
+        self.assertEqual('Digital cashbook\nSign in', heading.text)
 
     def test_bad_login(self):
         self.login('test-prison-1', 'bad-password')
