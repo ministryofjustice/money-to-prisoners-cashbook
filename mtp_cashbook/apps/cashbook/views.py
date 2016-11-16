@@ -77,6 +77,7 @@ class CashbookSubviewMixin(TemplateView):
         return context_data
 
 
+@method_decorator(login_required, name='dispatch')
 class CreditBatchListView(FormView, CashbookSubviewMixin):
     title = _('New credits to enter')
     form_class = ProcessCreditBatchForm
@@ -88,10 +89,6 @@ class CreditBatchListView(FormView, CashbookSubviewMixin):
         form_kwargs = super().get_form_kwargs()
         form_kwargs['request'] = self.request
         return form_kwargs
-
-    @method_decorator(login_required)
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

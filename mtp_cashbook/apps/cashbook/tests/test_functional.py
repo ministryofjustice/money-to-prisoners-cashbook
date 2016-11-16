@@ -20,7 +20,7 @@ class CashbookTestCase(FunctionalTestCase):
             super().load_test_data()
 
     def login(self, *args, **kwargs):
-        kwargs['url'] = self.live_server_url + '/en-gb/'
+        kwargs.setdefault('url', self.live_server_url + '/en-gb/')
         super().login(*args, **kwargs)
 
     def click_logout(self):

@@ -116,7 +116,6 @@ class DiscardLockedCreditsForm(GARequestErrorReportingMixin, forms.Form):
         Gets the credits currently locked by all users for prison
         """
         credits = self._request_locked_credits()
-        print(credits)
 
         return [
             (t['id'], t) for t in credits
