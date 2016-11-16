@@ -153,6 +153,7 @@
                     {% for comment in credit.comments %}
                       <div class="mtp-security__comment">
                         {{ comment.comment|linebreaks }}
+                        {% if comment.user_full_name %}<cite class="font-xsmall">{{ comment.user_full_name }}</cite>{% endif %}
                       </div>
                     {% endfor %}
                   </td>
