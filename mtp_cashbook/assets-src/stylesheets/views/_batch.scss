@@ -128,7 +128,7 @@
   }
 
   @media print {
-    h1, .check, {
+    h1, .check {
       display: none;
     }
     table {
@@ -193,28 +193,20 @@
 .mtp-security__comment:before {
   content: "";
   position: absolute;
-  bottom: -20px;
-  left: 40px;
-  border-width: 20px 20px 0;
   border-style: solid;
-  border-color: $beta-colour transparent;
   display: block;
   width: 0;
   top: 24px;
   bottom: auto;
   left: -12px;
-  border-width: 0px 10px 12px 0;
+  border-width: 0 10px 12px 0;
   border-color: transparent $beta-colour;
 }
 
 .mtp-security__comment:after {
   content: "";
   position: absolute;
-  bottom: -13px;
-  left: 47px;
-  border-width: 13px 13px 0;
   border-style: solid;
-  border-color: $page-colour transparent;
   display: block;
   width: 0;
   top: 26px;
