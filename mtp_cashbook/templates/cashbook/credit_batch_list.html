@@ -97,7 +97,7 @@
 
             <div class="column-one-third mtp-confirm__button">
               {% if object_list %}
-              <button type="submit" name="submit" value="submit" class="button">{% trans "Confirm entered in NOMIS" %}</button>
+                <button type="submit" name="submit" value="submit" class="button">{% trans 'Confirm entered in NOMIS' %}</button>
               {% endif %}
             </div>
           </div>
@@ -105,17 +105,17 @@
 
         <table>
           <thead>
-            {% include "cashbook/includes/batch_table_actions.html" with location='header' field_name=form.credits.html_name batch_size=batch_size %}
+            {% include 'cashbook/includes/batch_table_actions.html' with location='header' field_name=form.credits.html_name batch_size=batch_size %}
 
             <tr>
-              <th>{% trans "Prisoner number" %}</th>
-              <th>{% trans "Prisoner name" %}</th>
-              <th>{% trans "Amount" %}</th>
-              <th>{% trans "Sender" %}</th>
+              <th>{% trans 'Prisoner number' %}</th>
+              <th>{% trans 'Prisoner name' %}</th>
+              <th>{% trans 'Amount' %}</th>
+              <th>{% trans 'Sender' %}</th>
               {% if pre_approval_required %}
-                <th>{% trans "Security" %}</th>
+                <th>{% trans 'Security' %}</th>
               {% endif %}
-              <th class="check"><span id="id_credits-label">{% trans "Entered in NOMIS?" %}</span></th>
+              <th class="check"><span id="id_credits-label">{% trans 'Entered in NOMIS?' %}</span></th>
             </tr>
           </thead>
 
@@ -144,17 +144,17 @@
                     {% if credit_pk|to_string in form.credits.value %}checked{% endif %}
                     class="js-RunningTotal-item Checkbox"
                     data-amount="{{ credit.amount|currency }}">
-                  <label for="check-{{ credit.id }}">{% trans "Credited" %}</label>
+                  <label for="check-{{ credit.id }}">{% trans 'Credited' %}</label>
                 </td>
               </tr>
               {% if credit.comments %}
                 <tr>
                   <td class="mtp-security" colspan=6>
-                    <div class="mtp-security__comment">
-                      {% for comment in credit.comments %}
-                      <p>{{ comment }}</p>
-                      {% endfor %}
-                    </div>
+                    {% for comment in credit.comments %}
+                      <div class="mtp-security__comment">
+                        {{ comment.comment|linebreaks }}
+                      </div>
+                    {% endfor %}
                   </td>
                 </tr>
               {% endif %}
@@ -162,7 +162,7 @@
           </tbody>
 
           <tfoot>
-            {% include "cashbook/includes/batch_table_actions.html" with location='footer' field_name=form.credits.html_name batch_size=batch_size %}
+            {% include 'cashbook/includes/batch_table_actions.html' with location='footer' field_name=form.credits.html_name batch_size=batch_size %}
           </tfoot>
         </table>
 
@@ -177,17 +177,17 @@
          data-hide-close="true"
          data-disable-backdrop-close="true">
       <div class="Dialog-inner">
-        <p><strong>{% trans "Do you want to submit only the selected credits?" %}</strong></p>
+        <p><strong>{% trans 'Do you want to submit only the selected credits?' %}</strong></p>
         <button type="submit"
                 class="button"
-                value="override">{% trans "Yes" %}</button>
+                value="override">{% trans 'Yes' %}</button>
         <button type="button"
                 class="button button-secondary js-Dialog-close"
-                data-analytics="pageview,/batch/-dialog_close/">{% trans "No, continue processing" %}</button>
+                data-analytics="pageview,/batch/-dialog_close/">{% trans 'No, continue processing' %}</button>
       </div>
     </div>
   </form>
 
-  {% include "cashbook/includes/print_dialog.html" %}
+  {% include 'cashbook/includes/print_dialog.html' %}
 
 {% endblock %}
