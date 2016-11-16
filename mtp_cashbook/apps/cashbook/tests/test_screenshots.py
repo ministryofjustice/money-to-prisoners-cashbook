@@ -1,19 +1,29 @@
 from contextlib import contextmanager
 from datetime import datetime, timedelta
-from django.conf import settings
-from itertools import repeat
+from itertools import cycle, islice, repeat
 from unittest import mock
 
 from django.test.testcases import LiveServerThread
+from django.test.utils import override_settings
 from mtp_common.screenshots import ScreenshotGenerator
+
+
+def dashboard_stats(**kwargs):
+    if kwargs.get('status') == 'available':
+        return {'count': 26}
+    if kwargs.get('status') == 'locked' and kwargs.get('user') == 1:
+        return {'count': 0}
+    if kwargs.get('status') == 'locked':
+        return {'count': 20}
+    else:
+        return {'count': 234}
 
 
 @contextmanager
 def prepare():
-    env = settings.ENVIRONMENT
-    settings.ENVIRONMENT = 'prod'
-    with mock.patch('mtp_common.auth.api_client.authenticate') as mock_authenticate,\
-            mock.patch('cashbook.views.api_client') as mock_client:
+    with mock.patch('mtp_common.auth.api_client.authenticate') as mock_authenticate, \
+            mock.patch('cashbook.views.api_client') as mock_client, \
+            override_settings(ENVIRONMENT='prod'):
         user_pk = 1
         token = '???????????????'
         user_data = {
@@ -27,44 +37,47 @@ def prepare():
             'user_data': user_data
         }
         credits_client = mock_client.get_connection().credits
-
-        def api_calls(*args, **kwargs):
-            if kwargs.get('status') == 'available':
-                return {'count': 26}
-            if kwargs.get('status') == 'locked' and kwargs.get('user') == 1:
-                return {'count': 0}
-            if kwargs.get('status') == 'locked':
-                return {'count': 20}
-            else:
-                return {'count': 234}
-
-        credits_client.get.side_effect = api_calls
+        credits_client.get.side_effect = dashboard_stats
         yield mock_client
-    settings.ENVIRONMENT = env
 
 
-class DashboardScreenshotGenerator(ScreenshotGenerator):
+class CashbookScreenshotGenerator(ScreenshotGenerator):
+    def login(self, *args, **kwargs):
+        kwargs.setdefault('url', self.live_server_url + '/en-gb/')
+        super().login(*args, **kwargs)
+
+
+class DashboardScreenshotGenerator(CashbookScreenshotGenerator):
     save_as = 'training--intro'
 
     class MockedServerThread(LiveServerThread):
         def run(self):
             with prepare():
                 super().run()
+
     thread_class = MockedServerThread
 
     def test_setup_screenshot(self):
         self.login('username', 'password')
 
 
-class NewCreditsScreenshotGenerator(ScreenshotGenerator):
+class NewCreditsScreenshotGenerator(CashbookScreenshotGenerator):
     save_as = 'training--new-a'
 
     class MockedServerThread(LiveServerThread):
         def run(self):
-            with prepare(),\
+            with prepare(), \
                     mock.patch('cashbook.forms.get_connection') as mock_get_connection:
                 credits_client = mock_get_connection().credits
-                credits_client.get.return_value = {'count': 20, 'results': [
+                credits_client.get.side_effect = self.credits
+                super().run()
+
+        def credits(self, **kwargs):
+            if 'offset' not in kwargs:
+                return dashboard_stats(**kwargs)
+            return {
+                'count': 20,
+                'results': list(islice(cycle([
                     {
                         'id': 1,
                         'prisoner_number': 'A1409AE',
@@ -107,8 +120,9 @@ class NewCreditsScreenshotGenerator(ScreenshotGenerator):
                         'amount': 5500,
                         'sender_name': 'Joe Bishop'
                     },
-                ]}
-                super().run()
+                ]), 20))
+            }
+
     thread_class = MockedServerThread
 
     def test_setup_screenshot(self):
@@ -116,7 +130,7 @@ class NewCreditsScreenshotGenerator(ScreenshotGenerator):
         self.click_on_text('Enter next 20')
 
 
-class NewCreditsTickedScreenshotGenerator(ScreenshotGenerator):
+class NewCreditsTickedScreenshotGenerator(CashbookScreenshotGenerator):
     save_as = 'training--new-d'
     thread_class = NewCreditsScreenshotGenerator.MockedServerThread
 
@@ -129,12 +143,12 @@ class NewCreditsTickedScreenshotGenerator(ScreenshotGenerator):
         self.set_screenshot_size(top=1150)
 
 
-class InProgressScreenshotGenerator(ScreenshotGenerator):
+class InProgressScreenshotGenerator(CashbookScreenshotGenerator):
     save_as = 'training--in-progress'
 
     class MockedServerThread(LiveServerThread):
         def run(self):
-            with prepare(),\
+            with prepare(), \
                     mock.patch('cashbook.forms.get_connection') as mock_get_connection:
                 locked_credits_client = mock_get_connection().credits.locked
                 locked_date = datetime.now() - timedelta(hours=3)
@@ -150,6 +164,7 @@ class InProgressScreenshotGenerator(ScreenshotGenerator):
                     }, 12)
                 }
                 super().run()
+
     thread_class = MockedServerThread
 
     def test_setup_screenshot(self):
@@ -158,17 +173,17 @@ class InProgressScreenshotGenerator(ScreenshotGenerator):
         self.set_screenshot_size(top=330, left=40)
 
 
-class HistorySearchScreenshotGenerator(ScreenshotGenerator):
+class HistorySearchScreenshotGenerator(CashbookScreenshotGenerator):
     save_as = 'training--history-a'
 
     class MockedServerThread(LiveServerThread):
         def run(self):
-            with prepare(),\
+            with prepare(), \
                     mock.patch('cashbook.forms.get_connection') as mock_get_connection:
                 credits_client = mock_get_connection().credits
                 credits_client.get.return_value = {'count': 0}
-
                 super().run()
+
     thread_class = MockedServerThread
 
     def test_setup_screenshot(self):
@@ -176,15 +191,14 @@ class HistorySearchScreenshotGenerator(ScreenshotGenerator):
         self.click_on_text('View all credits')
         self.type_in('id_search', 'A1409AE')
         self.type_in('id_start', datetime.now().strftime('%d/%m/%y'))
-        self.set_screenshot_size(top=300, left=40)
 
 
-class HistoryResultsScreenshotGenerator(ScreenshotGenerator):
+class HistoryResultsScreenshotGenerator(CashbookScreenshotGenerator):
     save_as = 'training--history-b'
 
     class MockedServerThread(LiveServerThread):
         def run(self):
-            with prepare(),\
+            with prepare(), \
                     mock.patch('cashbook.forms.get_connection') as mock_get_connection:
                 received_at = datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')
                 credits_client = mock_get_connection().credits
@@ -278,6 +292,7 @@ class HistoryResultsScreenshotGenerator(ScreenshotGenerator):
                     },
                 ]}
                 super().run()
+
     thread_class = MockedServerThread
 
     def test_setup_screenshot(self):
