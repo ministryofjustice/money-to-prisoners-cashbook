@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MTP cashbook\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-15 16:50+0000\n"
+"POT-Creation-Date: 2016-11-22 17:30+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Igor U <igor.ushkarev@digital.justice.gov.uk>, 2016\n"
 "Language-Team: Welsh (https://www.transifex.com/ministry-of-justice/teams/34553/cy/)\n"
@@ -21,101 +21,101 @@ msgstr ""
 msgid "Only click ‘Done’ when you’ve selected the row of credits you want to release"
 msgstr ""
 
-#: apps/cashbook/forms.py:165
+#: apps/cashbook/forms.py:164
 msgid "From"
 msgstr ""
 
-#: apps/cashbook/forms.py:167
+#: apps/cashbook/forms.py:166
 msgid "To"
 msgstr ""
 
-#: apps/cashbook/forms.py:169
+#: apps/cashbook/forms.py:168
 msgid "Prisoner name, prisoner number or sender name"
 msgstr ""
 
-#: apps/cashbook/forms.py:189
+#: apps/cashbook/forms.py:188
 msgid "The end date must be after the start date"
 msgstr ""
 
-#: apps/cashbook/forms.py:264
+#: apps/cashbook/forms.py:263
 #, python-format
 msgid "on %(start)s"
 msgstr ""
 
-#: apps/cashbook/forms.py:266
+#: apps/cashbook/forms.py:265
 #, python-format
 msgid "between %(start)s and %(end)s"
 msgstr ""
 
-#: apps/cashbook/forms.py:268
+#: apps/cashbook/forms.py:267
 #, python-format
 msgid "since %(start)s"
 msgstr ""
 
-#: apps/cashbook/forms.py:270
+#: apps/cashbook/forms.py:269
 #, python-format
 msgid "up to %(end)s"
 msgstr ""
 
-#: apps/cashbook/forms.py:281
+#: apps/cashbook/forms.py:280
 #, python-format
 msgid "%(count)d credit"
 msgid_plural "%(count)d credits"
 msgstr[0] ""
 msgstr[1] ""
 
-#: apps/cashbook/forms.py:286
+#: apps/cashbook/forms.py:285
 msgid "no credits"
 msgstr ""
 
-#: apps/cashbook/forms.py:290
+#: apps/cashbook/forms.py:289
 #, python-format
 msgid "%(credits)s received %(date_range)s when searching for “%(search)s”"
 msgstr ""
 
-#: apps/cashbook/forms.py:296
+#: apps/cashbook/forms.py:295
 #, python-format
 msgid "Searching for “%(search)s” returned %(credits)s"
 msgstr ""
 
-#: apps/cashbook/forms.py:301
+#: apps/cashbook/forms.py:300
 #, python-format
 msgid "%(credits)s received %(date_range)s"
 msgstr ""
 
-#: apps/cashbook/forms.py:306
+#: apps/cashbook/forms.py:305
 #, python-format
 msgid "%(credits)s received"
 msgstr ""
 
 #: apps/cashbook/views.py:74 apps/cashbook/views_training.py:52
-#: templates/base.html:25 templates/training/page.html:55
+#: templates/base.html:25 templates/training/page.html.py:55
 msgid "Home"
 msgstr ""
 
-#: apps/cashbook/views.py:81
+#: apps/cashbook/views.py:82
 msgid "New credits to enter"
 msgstr ""
 
-#: apps/cashbook/views.py:125
+#: apps/cashbook/views.py:122
 #, python-format
 msgid "You’ve added 1 credit to NOMIS."
 msgid_plural "You’ve added %(credited)s credits to NOMIS."
 msgstr[0] ""
 msgstr[1] ""
 
-#: apps/cashbook/views.py:154 templates/cashbook/dashboard.html:43
-msgid "Currently being entered"
+#: apps/cashbook/views.py:151 templates/cashbook/dashboard.html.py:43
+msgid "Currently being entered into NOMIS"
 msgstr ""
 
-#: apps/cashbook/views.py:177
+#: apps/cashbook/views.py:174
 #, python-format
 msgid "You have now returned the credit your colleagues were processing to ‘New’ credits."
 msgid_plural "You have now returned the %(discarded)s credits your colleagues were processing to ‘New’ credits."
 msgstr[0] ""
 msgstr[1] ""
 
-#: apps/cashbook/views.py:206 apps/cashbook/views_training.py:71
+#: apps/cashbook/views.py:203 apps/cashbook/views_training.py:71
 #: templates/cashbook/dashboard.html:52
 #: templates/training/training--history.html:4
 #: templates/training/training--history.html:9
@@ -124,7 +124,7 @@ msgstr[1] ""
 msgid "All credits"
 msgstr ""
 
-#: apps/cashbook/views_training.py:61 templates/cashbook/dashboard.html:71
+#: apps/cashbook/views_training.py:61 templates/cashbook/dashboard.html.py:71
 msgid "How to use the digital cashbook"
 msgstr ""
 
@@ -140,7 +140,7 @@ msgstr ""
 msgid "Credits being entered"
 msgstr ""
 
-#: apps/cashbook/views_training.py:76 templates/cashbook/dashboard.html:66
+#: apps/cashbook/views_training.py:76 templates/cashbook/dashboard.html.py:66
 msgid "Overview – sending money to prisoners online"
 msgstr ""
 
@@ -169,8 +169,8 @@ msgstr ""
 msgid "Day 5"
 msgstr ""
 
-#: templates/base.html:11 templates/base.html:14
-#: templates/cashbook/dashboard.html:10 templates/mtp_auth/login.html:4
+#: templates/base.html:11 templates/base.html.py:14
+#: templates/cashbook/dashboard.html:10 templates/mtp_auth/login.html.py:4
 msgid "Digital cashbook"
 msgstr ""
 
@@ -178,7 +178,7 @@ msgstr ""
 msgid "TRAINING SITE"
 msgstr ""
 
-#: templates/base.html:27 templates/cashbook/dashboard.html:61
+#: templates/base.html:27 templates/cashbook/dashboard.html.py:61
 msgid "Training materials"
 msgstr ""
 
@@ -186,7 +186,7 @@ msgstr ""
 msgid "Manage users"
 msgstr ""
 
-#: templates/base.html:35 templates/base.html:37
+#: templates/base.html:35 templates/base.html.py:37
 msgid "Change password"
 msgstr ""
 
@@ -243,7 +243,7 @@ msgid "Here are the next %(batch_size)s of %(new_credits)s new credits to be pro
 msgstr ""
 
 #: templates/cashbook/credit_batch_list.html:45
-msgid "Enter credits into NOMIS, tick the box then click the green button, ‘Confirm entered in NOMIS’."
+msgid "Enter credits into NOMIS and tick the relevant boxes. Click the green "
 msgstr ""
 
 #: templates/cashbook/credit_batch_list.html:47
@@ -472,7 +472,7 @@ msgid "Select the box at the end of the row"
 msgstr ""
 
 #: templates/cashbook/credits_locked.html:34
-msgid "Click ‘Release selected credits’ to free up their work"
+msgid "When the green ‘Release selected credits’ button appears, click it to free up their work"
 msgstr ""
 
 #: templates/cashbook/credits_locked.html:51
@@ -532,7 +532,7 @@ msgid "Some checked by security"
 msgstr ""
 
 #: templates/cashbook/dashboard.html:44
-msgid "Look at credits being entered into NOMIS now and release them, if needed"
+msgid "Look at credits being entered now and release them, if needed"
 msgstr ""
 
 #: templates/cashbook/dashboard.html:47
@@ -629,7 +629,7 @@ msgstr ""
 msgid "Navigate to next page"
 msgstr ""
 
-#: templates/training/page.html:45 templates/training/page.html:50
+#: templates/training/page.html:45 templates/training/page.html.py:50
 msgid "Next"
 msgstr ""
 
