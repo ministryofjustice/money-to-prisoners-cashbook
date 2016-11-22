@@ -148,7 +148,7 @@ class CreditBatchListView(FormView, CashbookSubviewMixin):
 
 @method_decorator(login_required, name='dispatch')
 class CreditsLockedView(FormView, CashbookSubviewMixin):
-    title = _('Currently being entered')
+    title = _('Currently being entered into NOMIS')
     form_class = DiscardLockedCreditsForm
     template_name = 'cashbook/credits_locked.html'
     success_url = reverse_lazy('dashboard')

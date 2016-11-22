@@ -91,7 +91,7 @@ class InProgressPageTests(CashbookTestCase):
         self.login_and_go_to('View')
 
     def test_going_to_the_locked_credits_page(self):
-        self.assertInSource('Currently being entered')
+        self.assertInSource('Currently being entered into NOMIS')
         self.assertInSource('Staff name')
         self.assertInSource('Time in progress')
 
