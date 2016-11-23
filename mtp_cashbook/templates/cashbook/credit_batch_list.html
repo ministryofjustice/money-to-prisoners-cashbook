@@ -28,24 +28,26 @@
     {% if object_list %}
       {% include 'mtp_common/forms/error-summary.html' with form=form only %}
 
+      <p>
+        {% if batch_size == 1 %}
+          {% trans 'Here is the only new credit to be processed in NOMIS.' %}
+        {% elif batch_size == new_credits %}
+          {% blocktrans trimmed %}
+          Here are the {{ batch_size }} new credits to be processed in NOMIS.
+          {% endblocktrans %}
+        {% else %}
+          {% blocktrans trimmed %}
+          Here are the next {{ batch_size }} of {{ new_credits }} new credits to be processed in NOMIS.
+          {% endblocktrans %}
+        {% endif %}
+        <br />
+        {% trans 'Enter credits into NOMIS and tick the relevant boxes.' %}
+        {% trans 'Click the green ‘Confirm entered in NOMIS’ button when it appears.' %}
+        <br />
+        {% trans 'These credits are locked to you until completed or released by a colleague.' %}
+      </p>
+
       <div class="help-box">
-        <p>
-          {% if batch_size == 1 %}
-            {% trans 'Here is the only new credit to be processed in NOMIS.' %}
-          {% elif batch_size == new_credits %}
-            {% blocktrans trimmed %}
-            Here are the {{ batch_size }} new credits to be processed in NOMIS.
-            {% endblocktrans %}
-          {% else %}
-            {% blocktrans trimmed %}
-            Here are the next {{ batch_size }} of {{ new_credits }} new credits to be processed in NOMIS.
-            {% endblocktrans %}
-          {% endif %}
-          <br />
-          {% trans 'Enter credits into NOMIS and tick the relevant boxes. Click the green ‘Confirm entered in NOMIS’ button when it appears.' %}
-          <br />
-          {% trans 'These credits are locked to you until completed or released by a colleague.' %}
-        </p>
         <div class="help-box-title" aria-controls="help-box-contents" aria-expanded="false" role="heading">
           <div></div><a href="#">{% trans 'How to use this with NOMIS' %}</a>
         </div>
