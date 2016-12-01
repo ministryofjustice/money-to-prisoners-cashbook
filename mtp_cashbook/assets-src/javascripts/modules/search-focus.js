@@ -1,5 +1,4 @@
 // Focus on search input field
-/* globals exports, $ */
 'use strict';
 
 exports.SearchFocus = {

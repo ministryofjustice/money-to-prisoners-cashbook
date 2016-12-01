@@ -9,9 +9,20 @@
 *.sublime-workspace
 *.sublime-project
 
-# project
-mtp_cashbook/settings/local.py
-mtp_cashbook/assets/
+# sass & node.js
+*.sass-cache/
+.eslintcache/
 node_modules/
+npm-debug.log
+
+# project
+Dockerfile
+docker-compose.yml
+package.json
+webpack.config.js
+mtp_cashbook/assets/
+mtp_cashbook/settings/local.py
+mtp_cashbook/templates/govuk_template
 static/
+media/
 venv/

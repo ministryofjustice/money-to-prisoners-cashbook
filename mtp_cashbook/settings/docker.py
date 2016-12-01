@@ -13,11 +13,10 @@ DEBUG = os.environ.get('DEBUG') == 'True'
 ALLOWED_HOSTS = [
     'localhost',
     '.dsd.io',
-    '.service.gov.uk'
+    '.service.gov.uk',
 ]
 
-OAUTHLIB_INSECURE_TRANSPORT = os.environ.get(
-    'OAUTHLIB_INSECURE_TRANSPORT') == 'True'
+OAUTHLIB_INSECURE_TRANSPORT = os.environ.get('OAUTHLIB_INSECURE_TRANSPORT') == 'True'
 if not OAUTHLIB_INSECURE_TRANSPORT:
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = ''
 

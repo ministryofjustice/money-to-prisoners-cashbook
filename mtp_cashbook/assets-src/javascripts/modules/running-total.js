@@ -1,5 +1,4 @@
 // Running Total module
-/* globals exports, $ */
 'use strict';
 
 exports.RunningTotal = {
