@@ -1,5 +1,4 @@
 // Batch validation module
-/* global exports, require, $ */
 'use strict';
 
 var analytics = require('analytics');
@@ -61,7 +60,7 @@ exports.BatchValidation = {
     var checkedValid = this._allChecked();
     var numChecked = this._numChecked();
 
-    if(type !== 'submit') {
+    if (type !== 'submit') {
       // If this is a 'Yes' click in the confirmation popup, so just
       // actually submit
       return;

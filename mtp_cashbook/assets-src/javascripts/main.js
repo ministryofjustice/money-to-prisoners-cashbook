@@ -1,6 +1,4 @@
-/* globals require */
-
-(function() {
+(function () {
   'use strict';
 
   require('proposition-header').PropositionHeader.init();

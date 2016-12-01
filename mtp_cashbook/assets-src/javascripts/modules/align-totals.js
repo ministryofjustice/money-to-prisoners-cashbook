@@ -1,5 +1,4 @@
 // Align payment totals module
-/* globals exports, $ */
 'use strict';
 
 exports.AlignTotals = {

@@ -1,6 +1,4 @@
 // Confirmation button module
-/* globals exports, $ */
-
 'use strict';
 
 exports.ConfirmationButton = {
@@ -8,7 +6,7 @@ exports.ConfirmationButton = {
   init: function () {
     $('.mtp-confirm__button').hide();
 
-    $(document).on('change', '.Checkbox', function() {
+    $(document).on('change', '.Checkbox', function () {
       var items = $('.js-RunningTotal-item').length;
       var checkedCredits = $('.js-RunningTotal-item:checked').length;
       var checkedItems = $('.Checkbox:checked').length;

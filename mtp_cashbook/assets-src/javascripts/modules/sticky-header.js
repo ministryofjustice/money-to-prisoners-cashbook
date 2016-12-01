@@ -1,5 +1,4 @@
 // Sticky header module
-/* globals exports, $ */
 'use strict';
 
 exports.StickyHeader = {
