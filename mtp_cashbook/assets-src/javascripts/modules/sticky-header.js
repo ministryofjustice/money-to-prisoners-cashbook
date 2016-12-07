@@ -20,6 +20,7 @@ exports.StickyHeader = {
     if (this.$originalHeader.length) {
       this.$window = $(window);
       this.$body = $('body');
+      this.$form = $('form');
       this.$stickyHeader = this.$originalHeader.clone().addClass(this.stickyClass);
       this.offsetPosition = this.$originalHeader.offset().top + this.$originalHeader.height();
     }
@@ -56,6 +57,6 @@ exports.StickyHeader = {
 
   render: function () {
     this.$stickyHeader.hide();
-    this.$body.append(this.$stickyHeader);
+    this.$form.append(this.$stickyHeader);
   }
 };
