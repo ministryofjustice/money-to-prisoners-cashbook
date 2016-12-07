@@ -58,11 +58,11 @@ python_dependencies --common-path [path]
 
 ### Translating
 
-Update translation files with `cd mtp_cashbook; ../manage.py makemessages --all --keep-pot --no-wrap`.
+Update translation files with `./run.py make_messages` – you need to do this every time any translatable text is updated.
 
-Pull updates from Transifex with `tx pull`. You'll need to update translation files afterwards.
+Pull updates from Transifex with ``./run.py translations --pull``. You'll need to update translation files afterwards and manually check that the merges occurred correctly.
 
-Push latest English to Transifex with `tx push -s`. NB: always pull updates before pushing to merge correctly.
+Push latest English to Transifex with ``./run.py translations --push``. NB: you should pull updates before pushing to merge correctly.
 
 ## Deploying
 
