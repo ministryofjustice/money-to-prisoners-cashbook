@@ -1,9 +1,8 @@
 import logging
 import re
 
+from mtp_common.test_utils import silence_logger
 from mtp_common.test_utils.functional_tests import FunctionalTestCase
-
-from cashbook.tests import silence_logger
 
 logger = logging.getLogger('mtp')
 

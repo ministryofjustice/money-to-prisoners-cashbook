@@ -1,20 +1,9 @@
-from contextlib import contextmanager
-import logging
 from unittest import mock
 
 from django.core.urlresolvers import reverse
 from django.test import SimpleTestCase
 from django.utils.functional import cached_property
 from mtp_common.auth.test_utils import generate_tokens
-
-
-@contextmanager
-def silence_logger(name='mtp', level=logging.CRITICAL):
-    logger = logging.getLogger(name)
-    old_level = logger.level
-    logger.setLevel(level)
-    yield
-    logger.setLevel(old_level)
 
 
 class MTPBaseTestCase(SimpleTestCase):

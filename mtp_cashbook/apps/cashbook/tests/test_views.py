@@ -6,8 +6,9 @@ from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.utils.timezone import now, utc
 from mtp_common.auth.exceptions import Forbidden
+from mtp_common.test_utils import silence_logger
 
-from cashbook.tests import MTPBaseTestCase, silence_logger
+from cashbook.tests import MTPBaseTestCase
 
 
 class LocaleTestCase(MTPBaseTestCase):
