@@ -53,12 +53,13 @@ class DashboardView(TemplateView):
             reviewed = credit_client.get(status='available', reviewed=True)
             context_data['reviewed'] = reviewed['count']
 
+        new_credit_count = available['count'] + my_locked['count']
         context_data.update({
             'start_page_url': settings.START_PAGE_URL,
-            'new_credits': available['count'] + my_locked['count'],
+            'new_credits': new_credit_count,
             'locked_credits': locked['count'],
             'all_credits': all_credits['count'],
-            'batch_size': min(available['count'], 20),
+            'batch_size': min(new_credit_count, 20),
             'pre_approval_required': pre_approval_required
         })
         return context_data
