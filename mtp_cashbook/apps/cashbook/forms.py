@@ -53,10 +53,9 @@ class ProcessCreditBatchForm(GARequestErrorReportingMixin, forms.Form):
         Gets the credits currently locked by the user if they exist
         or locks some and returns them if not.
         """
-        credits = self._request_locked_credits()
-        if not self.is_bound and len(credits) == 0:
+        if not self.is_bound:
             self._take_credits()
-            credits = self._request_locked_credits()
+        credits = self._request_locked_credits()
 
         return [
             (t['id'], t) for t in credits

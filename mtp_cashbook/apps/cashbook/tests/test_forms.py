@@ -25,7 +25,7 @@ class ProcessCreditBatchFormTestCase(SimpleTestCase):
         self.mocked_get_connection = mocked_get_connection
         super(ProcessCreditBatchFormTestCase, self).__call__(result, *args, **kwargs)
 
-    def test_init_form_with_already_locked_credits(self):
+    def test_init_form(self):
         self.mocked_get_connection().credits.get.return_value = self.locked_credits_response
 
         form = ProcessCreditBatchForm(self.request)
@@ -33,21 +33,7 @@ class ProcessCreditBatchFormTestCase(SimpleTestCase):
         expected_choices = [
             (t['id'], t) for t in self.locked_credits_response['results']
         ]
-        self.assertEqual(form.credit_choices, expected_choices)
-        self.assertEqual(form.fields['credits'].choices, expected_choices)
-
-    def test_init_form_with_no_locked_credits(self):
-        self.mocked_get_connection().credits.get.side_effect = [
-                {
-                    'count': 0,
-                    'results': []
-                },
-            ] + [self.locked_credits_response]
-
-        form = ProcessCreditBatchForm(self.request)
-        expected_choices = [
-            (t['id'], t) for t in self.locked_credits_response['results']
-        ]
+        self.mocked_get_connection().credits.actions.lock.post.assert_called_with()
         self.assertEqual(form.credit_choices, expected_choices)
         self.assertEqual(form.fields['credits'].choices, expected_choices)
 
