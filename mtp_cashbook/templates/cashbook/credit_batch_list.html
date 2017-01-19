@@ -28,7 +28,7 @@
     {% if object_list %}
       {% include 'mtp_common/forms/error-summary.html' with form=form only %}
 
-      <p>
+      <p class="print-hidden">
         {% if batch_size == 1 %}
           {% trans 'Here is the only new credit to be processed in NOMIS.' %}
         {% elif batch_size == new_credits %}
@@ -47,6 +47,18 @@
         {% trans 'These credits are locked to you until completed or released by a colleague.' %}
       </p>
 
+      <div class="print-only">
+        <h2 class="heading-small">
+          {% trans "CONFIDENTIAL: dispose of securely" %}
+        </h2>
+        <p>
+          {% blocktrans trimmed with total=total|currency %}
+          1-{{ batch_size }} of {{ new_credits }} credits <br />
+          <strong>Control total: &pound;{{total}}</strong>
+          {% endblocktrans %}
+        </p>
+      </div>
+
       <div class="help-box">
         <div class="help-box-title" aria-controls="help-box-contents" aria-expanded="false" role="heading">
           <div></div><a href="#">{% trans 'How to use this with NOMIS' %}</a>
@@ -64,15 +76,12 @@
 
       <div class="mtp-batch">
         <div class="print-box">
-          <h2 class="heading-small">
-            {% trans "CONFIDENTIAL: dispose of securely" %}
-          </h2>
           <p>
-            {% trans "When you’ve processed these credits in NOMIS, select them in the digital cashbook and click ‘Done’." %}
+            {% trans "Remember to confirm all credits as processed in the digital cashbook." %}
           </p>
         </div>
 
-        <div class="totals js-StickyHeader">
+        <div class="totals js-StickyHeader print-hidden">
           <div class="grid-row">
             <div class="column-one-third">
               <p class='label'>
@@ -105,6 +114,10 @@
           </div>
         </div>
 
+        <h2 class="print-only heading-small">
+          {% trans 'To be entered into NOMIS by you' %}
+        </h2>
+
         <table>
           <thead>
             {% include 'cashbook/includes/batch_table_actions.html' with location='header' field_name=form.credits.html_name batch_size=batch_size %}
@@ -112,7 +125,7 @@
             <tr>
               <th>{% trans 'Prisoner number' %}</th>
               <th>{% trans 'Prisoner name' %}</th>
-              <th>{% trans 'Amount' %}</th>
+              <th class="number">{% trans 'Amount' %}</th>
               <th>{% trans 'Sender' %}</th>
               {% if pre_approval_required %}
                 <th>{% trans 'Security' %}</th>
@@ -126,7 +139,7 @@
               <tr>
                 <td>{{ credit.prisoner_number }}</td>
                 <td>{{ credit.prisoner_name }}</td>
-                <td class="numeric">&pound;{{ credit.amount|currency }}</td>
+                <td class="number">&pound;{{ credit.amount|currency }}</td>
                 <td>{{ credit.sender_name }}</td>
                 {% if pre_approval_required %}
                   <td>
@@ -138,6 +151,7 @@
                   </td>
                 {% endif %}
                 <td class="check">
+                  <div class="print-only print-checkbox"></div>
                   <input
                     type="checkbox"
                     name="{{ form.credits.html_name }}"
@@ -172,6 +186,17 @@
     {% else %}
       <p>{% trans "There aren’t any credits available" %}</p>
     {% endif %}
+
+    <div class="print-only print-reminder">
+      <strong>{% trans "Confirm all credits processed" %}</strong>
+      <div class="print-only print-checkbox"></div>
+      <div class="print-box">
+        <p>
+          {% trans "Remember to confirm all credits as processed in the digital cashbook." %}
+        </p>
+      </div>
+    </div>
+
 
     <div id="incomplete-batch-dialog"
          class="Dialog u-nojs-hidden"
