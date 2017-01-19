@@ -12,7 +12,7 @@ exports.AlignTotals = {
 
   cacheEls: function () {
     this.$window = $(window);
-    this.amount = $('td.numeric:first');
+    this.amount = $('td.number:first');
     this.ctrlTotal = $('.ctrl-total');
     this.entTotal = $('.entered-total');
   },
