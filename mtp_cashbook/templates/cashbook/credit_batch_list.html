@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load currency %}
 {% load mtp_common %}
+{% load credits %}
 
 {% block page_title %}{% trans 'New credits - Digital cashbook' %}{% endblock %}
 
@@ -123,8 +124,8 @@
             {% include 'cashbook/includes/batch_table_actions.html' with location='header' field_name=form.credits.html_name batch_size=batch_size %}
 
             <tr>
-              <th>{% trans 'Prisoner number' %}</th>
-              <th>{% trans 'Prisoner name' %}</th>
+              <th>{% trans 'Date sent' %}</th>
+              <th>{% trans 'Prisoner' %}</th>
               <th class="number">{% trans 'Amount' %}</th>
               <th>{% trans 'Sender' %}</th>
               {% if pre_approval_required %}
@@ -137,8 +138,26 @@
           <tbody>
             {% for credit_pk, credit in object_list %}
               <tr>
-                <td>{{ credit.prisoner_number }}</td>
-                <td>{{ credit.prisoner_name }}</td>
+                <td>
+                  <div>{{ credit.received_at.date|date:'d/m/Y' }}</div>
+                  {% with days=credit.received_at.date|dayssince %}
+                  <div class="sub {% if days >= 7 %}old{% endif %}">
+                    {% if days == 0 %}
+                      {% trans 'Today' %}
+                    {% else %}
+                      {% blocktrans count days=days %}
+                      {{ days }} day ago
+                      {% plural %}
+                      {{ days }} days ago
+                      {% endblocktrans %}
+                    {% endif %}
+                  </div>
+                  {% endwith %}
+                </td>
+                <td>
+                  <div>{{ credit.prisoner_number }}</div>
+                  <div class="sub">{{ credit.prisoner_name }}</div>
+                </td>
                 <td class="number">&pound;{{ credit.amount|currency }}</td>
                 <td>{{ credit.sender_name }}</td>
                 {% if pre_approval_required %}

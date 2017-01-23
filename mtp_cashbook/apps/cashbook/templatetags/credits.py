@@ -21,7 +21,7 @@ def parse_date_fields(credits):
 
     def convert(credit):
         for field in fields:
-            value = credit[field]
+            value = credit.get(field, None)
             if not value:
                 continue
             for parser in parsers:
@@ -35,7 +35,14 @@ def parse_date_fields(credits):
                     pass
         return credit
 
-    return map(convert, credits)
+    return map(convert, credits) if credits else credits
+
+
+@register.filter
+def dayssince(date):
+    if isinstance(date, datetime.datetime):
+        date = date.date
+    return (datetime.date.today() - date).days
 
 
 @register.filter

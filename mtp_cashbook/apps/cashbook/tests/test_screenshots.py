@@ -75,6 +75,7 @@ class NewCreditsScreenshotGenerator(CashbookScreenshotGenerator):
         def credits(self, **kwargs):
             if 'offset' not in kwargs:
                 return dashboard_stats(**kwargs)
+            received_at = datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')
             return {
                 'count': 20,
                 'results': list(islice(cycle([
@@ -83,42 +84,48 @@ class NewCreditsScreenshotGenerator(CashbookScreenshotGenerator):
                         'prisoner_number': 'A1409AE',
                         'prisoner_name': 'James Halls',
                         'amount': 4000,
-                        'sender_name': 'Wade A'
+                        'sender_name': 'Wade A',
+                        'received_at': received_at
                     },
                     {
                         'id': 2,
                         'prisoner_number': 'A3142AZ',
                         'prisoner_name': 'Mark Smith',
                         'amount': 2500,
-                        'sender_name': 'Campbell V'
+                        'sender_name': 'Campbell V',
+                        'received_at': received_at
                     },
                     {
                         'id': 3,
                         'prisoner_number': 'A2231YK',
                         'prisoner_name': 'Stanley Ward',
                         'amount': 4000,
-                        'sender_name': 'James R'
+                        'sender_name': 'James R',
+                        'received_at': received_at
                     },
                     {
                         'id': 4,
                         'prisoner_number': 'A4940OG',
                         'prisoner_name': 'Bradley Dale',
                         'amount': 2500,
-                        'sender_name': 'Glen West'
+                        'sender_name': 'Glen West',
+                        'received_at': received_at
                     },
                     {
                         'id': 5,
                         'prisoner_number': 'A7829IW',
                         'prisoner_name': 'Douglas Jarvis',
                         'amount': 6500,
-                        'sender_name': 'James R'
+                        'sender_name': 'James R',
+                        'received_at': received_at
                     },
                     {
                         'id': 6,
                         'prisoner_number': 'A8140GN',
                         'prisoner_name': 'Roge Hopkins',
                         'amount': 5500,
-                        'sender_name': 'Joe Bishop'
+                        'sender_name': 'Joe Bishop',
+                        'received_at': received_at
                     },
                 ]), 20))
             }

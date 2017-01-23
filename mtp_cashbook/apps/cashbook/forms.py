@@ -14,6 +14,7 @@ from mtp_common.api import retrieve_all_pages
 from mtp_common.auth.api_client import get_connection
 
 from .form_fields import MtpTextInput, MtpDateInput
+from .templatetags.credits import parse_date_fields
 
 
 class ProcessCreditBatchForm(GARequestErrorReportingMixin, forms.Form):
@@ -59,7 +60,7 @@ class ProcessCreditBatchForm(GARequestErrorReportingMixin, forms.Form):
             credits = self._request_locked_credits()
 
         return [
-            (t['id'], t) for t in credits
+            (t['id'], t) for t in parse_date_fields(credits)
         ]
 
     def save(self):

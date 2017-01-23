@@ -97,6 +97,14 @@
       td, th {
         border-bottom: none;
         border-top: 1px solid #bfc1c3;
+
+        .sub {
+          font-size: 16px;
+        }
+
+        .old {
+          color: $orange;
+        }
       }
 
       .print-hidden {
