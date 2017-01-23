@@ -17,7 +17,15 @@ class ProcessCreditBatchFormTestCase(SimpleTestCase):
 
         self.locked_credits_response = {
             'count': 4,
-            'results': [{'id': i} for i in range(1, 5)]
+            'results': [
+                {
+                    'id': i,
+                    'amount': 123,
+                    'locked_at': '2015-10-10T12:00:00Z',
+                    'received_at': '2015-10-09T12:00:00Z'
+                }
+                for i in range(1, 5)
+            ]
         }
 
     @mock.patch('cashbook.forms.get_connection')
@@ -165,6 +173,7 @@ class DiscardLockedTranscationsFormTestCase(SimpleTestCase):
                     'prison': 2,
                     'amount': 123,
                     'locked_at': '2015-10-10T12:00:00Z',
+                    'received_at': '2015-10-09T12:00:00Z'
                 }
                 for i in range(1, 5)
             ]

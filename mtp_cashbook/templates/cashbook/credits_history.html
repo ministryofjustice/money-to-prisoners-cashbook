@@ -42,7 +42,7 @@
         {% include 'mtp_common/forms/field.html' with field=form.search only %}
       </div>
       <div class="mtp-history-search__dates">
-        <div class="mtp-history-search__date-label">Date received<div class="form-hint">eg 28/04/2016</div></div>
+        <div class="mtp-history-search__date-label">{% trans 'Date' %}<div class="form-hint">eg 28/04/2016</div></div>
         <div class="mtp-history-search__date-start">
           {% include 'mtp_common/forms/field.html' with field=form.start input_classes='js-FormDateControl' value=form.start.value|date:'d/m/Y'|default:form.start.value|default_if_none:'' only %}
         </div>

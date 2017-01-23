@@ -255,9 +255,11 @@ class BatchListView(MTPBaseTestCase):
         mocked_form = mocked_form_class()
         mocked_form.credit_choices = [
             (1, {'id': 1,
-                 'amount': 1050}),
+                 'amount': 1050,
+                 'received_at': datetime.datetime.now()}),
             (2, {'id': 2,
-                 'amount': 4500}),
+                 'amount': 4500,
+                 'received_at': datetime.datetime.now()}),
         ]
         mocked_form.clean_credits.side_effect = ValidationError('empty list and not discarding')
         mocked_form.is_valid.return_value = False
@@ -279,9 +281,11 @@ class BatchListView(MTPBaseTestCase):
         mocked_form = mocked_form_class()
         mocked_form.credit_choices = [
             (1, {'id': 1,
-                 'amount': 1050}),
+                 'amount': 1050,
+                 'received_at': datetime.datetime.now()}),
             (2, {'id': 2,
-                 'amount': 4500}),
+                 'amount': 4500,
+                 'received_at': datetime.datetime.now()}),
         ]
         mocked_form.is_valid.return_value = True
         mocked_form.save.return_value = ({1}, {2})
@@ -305,9 +309,11 @@ class BatchListView(MTPBaseTestCase):
         mocked_form = mocked_form_class()
         mocked_form.credit_choices = [
             (1, {'id': 1,
-                 'amount': 1050}),
+                 'amount': 1050,
+                 'received_at': datetime.datetime.now()}),
             (2, {'id': 2,
-                 'amount': 4500}),
+                 'amount': 4500,
+                 'received_at': datetime.datetime.now()}),
         ]
         mocked_form.is_valid.return_value = True
         mocked_form.save.return_value = ({1, 2}, {})
