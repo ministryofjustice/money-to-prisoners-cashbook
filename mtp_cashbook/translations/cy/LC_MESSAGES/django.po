@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MTP cashbook\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-23 15:15+0000\n"
+"POT-Creation-Date: 2017-01-27 15:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Igor U <igor.ushkarev@digital.justice.gov.uk>, 2016\n"
 "Language-Team: Welsh (https://www.transifex.com/ministry-of-justice/teams/34553/cy/)\n"
@@ -104,7 +104,7 @@ msgid_plural "You’ve added %(credited)s credits to NOMIS."
 msgstr[0] ""
 msgstr[1] ""
 
-#: apps/cashbook/views.py:151 templates/cashbook/dashboard.html:43
+#: apps/cashbook/views.py:151
 msgid "Currently being entered into NOMIS"
 msgstr ""
 
@@ -573,6 +573,10 @@ msgstr ""
 
 #: templates/cashbook/dashboard.html:35
 msgid "Some checked by security"
+msgstr ""
+
+#: templates/cashbook/dashboard.html:43
+msgid "Currently being processed in NOMIS"
 msgstr ""
 
 #: templates/cashbook/dashboard.html:44
