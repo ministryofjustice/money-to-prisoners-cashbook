@@ -40,7 +40,7 @@
     </div>
     {% if locked_credits %}
       <div class="mtp-status-box">
-        <div class="mtp-status-box__title">{% trans 'Currently being entered into NOMIS' %}</div>
+        <div class="mtp-status-box__title">{% trans 'Currently being processed in NOMIS' %}</div>
         <div class="mtp-status-box__secondary-text">{% trans 'Look at credits being entered now and release them, if needed' %}</div>
         <div class="bold-xlarge mtp-status-box__number">{{ locked_credits|shortenint }}</div>
         <div class="mtp-status-box__link">

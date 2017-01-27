@@ -140,12 +140,17 @@
   }
 
   @media print {
+
+    .phase-banner-beta {
+      display: none;
+    }
+
     .print-only {
       display: block;
 
       .print-checkbox {
         float: right;
-        margin-right: 10.5%;
+        margin-right: 108px;
       }
 
       h2 {
@@ -155,8 +160,12 @@
       p {
         display: inline-block;
       }
-
     }
+
+    .print-box {
+      text-align: center;
+    }
+
     .print-reminder {
       strong {
         padding-left: 50%;
