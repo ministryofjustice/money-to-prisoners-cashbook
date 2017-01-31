@@ -14,7 +14,14 @@ def dashboard_stats(**kwargs):
     if kwargs.get('status') == 'locked' and kwargs.get('user') == 1:
         return {'count': 0}
     if kwargs.get('status') == 'locked':
-        return {'count': 20}
+        return {'count': 20, 'results': [{
+            'id': 1,
+            'owner': 1,
+            'owner_name': 'Fred',
+            'prison': 2,
+            'amount': 1123,
+            'locked_at': '2015-10-10T12:00:00Z',
+        }]}
     else:
         return {'count': 234}
 
@@ -176,7 +183,7 @@ class InProgressScreenshotGenerator(CashbookScreenshotGenerator):
 
     def test_setup_screenshot(self):
         self.login('username', 'password')
-        self.click_on_text('View')
+        self.click_on_text('Return these to new credits')
         self.set_screenshot_size(top=330, left=40)
 
 

@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load mtp_common %}
 {% load numbers %}
+{% load credits %}
 
 {% block inner_content %}
 
@@ -40,11 +41,16 @@
     </div>
     {% if locked_credits %}
       <div class="mtp-status-box">
-        <div class="mtp-status-box__title">{% trans 'Currently being processed in NOMIS' %}</div>
-        <div class="mtp-status-box__secondary-text">{% trans 'Look at credits being entered now and release them, if needed' %}</div>
+        <div class="mtp-status-box__title">
+          {% blocktrans with names=in_progress_users|truncate_user_list count counter=in_progress_users|length %}
+          {{ names }} is entering credits into NOMIS
+          {% plural %}
+          {{ names }} are entering credits into NOMIS
+          {% endblocktrans %}
+        </div>
         <div class="bold-xlarge mtp-status-box__number">{{ locked_credits|shortenint }}</div>
         <div class="mtp-status-box__link">
-          <a href="{% url 'credits-locked' %}">{% trans 'View' %}</a>
+          <a href="{% url 'credits-locked' %}">{% trans 'Take over' %}</a>
         </div>
       </div>
     {% endif %}
