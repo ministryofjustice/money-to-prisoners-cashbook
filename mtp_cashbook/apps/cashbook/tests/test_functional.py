@@ -97,7 +97,7 @@ class InProgressPageTests(CashbookTestCase):
     @silence_logger(name='mtp', level=logging.WARNING)
     def test_releasing_credits(self):
         self.get_element('//tbody//input[@type="checkbox"][1]/following-sibling::label').click()
-        self.click_on_text('Release selected credits')
+        self.click_on_text('Return these to new credits')
         self.assertCurrentUrl('/en-gb/dashboard-unlocked-payments/')
         self.assertInSource('You have now returned')
 

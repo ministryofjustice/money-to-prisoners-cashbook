@@ -6,6 +6,7 @@ from urllib import parse as urlparse
 from django import template
 from django.utils import timezone
 from django.utils.dateparse import parse_datetime, parse_date
+from django.utils.translation import gettext_lazy as _
 
 register = template.Library()
 
@@ -116,3 +117,15 @@ def url_with_query_param(request, param_name, value):
 
     url = request.build_absolute_uri()
     return replace_query_param(url, param_name, value)
+
+
+@register.filter
+def truncate_user_list(terms):
+    if len(terms) == 0:
+        return _('No staff')
+    elif len(terms) == 1:
+        return terms[0]
+    elif len(terms) == 2:
+        return _('{name1} and {name2}').format(name1=terms[0], name2=terms[1])
+    else:
+        return _('{name} and {number} others').format(name=terms[0], number=len(terms) - 1)

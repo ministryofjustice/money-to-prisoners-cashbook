@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MTP cashbook\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-27 15:36+0000\n"
+"POT-Creation-Date: 2017-01-31 14:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Igor U <igor.ushkarev@digital.justice.gov.uk>, 2016\n"
 "Language-Team: Welsh (https://www.transifex.com/ministry-of-justice/teams/34553/cy/)\n"
@@ -88,35 +88,49 @@ msgstr ""
 msgid "%(credits)s received"
 msgstr ""
 
-#: apps/cashbook/views.py:74 apps/cashbook/views_training.py:52
+#: apps/cashbook/templatetags/credits.py:125
+msgid "No staff"
+msgstr ""
+
+#: apps/cashbook/templatetags/credits.py:129
+#, python-brace-format
+msgid "{name1} and {name2}"
+msgstr ""
+
+#: apps/cashbook/templatetags/credits.py:131
+#, python-brace-format
+msgid "{name} and {number} others"
+msgstr ""
+
+#: apps/cashbook/views.py:75 apps/cashbook/views_training.py:52
 #: templates/base.html:25 templates/training/page.html:55
 msgid "Home"
 msgstr ""
 
-#: apps/cashbook/views.py:82
+#: apps/cashbook/views.py:83
 msgid "New credits to enter"
 msgstr ""
 
-#: apps/cashbook/views.py:122
+#: apps/cashbook/views.py:123
 #, python-format
 msgid "You’ve added 1 credit to NOMIS."
 msgid_plural "You’ve added %(credited)s credits to NOMIS."
 msgstr[0] ""
 msgstr[1] ""
 
-#: apps/cashbook/views.py:151
+#: apps/cashbook/views.py:152
 msgid "Currently being entered into NOMIS"
 msgstr ""
 
-#: apps/cashbook/views.py:174
+#: apps/cashbook/views.py:175
 #, python-format
 msgid "You have now returned the credit your colleagues were processing to ‘New’ credits."
 msgid_plural "You have now returned the %(discarded)s credits your colleagues were processing to ‘New’ credits."
 msgstr[0] ""
 msgstr[1] ""
 
-#: apps/cashbook/views.py:203 apps/cashbook/views_training.py:71
-#: templates/cashbook/dashboard.html:52
+#: apps/cashbook/views.py:204 apps/cashbook/views_training.py:71
+#: templates/cashbook/dashboard.html:58
 #: templates/training/training--history.html:4
 #: templates/training/training--history.html:9
 #: templates/training/training--history.html:29
@@ -124,7 +138,7 @@ msgstr[1] ""
 msgid "All credits"
 msgstr ""
 
-#: apps/cashbook/views_training.py:61 templates/cashbook/dashboard.html:71
+#: apps/cashbook/views_training.py:61 templates/cashbook/dashboard.html:77
 msgid "How to use the digital cashbook"
 msgstr ""
 
@@ -140,7 +154,7 @@ msgstr ""
 msgid "Credits being entered"
 msgstr ""
 
-#: apps/cashbook/views_training.py:76 templates/cashbook/dashboard.html:66
+#: apps/cashbook/views_training.py:76 templates/cashbook/dashboard.html:72
 msgid "Overview – sending money to prisoners online"
 msgstr ""
 
@@ -170,7 +184,7 @@ msgid "Day 5"
 msgstr ""
 
 #: templates/base.html:11 templates/base.html:14
-#: templates/cashbook/dashboard.html:10 templates/mtp_auth/login.html:4
+#: templates/cashbook/dashboard.html:11 templates/mtp_auth/login.html:4
 msgid "Digital cashbook"
 msgstr ""
 
@@ -178,7 +192,7 @@ msgstr ""
 msgid "TRAINING SITE"
 msgstr ""
 
-#: templates/base.html:27 templates/cashbook/dashboard.html:61
+#: templates/base.html:27 templates/cashbook/dashboard.html:67
 msgid "Training materials"
 msgstr ""
 
@@ -500,11 +514,11 @@ msgid "Here you can see who is currently processing the credits in your team."
 msgstr ""
 
 #: templates/cashbook/credits_locked.html:23
-msgid "You can release them if you need to take over their work."
+msgid "You can return these to new credits if you need to take over their work."
 msgstr ""
 
 #: templates/cashbook/credits_locked.html:30
-msgid "If you want to release credits:"
+msgid "If you want to return these credits to new credits:"
 msgstr ""
 
 #: templates/cashbook/credits_locked.html:32
@@ -516,7 +530,7 @@ msgid "Select the box at the end of the row"
 msgstr ""
 
 #: templates/cashbook/credits_locked.html:34
-msgid "When the green ‘Release selected credits’ button appears, click it to free up their work"
+msgid "When the green ‘Return these to new credits’ button appears, click it to free up their work"
 msgstr ""
 
 #: templates/cashbook/credits_locked.html:51
@@ -532,7 +546,9 @@ msgid "Time in progress"
 msgstr ""
 
 #: templates/cashbook/credits_locked.html:55
-msgid "Release"
+#: templates/cashbook/dashboard.html:53
+#: templates/cashbook/includes/locked_buttons.html:4
+msgid "Return these to new credits"
 msgstr ""
 
 #: templates/cashbook/credits_locked.html:74
@@ -543,12 +559,12 @@ msgstr ""
 msgid "No credits in progress"
 msgstr ""
 
-#: templates/cashbook/dashboard.html:14
+#: templates/cashbook/dashboard.html:15
 #, python-format
 msgid "Credits received from the <a href=\"%(start_page_url)s\" target=\"_blank\">‘Send money to a prisoner’</a> service"
 msgstr ""
 
-#: templates/cashbook/dashboard.html:24
+#: templates/cashbook/dashboard.html:25
 #: templates/training/training--intro.html:23
 #: templates/training/training--new.html:4
 #: templates/training/training--new.html:9
@@ -558,36 +574,39 @@ msgstr ""
 msgid "New credits to enter into NOMIS"
 msgstr ""
 
-#: templates/cashbook/dashboard.html:27
+#: templates/cashbook/dashboard.html:28
 #, python-format
 msgid "Enter next %(batch_size)s"
 msgstr ""
 
-#: templates/cashbook/dashboard.html:31
+#: templates/cashbook/dashboard.html:32
 msgid "All checked by security"
 msgstr ""
 
-#: templates/cashbook/dashboard.html:33
+#: templates/cashbook/dashboard.html:34
 msgid "Not checked by security"
 msgstr ""
 
-#: templates/cashbook/dashboard.html:35
+#: templates/cashbook/dashboard.html:36
 msgid "Some checked by security"
 msgstr ""
 
-#: templates/cashbook/dashboard.html:43
-msgid "Currently being processed in NOMIS"
-msgstr ""
+#: templates/cashbook/dashboard.html:45
+#, python-format
+msgid ""
+"\n"
+"          %(names)s is entering credits into NOMIS\n"
+"          "
+msgid_plural ""
+"\n"
+"          %(names)s are entering credits into NOMIS\n"
+"          "
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
-#: templates/cashbook/dashboard.html:44
-msgid "Look at credits being entered now and release them, if needed"
-msgstr ""
-
-#: templates/cashbook/dashboard.html:47
-msgid "View"
-msgstr ""
-
-#: templates/cashbook/dashboard.html:55
+#: templates/cashbook/dashboard.html:61
 msgid "View all credits"
 msgstr ""
 
@@ -619,10 +638,6 @@ msgstr ""
 #: templates/cashbook/includes/batch_table_actions.html:16
 #, python-format
 msgid "All %(batch_size)s"
-msgstr ""
-
-#: templates/cashbook/includes/locked_buttons.html:4
-msgid "Release selected credits"
 msgstr ""
 
 #: templates/cashbook/includes/print_dialog.html:4

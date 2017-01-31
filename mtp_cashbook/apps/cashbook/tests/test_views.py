@@ -82,7 +82,14 @@ class DashboardViewTestCase(MTPBaseTestCase):
                 return {'count': locked_by_user}
             status = kwargs.get('status')
             if status == 'locked':
-                return {'count': overall_locked}
+                return {'count': overall_locked, 'results': [{
+                    'id': 1,
+                    'owner': 1,
+                    'owner_name': 'Fred',
+                    'prison': 2,
+                    'amount': 1123,
+                    'locked_at': '2015-10-10T12:00:00Z',
+                }]}
             elif status == 'available':
                 return {'count': available}
             else:
@@ -298,7 +305,9 @@ class BatchListView(MTPBaseTestCase):
                 follow=False,
             )
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('dashboard-batch-incomplete'))
+        self.assertRedirects(
+            response, reverse('dashboard-batch-incomplete'), fetch_redirect_response=False
+        )
 
     @mock.patch('cashbook.views.api_client')
     @mock.patch('cashbook.views.CreditBatchListView.form_class')
@@ -326,7 +335,9 @@ class BatchListView(MTPBaseTestCase):
                 follow=False,
             )
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('dashboard-batch-complete'))
+        self.assertRedirects(
+            response, reverse('dashboard-batch-complete'), fetch_redirect_response=False
+        )
 
 
 class HistoryViewTestCase(MTPBaseTestCase):

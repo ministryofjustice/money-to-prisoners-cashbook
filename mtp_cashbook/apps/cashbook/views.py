@@ -59,7 +59,8 @@ class DashboardView(TemplateView):
             'locked_credits': locked['count'],
             'all_credits': all_credits['count'],
             'batch_size': my_locked['count'] or min(available['count'], 20),
-            'pre_approval_required': pre_approval_required
+            'pre_approval_required': pre_approval_required,
+            'in_progress_users': list({credit['owner_name'] for credit in locked['results']})
         })
         return context_data
 
