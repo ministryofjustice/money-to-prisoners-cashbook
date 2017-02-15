@@ -18,7 +18,7 @@ APP = 'cashbook'
 ENVIRONMENT = os.environ.get('ENV', 'local')
 APP_BUILD_DATE = os.environ.get('APP_BUILD_DATE')
 APP_GIT_COMMIT = os.environ.get('APP_GIT_COMMIT')
-
+MOJ_INTERNAL_SITE = True
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
