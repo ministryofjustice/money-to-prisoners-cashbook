@@ -126,7 +126,7 @@
         {% endfor %}
       {% endfor %}
 
-      {% page_list page=current_page page_count=page_count %}
+      {% page_list page=current_page page_count=page_count query_string=form.query_string %}
 
       <p><a href="#print-dialog" class="js-Dialog">{% trans 'Print this page of credits' %}</a></p>
       {% include 'cashbook/includes/print_dialog.html' %}

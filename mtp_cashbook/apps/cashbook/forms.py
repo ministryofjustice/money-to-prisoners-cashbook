@@ -1,6 +1,8 @@
+import collections
 from datetime import timedelta
 from functools import reduce
 from itertools import groupby
+from urllib.parse import urlencode
 
 from django import forms
 from django.conf import settings
@@ -307,3 +309,18 @@ class FilterCreditHistoryForm(GARequestErrorReportingMixin, forms.Form):
                 'credits': credit_description,
             }
         return capfirst(description)
+
+    def get_query_data(self):
+        data = collections.OrderedDict()
+        for field in self:
+            if field.name == 'page':
+                continue
+            value = self.cleaned_data.get(field.name)
+            if value in [None, '', []]:
+                continue
+            data[field.name] = value
+        return data
+
+    @cached_property
+    def query_string(self):
+        return urlencode(self.get_query_data(), doseq=True)
