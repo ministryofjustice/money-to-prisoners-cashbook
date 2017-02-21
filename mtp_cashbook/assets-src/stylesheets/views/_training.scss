@@ -32,7 +32,7 @@
     padding: .6em 2em;
     text-decoration: none;
 
-    @media (max-width: 640px) {
+    @include media(mobile) {
       padding: .6em 1em;
     }
 
@@ -87,7 +87,7 @@
     width: 22em;
   }
 
-  @media (max-width: 970px) {
+  @include media($max-width: 970px, $ignore-for-ie: true) {
     .mtp-training-section__image {
       float: left;
     }

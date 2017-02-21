@@ -1,13 +1,11 @@
 // Application specific
 
 .mtp-locked {
-  @include breakpoint($mobile) {
+  margin-top: 1em;
+
+  @include media(mobile) {
     width: 100%;
   }
-}
-
-.mtp-locked {
-  margin-top: 1em;
 
   .mtp-batch__buttons {
     width: 100%;
@@ -29,6 +27,7 @@
       text-align: left;
       padding-left: 25px;
     }
+
     .mtp-all {
       padding-left: 2.1em;
     }

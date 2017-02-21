@@ -3,7 +3,7 @@
 .mtp-status-box {
   overflow: hidden;
   margin: $gutter $gutter-half;
-  padding: 0 $gutter-half $gutter-half $gutter-half;
+  padding: 0 $gutter-half $gutter-half;
   border-bottom: 1px solid $grey-1;
 
   .mtp-status-box__secondary-text {
@@ -17,11 +17,11 @@
     min-width: 12%;
     padding-top: 8px;
 
-    @media (max-width: 769px) {
+    @include media($max-width: 769px, $ignore-for-ie: true) {
       min-width: 2.2em;
     }
 
-    @include breakpoint($mobile) {
+    @include media(mobile) {
       padding-top: 18px;
     }
   }
@@ -70,7 +70,7 @@
     overflow: hidden;
     padding: 16px 0 10px 10px;
 
-    @include breakpoint($mobile) {
+    @include media(mobile) {
       .button {
         width: auto;
       }
@@ -80,6 +80,7 @@
 
 .heading-xlarge__chopped {
   @extend .heading-xlarge;
+
   margin-bottom: 20px;
 }
 
