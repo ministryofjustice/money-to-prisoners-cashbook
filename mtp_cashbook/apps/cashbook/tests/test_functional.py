@@ -87,7 +87,7 @@ class InProgressPageTests(CashbookTestCase):
 
     def setUp(self):
         super().setUp()
-        self.login_and_go_to('View')
+        self.login_and_go_to('Return these to new credits')
 
     def test_going_to_the_locked_credits_page(self):
         self.assertInSource('Currently being entered into NOMIS')
