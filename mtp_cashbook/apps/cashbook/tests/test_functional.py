@@ -316,12 +316,12 @@ class Journeys(CashbookTestCase):
 
     def test_journey_12(self):
         self.login('test-prison-1', 'test-prison-1')
-        self.click_on_text('View')
+        self.click_on_text('Return these to new credits')
         self.click_on_text('Release')
 
     def test_journey_13(self):
         self.login('test-prison-1', 'test-prison-1')
-        self.click_on_text('View')
+        self.click_on_text('Return these to new credits')
         self.get_element('//tbody//input[@type="checkbox"][1]/following-sibling::label').click()
         self.click_on_text('Release')
 
