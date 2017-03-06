@@ -6,7 +6,7 @@
 
 {% block page_title %}{% trans 'New credits - Digital cashbook' %}{% endblock %}
 
-{% block body_classes %}mtp-new-credits{% endblock %}
+{% block body_classes %}mtp-credits{% endblock %}
 
 {% block page_content %}
 
@@ -52,10 +52,10 @@
                   Showing <strong>{{ new_credits }}</strong> new credits.
                   {% endblocktrans %}
                 {% endif %}
-                <span class="mtp-none-selected">{% trans "You haven't selected any to process yet." %}</span>
+                <span class="mtp-none-selected">{% trans "You haven't selected any to credit yet." %}</span>
                 <span class="mtp-some-selected">
                   {% blocktrans trimmed %}
-                  You have selected <strong><span class="js-SelectionCount"></span></strong> to process.
+                  You have selected <strong><span class="js-SelectionCount"></span></strong> to credit.
                   {% endblocktrans %}
                 </span>
               </p>
@@ -69,13 +69,13 @@
           </div>
         </div>
 
-        <h2 class="print-only heading-small">
+        <h2 class="print-only heading-xlarge">
           {% trans 'Do NOT enter these credits into NOMIS yourself.' %}
         </h2>
 
         <table>
           <thead>
-            {% include 'cashbook/includes/batch_table_actions.html' with location='header' field_name=form.credits.html_name batch_size=batch_size %}
+            {% include 'cashbook/includes/table_actions.html' with location='header' field_name=form.credits.html_name batch_size=batch_size %}
 
             <tr>
               <th class="{{ request|ordering_classes:'received_at' }}">
@@ -181,17 +181,6 @@
       <p>{% trans "There aren’t any credits available" %}</p>
     {% endif %}
 
-    <div class="print-only print-reminder">
-      <strong>{% trans "Confirm all credits processed" %}</strong>
-      <div class="print-only print-checkbox"></div>
-      <div class="print-box">
-        <p>
-          {% trans "Remember to confirm all credits as processed in the digital cashbook." %}
-        </p>
-      </div>
-    </div>
-
-
     <div id="incomplete-batch-dialog"
          class="Dialog"
          style="display: none"
@@ -209,6 +198,6 @@
     </div>
   </form>
 
-  {% include 'cashbook/includes/print_dialog.html' %}
+  {% include 'cashbook/includes/nomis_print_dialog.html' %}
 
 {% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load mtp_common %}
+{% load staticfiles %}
+
+{% block body_classes %}mtp-change-notification{% endblock %}
+
+{% block inner_content %}
+
+  <header>
+    {% language_switch %}
+    <h1 class="heading-large">{% trans 'Digital cashbook is now connected to NOMIS' %}</h1>
+  </header>
+
+  <div class="mtp-change-notification__content">
+    <img class="mtp-change-notification__graphic" src="{% static 'images/nomis-change-graphic.png' %}"/>
+    <img class="mtp-change-notification__graphic2x" src="{% static 'images/nomis-change-graphic@2x.png' %}"/>
+    <div>
+      {% trans 'You no longer has to enter credits by hand into NOMIS.' %}
+      {% trans 'Now when you confirm credits here they will be sent to NOMIS digitally.' %}
+    </div>
+    <a class="button" href="{% url 'new-credits' %}">I understand</a>
+  </div>
+
+{% endblock %}

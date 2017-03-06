@@ -1,0 +1,49 @@
+.mtp-change-notification {
+  h1 {
+    text-align: center;
+  }
+}
+
+.mtp-change-notification__content {
+  text-align: center;
+
+  div {
+    text-align: left;
+    width: 65%;
+    margin: 0 auto;
+    padding-top: 2em;
+    padding-bottom: 2em;
+  }
+}
+
+.mtp-change-notification__graphic {
+  display: inline;
+
+  @include device-pixel-ratio {
+    display: none;
+  }
+}
+
+.mtp-change-notification__graphic2x {
+  display: none;
+
+  @include device-pixel-ratio {
+    display: inline;
+  }
+}
+
+.mtp-change-notification__dialog {
+  text-align: center;
+
+  div {
+    text-align: left;
+    width: 95%;
+    margin: 0 auto;
+    padding-top: 1em;
+    padding-bottom: 1em;
+  }
+
+  + a.Dialog-close {
+    display: none;
+  }
+}

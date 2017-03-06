@@ -10,9 +10,10 @@ from django.views.generic import FormView, TemplateView
 from mtp_common.auth import api_client
 from django.shortcuts import render
 
+from . import require_nomis_integration
 from .forms import (
     ProcessCreditBatchForm, DiscardLockedCreditsForm, FilterCreditHistoryForm,
-    ProcessNewCreditsForm
+    ProcessNewCreditsForm, FilterAllCreditsForm
 )
 
 logger = logging.getLogger('mtp')
@@ -252,6 +253,7 @@ class CreditHistoryView(FormView, CashbookSubviewMixin):
 
 
 @method_decorator(login_required, name='dispatch')
+@method_decorator(require_nomis_integration, name='dispatch')
 class NewCreditsView(FormView):
     title = _('New credits')
     form_class = ProcessNewCreditsForm
@@ -309,13 +311,52 @@ class NewCreditsView(FormView):
 
         return super().form_valid(form)
 
-    get = FormView.post
 
-
-class AllCreditsView(CreditHistoryView):
+@method_decorator(login_required, name='dispatch')
+@method_decorator(require_nomis_integration, name='dispatch')
+class AllCreditsView(FormView):
+    title = _('All credits')
+    form_class = FilterAllCreditsForm
     template_name = 'cashbook/all_credits.html'
+    success_url = reverse_lazy('all-credits')
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial.update({
+            'page': 1,
+        })
+        return initial
+
+    def get_form_kwargs(self):
+        return {
+            'request': self.request,
+            'data': self.request.GET or {},
+            'initial': self.get_initial(),
+            'prefix': self.get_prefix(),
+        }
+
+    def get(self, request, *args, **kwargs):
+        form = self.get_form()
+        if form.is_bound:
+            if form.is_valid():
+                return self.form_valid(form)
+            else:
+                return self.form_invalid(form)
+        return self.render_to_response(self.get_context_data(form=form))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        del context['breadcrumbs']
+        form = context['form']
+        object_list = form.credit_choices
+        current_page = form.pagination['page']
+        page_count = form.pagination['page_count']
+        context.update({
+            'object_list': object_list,
+            'current_page': current_page,
+            'page_count': page_count,
+            'credit_owner_name': self.request.user.get_full_name(),
+        })
         return context
+
+    def form_valid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))

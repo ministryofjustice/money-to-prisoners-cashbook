@@ -1,8 +1,9 @@
-from django.conf import settings
 from django.conf.urls import url
 from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import redirect
+from django.views.generic import TemplateView
 
+from . import nomis_integration_available
 from .views import (
     CreditBatchListView, CreditsLockedView, CreditHistoryView, DashboardView,
     inactive_password_change_view, NewCreditsView, AllCreditsView
@@ -11,13 +12,8 @@ from .views_training import ServiceOverview, Training
 
 
 def dashboard_view(request):
-    nomis_integration_available = settings.NOMIS_API_AVAILABLE and any((
-        prison['nomis_id'] in settings.NOMIS_API_PRISONS
-        for prison in request.user.user_data.get('prisons', [])
-    ))
-
-    if nomis_integration_available:
-        return redirect(reverse_lazy('new-credits'))
+    if nomis_integration_available(request):
+        return redirect(reverse_lazy('change-notification'))
     return DashboardView.as_view()(request)
 
 
@@ -43,6 +39,11 @@ urlpatterns = [
 
     url(r'^inactive_password_change/$', inactive_password_change_view, name='inactive_password_change'),
 
+    url(
+        r'^change-notification/$',
+        TemplateView.as_view(template_name='cashbook/change_notification.html'),
+        name='change-notification'
+    ),
     url(r'^new/$', NewCreditsView.as_view(), name='new-credits'),
     url(r'^all/$', AllCreditsView.as_view(), name='all-credits'),
 ]

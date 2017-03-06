@@ -1,12 +1,12 @@
-.mtp-new-credits {
+.mtp-credits {
+
+  .phase-banner-beta {
+    border-bottom: 2px solid #bfc1c3;
+  }
 
   .Dialog {
     margin-top: 120px;
     position: fixed;
-  }
-
-  .help-box-title {
-    padding: 20px 0;
   }
 
   .mtp-floating-header {
@@ -33,6 +33,7 @@
     }
 
     .column-two-thirds {
+      padding: 0;
       margin-top: 0;
     }
 
@@ -144,6 +145,7 @@
 
         .sub {
           font-size: 16px;
+          color: #666666;
         }
 
         .old {

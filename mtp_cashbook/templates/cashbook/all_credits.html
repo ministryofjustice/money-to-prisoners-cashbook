@@ -4,6 +4,8 @@
 {% load mtp_common %}
 {% load credits %}
 
+{% block body_classes %}mtp-credits{% endblock %}
+
 {% block page_content %}
 
   <header>
@@ -16,123 +18,127 @@
       {% trans 'Below you’ll find all the credits listed to date.' %}
       {% trans 'You can also use the search to find specific credits.' %}
     </p>
-
-    <div class="help-box-title" aria-controls="help-box-contents" aria-expanded="false" role="heading">
-      <div></div><a href="#">{% trans 'Help' %}</a>
-    </div>
-    <div class="panel panel-border-narrow help-box-contents" id="help-box-contents">
-      <p>{% trans 'To help with your search:' %}</p>
-      <ul>
-        <li>{% trans 'Search by prisoner name, prisoner number, sender name or amount' %}</li>
-        <li>{% trans 'To bring up the whole history, don’t enter search dates although you can enter start and finish dates if you have a specific search' %}</li>
-        <li>{% trans 'Click on ‘Expand’ to see a list of credits for that day, then click on ‘Collapse’ to go back' %}</li>
-        <li>{% trans 'Remember the credits in ‘Uncredited’ haven’t been processed yet' %}</li>
-        <li><a href="{% url 'training' page='history' %}">{% trans 'More information is available in the training section' %}</a></li>
-      </ul>
-    </div>
   </div>
 
   {% include "mtp_common/includes/message_box.html" %}
 
-  <form method="get" class="mtp-history-search" action="">
+  <form method="get" class="mtp-all-credits-search" action="">
     {% include 'mtp_common/forms/error-summary.html' with form=form only %}
 
-    <div class="mtp-history-search__inputs">
-      <div class="mtp-history-search__field">
-        {% include 'mtp_common/forms/field.html' with field=form.search only %}
-      </div>
-      <div class="mtp-history-search__dates">
-        <div class="mtp-history-search__date-label">
-          {% trans 'Date' %}
-          <div class="form-hint">{% trans 'for example 28/04/2016' %}</div>
-        </div>
-        <div class="mtp-history-search__date-start">
+    <div class="mtp-all-credits-search__inputs">
+      <div class="mtp-all-credits-search__filter-heading">{% trans 'Filter by' %}</div>
+      <div class="mtp-all-credits-search__dates">
+        <div class="mtp-all-credits-search__date-start">
           {% include 'mtp_common/forms/field.html' with field=form.start input_classes='js-FormDateControl' value=form.start.value|date:'d/m/Y'|default:form.start.value|default_if_none:'' only %}
         </div>
-        <div class="mtp-history-search__date-end">
+        <div class="mtp-all-credits-search__date-end">
           {% include 'mtp_common/forms/field.html' with field=form.end input_classes='js-FormDateControl' value=form.end.value|date:'d/m/Y'|default:form.end.value|default_if_none:'' only %}
         </div>
       </div>
+      <div class="mtp-all-credits-search__field">
+        {% include 'mtp_common/forms/field.html' with field=form.search only %}
+      </div>
+
+      {# always forces a search to start on page 1 #}
+      <input type="hidden" name="{{ form.page.html_name }}" value="1">
+
+      <div><input class="button" type="submit" value="{% trans 'Search' %}"></div>
     </div>
-
-    {# always forces a search to start on page 1 #}
-    <input type="hidden" name="{{ form.page.html_name }}" value="1">
-
-    <div><input class="button" type="submit" value="{% trans 'Search' %}"></div>
   </form>
 
 
-  <div class="mtp-batch mtp-batch__history">
+  <div class="mtp-batch mtp-batch__all-credits">
     {% if object_list %}
 
-      <p class="mtp-history__description">{{ form.get_search_description }}</p>
+      <p class="mtp-all-credits__description">{{ form.get_search_description }}</p>
+      <p><a href="#print-dialog" class="js-Dialog">{% trans 'Print this page of credits' %}</a></p>
+      <table>
+        <thead>
 
-      {% for credit_date, group in object_list|parse_date_fields|regroup_credits %}
-        <h2 class="heading-medium">{{ credit_date|date:'DATE_FORMAT' }}</h2>
+          <tr>
+            <th class="{{ request|ordering_classes:'received_at' }}">
+              <a href="?{{ request|query_string_with_reversed_ordering:'received_at' }}">
+                <span>
+                  {% trans 'Date sent' %}
+                  {% describe_ordering_for_screenreader request 'received_at' %}
+                </span>
+              </a>
+            </th>
+            <th class="{{ request|ordering_classes:'prisoner_number' }}">
+              <a href="?{{ request|query_string_with_reversed_ordering:'prisoner_number' }}">
+                <span>
+                  {% trans 'Prisoner' %}
+                  {% describe_ordering_for_screenreader request 'prisoner_number' %}
+                </span>
+              </a>
+            </th>
+            <th class="{{ request|ordering_classes:'amount' }} number">
+              <a href="?{{ request|query_string_with_reversed_ordering:'amount' }}">
+                <span>
+                  {% trans 'Amount' %}
+                  {% describe_ordering_for_screenreader request 'amount' %}
+                </span>
+              </a>
+            </th>
+            <th>{% trans 'Sender' %}</th>
+            <th>{% trans 'Credited status' %}</th>
+          </tr>
+        </thead>
 
-        {% for credit_status, credits in group %}
-          <table id="HistoryBatch-{{ forloop.parentloop.counter }}-{{ forloop.counter }}" class="CollapsingTable">
-            <caption class="CollapsingTableHeader {% credit_group_class credit_status %}" data-collapse-text="{% trans 'Collapse' %}" data-expand-text="{% trans 'Expand' %}">
-              {% if credit_status == 'credited' %}
-                {% trans 'Credited' %}
-              {% elif credit_status == 'refunded' %}
-                {% trans 'Refunded' %}
-              {% elif credit_status == 'anonymous' %}
-                {% trans 'Unknown sender (uncredited)' %}
-              {% else %}
-                {% trans 'Uncredited' %}
-              {% endif %}
-              <span class="CollapsingTableHeader-aside CollapsingTableHeader-aside-right">
-                {% trans 'Total' %}: £{{ credits|sum_credits|currency }}
-              </span>
-            </caption>
-            <thead>
-              <tr>
-                <th>{% trans 'Prisoner no' %}</th>
-                <th>{% trans 'Prisoner name' %}</th>
-                <th>
-                  {% trans 'Prisoner name' %}
-                  <span class="font-xsmall">({% trans 'as entered by sender' %})</span>
-                </th>
-                <th>{% trans 'Amount (£)' %}</th>
-                <th>{% trans 'Sender' %}</th>
-                <th>
-                  {% if credit_status == 'credited' %}
-                    {% trans 'Credited by' %}
+        <tbody>
+          {% for credit in object_list %}
+            <tr>
+              <td>
+                <div>{{ credit.received_at.date|date:'d/m/Y' }}</div>
+                {% with days=credit.received_at.date|dayssince %}
+                <div class="sub {% if days >= 7 %}old{% endif %}">
+                  {% if days == 0 %}
+                    {% trans 'Today' %}
                   {% else %}
-                    {% trans 'Started by' %}
+                    {% blocktrans count days=days %}
+                    {{ days }} day ago
+                    {% plural %}
+                    {{ days }} days ago
+                    {% endblocktrans %}
                   {% endif %}
-                </th>
-                <th>{% trans 'Payment method' %}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for credit in credits %}
-                <tr>
-                  <td>{{ credit.prisoner_number|default_if_none:'—' }}</td>
-                  <td>{{ credit.prisoner_name|default_if_none:'—' }}</td>
-                  <td>{{ credit.intended_recipient|default_if_none:'—' }}</td>
-                  <td class="numeric">{{ credit.amount|currency }}</td>
-                  <td>{{ credit.sender_name|default_if_none:'—' }}</td>
-                  <td>{{ credit.owner_name|default_if_none:'—' }}</td>
-                  <td>
-                    {% if credit.source == 'online' %}
-                      {% trans 'Debit card' %}
-                    {% else %}
-                      {% trans 'Bank transfer' %}
-                    {% endif %}
-                  </td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        {% endfor %}
-      {% endfor %}
+                </div>
+                {% endwith %}
+              </td>
+              <td>
+                <div>{{ credit.prisoner_number }}</div>
+                <div class="sub">{{ credit.prisoner_name }}</div>
+              </td>
+              <td class="number">&pound;{{ credit.amount|currency }}</td>
+              <td>{{ credit.sender_name }}</td>
+              <td>
+                {% if credit.resolution == 'credited' %}
+                  <p>
+                    {{ credit.credited_at.date }}<br />
+                    {% blocktrans trimmed with name_of_clerk=credit.owner_name|default:'—' %}
+                      by {{ name_of_clerk }}
+                    {% endblocktrans %}
+                  </p>
+                {% elif credit.resolution == 'refunded' %}
+                  <p>
+                    {% trans 'Refunded' %}<br />
+                    {{ credit.refunded_at.date }}
+                  </p>
+                {% elif credit.anonymous %}
+                  <p>
+                    {% trans 'Anonymous (uncredited)' %}
+                  </p>
+                {% else %}
+                  <p>{% trans 'No' %}</p>
+                {% endif %}
+              </td>
+          {% endfor %}
+        </tbody>
+      </table>
 
       {% page_list page=current_page page_count=page_count query_string=form.query_string %}
 
       <p><a href="#print-dialog" class="js-Dialog">{% trans 'Print this page of credits' %}</a></p>
-      {% include 'cashbook/includes/print_dialog.html' %}
+      {% include 'cashbook/includes/nomis_print_dialog.html' %}
 
     {% else %}
 
