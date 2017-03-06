@@ -324,3 +324,46 @@ class FilterCreditHistoryForm(GARequestErrorReportingMixin, forms.Form):
     @cached_property
     def query_string(self):
         return urlencode(self.get_query_data(), doseq=True)
+
+
+class ProcessNewCreditsForm(GARequestErrorReportingMixin, forms.Form):
+    credits = forms.MultipleChoiceField(choices=(), required=False)
+
+    def __init__(self, request, ordering='-received_at', *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.request = request
+        self.user = request.user
+        self.client = get_connection(request)
+        self.ordering = ordering
+
+        self.fields['credits'].choices = self.credit_choices
+
+    def _request_all_credits(self):
+        return retrieve_all_pages(
+            self.client.credits.get, status='available',
+            ordering=self.ordering
+        )
+
+    def clean_credits(self):
+        credits = self.cleaned_data.get('credits', [])
+        if not credits:
+            self.add_error(None, gettext('Only click ‘Done’ when you’ve selected credits'))
+        return credits
+
+    @cached_property
+    def credit_choices(self):
+        """
+        Gets the credits currently available the user.
+        """
+        credits = self._request_all_credits()
+        return [
+            (t['id'], t) for t in parse_date_fields(credits)
+        ]
+
+    def save(self):
+        to_credit = set(self.cleaned_data['credits'])
+        if to_credit:
+            self.client.credits.patch(
+                [{'id': t_id, 'credited': True} for t_id in to_credit]
+            )
+        return to_credit

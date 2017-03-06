@@ -1,0 +1,8 @@
+{% load i18n %}
+{% spaceless %}
+  {% if ordering == 'ascending' %}
+    <span class="visually-hidden">{% trans 'In ascending order' %}</span>
+  {% elif ordering == 'descending' %}
+    <span class="visually-hidden">{% trans 'In descending order' %}</span>
+  {% endif %}
+{% endspaceless %}

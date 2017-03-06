@@ -1,0 +1,266 @@
+.mtp-new-credits {
+
+  .Dialog {
+    margin-top: 120px;
+    position: fixed;
+  }
+
+  .help-box-title {
+    padding: 20px 0;
+  }
+
+  .mtp-floating-header {
+    .mtp-none-selected {
+      display: none;
+    }
+
+
+    .mtp-some-selected {
+      display: none;
+    }
+
+    p {
+      font-size: 19px;
+    }
+
+    .grid-row {
+      width: 100%;
+      margin: 0;
+    }
+
+    .column-one-third {
+      padding: 0;
+    }
+
+    .column-two-thirds {
+      margin-top: 0;
+    }
+
+    .total {
+      font-weight: bold;
+    }
+
+    .green {
+      color: $button-colour;
+    }
+
+    .mtp-submit__button {
+      padding-right: 5px;
+      text-align: right;
+    }
+
+    &.is-sticky {
+      background: $page-colour;
+      border-top: 0;
+      border-bottom: solid $text-colour;
+      position: fixed;
+      z-index: 1000;
+      top: 0;
+      left: 0;
+      width: 100%;
+      margin: 0;
+      padding-top: 1em;
+      padding-bottom: 1em;
+
+      .grid-row {
+        width: 960px;
+        margin: 0 auto;
+      }
+
+      .mtp-submit__button {
+        text-align: right;
+        font-size: 1.1em;
+      }
+
+      p {
+        font-size: 1em;
+        margin-top: 0;
+        margin-bottom: 0;
+        padding-top: 0.3em;
+        padding-bottom: 0.3em;
+      }
+
+      .column-two-thirds {
+        padding: 0;
+      }
+    }
+  }
+
+  .mtp-batch {
+    margin: 0;
+
+    .mtp-results-ordering {
+      height: 100%;
+      padding: 0;
+
+      a {
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+        color: $text-colour;
+        text-decoration: none;
+
+        &:hover, &:focus {
+          background: $focus-colour;
+          outline: 0;
+        }
+
+        span {
+          display: block;
+          margin: .8em 0 .8em .8em;
+          padding-right: 1.2em;
+        }
+      }
+
+      &.mtp-results-ordering--asc, &.mtp-results-ordering--desc {
+        border-left: 1px solid $grey-2;
+        border-right: 1px solid $grey-2;
+
+        span {
+          background: transparent file-url('ordering-asc.png') no-repeat 92% 50%;
+
+          @include device-pixel-ratio {
+            background-image: file-url('ordering-asc@2x.png');
+            background-size: 9px 9px;
+          }
+        }
+      }
+
+      &.mtp-results-ordering--desc span {
+        background-image: file-url('ordering-desc.png');
+
+        @include device-pixel-ratio {
+          background-image: file-url('ordering-desc@2x.png');
+        }
+      }
+    }
+
+    table {
+      width: 100%;
+
+      td, th {
+        border-bottom: 0;
+        border-top: 1px solid #bfc1c3;
+
+        .sub {
+          font-size: 16px;
+        }
+
+        .old {
+          color: $orange;
+        }
+      }
+
+      .print-hidden {
+        td {
+          border-top: 0;
+        }
+      }
+
+      .number {
+        text-align: right;
+      }
+
+      .mtp-all {
+        text-align: center;
+        padding-left: 80px;
+      }
+
+      .mtp-security {
+        border-top: 0;
+      }
+    }
+  }
+
+  &.no-js {
+    .print,
+    .select-all {
+      display: none;
+    }
+  }
+
+  .print-only {
+    display: none;
+  }
+
+  @media print {
+
+    .phase-banner-beta {
+      display: none;
+    }
+
+    .print-only {
+      display: block;
+
+      .print-checkbox {
+        float: right;
+        margin-right: 108px;
+      }
+
+      h2 {
+        text-align: center;
+        margin: 1em 0;
+      }
+
+      p {
+        display: inline-block;
+      }
+    }
+
+    .print-box {
+      text-align: center;
+    }
+
+    .print-reminder {
+      strong {
+        padding-left: 50%;
+      }
+
+      .print-box {
+        margin-top: 2em;
+      }
+    }
+
+    .print-checkbox {
+      margin-left: 2em;
+      margin-bottom: 1em;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #000;
+      display: inline-block;
+    }
+
+    h2.print-only {
+      padding-top: 1em;
+    }
+
+    h1 {
+      display: none;
+    }
+
+    .mtp-floating-header {
+      margin-top: 0;
+      border-bottom: 0;
+
+      p span {
+        &.label {
+          font-size: em(10);
+          width: 7em;
+        }
+
+        margin-bottom: 1em;
+      }
+    }
+
+    .mtp-batch {
+      width: 100%;
+      margin-bottom: 2em;
+    }
+
+    .select-all,
+    .print,
+    .button {
+      display: none;
+    }
+  }
+}

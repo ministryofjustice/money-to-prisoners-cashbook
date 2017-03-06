@@ -1,11 +1,28 @@
+from django.conf import settings
 from django.conf.urls import url
+from django.core.urlresolvers import reverse_lazy
+from django.shortcuts import redirect
 
-from .views import CreditBatchListView, CreditsLockedView, \
-    CreditHistoryView, DashboardView, inactive_password_change_view
+from .views import (
+    CreditBatchListView, CreditsLockedView, CreditHistoryView, DashboardView,
+    inactive_password_change_view, NewCreditsView, AllCreditsView
+)
 from .views_training import ServiceOverview, Training
 
+
+def dashboard_view(request):
+    nomis_integration_available = settings.NOMIS_API_AVAILABLE and any((
+        prison['nomis_id'] in settings.NOMIS_API_PRISONS
+        for prison in request.user.user_data.get('prisons', [])
+    ))
+
+    if nomis_integration_available:
+        return redirect(reverse_lazy('new-credits'))
+    return DashboardView.as_view()(request)
+
+
 urlpatterns = [
-    url(r'^$', DashboardView.as_view(), name='dashboard'),
+    url(r'^$', dashboard_view, name='dashboard'),
     url(r'^dashboard-batch-complete/$', DashboardView.as_view(),
         name='dashboard-batch-complete'),
     url(r'^dashboard-batch-incomplete/$', DashboardView.as_view(),
@@ -25,4 +42,7 @@ urlpatterns = [
     url(r'^training/(?:(?P<page>[^/]+)/)?$', Training.as_view(), name='training'),
 
     url(r'^inactive_password_change/$', inactive_password_change_view, name='inactive_password_change'),
+
+    url(r'^new/$', NewCreditsView.as_view(), name='new-credits'),
+    url(r'^all/$', AllCreditsView.as_view(), name='all-credits'),
 ]

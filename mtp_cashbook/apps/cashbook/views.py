@@ -10,8 +10,10 @@ from django.views.generic import FormView, TemplateView
 from mtp_common.auth import api_client
 from django.shortcuts import render
 
-from .forms import ProcessCreditBatchForm, DiscardLockedCreditsForm, \
-    FilterCreditHistoryForm
+from .forms import (
+    ProcessCreditBatchForm, DiscardLockedCreditsForm, FilterCreditHistoryForm,
+    ProcessNewCreditsForm
+)
 
 logger = logging.getLogger('mtp')
 
@@ -247,3 +249,73 @@ class CreditHistoryView(FormView, CashbookSubviewMixin):
 
     def form_valid(self, form):
         return self.render_to_response(self.get_context_data(form=form))
+
+
+@method_decorator(login_required, name='dispatch')
+class NewCreditsView(FormView):
+    title = _('New credits')
+    form_class = ProcessNewCreditsForm
+    template_name = 'cashbook/new_credits.html'
+    success_url = reverse_lazy('new-credits')
+
+    def get_form_kwargs(self):
+        form_kwargs = super().get_form_kwargs()
+        form_kwargs['request'] = self.request
+        if 'ordering' in self.request.GET:
+            form_kwargs['ordering'] = self.request.GET['ordering']
+        return form_kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        credit_choices = context['form'].credit_choices
+        context['object_list'] = credit_choices
+        context['total'] = sum([x[1]['amount'] for x in credit_choices])
+        context['new_credits'] = len(credit_choices)
+
+        context['pre_approval_required'] = any((
+            prison['pre_approval_required']
+            for prison in self.request.user.user_data.get('prisons', [])
+        ))
+
+        return context
+
+    def form_valid(self, form):
+        credited = form.save()
+        credited_count = len(credited)
+
+        if credited_count:
+            messages.success(
+                self.request,
+                ngettext(
+                    'You credited 1 new credit to NOMIS.',
+                    'You credited %(credited)s new credits to NOMIS.',
+                    credited_count
+                ) % {
+                    'credited': credited_count
+                }
+            )
+
+            username = self.request.user.user_data.get('username', 'Unknown')
+            logger.info('User "%(username)s" added %(credited)d credits(s) to NOMIS' % {
+                'username': username,
+                'credited': credited_count,
+            }, extra={
+                'elk_fields': {
+                    '@fields.credited_count': credited_count,
+                    '@fields.username': username,
+                }
+            })
+
+        return super().form_valid(form)
+
+    get = FormView.post
+
+
+class AllCreditsView(CreditHistoryView):
+    template_name = 'cashbook/all_credits.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        del context['breadcrumbs']
+        return context

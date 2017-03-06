@@ -238,6 +238,9 @@ ZENDESK_CUSTOM_FIELDS = {
 
 SHOW_LANGUAGE_SWITCH = os.environ.get('SHOW_LANGUAGE_SWITCH', 'False') == 'True'
 
+NOMIS_API_AVAILABLE = os.environ.get('NOMIS_API_AVAILABLE', 'False') == 'True'
+NOMIS_API_PRISONS = ['BXI']
+
 try:
     from .local import *  # noqa
 except ImportError:

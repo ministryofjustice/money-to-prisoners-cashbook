@@ -1,0 +1,144 @@
+{% extends 'cashbook/credits_base.html' %}
+{% load i18n %}
+{% load currency %}
+{% load mtp_common %}
+{% load credits %}
+
+{% block page_content %}
+
+  <header>
+    {% language_switch %}
+    <h1 class="heading-xlarge">{{ view.title }}</h1>
+  </header>
+
+  <div class="help-box">
+    <p>
+      {% trans 'Below you’ll find all the credits listed to date.' %}
+      {% trans 'You can also use the search to find specific credits.' %}
+    </p>
+
+    <div class="help-box-title" aria-controls="help-box-contents" aria-expanded="false" role="heading">
+      <div></div><a href="#">{% trans 'Help' %}</a>
+    </div>
+    <div class="panel panel-border-narrow help-box-contents" id="help-box-contents">
+      <p>{% trans 'To help with your search:' %}</p>
+      <ul>
+        <li>{% trans 'Search by prisoner name, prisoner number, sender name or amount' %}</li>
+        <li>{% trans 'To bring up the whole history, don’t enter search dates although you can enter start and finish dates if you have a specific search' %}</li>
+        <li>{% trans 'Click on ‘Expand’ to see a list of credits for that day, then click on ‘Collapse’ to go back' %}</li>
+        <li>{% trans 'Remember the credits in ‘Uncredited’ haven’t been processed yet' %}</li>
+        <li><a href="{% url 'training' page='history' %}">{% trans 'More information is available in the training section' %}</a></li>
+      </ul>
+    </div>
+  </div>
+
+  {% include "mtp_common/includes/message_box.html" %}
+
+  <form method="get" class="mtp-history-search" action="">
+    {% include 'mtp_common/forms/error-summary.html' with form=form only %}
+
+    <div class="mtp-history-search__inputs">
+      <div class="mtp-history-search__field">
+        {% include 'mtp_common/forms/field.html' with field=form.search only %}
+      </div>
+      <div class="mtp-history-search__dates">
+        <div class="mtp-history-search__date-label">
+          {% trans 'Date' %}
+          <div class="form-hint">{% trans 'for example 28/04/2016' %}</div>
+        </div>
+        <div class="mtp-history-search__date-start">
+          {% include 'mtp_common/forms/field.html' with field=form.start input_classes='js-FormDateControl' value=form.start.value|date:'d/m/Y'|default:form.start.value|default_if_none:'' only %}
+        </div>
+        <div class="mtp-history-search__date-end">
+          {% include 'mtp_common/forms/field.html' with field=form.end input_classes='js-FormDateControl' value=form.end.value|date:'d/m/Y'|default:form.end.value|default_if_none:'' only %}
+        </div>
+      </div>
+    </div>
+
+    {# always forces a search to start on page 1 #}
+    <input type="hidden" name="{{ form.page.html_name }}" value="1">
+
+    <div><input class="button" type="submit" value="{% trans 'Search' %}"></div>
+  </form>
+
+
+  <div class="mtp-batch mtp-batch__history">
+    {% if object_list %}
+
+      <p class="mtp-history__description">{{ form.get_search_description }}</p>
+
+      {% for credit_date, group in object_list|parse_date_fields|regroup_credits %}
+        <h2 class="heading-medium">{{ credit_date|date:'DATE_FORMAT' }}</h2>
+
+        {% for credit_status, credits in group %}
+          <table id="HistoryBatch-{{ forloop.parentloop.counter }}-{{ forloop.counter }}" class="CollapsingTable">
+            <caption class="CollapsingTableHeader {% credit_group_class credit_status %}" data-collapse-text="{% trans 'Collapse' %}" data-expand-text="{% trans 'Expand' %}">
+              {% if credit_status == 'credited' %}
+                {% trans 'Credited' %}
+              {% elif credit_status == 'refunded' %}
+                {% trans 'Refunded' %}
+              {% elif credit_status == 'anonymous' %}
+                {% trans 'Unknown sender (uncredited)' %}
+              {% else %}
+                {% trans 'Uncredited' %}
+              {% endif %}
+              <span class="CollapsingTableHeader-aside CollapsingTableHeader-aside-right">
+                {% trans 'Total' %}: £{{ credits|sum_credits|currency }}
+              </span>
+            </caption>
+            <thead>
+              <tr>
+                <th>{% trans 'Prisoner no' %}</th>
+                <th>{% trans 'Prisoner name' %}</th>
+                <th>
+                  {% trans 'Prisoner name' %}
+                  <span class="font-xsmall">({% trans 'as entered by sender' %})</span>
+                </th>
+                <th>{% trans 'Amount (£)' %}</th>
+                <th>{% trans 'Sender' %}</th>
+                <th>
+                  {% if credit_status == 'credited' %}
+                    {% trans 'Credited by' %}
+                  {% else %}
+                    {% trans 'Started by' %}
+                  {% endif %}
+                </th>
+                <th>{% trans 'Payment method' %}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for credit in credits %}
+                <tr>
+                  <td>{{ credit.prisoner_number|default_if_none:'—' }}</td>
+                  <td>{{ credit.prisoner_name|default_if_none:'—' }}</td>
+                  <td>{{ credit.intended_recipient|default_if_none:'—' }}</td>
+                  <td class="numeric">{{ credit.amount|currency }}</td>
+                  <td>{{ credit.sender_name|default_if_none:'—' }}</td>
+                  <td>{{ credit.owner_name|default_if_none:'—' }}</td>
+                  <td>
+                    {% if credit.source == 'online' %}
+                      {% trans 'Debit card' %}
+                    {% else %}
+                      {% trans 'Bank transfer' %}
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% endfor %}
+      {% endfor %}
+
+      {% page_list page=current_page page_count=page_count query_string=form.query_string %}
+
+      <p><a href="#print-dialog" class="js-Dialog">{% trans 'Print this page of credits' %}</a></p>
+      {% include 'cashbook/includes/print_dialog.html' %}
+
+    {% else %}
+
+      <p><strong>{{ form.get_search_description }}</strong></p>
+
+    {% endif %}
+  </div>
+
+{% endblock %}
