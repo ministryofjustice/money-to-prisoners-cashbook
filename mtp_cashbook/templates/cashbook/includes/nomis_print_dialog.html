@@ -4,10 +4,9 @@
 <div id="print-dialog" class="Dialog" style="display: none">
   <div class="Dialog-inner mtp-change-notification__dialog">
     <h3 class="heading-medium">{% trans "Planning to enter these credits by hand?" %}</h3>
-    <img class="mtp-change-notification__graphic" src="{% static 'images/nomis-change-graphic.png' %}"/>
-    <img class="mtp-change-notification__graphic2x" src="{% static 'images/nomis-change-graphic@2x.png' %}"/>
+    <img class="mtp-change-notification__graphic" src="{% static 'images/nomis-change-graphic.png' %}" srcset="{% static 'images/nomis-change-graphic@2x.png' %} 2x"/>
     <div>
-      {% trans 'You no longer has to enter credits by hand into NOMIS.' %}
+      {% trans 'You no longer have to enter credits by hand into NOMIS.' %}
       {% trans 'Now when you confirm credits here they will be sent to NOMIS digitally.' %}
     </div>
 

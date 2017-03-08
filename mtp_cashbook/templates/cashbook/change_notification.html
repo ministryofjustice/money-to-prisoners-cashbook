@@ -12,11 +12,10 @@
     <h1 class="heading-large">{% trans 'Digital cashbook is now connected to NOMIS' %}</h1>
   </header>
 
-  <div class="mtp-change-notification__content">
-    <img class="mtp-change-notification__graphic" src="{% static 'images/nomis-change-graphic.png' %}"/>
-    <img class="mtp-change-notification__graphic2x" src="{% static 'images/nomis-change-graphic@2x.png' %}"/>
+  <div class="mtp-change-notification__page">
+    <img class="mtp-change-notification__graphic" src="{% static 'images/nomis-change-graphic.png' %}" srcset="{% static 'images/nomis-change-graphic@2x.png' %} 2x"/>
     <div>
-      {% trans 'You no longer has to enter credits by hand into NOMIS.' %}
+      {% trans 'You no longer have to enter credits by hand into NOMIS.' %}
       {% trans 'Now when you confirm credits here they will be sent to NOMIS digitally.' %}
     </div>
     <a class="button" href="{% url 'new-credits' %}">I understand</a>

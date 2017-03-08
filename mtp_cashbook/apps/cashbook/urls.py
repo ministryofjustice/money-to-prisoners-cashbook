@@ -1,19 +1,31 @@
 from django.conf.urls import url
+from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import redirect
-from django.views.generic import TemplateView
 
-from . import nomis_integration_available
+from .utils import nomis_integration_available
 from .views import (
     CreditBatchListView, CreditsLockedView, CreditHistoryView, DashboardView,
-    inactive_password_change_view, NewCreditsView, AllCreditsView
+    inactive_password_change_view, NewCreditsView, AllCreditsView, ChangeNotificationView
 )
 from .views_training import ServiceOverview, Training
 
 
+@login_required
 def dashboard_view(request):
     if nomis_integration_available(request):
-        return redirect(reverse_lazy('change-notification'))
+        cookie_content = request.COOKIES.get('change-notification-read')
+        if cookie_content:
+            users_notified = cookie_content.split(',')
+            if request.user.username in users_notified:
+                return redirect(reverse_lazy('new-credits'))
+        response = redirect(reverse_lazy('change-notification'))
+        response.set_cookie(
+            'change-notification-read',
+            ','.join([cookie_content, request.user.username])
+            if cookie_content else request.user.username
+        )
+        return response
     return DashboardView.as_view()(request)
 
 
@@ -39,11 +51,7 @@ urlpatterns = [
 
     url(r'^inactive_password_change/$', inactive_password_change_view, name='inactive_password_change'),
 
-    url(
-        r'^change-notification/$',
-        TemplateView.as_view(template_name='cashbook/change_notification.html'),
-        name='change-notification'
-    ),
+    url(r'^change-notification/$', ChangeNotificationView.as_view(), name='change-notification'),
     url(r'^new/$', NewCreditsView.as_view(), name='new-credits'),
     url(r'^all/$', AllCreditsView.as_view(), name='all-credits'),
 ]

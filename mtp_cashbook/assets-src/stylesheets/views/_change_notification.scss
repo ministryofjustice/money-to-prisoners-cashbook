@@ -4,7 +4,7 @@
   }
 }
 
-.mtp-change-notification__content {
+.mtp-change-notification__page {
   text-align: center;
 
   div {
@@ -13,22 +13,6 @@
     margin: 0 auto;
     padding-top: 2em;
     padding-bottom: 2em;
-  }
-}
-
-.mtp-change-notification__graphic {
-  display: inline;
-
-  @include device-pixel-ratio {
-    display: none;
-  }
-}
-
-.mtp-change-notification__graphic2x {
-  display: none;
-
-  @include device-pixel-ratio {
-    display: inline;
   }
 }
 

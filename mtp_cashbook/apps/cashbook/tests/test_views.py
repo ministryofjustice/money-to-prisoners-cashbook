@@ -4,6 +4,7 @@ from unittest import mock
 
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
+from django.test import override_settings
 from django.utils.timezone import now, utc
 from mtp_common.auth.exceptions import Forbidden
 from mtp_common.test_utils import silence_logger
@@ -86,7 +87,7 @@ class DashboardViewTestCase(MTPBaseTestCase):
                     'id': 1,
                     'owner': 1,
                     'owner_name': 'Fred',
-                    'prison': 2,
+                    'prison': 'BXI',
                     'amount': 1123,
                     'locked_at': '2015-10-10T12:00:00Z',
                 }]}
@@ -189,7 +190,7 @@ class LockedViewTestCase(MTPBaseTestCase):
                     'id': 1,
                     'owner': 1,
                     'owner_name': 'Fred',
-                    'prison': 2,
+                    'prison': 'BXI',
                     'amount': 1123,
                     'locked_at': '2015-10-10T12:00:00Z',
                 }]
@@ -200,7 +201,7 @@ class LockedViewTestCase(MTPBaseTestCase):
                     'id': 2,
                     'owner': 2,
                     'owner_name': 'Mary',
-                    'prison': 2,
+                    'prison': 'BXI',
                     'amount': 1000,
                     'locked_at': '2015-10-10T13:00:00Z',
                 }]
@@ -211,7 +212,7 @@ class LockedViewTestCase(MTPBaseTestCase):
                     'id': 3,
                     'owner': 1,
                     'owner_name': 'Fred',
-                    'prison': 2,
+                    'prison': 'BXI',
                     'amount': 5000,
                     'locked_at': '2015-10-10T14:00:00Z',
                 }]
@@ -221,7 +222,7 @@ class LockedViewTestCase(MTPBaseTestCase):
             ('1 3', {
                 'owner': 1,
                 'owner_name': 'Fred',
-                'owner_prison': 2,
+                'owner_prison': 'BXI',
                 'locked_count': 2,
                 'locked_amount': 6123,
                 'locked_at_earliest': utc.localize(datetime.datetime(2015, 10, 10, 12)),
@@ -229,7 +230,7 @@ class LockedViewTestCase(MTPBaseTestCase):
             ('2', {
                 'owner': 2,
                 'owner_name': 'Mary',
-                'owner_prison': 2,
+                'owner_prison': 'BXI',
                 'locked_count': 1,
                 'locked_amount': 1000,
                 'locked_at_earliest': utc.localize(datetime.datetime(2015, 10, 10, 13)),
@@ -370,7 +371,7 @@ class HistoryViewTestCase(MTPBaseTestCase):
                     'amount': 5200,
                     'formatted_amount': '£52.00',
                     'sender_name': 'Fred Smith',
-                    'prison': 14,
+                    'prison': 'BXI',
                     'owner': login_data['user_pk'],
                     'owner_name': '%s %s' % (
                         login_data['user_data']['first_name'],
@@ -388,7 +389,7 @@ class HistoryViewTestCase(MTPBaseTestCase):
                     'amount': 2650,
                     'formatted_amount': '£26.50',
                     'sender_name': 'Mary Smith',
-                    'prison': 14,
+                    'prison': 'BXI',
                     'owner': login_data['user_pk'],
                     'owner_name': '%s %s' % (
                         login_data['user_data']['first_name'],
@@ -432,7 +433,7 @@ class HistoryViewTestCase(MTPBaseTestCase):
                     'amount': 5200,
                     'formatted_amount': '£52.00',
                     'sender_name': 'Fred Smith',
-                    'prison': 14,
+                    'prison': 'BXI',
                     'owner': login_data['user_pk'],
                     'owner_name': '%s %s' % (
                         login_data['user_data']['first_name'],
@@ -477,7 +478,7 @@ class HistoryViewTestCase(MTPBaseTestCase):
                     'amount': 5200,
                     'formatted_amount': '£52.00',
                     'sender_name': 'Fred Smith',
-                    'prison': 14,
+                    'prison': 'BXI',
                     'owner': login_data['user_pk'],
                     'owner_name': '%s %s' % (
                         login_data['user_data']['first_name'],
@@ -497,3 +498,36 @@ class HistoryViewTestCase(MTPBaseTestCase):
         self.assertEqual(response.context['current_page'], 7)
         self.assertSequenceEqual(response.context['page_range'], [1, 2, 3, None, 5, 6, 7, 8, 9, None, 25, 26, 27])
         self.assertContains(response, text='…', count=2)
+
+
+nomis_integration_active = override_settings(
+    NOMIS_API_AVAILABLE=True, NOMIS_API_PRISONS=['BXI']
+)
+
+
+class ChangeNotificationTestCase(MTPBaseTestCase):
+
+    @nomis_integration_active
+    @mock.patch('cashbook.forms.get_connection')
+    def __call__(self, result, mocked_get_connection):
+        self.mocked_get_connection = mocked_get_connection
+        super().__call__(result)
+
+    def test_first_visit_with_nomis_available_shows_change_notification(self):
+        self.login()
+        response = self.client.get('/', follow=True)
+        self.assertRedirects(response, reverse('change-notification'))
+
+    def test_second_visit_with_nomis_available_skips_change_notification(self):
+        self.login()
+        response = self.client.get('/', follow=True)
+        self.assertRedirects(response, reverse('change-notification'))
+        self.logout()
+
+        # second visit
+        self.login()
+        self.mocked_get_connection().credits.get.return_value = {
+            'count': 0, 'results': []
+        }
+        response = self.client.get('/', follow=True)
+        self.assertRedirects(response, reverse('new-credits'))

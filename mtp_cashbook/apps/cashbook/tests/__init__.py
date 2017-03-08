@@ -33,6 +33,11 @@ class MTPBaseTestCase(SimpleTestCase):
             'username': credentials['username'],
             'applications': ['cashbook'],
             'permissions': permissions,
+            'prisons': [{
+                'nomis_id': 'BXI',
+                'name': 'HMP Brixton',
+                'pre_approval_required': False
+            }],
         }
 
         return {

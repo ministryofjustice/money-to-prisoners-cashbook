@@ -10,7 +10,7 @@ from django.views.generic import FormView, TemplateView
 from mtp_common.auth import api_client
 from django.shortcuts import render
 
-from . import expected_nomis_availability
+from .utils import expected_nomis_availability
 from .forms import (
     ProcessCreditBatchForm, DiscardLockedCreditsForm, FilterCreditHistoryForm,
     ProcessNewCreditsForm, FilterAllCreditsForm
@@ -254,6 +254,12 @@ class CreditHistoryView(FormView, CashbookSubviewMixin):
 
     def form_valid(self, form):
         return self.render_to_response(self.get_context_data(form=form))
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(expected_nomis_availability(True), name='dispatch')
+class ChangeNotificationView(TemplateView):
+    template_name = 'cashbook/change_notification.html'
 
 
 @method_decorator(login_required, name='dispatch')
