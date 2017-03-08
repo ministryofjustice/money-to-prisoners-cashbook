@@ -12,11 +12,13 @@ def nomis_integration_available(request):
     ))
 
 
-def require_nomis_integration(f):
-    @wraps(f)
-    def inner(request, *args, **kwargs):
-        if not nomis_integration_available(request):
-            return redirect(reverse_lazy('dashboard'))
-        else:
-            return f(request, *args, **kwargs)
-    return inner
+def expected_nomis_availability(expectation):
+    def decorator(f):
+        @wraps(f)
+        def inner(request, *args, **kwargs):
+            if nomis_integration_available(request) != expectation:
+                return redirect(reverse_lazy('dashboard'))
+            else:
+                return f(request, *args, **kwargs)
+        return inner
+    return decorator

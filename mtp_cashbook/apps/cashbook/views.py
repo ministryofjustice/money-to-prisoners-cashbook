@@ -10,7 +10,7 @@ from django.views.generic import FormView, TemplateView
 from mtp_common.auth import api_client
 from django.shortcuts import render
 
-from . import require_nomis_integration
+from . import expected_nomis_availability
 from .forms import (
     ProcessCreditBatchForm, DiscardLockedCreditsForm, FilterCreditHistoryForm,
     ProcessNewCreditsForm, FilterAllCreditsForm
@@ -28,6 +28,7 @@ class DashboardView(TemplateView):
     discard_batch = False
 
     @method_decorator(login_required)
+    @method_decorator(expected_nomis_availability(False))
     def dispatch(self, request, *args, **kwargs):
         self.client = api_client.get_connection(request)
         if self.discard_batch:
@@ -82,6 +83,7 @@ class CashbookSubviewMixin(TemplateView):
 
 
 @method_decorator(login_required, name='dispatch')
+@method_decorator(expected_nomis_availability(False), name='dispatch')
 class CreditBatchListView(FormView, CashbookSubviewMixin):
     title = _('New credits to enter')
     form_class = ProcessCreditBatchForm
@@ -151,6 +153,7 @@ class CreditBatchListView(FormView, CashbookSubviewMixin):
 
 
 @method_decorator(login_required, name='dispatch')
+@method_decorator(expected_nomis_availability(False), name='dispatch')
 class CreditsLockedView(FormView, CashbookSubviewMixin):
     title = _('Currently being entered into NOMIS')
     form_class = DiscardLockedCreditsForm
@@ -203,6 +206,7 @@ class CreditsLockedView(FormView, CashbookSubviewMixin):
 
 
 @method_decorator(login_required, name='dispatch')
+@method_decorator(expected_nomis_availability(False), name='dispatch')
 class CreditHistoryView(FormView, CashbookSubviewMixin):
     title = _('All credits')
     form_class = FilterCreditHistoryForm
@@ -253,7 +257,7 @@ class CreditHistoryView(FormView, CashbookSubviewMixin):
 
 
 @method_decorator(login_required, name='dispatch')
-@method_decorator(require_nomis_integration, name='dispatch')
+@method_decorator(expected_nomis_availability(True), name='dispatch')
 class NewCreditsView(FormView):
     title = _('New credits')
     form_class = ProcessNewCreditsForm
@@ -313,7 +317,7 @@ class NewCreditsView(FormView):
 
 
 @method_decorator(login_required, name='dispatch')
-@method_decorator(require_nomis_integration, name='dispatch')
+@method_decorator(expected_nomis_availability(True), name='dispatch')
 class AllCreditsView(FormView):
     title = _('All credits')
     form_class = FilterAllCreditsForm
