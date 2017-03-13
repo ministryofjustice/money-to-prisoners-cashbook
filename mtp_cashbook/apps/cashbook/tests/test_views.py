@@ -8,8 +8,9 @@ from django.test import override_settings
 from django.utils.timezone import now, utc
 from mtp_common.auth.exceptions import Forbidden
 from mtp_common.test_utils import silence_logger
+import responses
 
-from cashbook.tests import MTPBaseTestCase
+from cashbook.tests import MTPBaseTestCase, api_url
 
 
 class LocaleTestCase(MTPBaseTestCase):
@@ -507,27 +508,189 @@ nomis_integration_active = override_settings(
 
 class ChangeNotificationTestCase(MTPBaseTestCase):
 
-    @nomis_integration_active
-    @mock.patch('cashbook.forms.get_connection')
-    def __call__(self, result, mocked_get_connection):
-        self.mocked_get_connection = mocked_get_connection
-        super().__call__(result)
+    @property
+    def url(self):
+        return reverse('dashboard')
 
+    @nomis_integration_active
     def test_first_visit_with_nomis_available_shows_change_notification(self):
         self.login()
-        response = self.client.get('/', follow=True)
+        response = self.client.get(self.url, follow=True)
         self.assertRedirects(response, reverse('change-notification'))
 
+    @nomis_integration_active
     def test_second_visit_with_nomis_available_skips_change_notification(self):
         self.login()
-        response = self.client.get('/', follow=True)
+        response = self.client.get(self.url, follow=True)
         self.assertRedirects(response, reverse('change-notification'))
-        self.logout()
 
         # second visit
-        self.login()
-        self.mocked_get_connection().credits.get.return_value = {
-            'count': 0, 'results': []
-        }
-        response = self.client.get('/', follow=True)
-        self.assertRedirects(response, reverse('new-credits'))
+        with responses.RequestsMock() as rsps:
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/'),
+                json={
+                    'count': 0,
+                    'results': []
+                },
+                status=200,
+            )
+            response = self.client.get(self.url, follow=True)
+            self.assertRedirects(response, reverse('new-credits'))
+
+
+class NewCreditsViewTestCase(MTPBaseTestCase):
+
+    @property
+    def url(self):
+        return reverse('new-credits')
+
+    @nomis_integration_active
+    def test_new_credits_display(self):
+        with responses.RequestsMock() as rsps:
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/'),
+                json={
+                    'count': 2,
+                    'results': [
+                        {'id': 1,
+                         'prisoner_name': 'John Smith',
+                         'prisoner_number': 'A1234BC',
+                         'amount': 5200,
+                         'sender_name': 'Fred Smith',
+                         'received_at': '2017-01-25T12:00:00Z'},
+                        {'id': 2,
+                         'prisoner_name': 'John Jones',
+                         'prisoner_number': 'A1234GG',
+                         'amount': 4500,
+                         'sender_name': 'Fred Jones',
+                         'received_at': '2017-01-25T12:00:00Z'},
+                    ]
+                },
+                status=200,
+            )
+            self.login()
+            response = self.client.get(self.url, follow=True)
+            self.assertContains(response, '52.00')
+            self.assertContains(response, '45.00')
+
+    @nomis_integration_active
+    def test_new_credits_submit(self):
+        with responses.RequestsMock() as rsps:
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/'),
+                json={
+                    'count': 2,
+                    'results': [
+                        {'id': 1,
+                         'prisoner_name': 'John Smith',
+                         'prisoner_number': 'A1234BC',
+                         'amount': 5200,
+                         'sender_name': 'Fred Smith',
+                         'received_at': '2017-01-25T12:00:00Z'},
+                        {'id': 2,
+                         'prisoner_name': 'John Jones',
+                         'prisoner_number': 'A1234GG',
+                         'amount': 4500,
+                         'sender_name': 'Fred Jones',
+                         'received_at': '2017-01-25T12:00:00Z'},
+                    ]
+                },
+                status=200,
+            )
+            rsps.add(
+                rsps.POST,
+                api_url('/credits/actions/credit/'),
+                status=203,
+            )
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/'),
+                json={
+                    'count': 0,
+                    'results': []
+                },
+                status=200,
+            )
+
+            self.login()
+            response = self.client.post(
+                self.url,
+                data={'credits': [1, 2]},
+                follow=True
+            )
+            self.assertEqual(response.status_code, 200)
+            self.assertContains(response, '2 new credits')
+
+
+class AllCreditsViewTestCase(MTPBaseTestCase):
+
+    @property
+    def url(self):
+        return reverse('all-credits')
+
+    @nomis_integration_active
+    def test_history_view(self):
+        with responses.RequestsMock() as rsps:
+            self.login()
+            login_data = self._default_login_data
+
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/'),
+                json={
+                    'count': 2,
+                    'results': [
+                        {
+                            'id': 142,
+                            'prisoner_name': 'John Smith',
+                            'prisoner_number': 'A1234BC',
+                            'amount': 5200,
+                            'formatted_amount': '£52.00',
+                            'sender_name': 'Fred Smith',
+                            'prison': 'BXI',
+                            'owner': login_data['user_pk'],
+                            'owner_name': '%s %s' % (
+                                login_data['user_data']['first_name'],
+                                login_data['user_data']['last_name'],
+                            ),
+                            'received_at': '2017-01-25T12:00:00Z',
+                            'resolution': 'credited',
+                            'credited_at': '2017-01-26T12:00:00Z',
+                            'refunded_at': None,
+                        },
+                        {
+                            'id': 183,
+                            'prisoner_name': 'John Smith',
+                            'prisoner_number': 'A1234BC',
+                            'amount': 2650,
+                            'formatted_amount': '£26.50',
+                            'sender_name': 'Mary Smith',
+                            'prison': 'BXI',
+                            'owner': login_data['user_pk'],
+                            'owner_name': '%s %s' % (
+                                login_data['user_data']['first_name'],
+                                login_data['user_data']['last_name'],
+                            ),
+                            'received_at': '2017-01-25T12:00:00Z',
+                            'resolution': 'credited',
+                            'credited_at': '2017-01-26T12:00:00Z',
+                            'refunded_at': None,
+                        },
+                    ]
+                },
+                status=200,
+            )
+
+            response = self.client.get(self.url)
+            self.assertEqual(response.status_code, 200)
+            self.assertSequenceEqual(response.context['page_range'], [1])
+            self.assertEqual(response.context['current_page'], 1)
+            self.assertEqual(response.context['credit_owner_name'], '%s %s' % (
+                login_data['user_data']['first_name'],
+                login_data['user_data']['last_name'],
+            ))
+            self.assertContains(response, text='2 credits received', count=1)
+            self.assertContains(response, text='John Smith', count=2)

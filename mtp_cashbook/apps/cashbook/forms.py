@@ -364,12 +364,9 @@ class ProcessNewCreditsForm(GARequestErrorReportingMixin, forms.Form):
     def save(self):
         to_credit = set(self.cleaned_data['credits'])
         if to_credit:
-            try:
-                self.client.credits.actions.credit.post({
-                    'credit_ids': [int(c_id) for c_id in to_credit]
-                })
-            except Exception as e:
-                print(e.content)
+            self.client.credits.actions.credit.post({
+                'credit_ids': [int(c_id) for c_id in to_credit]
+            })
         return to_credit
 
 
