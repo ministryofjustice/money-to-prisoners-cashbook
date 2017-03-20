@@ -98,7 +98,7 @@
                 <th>{% trans 'Sender' %}</th>
                 <th>
                   {% if credit_status == 'credited' %}
-                    {% trans 'Credited by' %}
+                    {% trans 'Credited status' %}
                   {% else %}
                     {% trans 'Started by' %}
                   {% endif %}
@@ -114,7 +114,16 @@
                   <td>{{ credit.intended_recipient|default_if_none:'—' }}</td>
                   <td class="numeric">{{ credit.amount|currency }}</td>
                   <td>{{ credit.sender_name|default_if_none:'—' }}</td>
-                  <td>{{ credit.owner_name|default_if_none:'—' }}</td>
+                  <td>
+                    {% if credit.resolution == 'credited' %}
+                      {{ credit.credited_at.date }}<br />
+                      {% blocktrans trimmed with name_of_clerk=credit.owner_name|default:'—' %}
+                        by {{ name_of_clerk }}
+                      {% endblocktrans %}
+                    {% else %}
+                      {{ credit.owner_name|default_if_none:'—' }}
+                    {% endif %}
+                  </td>
                   <td>
                     {% if credit.source == 'online' %}
                       {% trans 'Debit card' %}
