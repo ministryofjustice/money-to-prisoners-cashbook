@@ -239,7 +239,10 @@ ZENDESK_CUSTOM_FIELDS = {
 SHOW_LANGUAGE_SWITCH = os.environ.get('SHOW_LANGUAGE_SWITCH', 'False') == 'True'
 
 NOMIS_API_AVAILABLE = os.environ.get('NOMIS_API_AVAILABLE', 'False') == 'True'
-NOMIS_API_PRISONS = []
+NOMIS_API_PRISONS = os.environ.get('NOMIS_API_PRISONS', '').split(',')
+NOMIS_API_BASE_URL = os.environ.get('NOMIS_API_BASE_URL', '')
+NOMIS_API_CLIENT_TOKEN = os.environ.get('NOMIS_API_CLIENT_TOKEN', '')
+NOMIS_API_PRIVATE_KEY = os.environ.get('NOMIS_API_PRIVATE_KEY', '').encode('utf8').decode('unicode_escape')
 
 try:
     from .local import *  # noqa

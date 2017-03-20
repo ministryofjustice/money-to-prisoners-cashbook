@@ -10,7 +10,7 @@ from mtp_common.auth.exceptions import Forbidden
 from mtp_common.test_utils import silence_logger
 import responses
 
-from cashbook.tests import MTPBaseTestCase, api_url
+from cashbook.tests import MTPBaseTestCase, api_url, nomis_url
 
 
 class LocaleTestCase(MTPBaseTestCase):
@@ -501,8 +501,18 @@ class HistoryViewTestCase(MTPBaseTestCase):
         self.assertContains(response, text='…', count=2)
 
 
-nomis_integration_active = override_settings(
-    NOMIS_API_AVAILABLE=True, NOMIS_API_PRISONS=['BXI']
+override_nomis_settings = override_settings(
+    NOMIS_API_AVAILABLE=True,
+    NOMIS_API_PRISONS=['BXI'],
+    NOMIS_API_BASE_URL='https://nomis.local/',
+    NOMIS_API_CLIENT_TOKEN='hello',
+    NOMIS_API_PRIVATE_KEY=(
+        '-----BEGIN EC PRIVATE KEY-----\n'
+        'MHcCAQEEIOhhs3RXk8dU/YQE3j2s6u97mNxAM9s+13S+cF9YVgluoAoGCCqGSM49\n'
+        'AwEHoUQDQgAE6l49nl7NN6k6lJBfGPf4QMeHNuER/o+fLlt8mCR5P7LXBfMG6Uj6\n'
+        'TUeoge9H2N/cCafyhCKdFRdQF9lYB2jB+A==\n'
+        '-----END EC PRIVATE KEY-----\n'
+    ),  # this key is just for tests, doesn't do anything
 )
 
 
@@ -512,13 +522,13 @@ class ChangeNotificationTestCase(MTPBaseTestCase):
     def url(self):
         return reverse('dashboard')
 
-    @nomis_integration_active
+    @override_nomis_settings
     def test_first_visit_with_nomis_available_shows_change_notification(self):
         self.login()
         response = self.client.get(self.url, follow=True)
         self.assertRedirects(response, reverse('change-notification'))
 
-    @nomis_integration_active
+    @override_nomis_settings
     def test_second_visit_with_nomis_available_skips_change_notification(self):
         self.login()
         response = self.client.get(self.url, follow=True)
@@ -541,33 +551,37 @@ class ChangeNotificationTestCase(MTPBaseTestCase):
 
 class NewCreditsViewTestCase(MTPBaseTestCase):
 
+    available_credits = {
+        'count': 2,
+        'results': [
+            {'id': 1,
+             'prisoner_name': 'John Smith',
+             'prisoner_number': 'A1234BC',
+             'prison': 'BXI',
+             'amount': 5200,
+             'sender_name': 'Fred Smith',
+             'received_at': '2017-01-25T12:00:00Z'},
+            {'id': 2,
+             'prisoner_name': 'John Jones',
+             'prisoner_number': 'A1234GG',
+             'prison': 'BXI',
+             'amount': 4500,
+             'sender_name': 'Fred Jones',
+             'received_at': '2017-01-25T12:00:00Z'},
+        ]
+    }
+
     @property
     def url(self):
         return reverse('new-credits')
 
-    @nomis_integration_active
+    @override_nomis_settings
     def test_new_credits_display(self):
         with responses.RequestsMock() as rsps:
             rsps.add(
                 rsps.GET,
                 api_url('/credits/'),
-                json={
-                    'count': 2,
-                    'results': [
-                        {'id': 1,
-                         'prisoner_name': 'John Smith',
-                         'prisoner_number': 'A1234BC',
-                         'amount': 5200,
-                         'sender_name': 'Fred Smith',
-                         'received_at': '2017-01-25T12:00:00Z'},
-                        {'id': 2,
-                         'prisoner_name': 'John Jones',
-                         'prisoner_number': 'A1234GG',
-                         'amount': 4500,
-                         'sender_name': 'Fred Jones',
-                         'received_at': '2017-01-25T12:00:00Z'},
-                    ]
-                },
+                json=self.available_credits,
                 status=200,
             )
             self.login()
@@ -575,35 +589,31 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             self.assertContains(response, '52.00')
             self.assertContains(response, '45.00')
 
-    @nomis_integration_active
+    @override_nomis_settings
     def test_new_credits_submit(self):
         with responses.RequestsMock() as rsps:
             rsps.add(
                 rsps.GET,
                 api_url('/credits/'),
-                json={
-                    'count': 2,
-                    'results': [
-                        {'id': 1,
-                         'prisoner_name': 'John Smith',
-                         'prisoner_number': 'A1234BC',
-                         'amount': 5200,
-                         'sender_name': 'Fred Smith',
-                         'received_at': '2017-01-25T12:00:00Z'},
-                        {'id': 2,
-                         'prisoner_name': 'John Jones',
-                         'prisoner_number': 'A1234GG',
-                         'amount': 4500,
-                         'sender_name': 'Fred Jones',
-                         'received_at': '2017-01-25T12:00:00Z'},
-                    ]
-                },
+                json=self.available_credits,
+                status=200,
+            )
+            rsps.add(
+                rsps.POST,
+                nomis_url('/prison/BXI/offenders/A1234BC/transactions'),
+                json={'id': '6244779-1'},
+                status=200,
+            )
+            rsps.add(
+                rsps.POST,
+                nomis_url('/prison/BXI/offenders/A1234GG/transactions'),
+                json={'id': '6244780-1'},
                 status=200,
             )
             rsps.add(
                 rsps.POST,
                 api_url('/credits/actions/credit/'),
-                status=203,
+                status=204,
             )
             rsps.add(
                 rsps.GET,
@@ -624,6 +634,94 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             self.assertEqual(response.status_code, 200)
             self.assertContains(response, '2 new credits')
 
+    @override_nomis_settings
+    def test_new_credits_submit_with_conflict(self):
+        with responses.RequestsMock() as rsps:
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/'),
+                json=self.available_credits,
+                status=200,
+            )
+            rsps.add(
+                rsps.POST,
+                nomis_url('/prison/BXI/offenders/A1234BC/transactions'),
+                status=409,
+            )
+            rsps.add(
+                rsps.POST,
+                nomis_url('/prison/BXI/offenders/A1234GG/transactions'),
+                json={'id': '6244780-1'},
+                status=200,
+            )
+            rsps.add(
+                rsps.POST,
+                api_url('/credits/actions/credit/'),
+                status=204,
+            )
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/'),
+                json={
+                    'count': 0,
+                    'results': []
+                },
+                status=200,
+            )
+
+            self.login()
+            response = self.client.post(
+                self.url,
+                data={'credits': [1, 2]},
+                follow=True
+            )
+            self.assertEqual(response.status_code, 200)
+            self.assertContains(response, '2 new credits')
+
+    @override_nomis_settings
+    def test_new_credits_submit_with_uncreditable(self):
+        with responses.RequestsMock() as rsps:
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/'),
+                json=self.available_credits,
+                status=200,
+            )
+            rsps.add(
+                rsps.POST,
+                nomis_url('/prison/BXI/offenders/A1234BC/transactions'),
+                status=400,
+            )
+            rsps.add(
+                rsps.POST,
+                nomis_url('/prison/BXI/offenders/A1234GG/transactions'),
+                json={'id': '6244780-1'},
+                status=200,
+            )
+            rsps.add(
+                rsps.POST,
+                api_url('/credits/actions/credit/'),
+                status=204,
+            )
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/'),
+                json={
+                    'count': 0,
+                    'results': []
+                },
+                status=200,
+            )
+
+            self.login()
+            response = self.client.post(
+                self.url,
+                data={'credits': [1, 2]},
+                follow=True
+            )
+            self.assertEqual(response.status_code, 200)
+            self.assertContains(response, '1 new credit')
+
 
 class AllCreditsViewTestCase(MTPBaseTestCase):
 
@@ -631,7 +729,7 @@ class AllCreditsViewTestCase(MTPBaseTestCase):
     def url(self):
         return reverse('all-credits')
 
-    @nomis_integration_active
+    @override_nomis_settings
     def test_history_view(self):
         with responses.RequestsMock() as rsps:
             self.login()

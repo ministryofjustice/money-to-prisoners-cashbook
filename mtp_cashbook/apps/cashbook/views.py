@@ -293,7 +293,7 @@ class NewCreditsView(FormView):
         return context
 
     def form_valid(self, form):
-        credited = form.save()
+        credited, failed, uncreditable, unavailable = form.save()
         credited_count = len(credited)
 
         if credited_count:

@@ -2,6 +2,7 @@ import collections
 from datetime import timedelta
 from functools import reduce
 from itertools import groupby
+import logging
 from math import ceil
 from urllib.parse import urlencode
 
@@ -13,11 +14,15 @@ from django.utils.dateformat import format as format_date
 from django.utils.text import capfirst
 from django.utils.translation import gettext, gettext_lazy, ngettext
 from form_error_reporting import GARequestErrorReportingMixin
+from mtp_common import nomis
 from mtp_common.api import retrieve_all_pages
 from mtp_common.auth.api_client import get_connection
+from requests.exceptions import HTTPError
 
 from .form_fields import MtpTextInput, MtpDateInput
 from .templatetags.credits import parse_date_fields
+
+logger = logging.getLogger('mtp')
 
 
 class ProcessCreditBatchForm(GARequestErrorReportingMixin, forms.Form):
@@ -362,12 +367,45 @@ class ProcessNewCreditsForm(GARequestErrorReportingMixin, forms.Form):
         ]
 
     def save(self):
-        to_credit = set(self.cleaned_data['credits'])
-        if to_credit:
-            self.client.credits.actions.credit.post({
-                'credit_ids': [int(c_id) for c_id in to_credit]
-            })
-        return to_credit
+        credit_ids = [int(c_id) for c_id in set(self.cleaned_data['credits'])]
+        credits = dict(self.credit_choices)
+
+        credited = []
+        failed = []
+        uncreditable = []
+        unavailable = []
+
+        for credit_id in credit_ids:
+            if credit_id in credits:
+                credit = credits[credit_id]
+                try:
+                    nomis.credit_prisoner(
+                        credit['prison'],
+                        credit['prisoner_number'],
+                        credit['amount'],
+                        str(credit_id),
+                        'Sent by {sender}'.format(sender=credit['sender_name']),
+                        retries=1
+                    )
+                    credited.append(credit_id)
+                except HTTPError as e:
+                    if e.response.status_code == 409:
+                        credited.append(credit_id)
+                        logger.warn('Credit %s was already present in NOMIS' % credit_id)
+                    elif e.response.status_code >= 500:
+                        failed.append(credit_id)
+                        logger.error('Credit %s could not credited as NOMIS is unavailable' % credit_id)
+                    else:
+                        uncreditable.append(credit_id)
+                        logger.error('Credit %s cannot be automatically credited to NOMIS' % credit_id)
+            else:
+                unavailable.append(credit_id)
+                logger.warn('Credit %s is no longer available' % credit_id)
+
+        self.client.credits.actions.credit.post({
+            'credit_ids': [int(c_id) for c_id in credited]
+        })
+        return (credited, failed, uncreditable, unavailable)
 
 
 class FilterAllCreditsForm(GARequestErrorReportingMixin, forms.Form):
