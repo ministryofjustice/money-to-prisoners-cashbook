@@ -10,8 +10,11 @@ from django.views.generic import FormView, TemplateView
 from mtp_common.auth import api_client
 from django.shortcuts import render
 
-from .forms import ProcessCreditBatchForm, DiscardLockedCreditsForm, \
-    FilterCreditHistoryForm
+from .utils import expected_nomis_availability
+from .forms import (
+    ProcessCreditBatchForm, DiscardLockedCreditsForm, FilterCreditHistoryForm,
+    ProcessNewCreditsForm, FilterAllCreditsForm
+)
 
 logger = logging.getLogger('mtp')
 
@@ -25,6 +28,7 @@ class DashboardView(TemplateView):
     discard_batch = False
 
     @method_decorator(login_required)
+    @method_decorator(expected_nomis_availability(False))
     def dispatch(self, request, *args, **kwargs):
         self.client = api_client.get_connection(request)
         if self.discard_batch:
@@ -79,6 +83,7 @@ class CashbookSubviewMixin(TemplateView):
 
 
 @method_decorator(login_required, name='dispatch')
+@method_decorator(expected_nomis_availability(False), name='dispatch')
 class CreditBatchListView(FormView, CashbookSubviewMixin):
     title = _('New credits to enter')
     form_class = ProcessCreditBatchForm
@@ -148,6 +153,7 @@ class CreditBatchListView(FormView, CashbookSubviewMixin):
 
 
 @method_decorator(login_required, name='dispatch')
+@method_decorator(expected_nomis_availability(False), name='dispatch')
 class CreditsLockedView(FormView, CashbookSubviewMixin):
     title = _('Currently being entered into NOMIS')
     form_class = DiscardLockedCreditsForm
@@ -200,12 +206,129 @@ class CreditsLockedView(FormView, CashbookSubviewMixin):
 
 
 @method_decorator(login_required, name='dispatch')
+@method_decorator(expected_nomis_availability(False), name='dispatch')
 class CreditHistoryView(FormView, CashbookSubviewMixin):
     title = _('All credits')
     form_class = FilterCreditHistoryForm
     template_name = 'cashbook/credits_history.html'
     success_url = reverse_lazy('credit-history')
     http_method_names = ['get', 'options']
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial.update({
+            'page': 1,
+        })
+        return initial
+
+    def get_form_kwargs(self):
+        return {
+            'request': self.request,
+            'data': self.request.GET or {},
+            'initial': self.get_initial(),
+            'prefix': self.get_prefix(),
+        }
+
+    def get(self, request, *args, **kwargs):
+        form = self.get_form()
+        if form.is_bound:
+            if form.is_valid():
+                return self.form_valid(form)
+            else:
+                return self.form_invalid(form)
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        form = context['form']
+        object_list = form.credit_choices
+        current_page = form.pagination['page']
+        page_count = form.pagination['page_count']
+        context.update({
+            'object_list': object_list,
+            'current_page': current_page,
+            'page_count': page_count,
+            'credit_owner_name': self.request.user.get_full_name(),
+        })
+        return context
+
+    def form_valid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(expected_nomis_availability(True), name='dispatch')
+class ChangeNotificationView(TemplateView):
+    template_name = 'cashbook/change_notification.html'
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(expected_nomis_availability(True), name='dispatch')
+class NewCreditsView(FormView):
+    title = _('New credits')
+    form_class = ProcessNewCreditsForm
+    template_name = 'cashbook/new_credits.html'
+    success_url = reverse_lazy('new-credits')
+
+    def get_form_kwargs(self):
+        form_kwargs = super().get_form_kwargs()
+        form_kwargs['request'] = self.request
+        if 'ordering' in self.request.GET:
+            form_kwargs['ordering'] = self.request.GET['ordering']
+        return form_kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        credit_choices = context['form'].credit_choices
+        context['object_list'] = credit_choices
+        context['total'] = sum([x[1]['amount'] for x in credit_choices])
+        context['new_credits'] = len(credit_choices)
+
+        context['pre_approval_required'] = any((
+            prison['pre_approval_required']
+            for prison in self.request.user.user_data.get('prisons', [])
+        ))
+
+        return context
+
+    def form_valid(self, form):
+        credited, failed, uncreditable, unavailable = form.save()
+        credited_count = len(credited)
+
+        if credited_count:
+            messages.success(
+                self.request,
+                ngettext(
+                    'You credited 1 new credit to NOMIS.',
+                    'You credited %(credited)s new credits to NOMIS.',
+                    credited_count
+                ) % {
+                    'credited': credited_count
+                }
+            )
+
+            username = self.request.user.user_data.get('username', 'Unknown')
+            logger.info('User "%(username)s" added %(credited)d credits(s) to NOMIS' % {
+                'username': username,
+                'credited': credited_count,
+            }, extra={
+                'elk_fields': {
+                    '@fields.credited_count': credited_count,
+                    '@fields.username': username,
+                }
+            })
+
+        return super().form_valid(form)
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(expected_nomis_availability(True), name='dispatch')
+class AllCreditsView(FormView):
+    title = _('All credits')
+    form_class = FilterAllCreditsForm
+    template_name = 'cashbook/all_credits.html'
+    success_url = reverse_lazy('all-credits')
 
     def get_initial(self):
         initial = super().get_initial()

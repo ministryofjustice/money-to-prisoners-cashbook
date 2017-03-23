@@ -4,11 +4,13 @@ from unittest import mock
 
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
+from django.test import override_settings
 from django.utils.timezone import now, utc
 from mtp_common.auth.exceptions import Forbidden
 from mtp_common.test_utils import silence_logger
+import responses
 
-from cashbook.tests import MTPBaseTestCase
+from cashbook.tests import MTPBaseTestCase, api_url, nomis_url
 
 
 class LocaleTestCase(MTPBaseTestCase):
@@ -86,7 +88,7 @@ class DashboardViewTestCase(MTPBaseTestCase):
                     'id': 1,
                     'owner': 1,
                     'owner_name': 'Fred',
-                    'prison': 2,
+                    'prison': 'BXI',
                     'amount': 1123,
                     'locked_at': '2015-10-10T12:00:00Z',
                 }]}
@@ -189,7 +191,7 @@ class LockedViewTestCase(MTPBaseTestCase):
                     'id': 1,
                     'owner': 1,
                     'owner_name': 'Fred',
-                    'prison': 2,
+                    'prison': 'BXI',
                     'amount': 1123,
                     'locked_at': '2015-10-10T12:00:00Z',
                 }]
@@ -200,7 +202,7 @@ class LockedViewTestCase(MTPBaseTestCase):
                     'id': 2,
                     'owner': 2,
                     'owner_name': 'Mary',
-                    'prison': 2,
+                    'prison': 'BXI',
                     'amount': 1000,
                     'locked_at': '2015-10-10T13:00:00Z',
                 }]
@@ -211,7 +213,7 @@ class LockedViewTestCase(MTPBaseTestCase):
                     'id': 3,
                     'owner': 1,
                     'owner_name': 'Fred',
-                    'prison': 2,
+                    'prison': 'BXI',
                     'amount': 5000,
                     'locked_at': '2015-10-10T14:00:00Z',
                 }]
@@ -221,7 +223,7 @@ class LockedViewTestCase(MTPBaseTestCase):
             ('1 3', {
                 'owner': 1,
                 'owner_name': 'Fred',
-                'owner_prison': 2,
+                'owner_prison': 'BXI',
                 'locked_count': 2,
                 'locked_amount': 6123,
                 'locked_at_earliest': utc.localize(datetime.datetime(2015, 10, 10, 12)),
@@ -229,7 +231,7 @@ class LockedViewTestCase(MTPBaseTestCase):
             ('2', {
                 'owner': 2,
                 'owner_name': 'Mary',
-                'owner_prison': 2,
+                'owner_prison': 'BXI',
                 'locked_count': 1,
                 'locked_amount': 1000,
                 'locked_at_earliest': utc.localize(datetime.datetime(2015, 10, 10, 13)),
@@ -370,7 +372,7 @@ class HistoryViewTestCase(MTPBaseTestCase):
                     'amount': 5200,
                     'formatted_amount': '£52.00',
                     'sender_name': 'Fred Smith',
-                    'prison': 14,
+                    'prison': 'BXI',
                     'owner': login_data['user_pk'],
                     'owner_name': '%s %s' % (
                         login_data['user_data']['first_name'],
@@ -388,7 +390,7 @@ class HistoryViewTestCase(MTPBaseTestCase):
                     'amount': 2650,
                     'formatted_amount': '£26.50',
                     'sender_name': 'Mary Smith',
-                    'prison': 14,
+                    'prison': 'BXI',
                     'owner': login_data['user_pk'],
                     'owner_name': '%s %s' % (
                         login_data['user_data']['first_name'],
@@ -432,7 +434,7 @@ class HistoryViewTestCase(MTPBaseTestCase):
                     'amount': 5200,
                     'formatted_amount': '£52.00',
                     'sender_name': 'Fred Smith',
-                    'prison': 14,
+                    'prison': 'BXI',
                     'owner': login_data['user_pk'],
                     'owner_name': '%s %s' % (
                         login_data['user_data']['first_name'],
@@ -477,7 +479,7 @@ class HistoryViewTestCase(MTPBaseTestCase):
                     'amount': 5200,
                     'formatted_amount': '£52.00',
                     'sender_name': 'Fred Smith',
-                    'prison': 14,
+                    'prison': 'BXI',
                     'owner': login_data['user_pk'],
                     'owner_name': '%s %s' % (
                         login_data['user_data']['first_name'],
@@ -497,3 +499,296 @@ class HistoryViewTestCase(MTPBaseTestCase):
         self.assertEqual(response.context['current_page'], 7)
         self.assertSequenceEqual(response.context['page_range'], [1, 2, 3, None, 5, 6, 7, 8, 9, None, 25, 26, 27])
         self.assertContains(response, text='…', count=2)
+
+
+override_nomis_settings = override_settings(
+    NOMIS_API_AVAILABLE=True,
+    NOMIS_API_PRISONS=['BXI'],
+    NOMIS_API_BASE_URL='https://nomis.local/',
+    NOMIS_API_CLIENT_TOKEN='hello',
+    NOMIS_API_PRIVATE_KEY=(
+        '-----BEGIN EC PRIVATE KEY-----\n'
+        'MHcCAQEEIOhhs3RXk8dU/YQE3j2s6u97mNxAM9s+13S+cF9YVgluoAoGCCqGSM49\n'
+        'AwEHoUQDQgAE6l49nl7NN6k6lJBfGPf4QMeHNuER/o+fLlt8mCR5P7LXBfMG6Uj6\n'
+        'TUeoge9H2N/cCafyhCKdFRdQF9lYB2jB+A==\n'
+        '-----END EC PRIVATE KEY-----\n'
+    ),  # this key is just for tests, doesn't do anything
+)
+
+
+class ChangeNotificationTestCase(MTPBaseTestCase):
+
+    @property
+    def url(self):
+        return reverse('dashboard')
+
+    @override_nomis_settings
+    def test_first_visit_with_nomis_available_shows_change_notification(self):
+        self.login()
+        response = self.client.get(self.url, follow=True)
+        self.assertRedirects(response, reverse('change-notification'))
+
+    @override_nomis_settings
+    def test_second_visit_with_nomis_available_skips_change_notification(self):
+        self.login()
+        response = self.client.get(self.url, follow=True)
+        self.assertRedirects(response, reverse('change-notification'))
+
+        # second visit
+        with responses.RequestsMock() as rsps:
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/'),
+                json={
+                    'count': 0,
+                    'results': []
+                },
+                status=200,
+            )
+            response = self.client.get(self.url, follow=True)
+            self.assertRedirects(response, reverse('new-credits'))
+
+
+class NewCreditsViewTestCase(MTPBaseTestCase):
+
+    available_credits = {
+        'count': 2,
+        'results': [
+            {'id': 1,
+             'prisoner_name': 'John Smith',
+             'prisoner_number': 'A1234BC',
+             'prison': 'BXI',
+             'amount': 5200,
+             'sender_name': 'Fred Smith',
+             'received_at': '2017-01-25T12:00:00Z'},
+            {'id': 2,
+             'prisoner_name': 'John Jones',
+             'prisoner_number': 'A1234GG',
+             'prison': 'BXI',
+             'amount': 4500,
+             'sender_name': 'Fred Jones',
+             'received_at': '2017-01-25T12:00:00Z'},
+        ]
+    }
+
+    @property
+    def url(self):
+        return reverse('new-credits')
+
+    @override_nomis_settings
+    def test_new_credits_display(self):
+        with responses.RequestsMock() as rsps:
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/'),
+                json=self.available_credits,
+                status=200,
+            )
+            self.login()
+            response = self.client.get(self.url, follow=True)
+            self.assertContains(response, '52.00')
+            self.assertContains(response, '45.00')
+
+    @override_nomis_settings
+    def test_new_credits_submit(self):
+        with responses.RequestsMock() as rsps:
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/'),
+                json=self.available_credits,
+                status=200,
+            )
+            rsps.add(
+                rsps.POST,
+                nomis_url('/prison/BXI/offenders/A1234BC/transactions'),
+                json={'id': '6244779-1'},
+                status=200,
+            )
+            rsps.add(
+                rsps.POST,
+                nomis_url('/prison/BXI/offenders/A1234GG/transactions'),
+                json={'id': '6244780-1'},
+                status=200,
+            )
+            rsps.add(
+                rsps.POST,
+                api_url('/credits/actions/credit/'),
+                status=204,
+            )
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/'),
+                json={
+                    'count': 0,
+                    'results': []
+                },
+                status=200,
+            )
+
+            self.login()
+            response = self.client.post(
+                self.url,
+                data={'credits': [1, 2]},
+                follow=True
+            )
+            self.assertEqual(response.status_code, 200)
+            self.assertContains(response, '2 new credits')
+
+    @override_nomis_settings
+    def test_new_credits_submit_with_conflict(self):
+        with responses.RequestsMock() as rsps:
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/'),
+                json=self.available_credits,
+                status=200,
+            )
+            rsps.add(
+                rsps.POST,
+                nomis_url('/prison/BXI/offenders/A1234BC/transactions'),
+                status=409,
+            )
+            rsps.add(
+                rsps.POST,
+                nomis_url('/prison/BXI/offenders/A1234GG/transactions'),
+                json={'id': '6244780-1'},
+                status=200,
+            )
+            rsps.add(
+                rsps.POST,
+                api_url('/credits/actions/credit/'),
+                status=204,
+            )
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/'),
+                json={
+                    'count': 0,
+                    'results': []
+                },
+                status=200,
+            )
+
+            self.login()
+            response = self.client.post(
+                self.url,
+                data={'credits': [1, 2]},
+                follow=True
+            )
+            self.assertEqual(response.status_code, 200)
+            self.assertContains(response, '2 new credits')
+
+    @override_nomis_settings
+    def test_new_credits_submit_with_uncreditable(self):
+        with responses.RequestsMock() as rsps:
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/'),
+                json=self.available_credits,
+                status=200,
+            )
+            rsps.add(
+                rsps.POST,
+                nomis_url('/prison/BXI/offenders/A1234BC/transactions'),
+                status=400,
+            )
+            rsps.add(
+                rsps.POST,
+                nomis_url('/prison/BXI/offenders/A1234GG/transactions'),
+                json={'id': '6244780-1'},
+                status=200,
+            )
+            rsps.add(
+                rsps.POST,
+                api_url('/credits/actions/credit/'),
+                status=204,
+            )
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/'),
+                json={
+                    'count': 0,
+                    'results': []
+                },
+                status=200,
+            )
+
+            self.login()
+            response = self.client.post(
+                self.url,
+                data={'credits': [1, 2]},
+                follow=True
+            )
+            self.assertEqual(response.status_code, 200)
+            self.assertContains(response, '1 new credit')
+
+
+class AllCreditsViewTestCase(MTPBaseTestCase):
+
+    @property
+    def url(self):
+        return reverse('all-credits')
+
+    @override_nomis_settings
+    def test_history_view(self):
+        with responses.RequestsMock() as rsps:
+            self.login()
+            login_data = self._default_login_data
+
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/'),
+                json={
+                    'count': 2,
+                    'results': [
+                        {
+                            'id': 142,
+                            'prisoner_name': 'John Smith',
+                            'prisoner_number': 'A1234BC',
+                            'amount': 5200,
+                            'formatted_amount': '£52.00',
+                            'sender_name': 'Fred Smith',
+                            'prison': 'BXI',
+                            'owner': login_data['user_pk'],
+                            'owner_name': '%s %s' % (
+                                login_data['user_data']['first_name'],
+                                login_data['user_data']['last_name'],
+                            ),
+                            'received_at': '2017-01-25T12:00:00Z',
+                            'resolution': 'credited',
+                            'credited_at': '2017-01-26T12:00:00Z',
+                            'refunded_at': None,
+                        },
+                        {
+                            'id': 183,
+                            'prisoner_name': 'John Smith',
+                            'prisoner_number': 'A1234BC',
+                            'amount': 2650,
+                            'formatted_amount': '£26.50',
+                            'sender_name': 'Mary Smith',
+                            'prison': 'BXI',
+                            'owner': login_data['user_pk'],
+                            'owner_name': '%s %s' % (
+                                login_data['user_data']['first_name'],
+                                login_data['user_data']['last_name'],
+                            ),
+                            'received_at': '2017-01-25T12:00:00Z',
+                            'resolution': 'credited',
+                            'credited_at': '2017-01-26T12:00:00Z',
+                            'refunded_at': None,
+                        },
+                    ]
+                },
+                status=200,
+            )
+
+            response = self.client.get(self.url)
+            self.assertEqual(response.status_code, 200)
+            self.assertSequenceEqual(response.context['page_range'], [1])
+            self.assertEqual(response.context['current_page'], 1)
+            self.assertEqual(response.context['credit_owner_name'], '%s %s' % (
+                login_data['user_data']['first_name'],
+                login_data['user_data']['last_name'],
+            ))
+            self.assertContains(response, text='2 credits received', count=1)
+            self.assertContains(response, text='John Smith', count=2)

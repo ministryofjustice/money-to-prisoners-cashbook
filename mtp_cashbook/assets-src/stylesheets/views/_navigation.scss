@@ -1,0 +1,18 @@
+.mtp-cashbook-navigation {
+  padding-top: 0.75em;
+  padding-bottom: 0.75em;
+  border-bottom: 2px solid #bfc1c3;
+
+  ol {
+    @extend %contain-floats;
+  }
+
+  li {
+    float: left;
+
+    list-style: none;
+
+    margin-left: 0.6em;
+    padding-left: 0.9em;
+  }
+}

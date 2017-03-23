@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block inner_content %}
+<div class="mtp-cashbook-navigation">
+	<ol>
+    {% trans 'New credits' as new_link %}
+    <li>{% include 'cashbook/includes/context_sensitive_link.html' with view_name='new-credits' link_text=new_link %}</li>
+    {% trans 'All credits' as history_link %}
+    <li>{% include 'cashbook/includes/context_sensitive_link.html' with view_name='all-credits' link_text=history_link %}</li>
+	</ol>
+</div>
+{% block page_content %}{% endblock %}
+{% endblock %}

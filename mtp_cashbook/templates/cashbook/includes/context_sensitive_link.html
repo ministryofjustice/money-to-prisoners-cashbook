@@ -1,0 +1,6 @@
+{% url view_name as view_url %}
+{% if request.path == view_url %}
+{{ link_text }}
+{% else %}
+<a href="{{ view_url }}">{{ link_text }}</a>
+{% endif %}

@@ -1,0 +1,203 @@
+{% extends 'cashbook/credits_base.html' %}
+{% load i18n %}
+{% load currency %}
+{% load mtp_common %}
+{% load credits %}
+
+{% block page_title %}{% trans 'New credits - Digital cashbook' %}{% endblock %}
+
+{% block body_classes %}mtp-credits{% endblock %}
+
+{% block page_content %}
+
+  <header>
+    {% language_switch %}
+    <h1 class="heading-xlarge">{{ view.title }}</h1>
+  </header>
+
+  {% include "mtp_common/includes/message_box.html" %}
+
+  <form
+    method="post"
+    action=""
+    class="js-BeforeUnload js-BatchValidation"
+    data-credits-name="{{ form.credits.html_name }}">
+    {% csrf_token %}
+
+
+    {% if object_list %}
+      {% include 'mtp_common/forms/error-summary.html' with form=form only %}
+
+      <div class="print-only">
+        <h2 class="heading-small">
+          {% trans "CONFIDENTIAL: dispose of securely" %}
+        </h2>
+        <p>
+          {% blocktrans trimmed with total=total|currency %}
+          1-{{ new_credits }} credits <br />
+          <strong>Total: &pound;{{total}}</strong>
+          {% endblocktrans %}
+        </p>
+      </div>
+
+      <div class="mtp-batch">
+        <div class="mtp-floating-header js-StickyHeader print-hidden">
+          <div class="grid-row">
+            <div class="column-two-thirds">
+              <p class="print-hidden">
+                {% if new_credits == 1 %}
+                  {% trans 'Showing <strong>one</strong> new credit.' %}
+                {% else %}
+                  {% blocktrans trimmed %}
+                  Showing <strong>{{ new_credits }}</strong> new credits.
+                  {% endblocktrans %}
+                {% endif %}
+                <span class="mtp-none-selected">{% trans "You haven't selected any to credit yet." %}</span>
+                <span class="mtp-some-selected">
+                  {% blocktrans trimmed %}
+                  You have selected <strong><span class="js-SelectionCount"></span></strong> to credit.
+                  {% endblocktrans %}
+                </span>
+              </p>
+            </div>
+
+            <div class="column-one-third mtp-submit__button">
+              {% if object_list %}
+                <button type="submit" name="submit" value="submit" class="button">{% trans 'Credit to NOMIS' %}</button>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <h2 class="print-only heading-xlarge">
+          {% trans 'Do NOT enter these credits into NOMIS yourself.' %}
+        </h2>
+
+        <table>
+          <thead>
+            {% include 'cashbook/includes/table_actions.html' with location='header' field_name=form.credits.html_name batch_size=batch_size %}
+
+            <tr>
+              <th class="{{ request|ordering_classes:'received_at' }}">
+                <a href="?{{ request|query_string_with_reversed_ordering:'received_at' }}">
+                  <span>
+                    {% trans 'Date sent' %}
+                    {% describe_ordering_for_screenreader request 'received_at' %}
+                  </span>
+                </a>
+              </th>
+              <th class="{{ request|ordering_classes:'prisoner_number' }}">
+                <a href="?{{ request|query_string_with_reversed_ordering:'prisoner_number' }}">
+                  <span>
+                    {% trans 'Prisoner' %}
+                    {% describe_ordering_for_screenreader request 'prisoner_number' %}
+                  </span>
+                </a>
+              </th>
+              <th class="{{ request|ordering_classes:'amount' }} number">
+                <a href="?{{ request|query_string_with_reversed_ordering:'amount' }}">
+                  <span>
+                    {% trans 'Amount' %}
+                    {% describe_ordering_for_screenreader request 'amount' %}
+                  </span>
+                </a>
+              </th>
+              <th>{% trans 'Sender' %}</th>
+              {% if pre_approval_required %}
+                <th>{% trans 'Security' %}</th>
+              {% endif %}
+              <th class="check"><span id="id_credits-label">{% trans 'Select' %}</span></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for credit_pk, credit in object_list %}
+              <tr>
+                <td>
+                  <div>{{ credit.received_at.date|date:'d/m/Y' }}</div>
+                  {% with days=credit.received_at.date|dayssince %}
+                  <div class="sub {% if days >= 7 %}old{% endif %}">
+                    {% if days == 0 %}
+                      {% trans 'Today' %}
+                    {% else %}
+                      {% blocktrans count days=days %}
+                      {{ days }} day ago
+                      {% plural %}
+                      {{ days }} days ago
+                      {% endblocktrans %}
+                    {% endif %}
+                  </div>
+                  {% endwith %}
+                </td>
+                <td>
+                  <div>{{ credit.prisoner_number }}</div>
+                  <div class="sub">{{ credit.prisoner_name }}</div>
+                </td>
+                <td class="number">&pound;{{ credit.amount|currency }}</td>
+                <td>{{ credit.sender_name }}</td>
+                {% if pre_approval_required %}
+                  <td>
+                    {% if credit.reviewed %}
+                      {% trans 'Checked' %}
+                    {% else %}
+                      {% trans 'Not checked' %}
+                    {% endif %}
+                  </td>
+                {% endif %}
+                <td class="check">
+                  <div class="print-only print-checkbox"></div>
+                  <input
+                    type="checkbox"
+                    name="{{ form.credits.html_name }}"
+                    value="{{ credit_pk }}"
+                    id="check-{{ credit.id }}"
+                    {% if credit_pk|to_string in form.credits.value %}checked{% endif %}
+                    class="js-SelectionCount-item Checkbox"
+                    data-amount="{{ credit.amount|currency }}">
+                  <label for="check-{{ credit.id }}">{% trans 'Credited' %}</label>
+                </td>
+              </tr>
+              {% if credit.comments %}
+                <tr>
+                  <td class="mtp-security" colspan=6>
+                    {% for comment in credit.comments %}
+                      <div class="mtp-security__comment">
+                        {{ comment.comment|linebreaks }}
+                      </div>
+                    {% endfor %}
+                  </td>
+                </tr>
+              {% endif %}
+            {% endfor %}
+          </tbody>
+
+          <tfoot>
+            {% include 'cashbook/includes/batch_table_actions.html' with location='footer' field_name=form.credits.html_name batch_size=batch_size %}
+          </tfoot>
+        </table>
+
+      </div>
+    {% else %}
+      <p>{% trans "There aren’t any credits available" %}</p>
+    {% endif %}
+
+    <div id="incomplete-batch-dialog"
+         class="Dialog"
+         style="display: none"
+         data-hide-close="true"
+         data-disable-backdrop-close="true">
+      <div class="Dialog-inner">
+        <p><strong>{% trans 'Do you want to submit only the selected credits?' %}</strong></p>
+        <button type="submit"
+                class="button"
+                value="override">{% trans 'Yes' %}</button>
+        <button type="button"
+                class="button button-secondary js-Dialog-close"
+                data-analytics="pageview,/batch/-dialog_close/">{% trans 'No, continue processing' %}</button>
+      </div>
+    </div>
+  </form>
+
+  {% include 'cashbook/includes/nomis_print_dialog.html' %}
+
+{% endblock %}

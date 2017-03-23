@@ -6,6 +6,7 @@ from urllib import parse as urlparse
 from django import template
 from django.utils import timezone
 from django.utils.dateparse import parse_datetime, parse_date
+from django.utils.http import urlencode
 from django.utils.translation import gettext_lazy as _
 
 register = template.Library()
@@ -129,3 +130,35 @@ def truncate_user_list(terms):
         return _('{name1} and {name2}').format(name1=terms[0], name2=terms[1])
     else:
         return _('{name} and {number} others').format(name=terms[0], number=len(terms) - 1)
+
+
+@register.filter
+def ordering_classes(request, ordering):
+    current_ordering = request.GET.get('ordering')
+    if current_ordering == ordering:
+        return 'mtp-results-ordering mtp-results-ordering--asc'
+    if current_ordering == '-%s' % ordering:
+        return 'mtp-results-ordering mtp-results-ordering--desc'
+    return 'mtp-results-ordering'
+
+
+@register.inclusion_tag('cashbook/includes/result-ordering-for-screenreader.html')
+def describe_ordering_for_screenreader(request, ordering):
+    current_ordering = request.GET.get('ordering')
+    if current_ordering == ordering:
+        ordering = 'ascending'
+    elif current_ordering == '-%s' % ordering:
+        ordering = 'descending'
+    else:
+        ordering = None
+    return {'ordering': ordering}
+
+
+@register.filter
+def query_string_with_reversed_ordering(request, ordering):
+    data = request.GET.copy()
+    current_ordering = data.get('ordering')
+    if current_ordering == ordering:
+        ordering = '-%s' % ordering
+    data['ordering'] = ordering
+    return urlencode(data, doseq=True)

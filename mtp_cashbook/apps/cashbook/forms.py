@@ -2,6 +2,8 @@ import collections
 from datetime import timedelta
 from functools import reduce
 from itertools import groupby
+import logging
+from math import ceil
 from urllib.parse import urlencode
 
 from django import forms
@@ -12,11 +14,15 @@ from django.utils.dateformat import format as format_date
 from django.utils.text import capfirst
 from django.utils.translation import gettext, gettext_lazy, ngettext
 from form_error_reporting import GARequestErrorReportingMixin
+from mtp_common import nomis
 from mtp_common.api import retrieve_all_pages
 from mtp_common.auth.api_client import get_connection
+from requests.exceptions import HTTPError
 
 from .form_fields import MtpTextInput, MtpDateInput
 from .templatetags.credits import parse_date_fields
+
+logger = logging.getLogger('mtp')
 
 
 class ProcessCreditBatchForm(GARequestErrorReportingMixin, forms.Form):
@@ -247,6 +253,254 @@ class FilterCreditHistoryForm(GARequestErrorReportingMixin, forms.Form):
             'page_count': response.get('page_count', 0),
         }
         return response.get('results', [])
+
+    def _get_filter_description(self):
+        if self.cleaned_data:
+            search_description = self.cleaned_data.get('search')
+
+            def get_date(date_key):
+                date = self.cleaned_data.get(date_key)
+                if date:
+                    return format_date(date, 'd/m/Y')
+
+            date_range = {
+                'start': get_date('start'),
+                'end': get_date('end'),
+            }
+            if date_range['start'] and date_range['end']:
+                if date_range['start'] == date_range['end']:
+                    date_range_description = gettext('on %(start)s') % date_range
+                else:
+                    date_range_description = gettext('between %(start)s and %(end)s') % date_range
+            elif date_range['start']:
+                date_range_description = gettext('since %(start)s') % date_range
+            elif date_range['end']:
+                date_range_description = gettext('up to %(end)s') % date_range
+            else:
+                date_range_description = None
+        else:
+            search_description = None
+            date_range_description = None
+        return search_description, date_range_description
+
+    def get_search_description(self):
+        if self.pagination['count']:
+            credit_description = ngettext(
+                '%(count)d credit',
+                '%(count)d credits',
+                self.pagination['count'],
+            ) % self.pagination
+        else:
+            credit_description = gettext('no credits')
+
+        search_description, date_range_description = self._get_filter_description()
+        if search_description and date_range_description:
+            description = gettext('%(credits)s received %(date_range)s when searching for “%(search)s”') % {
+                'search': search_description,
+                'date_range': date_range_description,
+                'credits': credit_description,
+            }
+        elif search_description:
+            description = gettext('Searching for “%(search)s” returned %(credits)s') % {
+                'search': search_description,
+                'credits': credit_description,
+            }
+        elif date_range_description:
+            description = gettext('%(credits)s received %(date_range)s') % {
+                'date_range': date_range_description,
+                'credits': credit_description,
+            }
+        else:
+            description = gettext('%(credits)s received') % {
+                'credits': credit_description,
+            }
+        return capfirst(description)
+
+    def get_query_data(self):
+        data = collections.OrderedDict()
+        for field in self:
+            if field.name == 'page':
+                continue
+            value = self.cleaned_data.get(field.name)
+            if value in [None, '', []]:
+                continue
+            data[field.name] = value
+        return data
+
+    @cached_property
+    def query_string(self):
+        return urlencode(self.get_query_data(), doseq=True)
+
+
+class ProcessNewCreditsForm(GARequestErrorReportingMixin, forms.Form):
+    credits = forms.MultipleChoiceField(choices=(), required=False)
+
+    def __init__(self, request, ordering='-received_at', *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.request = request
+        self.user = request.user
+        self.client = get_connection(request)
+        self.ordering = ordering
+
+        self.fields['credits'].choices = self.credit_choices
+
+    def _request_all_credits(self):
+        return retrieve_all_pages(
+            self.client.credits.get, status='available',
+            ordering=self.ordering
+        )
+
+    def clean_credits(self):
+        credits = self.cleaned_data.get('credits', [])
+        if not credits:
+            self.add_error(None, gettext('Only click ‘Done’ when you’ve selected credits'))
+        return credits
+
+    @cached_property
+    def credit_choices(self):
+        """
+        Gets the credits currently available the user.
+        """
+        credits = self._request_all_credits()
+        return [
+            (t['id'], t) for t in parse_date_fields(credits)
+        ]
+
+    def save(self):
+        credit_ids = [int(c_id) for c_id in set(self.cleaned_data['credits'])]
+        credits = dict(self.credit_choices)
+
+        credited = []
+        failed = []
+        uncreditable = []
+        unavailable = []
+
+        for credit_id in credit_ids:
+            if credit_id in credits:
+                credit = credits[credit_id]
+                try:
+                    nomis.credit_prisoner(
+                        credit['prison'],
+                        credit['prisoner_number'],
+                        credit['amount'],
+                        str(credit_id),
+                        'Sent by {sender}'.format(sender=credit['sender_name']),
+                        retries=1
+                    )
+                    credited.append(credit_id)
+                except HTTPError as e:
+                    if e.response.status_code == 409:
+                        credited.append(credit_id)
+                        logger.warn('Credit %s was already present in NOMIS' % credit_id)
+                    elif e.response.status_code >= 500:
+                        failed.append(credit_id)
+                        logger.error('Credit %s could not credited as NOMIS is unavailable' % credit_id)
+                    else:
+                        uncreditable.append(credit_id)
+                        logger.error('Credit %s cannot be automatically credited to NOMIS' % credit_id)
+            else:
+                unavailable.append(credit_id)
+                logger.warn('Credit %s is no longer available' % credit_id)
+
+        self.client.credits.actions.credit.post({
+            'credit_ids': [int(c_id) for c_id in credited]
+        })
+        return (credited, failed, uncreditable, unavailable)
+
+
+class FilterAllCreditsForm(GARequestErrorReportingMixin, forms.Form):
+    ordering = forms.ChoiceField(
+        label=gettext_lazy('Order by'), required=False,
+        initial='-received_at',
+        choices=[
+            ('received_at', gettext_lazy('Received date (oldest to newest)')),
+            ('-received_at', gettext_lazy('Received date (newest to oldest)')),
+            ('amount', gettext_lazy('Amount sent (low to high)')),
+            ('-amount', gettext_lazy('Amount sent (high to low)')),
+            ('prisoner_number', gettext_lazy('Prisoner number (A to Z)')),
+            ('-prisoner_number', gettext_lazy('Prisoner number (Z to A)')),
+        ]
+    )
+    start = forms.DateField(label=gettext_lazy('From'),
+                            help_text=gettext_lazy('eg 1/6/2016'),
+                            required=False, widget=MtpDateInput)
+    end = forms.DateField(label=gettext_lazy('To'),
+                          help_text=gettext_lazy('eg 5/6/2016'),
+                          required=False, widget=MtpDateInput)
+    search = forms.CharField(label=gettext_lazy('Keywords'),
+                             help_text=gettext_lazy('eg prisoner name, prisoner number or sender name'),
+                             required=False, widget=MtpTextInput)
+    page = forms.IntegerField(required=False, widget=forms.HiddenInput)
+
+    page_size = 20
+
+    def __init__(self, request, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.label_suffix = ''
+        self.request = request
+        self.user = request.user
+        self.client = get_connection(request)
+        self.pagination = {
+            'page': 1,
+            'count': 0,
+            'page_count': 0,
+        }
+
+    def clean(self):
+        start = self.cleaned_data.get('start')
+        end = self.cleaned_data.get('end')
+        if start and end and start >= end:
+            self.add_error('end', gettext('The end date must be after the start date'))
+        return super().clean()
+
+    def clean_ordering(self):
+        return self.cleaned_data['ordering'] or self.fields['ordering'].initial
+
+    def clean_end(self):
+        end = self.cleaned_data.get('end')
+        if end is not None:
+            return end + timedelta(days=1)
+
+    @property
+    def has_filters(self):
+        if not hasattr(self, 'cleaned_data'):
+            return False
+        return any(self.cleaned_data.get(key) for key in ['start', 'end', 'search'])
+
+    @cached_property
+    def credit_choices(self):
+        filters = {}
+        fields = set(self.fields.keys())
+        if self.is_valid():
+            # valid form
+            for field in fields:
+                if field in self.cleaned_data:
+                    filters[field] = self.cleaned_data[field]
+        elif not self.is_bound:
+            # no form submission
+            for field in fields:
+                if field in self.initial:
+                    filters[field] = self.initial[field]
+
+        renames = (
+            ('start', 'received_at__gte'),
+            ('end', 'received_at__lt'),
+        )
+        for field_name, api_name in renames:
+            if field_name in filters:
+                filters[api_name] = filters[field_name]
+                del filters[field_name]
+
+        page = self.cleaned_data.get('page') or 1
+        offset = (page - 1) * self.page_size
+        response = self.client.credits.get(offset=offset, limit=self.page_size, **filters)
+        count = response.get('count', 0)
+        self.pagination = {
+            'page': page,
+            'count': count,
+            'page_count': int(ceil(count / self.page_size)),
+        }
+        return parse_date_fields(response.get('results', []))
 
     def _get_filter_description(self):
         if self.cleaned_data:
