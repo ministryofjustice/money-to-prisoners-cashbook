@@ -23,7 +23,8 @@ def dashboard_view(request):
         response.set_cookie(
             'change-notification-read',
             ','.join([cookie_content, request.user.username])
-            if cookie_content else request.user.username
+            if cookie_content else request.user.username,
+            max_age=5 * 365 * 24 * 60 * 60
         )
         return response
     return DashboardView.as_view()(request)
