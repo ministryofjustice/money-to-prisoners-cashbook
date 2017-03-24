@@ -33,7 +33,6 @@ class MTPBaseTestCase(SimpleTestCase):
             'first_name': 'My First Name',
             'last_name': 'My Last Name',
             'username': credentials['username'],
-            'applications': ['cashbook'],
             'permissions': permissions,
             'prisons': [{
                 'nomis_id': 'BXI',
