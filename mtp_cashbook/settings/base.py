@@ -25,6 +25,14 @@ DEBUG = True
 SECRET_KEY = 'CHANGE_ME'
 ALLOWED_HOSTS = []
 
+CITIZEN_HELP_PAGE_URL = os.environ.get(
+    'CITIZEN_HELP_PAGE_URL',
+    'https://send-money-to-prisoner.service.gov.uk/help/'
+)
+CITIZEN_CONTACT_PAGE_URL = os.environ.get(
+    'CITIZEN_CONTACT_PAGE_URL',
+    'https://send-money-to-prisoner.service.gov.uk/contact-us/'
+)
 START_PAGE_URL = os.environ.get('START_PAGE_URL', 'https://www.gov.uk/send-prisoner-money')
 SITE_URL = os.environ.get('SITE_URL', 'http://localhost:8001')
 
@@ -243,6 +251,11 @@ NOMIS_API_PRISONS = os.environ.get('NOMIS_API_PRISONS', '').split(',')
 NOMIS_API_BASE_URL = os.environ.get('NOMIS_API_BASE_URL', '')
 NOMIS_API_CLIENT_TOKEN = os.environ.get('NOMIS_API_CLIENT_TOKEN', '')
 NOMIS_API_PRIVATE_KEY = os.environ.get('NOMIS_API_PRIVATE_KEY', '').encode('utf8').decode('unicode_escape')
+
+EMAIL_BACKEND = 'django_mailgun.MailgunBackend'
+MAILGUN_ACCESS_KEY = os.environ.get('MAILGUN_ACCESS_KEY', '')
+MAILGUN_SERVER_NAME = os.environ.get('MAILGUN_SERVER_NAME', '')
+MAILGUN_FROM_ADDRESS = os.environ.get('MAILGUN_FROM_ADDRESS', '')
 
 try:
     from .local import *  # noqa

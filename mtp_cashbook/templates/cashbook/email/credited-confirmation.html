@@ -1,0 +1,39 @@
+{% extends 'mtp_common/email_base.html' %}
+{% load i18n %}
+{% load currency %}
+
+{% block inner_content %}
+  <p>{% trans 'Dear sender,' %}</p>
+
+  <p>
+    {% blocktrans %}
+    The payment you made - reference number {{ ref_number }} - has now been credited to the prisoner’s account.
+    {% endblocktrans %}
+  </p>
+
+  <table cellspacing="10" style="font-family: sans-serif;">
+    <tr>
+      <th valign="top" align="left">{% trans 'Payment to:' %}</th>
+      <td>{{ prisoner_name }}</td>
+    </tr>
+    <tr>
+      <th valign="top" align="left">{% trans 'Amount paid:' %}</th>
+      <td>£{{ amount|currency }}</td>
+    </tr>
+    <tr>
+      <th valign="top" align="left">{% trans 'Date payment made:' %}</th>
+      <td>{{ received_at|date:'d/m/Y' }}</td>
+    </tr>
+  </table>
+
+  <p>
+    {% trans 'Thank you for using this service.' %}
+  </p>
+
+  <p>
+    {% blocktrans trimmed %}
+      <a href="{{ help_url }}">Help</a> with problems using this service or how to <a href="{{ feedback_url }}">contact us</a>.
+    {% endblocktrans %}
+  </p>
+  <p><a href="{{ site_url }}">{% trans 'Back to the service' %}</a></p>
+{% endblock %}
