@@ -16,6 +16,8 @@ RUN mkdir -p mtp_cashbook/assets
 RUN mkdir -p mtp_cashbook/assets-static
 RUN mkdir -p static
 RUN mkdir -p media
+RUN mkdir -p spooler
+RUN chown www-data:www-data spooler
 
 # install python
 RUN apt-get install -y python3-all python3-all-dev python3-setuptools python3-pip python-pip python3.4-venv

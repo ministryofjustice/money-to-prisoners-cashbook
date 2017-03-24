@@ -2,6 +2,7 @@ import datetime
 import logging
 from unittest import mock
 
+from django.core import mail
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.test import override_settings
@@ -560,6 +561,8 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
              'prison': 'BXI',
              'amount': 5200,
              'sender_name': 'Fred Smith',
+             'sender_email': 'fred.smith@mail.local',
+             'short_ref_number': '89AF76GH',
              'received_at': '2017-01-25T12:00:00Z'},
             {'id': 2,
              'prisoner_name': 'John Jones',
@@ -567,6 +570,8 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
              'prison': 'BXI',
              'amount': 4500,
              'sender_name': 'Fred Jones',
+             'sender_email': 'fred.jones@mail.local',
+             'short_ref_number': '98KI32SA',
              'received_at': '2017-01-25T12:00:00Z'},
         ]
     }
@@ -633,6 +638,11 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             )
             self.assertEqual(response.status_code, 200)
             self.assertContains(response, '2 new credits')
+            self.assertEqual(len(mail.outbox), 2)
+            self.assertTrue(
+                '£52.00' in mail.outbox[0].body and '£45.00' in mail.outbox[1].body or
+                '£52.00' in mail.outbox[1].body and '£45.00' in mail.outbox[0].body
+            )
 
     @override_nomis_settings
     def test_new_credits_submit_with_conflict(self):
@@ -677,6 +687,7 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             )
             self.assertEqual(response.status_code, 200)
             self.assertContains(response, '2 new credits')
+            self.assertEqual(len(mail.outbox), 1)
 
     @override_nomis_settings
     def test_new_credits_submit_with_uncreditable(self):
@@ -721,6 +732,7 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             )
             self.assertEqual(response.status_code, 200)
             self.assertContains(response, '1 new credit')
+            self.assertEqual(len(mail.outbox), 1)
 
 
 class AllCreditsViewTestCase(MTPBaseTestCase):
