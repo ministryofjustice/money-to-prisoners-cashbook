@@ -594,6 +594,7 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             self.assertContains(response, '52.00')
             self.assertContains(response, '45.00')
 
+    @override_settings(ENVIRONMENT='prod')  # because non-prod environments don't send to .local
     @override_nomis_settings
     def test_new_credits_submit(self):
         with responses.RequestsMock() as rsps:
@@ -644,6 +645,7 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
                 '£52.00' in mail.outbox[1].body and '£45.00' in mail.outbox[0].body
             )
 
+    @override_settings(ENVIRONMENT='prod')  # because non-prod environments don't send to .local
     @override_nomis_settings
     def test_new_credits_submit_with_conflict(self):
         with responses.RequestsMock() as rsps:
@@ -689,6 +691,7 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             self.assertContains(response, '2 new credits')
             self.assertEqual(len(mail.outbox), 1)
 
+    @override_settings(ENVIRONMENT='prod')  # because non-prod environments don't send to .local
     @override_nomis_settings
     def test_new_credits_submit_with_uncreditable(self):
         with responses.RequestsMock() as rsps:
