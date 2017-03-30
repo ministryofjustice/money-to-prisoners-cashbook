@@ -41,7 +41,7 @@ exports.RunningTotal = {
 
     this.$items.each(function (i, el) {
       var $el = $(el);
-      var amount = $el.data('amount');
+      var amount = String($el.data('amount')).replace(',', '');
 
       if ($el.is(':checked')) {
         total += parseFloat(amount);
