@@ -209,6 +209,26 @@
       }
     }
 
+    .mtp-nomis-print-header {
+      border: 2px solid $text-colour;
+
+      img {
+        margin-left: 35px;
+        margin-top: 18px;
+        float: left;
+      }
+
+      div.mtp-nomis-warning {
+        padding-left: 100px;
+        padding-bottom: 1em;
+
+        h2.heading-medium {
+          text-align: left;
+          margin-bottom: 0;
+        }
+      }
+    }
+
     .print-box {
       text-align: center;
     }
@@ -223,15 +243,6 @@
       }
     }
 
-    .print-checkbox {
-      margin-left: 2em;
-      margin-bottom: 1em;
-      width: 20px;
-      height: 20px;
-      border: 2px solid #000;
-      display: inline-block;
-    }
-
     h2.print-only {
       padding-top: 1em;
     }
@@ -241,17 +252,7 @@
     }
 
     .mtp-floating-header {
-      margin-top: 0;
-      border-bottom: 0;
-
-      p span {
-        &.label {
-          font-size: em(10);
-          width: 7em;
-        }
-
-        margin-bottom: 1em;
-      }
+      display: none;
     }
 
     .mtp-batch {
