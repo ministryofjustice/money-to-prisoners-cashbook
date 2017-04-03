@@ -3,6 +3,7 @@
 {% load currency %}
 {% load mtp_common %}
 {% load credits %}
+{% load staticfiles %}
 
 {% block page_title %}{% trans 'New credits - Digital cashbook' %}{% endblock %}
 
@@ -32,12 +33,6 @@
         <h2 class="heading-small">
           {% trans "CONFIDENTIAL: dispose of securely" %}
         </h2>
-        <p>
-          {% blocktrans trimmed with total=total|currency %}
-          1-{{ new_credits }} credits <br />
-          <strong>Total: &pound;{{total}}</strong>
-          {% endblocktrans %}
-        </p>
       </div>
 
       <div class="mtp-batch">
@@ -69,9 +64,17 @@
           </div>
         </div>
 
-        <h2 class="print-only heading-xlarge">
-          {% trans 'Do NOT enter these credits into NOMIS yourself.' %}
-        </h2>
+        <div class="mtp-nomis-print-header print-only">
+          <img src="{% static 'images/icon-important.png' %}"/>
+          <div class="mtp-nomis-warning">
+            <h2 class="heading-medium">
+              {% trans 'You don’t have to manually enter credits into NOMIS any more' %}
+            </h2>
+            <div>
+              {% trans 'Now when you ’confirm’ credits, they’ll be sent digitally to NOMIS' %}
+            </div>
+          </div>
+        </div>
 
         <table>
           <thead>
@@ -106,7 +109,7 @@
               {% if pre_approval_required %}
                 <th>{% trans 'Security' %}</th>
               {% endif %}
-              <th class="check"><span id="id_credits-label">{% trans 'Select' %}</span></th>
+              <th class="check print-hidden"><span id="id_credits-label">{% trans 'Select' %}</span></th>
             </tr>
           </thead>
 
@@ -144,8 +147,7 @@
                     {% endif %}
                   </td>
                 {% endif %}
-                <td class="check">
-                  <div class="print-only print-checkbox"></div>
+                <td class="check print-hidden">
                   <input
                     type="checkbox"
                     name="{{ form.credits.html_name }}"
