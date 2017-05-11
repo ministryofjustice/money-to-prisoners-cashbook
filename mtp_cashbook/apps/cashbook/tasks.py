@@ -4,6 +4,7 @@ from smtplib import SMTPException
 from django.conf import settings
 from django.utils.translation import gettext as _
 from django_mailgun import MailgunAPIError
+from mtp_common.auth.api_client import get_connection_with_session
 from mtp_common.email import send_email
 from mtp_common import nomis
 from requests.exceptions import HTTPError, RequestException
@@ -32,15 +33,16 @@ def send_credit_confirmation_email(email, prisoner_name, amount, ref_number, rec
             logger.exception('Could not send credit credited notification')
 
 
-def credit_selected_credits_to_nomis(client, selected_credit_ids, credits):
+def credit_selected_credits_to_nomis(user, session, selected_credit_ids, credits):
     for credit_id in selected_credit_ids:
         if credit_id in credits:
-            schedule_credit_individual_credit_to_nomis(client, credit_id, credits[credit_id])
+            schedule_credit_individual_credit_to_nomis(user, session, credit_id, credits[credit_id])
         else:
             logger.warn('Credit %s is no longer available' % credit_id)
 
 
-def credit_individual_credit_to_nomis(client, credit_id, credit):
+def credit_individual_credit_to_nomis(user, session, credit_id, credit):
+    client = get_connection_with_session(user, session)
     try:
         nomis.credit_prisoner(
             credit['prison'],
@@ -83,12 +85,12 @@ try:
             send_credit_confirmation_email(email, prisoner_name, amount, ref_number, received_at)
 
     @spool(pass_arguments=True)
-    def schedule_credit_selected_credits_to_nomis(client, selected_credits, credit_choices):
-        credit_selected_credits_to_nomis(client, selected_credits, credit_choices)
+    def schedule_credit_selected_credits_to_nomis(user, session, selected_credits, credit_choices):
+        credit_selected_credits_to_nomis(user, session, selected_credits, credit_choices)
 
     @spool(pass_arguments=True)
-    def schedule_credit_individual_credit_to_nomis(client, credit_id, credit):
-        credit_individual_credit_to_nomis(client, credit_id, credit)
+    def schedule_credit_individual_credit_to_nomis(user, session, credit_id, credit):
+        credit_individual_credit_to_nomis(user, session, credit_id, credit)
 
 except ImportError as e:
     schedule_credit_confirmation_email = send_credit_confirmation_email

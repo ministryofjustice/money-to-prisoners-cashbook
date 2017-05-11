@@ -1,0 +1,61 @@
+.mtp-progress-bar {
+  margin: 0 auto;
+  margin-top: 2.5em;
+  text-align: center;
+  background-color: $govuk-blue;
+  width: 100%;
+  height: 450px;
+  color: $page-colour;
+
+  .mtp-progress-bar__content {
+    padding-top: 60px;
+  }
+
+  .mtp-progress-bar__background {
+    margin: 0 auto;
+    margin-top: 2em;
+    width: 70%;
+    height: 60px;
+    background-color: $page-colour;
+
+    .mtp-progress-bar__fill {
+      width: 0%;
+      height: 100%;
+      background-color: $black;
+      position: relative;
+
+      &:after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        border: 2px solid $page-colour;
+      }
+    }
+  }
+
+  .mtp-progress-bar__progress {
+    margin-top: 1em;
+    font-size: 25px;
+  }
+
+  a.mtp-progress-bar__continue {
+    display: block;
+    margin: 0 auto;
+    margin-top: 1em;
+    font-size: 19px;
+    max-width: 200px;
+    height: 1.5em;
+    background-color: $page-colour;
+    text-align: center;
+    padding-top: 0.5em;
+    color: $govuk-blue;
+    text-decoration: none;
+
+    &:hover, &:link, &:active, &:visited {
+      color: $govuk-blue;
+    }
+  }
+}

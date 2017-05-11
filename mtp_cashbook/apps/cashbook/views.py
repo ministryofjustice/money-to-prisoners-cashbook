@@ -4,6 +4,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy, reverse
+from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _, ngettext
 from django.views.generic import FormView, TemplateView
@@ -270,6 +271,18 @@ class NewCreditsView(FormView):
     template_name = 'cashbook/new_credits.html'
     success_url = reverse_lazy('new-credits')
 
+    def dispatch(self, request, *args, **kwargs):
+        client = api_client.get_connection(self.request)
+        batches = client.credits.batches.get()
+        if batches['count']:
+            credit_ids = batches['results'][0]['credits']
+            incomplete_credits = client.credits.get(
+                resolution='pending', pk=credit_ids
+            )
+            if not batches['results'][0]['expired'] and incomplete_credits['count']:
+                return redirect('processing-credits')
+        return super().dispatch(request, *args, **kwargs)
+
     def get_form_kwargs(self):
         form_kwargs = super().get_form_kwargs()
         form_kwargs['request'] = self.request
@@ -319,6 +332,29 @@ class NewCreditsView(FormView):
             })
 
         return super().form_valid(form)
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(expected_nomis_availability(True), name='dispatch')
+class ProcessingCreditsView(TemplateView):
+    title = _('Digital cashbook')
+    template_name = 'cashbook/processing_credits.html'
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        client = api_client.get_connection(self.request)
+        batches = client.credits.batches.get()
+        if batches['count'] == 0 or batches['results'][0]['expired']:
+            return redirect('new-credits')
+        else:
+            credit_ids = batches['results'][0]['credits']
+            total = len(credit_ids)
+            incomplete_credits = client.credits.get(
+                resolution='pending', pk=credit_ids
+            )
+            done_credit_count = total - incomplete_credits['count']
+            context['percentage'] = int((done_credit_count/total)*100)
+        return self.render_to_response(context)
 
 
 @method_decorator(login_required, name='dispatch')

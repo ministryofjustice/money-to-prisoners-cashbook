@@ -369,9 +369,10 @@ class ProcessNewCreditsForm(GARequestErrorReportingMixin, forms.Form):
         credit_ids = [int(c_id) for c_id in set(self.cleaned_data['credits'])]
         credits = dict(self.credit_choices)
 
-        schedule_credit_selected_credits_to_nomis(self.client, credit_ids, credits)
-
-        return len(credit_ids)
+        self.client.credits.batches.post({'credits': credit_ids})
+        schedule_credit_selected_credits_to_nomis(
+            self.request.user, self.request.session, credit_ids, credits
+        )
 
 
 class FilterAllCreditsForm(GARequestErrorReportingMixin, forms.Form):
