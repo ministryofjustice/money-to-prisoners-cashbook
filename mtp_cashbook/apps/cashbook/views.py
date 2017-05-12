@@ -8,6 +8,7 @@ from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _, ngettext
 from django.views.generic import FormView, TemplateView
+from mtp_common.api import retrieve_all_pages
 from mtp_common.auth import api_client
 from django.shortcuts import render
 
@@ -271,17 +272,25 @@ class NewCreditsView(FormView):
     template_name = 'cashbook/new_credits.html'
     success_url = reverse_lazy('new-credits')
 
-    def dispatch(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         client = api_client.get_connection(self.request)
         batches = client.credits.batches.get()
         if batches['count']:
-            credit_ids = batches['results'][0]['credits']
+            last_batch = batches['results'][0]
+            credit_ids = last_batch['credits']
             incomplete_credits = client.credits.get(
                 resolution='pending', pk=credit_ids
             )
-            if not batches['results'][0]['expired'] and incomplete_credits['count']:
+            if not last_batch['expired'] and incomplete_credits['count']:
                 return redirect('processing-credits')
-        return super().dispatch(request, *args, **kwargs)
+
+            credited_credits = client.credits.get(
+                resolution='credited', pk=credit_ids
+            )
+            kwargs['credited_count'] = credited_credits['count']
+            kwargs['failed_count'] = incomplete_credits['count']
+            client.credits.batches(last_batch['id']).delete()
+        return self.render_to_response(self.get_context_data(**kwargs))
 
     def get_form_kwargs(self):
         form_kwargs = super().get_form_kwargs()
@@ -303,34 +312,22 @@ class NewCreditsView(FormView):
             for prison in self.request.user.user_data.get('prisons', [])
         ))
 
-        return context
-
-    def form_valid(self, form):
-        credited_count = form.save()
-
-        if credited_count:
-            messages.success(
-                self.request,
-                ngettext(
-                    'You credited 1 new credit to NOMIS.',
-                    'You credited %(credited)s new credits to NOMIS.',
-                    credited_count
-                ) % {
-                    'credited': credited_count
-                }
-            )
-
+        if context.get('credited_count', 0):
             username = self.request.user.user_data.get('username', 'Unknown')
             logger.info('User "%(username)s" added %(credited)d credits(s) to NOMIS' % {
                 'username': username,
-                'credited': credited_count,
+                'credited': context['credited_count'],
             }, extra={
                 'elk_fields': {
-                    '@fields.credited_count': credited_count,
+                    '@fields.credited_count': context['credited_count'],
                     '@fields.username': username,
                 }
             })
 
+        return context
+
+    def form_valid(self, form):
+        form.save()
         return super().form_valid(form)
 
 

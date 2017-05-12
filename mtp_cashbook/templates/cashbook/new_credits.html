@@ -18,6 +18,36 @@
 
   {% include "mtp_common/includes/message_box.html" %}
 
+  {% if credited_count %}
+  <div class="mtp-crediting-result mtp-credited-credits">
+      {% blocktrans count credited_count=credited_count %}
+      {{ credited_count }} credit sent to NOMIS
+      {% plural %}
+      {{ credited_count }} credits sent to NOMIS
+      {% endblocktrans %}
+  </div>
+  {% endif %}
+
+  {% if manual_count %}
+  <div class="mtp-crediting-result mtp-manual-credits">
+      {% blocktrans count manual_count=manual_count %}
+      {{ manual_count }} credit needs your manual input in NOMIS - see below
+      {% plural %}
+      {{ manual_count }} credits need your manual input in NOMIS - see below
+      {% endblocktrans %}
+  </div>
+  {% endif %}
+
+  {% if failed_count %}
+  <div class="mtp-crediting-result mtp-failed-credits">
+      {% blocktrans count failed_count=failed_count %}
+      {{ failed_count }} credit couldn't be processed
+      {% plural %}
+      {{ failed_count }} credits couldn't be processed
+      {% endblocktrans %}
+  </div>
+  {% endif %}
+
   <form
     method="post"
     action=""
