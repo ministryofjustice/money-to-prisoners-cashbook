@@ -18,7 +18,7 @@ from mtp_common.api import retrieve_all_pages
 from mtp_common.auth.api_client import get_connection
 
 from .form_fields import MtpTextInput, MtpDateInput
-from .tasks import schedule_credit_selected_credits_to_nomis
+from .tasks import credit_selected_credits_to_nomis
 from .templatetags.credits import parse_date_fields
 
 logger = logging.getLogger('mtp')
@@ -370,7 +370,7 @@ class ProcessNewCreditsForm(GARequestErrorReportingMixin, forms.Form):
         credits = dict(self.credit_choices)
 
         self.client.credits.batches.post({'credits': credit_ids})
-        schedule_credit_selected_credits_to_nomis(
+        credit_selected_credits_to_nomis(
             self.request.user, self.request.session, credit_ids, credits
         )
 
