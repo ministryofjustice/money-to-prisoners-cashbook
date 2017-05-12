@@ -17,10 +17,10 @@ from form_error_reporting import GARequestErrorReportingMixin
 from mtp_common import nomis
 from mtp_common.api import retrieve_all_pages
 from mtp_common.auth.api_client import get_connection
+from mtp_common.tasks import send_email
 from requests.exceptions import HTTPError
 
 from .form_fields import MtpTextInput, MtpDateInput
-from .tasks import schedule_credit_confirmation_email
 from .templatetags.credits import parse_date_fields
 
 logger = logging.getLogger('mtp')
@@ -389,11 +389,21 @@ class ProcessNewCreditsForm(GARequestErrorReportingMixin, forms.Form):
                         retries=1
                     )
                     credited.append(credit_id)
-                    schedule_credit_confirmation_email(
-                        credit.get('sender_email'), credit['prisoner_name'],
-                        credit['amount'], credit.get('short_ref_number'),
-                        credit['received_at']
-                    )
+                    if credit.get('sender_email'):
+                        send_email(
+                            credit['sender_email'], 'cashbook/email/credited-confirmation.txt',
+                            gettext('Send money to a prisoner: the prisoner’s account has been credited'),
+                            context={
+                                'amount': credit['amount'],
+                                'ref_number': credit.get('short_ref_number'),
+                                'received_at': credit['received_at'],
+                                'prisoner_name': credit['prisoner_name'],
+                                'help_url': settings.CITIZEN_HELP_PAGE_URL,
+                                'feedback_url': settings.CITIZEN_CONTACT_PAGE_URL,
+                                'site_url': settings.START_PAGE_URL,
+                            },
+                            html_template='cashbook/email/credited-confirmation.html'
+                        )
                 except HTTPError as e:
                     if e.response.status_code == 409:
                         credited.append(credit_id)
