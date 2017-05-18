@@ -14,8 +14,10 @@ from django.utils.dateformat import format as format_date
 from django.utils.text import capfirst
 from django.utils.translation import gettext, gettext_lazy, ngettext
 from form_error_reporting import GARequestErrorReportingMixin
+from mtp_common import nomis
 from mtp_common.api import retrieve_all_pages
 from mtp_common.auth.api_client import get_connection
+from requests.exceptions import HTTPError
 
 from .form_fields import MtpTextInput, MtpDateInput
 from .tasks import credit_selected_credits_to_nomis
@@ -345,7 +347,7 @@ class ProcessNewCreditsForm(GARequestErrorReportingMixin, forms.Form):
 
     def _request_all_credits(self):
         return retrieve_all_pages(
-            self.client.credits.get, status='available',
+            self.client.credits.get, status='available', resolution='pending',
             ordering=self.ordering
         )
 
@@ -373,6 +375,56 @@ class ProcessNewCreditsForm(GARequestErrorReportingMixin, forms.Form):
         credit_selected_credits_to_nomis(
             self.request.user, self.request.session, credit_ids, credits
         )
+
+
+class ProcessManualCreditsForm(GARequestErrorReportingMixin, forms.Form):
+    credits = forms.MultipleChoiceField(choices=(), required=False)
+
+    def __init__(self, request, ordering='-received_at', *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.request = request
+        self.user = request.user
+        self.client = get_connection(request)
+        self.ordering = ordering
+
+        self.fields['credits'].choices = self.credit_choices
+
+    def _request_all_credits(self):
+        return retrieve_all_pages(
+            self.client.credits.get, resolution='manual',
+            ordering=self.ordering
+        )
+
+    def clean_credits(self):
+        prefix = 'submit_manual_'
+        credits = []
+        if self.request.method == 'POST':
+            for key in self.request.POST:
+                if key.startswith(prefix):
+                    credits.append(int(key[len(prefix):]))
+        return credits
+
+    @cached_property
+    def credit_choices(self):
+        """
+        Gets the credits currently available the user.
+        """
+        credits = self._request_all_credits()
+        id_credits = []
+        for credit in parse_date_fields(credits):
+            try:
+                location = nomis.get_location(credit['prisoner_number'])
+                credit['new_location'] = location
+            except HTTPError:
+                pass
+            id_credits.append((credit['id'], credit))
+        return id_credits
+
+    def save(self):
+        credit_ids = [int(c_id) for c_id in set(self.cleaned_data['credits'])]
+        self.client.credits.actions.credit.post({
+            'credit_ids': [int(c_id) for c_id in credit_ids]
+        })
 
 
 class FilterAllCreditsForm(GARequestErrorReportingMixin, forms.Form):

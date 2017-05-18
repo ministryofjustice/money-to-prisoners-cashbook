@@ -8,14 +8,13 @@ from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _, ngettext
 from django.views.generic import FormView, TemplateView
-from mtp_common.api import retrieve_all_pages
 from mtp_common.auth import api_client
 from django.shortcuts import render
 
-from .utils import expected_nomis_availability
+from .utils import expected_nomis_availability, check_pre_approval_required
 from .forms import (
     ProcessCreditBatchForm, DiscardLockedCreditsForm, FilterCreditHistoryForm,
-    ProcessNewCreditsForm, FilterAllCreditsForm
+    ProcessNewCreditsForm, FilterAllCreditsForm, ProcessManualCreditsForm
 )
 
 logger = logging.getLogger('mtp')
@@ -51,10 +50,7 @@ class DashboardView(TemplateView):
         locked = credit_client.get(status='locked')
         all_credits = credit_client.get()
 
-        pre_approval_required = any((
-            prison['pre_approval_required']
-            for prison in self.request.user.user_data.get('prisons', [])
-        ))
+        pre_approval_required = check_pre_approval_required(self.request)
         if pre_approval_required:
             reviewed = credit_client.get(status='available', reviewed=True)
             context_data['reviewed'] = reviewed['count']
@@ -106,10 +102,7 @@ class CreditBatchListView(FormView, CashbookSubviewMixin):
         context['total'] = sum([x[1]['amount'] for x in credit_choices])
         context['batch_size'] = len(credit_choices)
 
-        context['pre_approval_required'] = any((
-            prison['pre_approval_required']
-            for prison in self.request.user.user_data.get('prisons', [])
-        ))
+        context['pre_approval_required'] = check_pre_approval_required(self.request)
 
         credit_client = context['form'].client.credits
         available = credit_client.get(status='available')
@@ -268,9 +261,27 @@ class ChangeNotificationView(TemplateView):
 @method_decorator(expected_nomis_availability(True), name='dispatch')
 class NewCreditsView(FormView):
     title = _('New credits')
-    form_class = ProcessNewCreditsForm
+    form_class = {
+        'new': ProcessNewCreditsForm,
+        'manual': ProcessManualCreditsForm
+    }
     template_name = 'cashbook/new_credits.html'
     success_url = reverse_lazy('new-credits')
+
+    def get_form(self, form_class=None):
+        """
+        Returns a dict of instances of the forms to be used in this view.
+        """
+        if form_class is None:
+            form_class = self.get_form_class()
+        return {name: form_class[name](**self.get_form_kwargs()) for name in form_class}
+
+    def get_form_kwargs(self):
+        form_kwargs = super().get_form_kwargs()
+        form_kwargs['request'] = self.request
+        if 'ordering' in self.request.GET:
+            form_kwargs['ordering'] = self.request.GET['ordering']
+        return form_kwargs
 
     def get(self, request, *args, **kwargs):
         client = api_client.get_connection(self.request)
@@ -287,30 +298,39 @@ class NewCreditsView(FormView):
             credited_credits = client.credits.get(
                 resolution='credited', pk=credit_ids
             )
-            kwargs['credited_count'] = credited_credits['count']
-            kwargs['failed_count'] = incomplete_credits['count']
+            kwargs['credited_credits'] = credited_credits['count']
+            kwargs['failed_credits'] = incomplete_credits['count']
             client.credits.batches(last_batch['id']).delete()
         return self.render_to_response(self.get_context_data(**kwargs))
 
-    def get_form_kwargs(self):
-        form_kwargs = super().get_form_kwargs()
-        form_kwargs['request'] = self.request
-        if 'ordering' in self.request.GET:
-            form_kwargs['ordering'] = self.request.GET['ordering']
-        return form_kwargs
+    def post(self, request, *args, **kwargs):
+        """
+        Handles POST requests, instantiating the relevant form instance with
+        the passed POST variables and then checked for validity.
+        """
+        for key in request.POST:
+            for name in self.get_form_class():
+                if key.startswith('submit_%s' % name):
+                    break
+        form = self.get_form()[name]
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        credit_choices = context['form'].credit_choices
-        context['object_list'] = credit_choices
-        context['total'] = sum([x[1]['amount'] for x in credit_choices])
-        context['new_credits'] = len(credit_choices)
+        new_credit_choices = context['form']['new'].credit_choices
+        context['new_object_list'] = new_credit_choices
+        context['total'] = sum([x[1]['amount'] for x in new_credit_choices])
+        context['new_credits'] = len(new_credit_choices)
 
-        context['pre_approval_required'] = any((
-            prison['pre_approval_required']
-            for prison in self.request.user.user_data.get('prisons', [])
-        ))
+        manual_credit_choices = context['form']['manual'].credit_choices
+        context['manual_object_list'] = manual_credit_choices
+        context['manual_credits'] = len(manual_credit_choices)
+
+        context['pre_approval_required'] = check_pre_approval_required(self.request)
 
         if context.get('credited_count', 0):
             username = self.request.user.user_data.get('username', 'Unknown')

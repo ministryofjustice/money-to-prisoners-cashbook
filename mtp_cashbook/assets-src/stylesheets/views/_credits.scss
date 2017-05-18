@@ -176,6 +176,8 @@
 
     table {
       width: 100%;
+      border-bottom: 1px solid #bfc1c3;
+      margin-bottom: 2em;
 
       td, th {
         border-bottom: 0;
@@ -206,8 +208,13 @@
         padding-left: 80px;
       }
 
-      .mtp-security {
+      .mtp-security, .mtp-manual-action {
         border-top: 0;
+
+        .mtp-manual-action__details {
+          color: $orange;
+          font-weight: bold;
+        }
       }
     }
   }
