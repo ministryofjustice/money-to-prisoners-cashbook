@@ -53,7 +53,7 @@
   </div>
 
   {% if manual_object_list %}
-  <div class='print-hidden'><p>{% trans ' These credits need your manual input to NOMIS.' %}</p></div>
+  <div class='print-hidden'><p>{% trans ' These credits need your manual input to be processed.' %}</p></div>
 
   <form method="post" action="" data-credits-name="{{ form.manual.credits.html_name }}">
     {% csrf_token %}
@@ -75,6 +75,14 @@
 
         <tbody>
           {% for credit_pk, credit in manual_object_list %}
+            {% if completed_index == forloop.counter0 %}
+              <tr class="mtp-manual-credit-complete">
+                <td colspan="1"></td>
+                <td colspan="{% if pre_approval_required%}5{% else %}4{% endif %}">
+                  {% trans 'Credit marked as credited' %}
+                </td>
+              </tr>
+            {% endif %}
             <tr>
               <td>
                 <div>{{ credit.received_at.date|date:'d/m/Y' }}</div>

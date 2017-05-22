@@ -4,17 +4,18 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy, reverse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _, ngettext
 from django.views.generic import FormView, TemplateView
 from mtp_common.auth import api_client
-from django.shortcuts import render
+from mtp_common import nomis
+from requests.exceptions import HTTPError
 
 from .utils import expected_nomis_availability, check_pre_approval_required
 from .forms import (
     ProcessCreditBatchForm, DiscardLockedCreditsForm, FilterCreditHistoryForm,
-    ProcessNewCreditsForm, FilterAllCreditsForm, ProcessManualCreditsForm
+    ProcessNewCreditsForm, FilterAllCreditsForm, ProcessManualCreditsForm, COMPLETED_INDEX
 )
 
 logger = logging.getLogger('mtp')
@@ -301,6 +302,11 @@ class NewCreditsView(FormView):
             kwargs['credited_credits'] = credited_credits['count']
             kwargs['failed_credits'] = incomplete_credits['count']
             client.credits.batches(last_batch['id']).delete()
+
+        for message in messages.get_messages(request):
+            if message.level == COMPLETED_INDEX:
+                kwargs['completed_index'] = int(message.message)
+
         return self.render_to_response(self.get_context_data(**kwargs))
 
     def post(self, request, *args, **kwargs):
@@ -308,15 +314,16 @@ class NewCreditsView(FormView):
         Handles POST requests, instantiating the relevant form instance with
         the passed POST variables and then checked for validity.
         """
+        form_name = None
         for key in request.POST:
             for name in self.get_form_class():
                 if key.startswith('submit_%s' % name):
-                    break
-        form = self.get_form()[name]
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
+                    form_name = name
+        if form_name in self.get_form():
+            form = self.get_form()[form_name]
+            if form.is_valid():
+                return self.form_valid(form)
+        return self.form_invalid(None)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -327,6 +334,12 @@ class NewCreditsView(FormView):
         context['new_credits'] = len(new_credit_choices)
 
         manual_credit_choices = context['form']['manual'].credit_choices
+        for credit_id, manual_credit in manual_credit_choices:
+            try:
+                location = nomis.get_location(manual_credit['prisoner_number'])
+                manual_credit['new_location'] = location
+            except HTTPError:
+                pass
         context['manual_object_list'] = manual_credit_choices
         context['manual_credits'] = len(manual_credit_choices)
 
@@ -347,8 +360,17 @@ class NewCreditsView(FormView):
         return context
 
     def form_valid(self, form):
-        form.save()
+        credit_choices = form.credit_choices
+
+        credit_id = form.save()
+
+        for i, choice in enumerate(credit_choices):
+            if credit_id == choice[0]:
+                messages.add_message(self.request, COMPLETED_INDEX, str(i))
         return super().form_valid(form)
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data())
 
 
 @method_decorator(login_required, name='dispatch')
