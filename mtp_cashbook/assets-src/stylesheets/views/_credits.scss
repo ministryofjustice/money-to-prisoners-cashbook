@@ -37,6 +37,12 @@
         background-image: file-url('alert@2x.png');
       }
     }
+
+    a.mtp-end-link {
+      color: $white;
+      font-size: 19px;
+      margin-left: 1em;
+    }
   }
 
   .phase-banner-beta {
@@ -46,6 +52,18 @@
   .Dialog {
     margin-top: 120px;
     position: fixed;
+    border: $black 5px solid;
+
+    .Dialog-inner {
+      text-align: center;
+      p {
+        text-align: left;
+      }
+
+      button {
+        text-align: center;
+      }
+    }
   }
 
   .mtp-floating-header {

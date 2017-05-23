@@ -23,6 +23,7 @@
       {% plural %}
       {{ credited_credits }} credits sent to NOMIS
       {% endblocktrans %}
+      <a href="{% url 'all-credits' %}" class="mtp-end-link">{% trans "View" %}</a>
   </div>
   {% endif %}
 
@@ -33,6 +34,22 @@
       {% plural %}
       {{ failed_credits }} credits couldn't be processed
       {% endblocktrans %}
+      <a href="#failed-credits-dialog" class="js-Dialog mtp-end-link">{% trans "Why?" %}</a>
+  </div>
+
+  <div id="failed-credits-dialog"
+       class="Dialog"
+       style="display: none"
+       data-hide-close="true"
+       data-disable-backdrop-close="true">
+    <div class="Dialog-inner">
+      <h2 class="heading-large">{% trans 'Why didn’t it work?' %}</h2>
+      <p>
+        {% trans 'Sometimes a fault in the system prevents credits from being processed.' %}
+        {% trans 'Please wait a few minutes and try sending to NOMIS again.' %}
+      </p>
+      <button type="button" class="button js-Dialog-close">{% trans 'Ok' %}</button>
+    </div>
   </div>
   {% endif %}
 
@@ -55,7 +72,7 @@
   {% if manual_object_list %}
   <div class='print-hidden'><p>{% trans ' These credits need your manual input to be processed.' %}</p></div>
 
-  <form method="post" action="" data-credits-name="{{ form.manual.credits.html_name }}">
+  <form class="js-ConfirmManual" method="post" action="" data-credits-name="{{ form.manual.credits.html_name }}">
     {% csrf_token %}
     {% include 'mtp_common/forms/error-summary.html' with form=form.manual only %}
     <div class="mtp-batch">
@@ -145,8 +162,23 @@
                 </div>
               </td>
               <td class="mtp-manual-action print-hidden" style="text-align: center;">
-                <button type="submit" name="submit_manual_{{credit_pk}}" value="submit"  class="button">{% trans 'Done' %}</button>
+                <button type="submit" name="submit_manual_{{ credit_pk }}" value="submit"  class="button" data-credit-id="{{ credit_pk }}">{% trans 'Done' %}</button>
               </td>
+              <div id="manual-confirm-dialog-{{credit_pk}}"
+                   class="Dialog"
+                   style="display: none"
+                   data-hide-close="true"
+                   data-disable-backdrop-close="true">
+                <div class="Dialog-inner">
+                  <h2 class="heading-large">{% trans 'Have you updated NOMIS?' %}</h2>
+                  <button type="submit"
+                          name="submit_manual_{{credit_pk}}"
+                          class="button"
+                          value="override">{% trans 'Yes' %}</button>
+                  <br/><br/>
+                  <a href="#" class="js-Dialog-close">{% trans 'No, I’ll do that now' %}</a>
+                </div>
+              </div>
             </tr>
           {% endfor %}
         </tbody>
@@ -320,7 +352,7 @@
          data-hide-close="true"
          data-disable-backdrop-close="true">
       <div class="Dialog-inner">
-        <p><strong>{% trans 'Do you want to submit only the selected credits?' %}</strong></p>
+        <h2 class="heading-large">{% trans 'Do you want to submit only the selected credits?' %}</h2>
         <button type="submit"
                 name="submit_new"
                 class="button"
