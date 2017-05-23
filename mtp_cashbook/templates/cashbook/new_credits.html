@@ -30,9 +30,9 @@
   {% if failed_credits %}
   <div class="mtp-crediting-result mtp-failed-credits print-hidden">
       {% blocktrans count failed_credits=failed_credits %}
-      {{ failed_credits }} credit couldn't be processed
+      {{ failed_credits }} credit couldn’t be processed
       {% plural %}
-      {{ failed_credits }} credits couldn't be processed
+      {{ failed_credits }} credits couldn’t be processed
       {% endblocktrans %}
       <a href="#failed-credits-dialog" class="js-Dialog mtp-end-link">{% trans "Why?" %}</a>
   </div>
@@ -203,16 +203,16 @@
             <div class="column-two-thirds">
               <p class="print-hidden">
                 {% if new_credits == 1 %}
-                  {% trans 'Showing <strong>one</strong> new credit.' %}
+                  {% trans '<strong>{{ new_credits }}</strong> new credit.' %}
                 {% else %}
                   {% blocktrans trimmed %}
-                  Showing <strong>{{ new_credits }}</strong> new credits.
+                  <strong>{{ new_credits }}</strong> new credits.
                   {% endblocktrans %}
                 {% endif %}
-                <span class="mtp-none-selected">{% trans "You haven't selected any to credit yet." %}</span>
+                <span class="mtp-none-selected">{% trans "You haven’t selected any to process yet." %}</span>
                 <span class="mtp-some-selected">
                   {% blocktrans trimmed %}
-                  You have selected <strong><span class="js-SelectionCount"></span></strong> to credit.
+                  <strong><span class="js-SelectionCount"></span></strong> credits selected for processing in NOMIS.
                   {% endblocktrans %}
                 </span>
               </p>
@@ -238,7 +238,7 @@
           </div>
         </div>
       {% else %}
-        <p>{% trans "There aren’t any credits available" %}</p>
+        <p>{% trans "No new credits received" %}</p>
       {% endif %}
 
 
