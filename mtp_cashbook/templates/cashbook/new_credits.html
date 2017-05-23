@@ -194,11 +194,10 @@
     data-credits-name="{{ form.new.credits.html_name }}">
     {% csrf_token %}
 
+    {% include 'mtp_common/forms/error-summary.html' with form=form.new only %}
 
-    {% if new_object_list %}
-      {% include 'mtp_common/forms/error-summary.html' with form=form.new only %}
-
-      <div class="mtp-batch">
+    <div class="mtp-batch">
+      {% if new_object_list %}
         <div class="mtp-floating-header js-StickyHeader print-hidden">
           <div class="grid-row">
             <div class="column-two-thirds">
@@ -238,44 +237,51 @@
             </div>
           </div>
         </div>
+      {% else %}
+        <p>{% trans "There aren’t any credits available" %}</p>
+      {% endif %}
 
-        <table>
-          <thead>
+
+      <table>
+        <thead>
+          {% if new_object_list %}
             {% include 'cashbook/includes/table_actions.html' with location='header' field_name=form.new.credits.html_name batch_size=batch_size %}
+          {% endif %}
 
-            <tr>
-              <th class="{{ request|ordering_classes:'received_at' }}">
-                <a href="?{{ request|query_string_with_reversed_ordering:'received_at' }}">
-                  <span>
-                    {% trans 'Date sent' %}
-                    {% describe_ordering_for_screenreader request 'received_at' %}
-                  </span>
-                </a>
-              </th>
-              <th class="{{ request|ordering_classes:'prisoner_number' }}">
-                <a href="?{{ request|query_string_with_reversed_ordering:'prisoner_number' }}">
-                  <span>
-                    {% trans 'Prisoner' %}
-                    {% describe_ordering_for_screenreader request 'prisoner_number' %}
-                  </span>
-                </a>
-              </th>
-              <th class="{{ request|ordering_classes:'amount' }} number">
-                <a href="?{{ request|query_string_with_reversed_ordering:'amount' }}">
-                  <span>
-                    {% trans 'Amount' %}
-                    {% describe_ordering_for_screenreader request 'amount' %}
-                  </span>
-                </a>
-              </th>
-              <th>{% trans 'Sender' %}</th>
-              {% if pre_approval_required %}
-                <th>{% trans 'Security' %}</th>
-              {% endif %}
-              <th class="check print-hidden"><span id="id_credits-label">{% trans 'Select' %}</span></th>
-            </tr>
-          </thead>
+          <tr>
+            <th class="{{ request|ordering_classes:'received_at' }}">
+              <a href="?{{ request|query_string_with_reversed_ordering:'received_at' }}">
+                <span>
+                  {% trans 'Date sent' %}
+                  {% describe_ordering_for_screenreader request 'received_at' %}
+                </span>
+              </a>
+            </th>
+            <th class="{{ request|ordering_classes:'prisoner_number' }}">
+              <a href="?{{ request|query_string_with_reversed_ordering:'prisoner_number' }}">
+                <span>
+                  {% trans 'Prisoner' %}
+                  {% describe_ordering_for_screenreader request 'prisoner_number' %}
+                </span>
+              </a>
+            </th>
+            <th class="{{ request|ordering_classes:'amount' }} number">
+              <a href="?{{ request|query_string_with_reversed_ordering:'amount' }}">
+                <span>
+                  {% trans 'Amount' %}
+                  {% describe_ordering_for_screenreader request 'amount' %}
+                </span>
+              </a>
+            </th>
+            <th>{% trans 'Sender' %}</th>
+            {% if pre_approval_required %}
+              <th>{% trans 'Security' %}</th>
+            {% endif %}
+            <th class="check print-hidden"><span id="id_credits-label">{% trans 'Select' %}</span></th>
+          </tr>
+        </thead>
 
+        {% if new_object_list %}
           <tbody>
             {% for credit_pk, credit in new_object_list %}
               <tr>
@@ -339,12 +345,19 @@
           <tfoot>
             {% include 'cashbook/includes/table_actions.html' with location='footer' field_name=form.new.credits.html_name batch_size=batch_size %}
           </tfoot>
-        </table>
+        {% else %}
+          <tbody>
+            <tr>
+              <td class="mtp-no-credits" colspan="100%">
+                <h2 class="heading-large">Thank you</h2>
+                <p>All credits have been processed</p>
+              </td>
+            </tr>
+          </tbody>
+        {% endif %}
+      </table>
 
-      </div>
-    {% else %}
-      <p>{% trans "There aren’t any credits available" %}</p>
-    {% endif %}
+    </div>
 
     <div id="incomplete-batch-dialog"
          class="Dialog"

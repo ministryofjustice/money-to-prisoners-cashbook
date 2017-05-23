@@ -238,6 +238,13 @@
       .mtp-manual-credit-complete {
         background-color: #cce9ff;
       }
+
+      .mtp-no-credits {
+        text-align: center;
+        background-color: $highlight-colour;
+        color: $secondary-text-colour;
+        height: 240px;
+      }
     }
   }
 
