@@ -23,8 +23,9 @@ def credit_selected_credits_to_nomis(user, session, selected_credit_ids, credits
 @spoolable()
 def credit_individual_credit_to_nomis(user, session, credit_id, credit):
     client = get_connection_with_session(user, session)
+    nomis_response = None
     try:
-        nomis.credit_prisoner(
+        nomis_response = nomis.credit_prisoner(
             credit['prison'],
             credit['prisoner_number'],
             credit['amount'],
@@ -45,9 +46,11 @@ def credit_individual_credit_to_nomis(user, session, credit_id, credit):
             })
             return
 
-    client.credits.actions.credit.post({
-        'credit_ids': [int(credit_id)]
-    })
+    credit_update = {'id': credit_id, 'credited': True}
+    if nomis_response and 'id' in nomis_response:
+        credit_update['nomis_transaction_id'] = nomis_response['id']
+    client.credits.actions.credit.post([credit_update])
+
     if credit.get('sender_email'):
         send_email(
             credit['sender_email'], 'cashbook/email/credited-confirmation.txt',

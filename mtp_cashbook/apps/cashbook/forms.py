@@ -420,9 +420,9 @@ class ProcessManualCreditsForm(GARequestErrorReportingMixin, forms.Form):
 
     def save(self):
         credit_id = int(self.cleaned_data['credit'])
-        self.client.credits.actions.credit.post({
-            'credit_ids': [credit_id]
-        })
+        self.client.credits.actions.credit.post([
+            {'id': credit_id, 'credited': True}
+        ])
         return credit_id
 
 

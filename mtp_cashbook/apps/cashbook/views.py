@@ -10,7 +10,7 @@ from django.utils.translation import gettext_lazy as _, ngettext
 from django.views.generic import FormView, TemplateView
 from mtp_common.auth import api_client
 from mtp_common import nomis
-from requests.exceptions import HTTPError
+from requests.exceptions import RequestException
 
 from .utils import expected_nomis_availability, check_pre_approval_required
 from .forms import (
@@ -275,7 +275,10 @@ class NewCreditsView(FormView):
         """
         if form_class is None:
             form_class = self.get_form_class()
-        return {name: form_class[name](**self.get_form_kwargs()) for name in form_class}
+        return {
+            name: form_class[name](**self.get_form_kwargs())
+            for name in form_class
+        }
 
     def get_form_kwargs(self):
         form_kwargs = super().get_form_kwargs()
@@ -319,8 +322,9 @@ class NewCreditsView(FormView):
             for name in self.get_form_class():
                 if key.startswith('submit_%s' % name):
                     form_name = name
-        if form_name in self.get_form():
-            form = self.get_form()[form_name]
+        forms = self.get_form()
+        if form_name in forms:
+            form = forms[form_name]
             if form.is_valid():
                 return self.form_valid(form)
         return self.form_invalid(None)
@@ -338,7 +342,7 @@ class NewCreditsView(FormView):
             try:
                 location = nomis.get_location(manual_credit['prisoner_number'])
                 manual_credit['new_location'] = location
-            except HTTPError:
+            except RequestException:
                 pass
         context['manual_object_list'] = manual_credit_choices
         context['manual_credits'] = len(manual_credit_choices)
