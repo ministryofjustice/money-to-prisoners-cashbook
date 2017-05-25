@@ -37,6 +37,13 @@ PROCESSING_BATCH = {
     'created': datetime.now().isoformat(),
     'expired': False
 }
+EXPIRED_PROCESSING_BATCH = {
+    'id': 10,
+    'user': 1,
+    'credits': [1, 2],
+    'created': datetime.now().isoformat(),
+    'expired': True
+}
 
 
 override_nomis_settings = override_settings(
@@ -547,6 +554,156 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             )
             self.assertEqual(response.status_code, 200)
             self.assertContains(response, 'Credit marked as credited')
+
+
+class ProcessingCreditsViewTestCase(MTPBaseTestCase):
+
+    @property
+    def url(self):
+        return reverse('processing-credits')
+
+    @override_nomis_settings
+    def test_new_credits_redirects_to_processing_when_batch_active(self):
+        with responses.RequestsMock() as rsps:
+            # get active batches
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/batches/'),
+                json=wrap_response_data(PROCESSING_BATCH),
+                status=200,
+            )
+            # get incomplete credits
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/?resolution=pending&pk=1&pk=2'),
+                json=wrap_response_data(CREDIT_1, CREDIT_2),
+                status=200,
+                match_querystring=True,
+            )
+            # get active batches
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/batches/'),
+                json=wrap_response_data(PROCESSING_BATCH),
+                status=200,
+            )
+            # get incomplete credits
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/?resolution=pending&pk=1&pk=2'),
+                json=wrap_response_data(CREDIT_1, CREDIT_2),
+                status=200,
+                match_querystring=True,
+            )
+
+            self.login()
+            response = self.client.get(reverse('new-credits'), follow=True)
+            self.assertRedirects(response, self.url)
+
+    @override_nomis_settings
+    def test_processing_credits_displays_percentage(self):
+        with responses.RequestsMock() as rsps:
+            # get active batches
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/batches/'),
+                json=wrap_response_data(PROCESSING_BATCH),
+                status=200,
+            )
+            # get incomplete credits
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/?resolution=pending&pk=1&pk=2'),
+                json=wrap_response_data(CREDIT_2),
+                status=200,
+                match_querystring=True,
+            )
+
+            self.login()
+            response = self.client.get(reverse('processing-credits'), follow=True)
+            self.assertContains(response, '50%')
+
+    @override_nomis_settings
+    def test_processing_credits_displays_continue_when_done(self):
+        with responses.RequestsMock() as rsps:
+            # get active batches
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/batches/'),
+                json=wrap_response_data(PROCESSING_BATCH),
+                status=200,
+            )
+            # get incomplete credits
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/?resolution=pending&pk=1&pk=2'),
+                json=wrap_response_data(),
+                status=200,
+                match_querystring=True,
+            )
+
+            self.login()
+            response = self.client.get(reverse('processing-credits'), follow=True)
+            self.assertContains(response, 'Continue')
+
+    @override_nomis_settings
+    def test_processing_credits_redirects_to_new_for_expired_batch(self):
+        with responses.RequestsMock() as rsps:
+            # get active batches
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/batches/'),
+                json=wrap_response_data(EXPIRED_PROCESSING_BATCH),
+                status=200,
+            )
+            # get active batches
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/batches/'),
+                json=wrap_response_data(EXPIRED_PROCESSING_BATCH),
+                status=200,
+            )
+            # get incomplete credits
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/?resolution=pending&pk=1&pk=2'),
+                json=wrap_response_data(CREDIT_2),
+                status=200,
+                match_querystring=True,
+            )
+            # get complete credits
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/?resolution=credited&pk=1&pk=2'),
+                json=wrap_response_data(CREDIT_1),
+                status=200,
+                match_querystring=True,
+            )
+            rsps.add(
+                rsps.DELETE,
+                api_url('/credits/batches/%s/' % PROCESSING_BATCH['id']),
+                status=200,
+            )
+            # get new credits
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/?ordering=-received_at&offset=0&limit=100&status=available&resolution=pending'),
+                json=wrap_response_data(),
+                status=200,
+                match_querystring=True,
+            )
+            # get manual credits
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/?resolution=manual&offset=0&limit=100&ordering=-received_at'),
+                json=wrap_response_data(CREDIT_2),
+                status=200,
+                match_querystring=True,
+            )
+
+            self.login()
+            response = self.client.get(self.url, follow=True)
+            self.assertRedirects(response, reverse('new-credits'))
 
 
 class AllCreditsViewTestCase(MTPBaseTestCase):
