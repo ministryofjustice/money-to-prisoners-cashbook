@@ -59,7 +59,7 @@ def credit_individual_credit_to_nomis(user, session, credit_id, credit):
                 'amount': credit['amount'],
                 'ref_number': credit.get('short_ref_number'),
                 'received_at': credit['received_at'],
-                'prisoner_name': credit['prisoner_name'],
+                'prisoner_name': credit.get('intended_recipient'),
                 'help_url': settings.CITIZEN_HELP_PAGE_URL,
                 'feedback_url': settings.CITIZEN_CONTACT_PAGE_URL,
                 'site_url': settings.START_PAGE_URL,
