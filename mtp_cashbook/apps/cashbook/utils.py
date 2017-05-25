@@ -5,6 +5,13 @@ from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import redirect
 
 
+def check_pre_approval_required(request):
+    return any((
+        prison['pre_approval_required']
+        for prison in request.user.user_data.get('prisons', [])
+    ))
+
+
 def nomis_integration_available(request):
     return settings.NOMIS_API_AVAILABLE and any((
         prison['nomis_id'] in settings.NOMIS_API_PRISONS

@@ -26,3 +26,4 @@ mtp_cashbook/templates/govuk_template
 static/
 media/
 venv/
+spooler/

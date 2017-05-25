@@ -4,16 +4,18 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy, reverse
+from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _, ngettext
 from django.views.generic import FormView, TemplateView
 from mtp_common.auth import api_client
-from django.shortcuts import render
+from mtp_common import nomis
+from requests.exceptions import RequestException
 
-from .utils import expected_nomis_availability
+from .utils import expected_nomis_availability, check_pre_approval_required
 from .forms import (
     ProcessCreditBatchForm, DiscardLockedCreditsForm, FilterCreditHistoryForm,
-    ProcessNewCreditsForm, FilterAllCreditsForm
+    ProcessNewCreditsForm, FilterAllCreditsForm, ProcessManualCreditsForm, COMPLETED_INDEX
 )
 
 logger = logging.getLogger('mtp')
@@ -49,10 +51,7 @@ class DashboardView(TemplateView):
         locked = credit_client.get(status='locked')
         all_credits = credit_client.get()
 
-        pre_approval_required = any((
-            prison['pre_approval_required']
-            for prison in self.request.user.user_data.get('prisons', [])
-        ))
+        pre_approval_required = check_pre_approval_required(self.request)
         if pre_approval_required:
             reviewed = credit_client.get(status='available', reviewed=True)
             context_data['reviewed'] = reviewed['count']
@@ -104,10 +103,7 @@ class CreditBatchListView(FormView, CashbookSubviewMixin):
         context['total'] = sum([x[1]['amount'] for x in credit_choices])
         context['batch_size'] = len(credit_choices)
 
-        context['pre_approval_required'] = any((
-            prison['pre_approval_required']
-            for prison in self.request.user.user_data.get('prisons', [])
-        ))
+        context['pre_approval_required'] = check_pre_approval_required(self.request)
 
         credit_client = context['form'].client.credits
         available = credit_client.get(status='available')
@@ -266,9 +262,23 @@ class ChangeNotificationView(TemplateView):
 @method_decorator(expected_nomis_availability(True), name='dispatch')
 class NewCreditsView(FormView):
     title = _('New credits')
-    form_class = ProcessNewCreditsForm
+    form_class = {
+        'new': ProcessNewCreditsForm,
+        'manual': ProcessManualCreditsForm
+    }
     template_name = 'cashbook/new_credits.html'
     success_url = reverse_lazy('new-credits')
+
+    def get_form(self, form_class=None):
+        """
+        Returns a dict of instances of the forms to be used in this view.
+        """
+        if form_class is None:
+            form_class = self.get_form_class()
+        return {
+            name: form_class[name](**self.get_form_kwargs())
+            for name in form_class
+        }
 
     def get_form_kwargs(self):
         form_kwargs = super().get_form_kwargs()
@@ -277,49 +287,117 @@ class NewCreditsView(FormView):
             form_kwargs['ordering'] = self.request.GET['ordering']
         return form_kwargs
 
+    def get(self, request, *args, **kwargs):
+        client = api_client.get_connection(self.request)
+        batches = client.credits.batches.get()
+        if batches['count']:
+            last_batch = batches['results'][0]
+            credit_ids = last_batch['credits']
+            incomplete_credits = client.credits.get(
+                resolution='pending', pk=credit_ids
+            )
+            if not last_batch['expired'] and incomplete_credits['count']:
+                return redirect('processing-credits')
+
+            credited_credits = client.credits.get(
+                resolution='credited', pk=credit_ids
+            )
+            kwargs['credited_credits'] = credited_credits['count']
+            kwargs['failed_credits'] = incomplete_credits['count']
+            client.credits.batches(last_batch['id']).delete()
+
+        for message in messages.get_messages(request):
+            if message.level == COMPLETED_INDEX:
+                kwargs['completed_index'] = int(message.message)
+
+        return self.render_to_response(self.get_context_data(**kwargs))
+
+    def post(self, request, *args, **kwargs):
+        """
+        Handles POST requests, instantiating the relevant form instance with
+        the passed POST variables and then checked for validity.
+        """
+        form_name = None
+        for key in request.POST:
+            for name in self.get_form_class():
+                if key.startswith('submit_%s' % name):
+                    form_name = name
+        forms = self.get_form()
+        if form_name in forms:
+            form = forms[form_name]
+            if form.is_valid():
+                return self.form_valid(form)
+        return self.form_invalid(None)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        credit_choices = context['form'].credit_choices
-        context['object_list'] = credit_choices
-        context['total'] = sum([x[1]['amount'] for x in credit_choices])
-        context['new_credits'] = len(credit_choices)
+        new_credit_choices = context['form']['new'].credit_choices
+        context['new_object_list'] = new_credit_choices
+        context['total'] = sum([x[1]['amount'] for x in new_credit_choices])
+        context['new_credits'] = len(new_credit_choices)
 
-        context['pre_approval_required'] = any((
-            prison['pre_approval_required']
-            for prison in self.request.user.user_data.get('prisons', [])
-        ))
+        manual_credit_choices = context['form']['manual'].credit_choices
+        for credit_id, manual_credit in manual_credit_choices:
+            try:
+                location = nomis.get_location(manual_credit['prisoner_number'])
+                manual_credit['new_location'] = location
+            except RequestException:
+                pass
+        context['manual_object_list'] = manual_credit_choices
+        context['manual_credits'] = len(manual_credit_choices)
 
-        return context
+        context['pre_approval_required'] = check_pre_approval_required(self.request)
 
-    def form_valid(self, form):
-        credited, failed, uncreditable, unavailable = form.save()
-        credited_count = len(credited)
-
-        if credited_count:
-            messages.success(
-                self.request,
-                ngettext(
-                    'You credited 1 new credit to NOMIS.',
-                    'You credited %(credited)s new credits to NOMIS.',
-                    credited_count
-                ) % {
-                    'credited': credited_count
-                }
-            )
-
+        if context.get('credited_count', 0):
             username = self.request.user.user_data.get('username', 'Unknown')
             logger.info('User "%(username)s" added %(credited)d credits(s) to NOMIS' % {
                 'username': username,
-                'credited': credited_count,
+                'credited': context['credited_count'],
             }, extra={
                 'elk_fields': {
-                    '@fields.credited_count': credited_count,
+                    '@fields.credited_count': context['credited_count'],
                     '@fields.username': username,
                 }
             })
 
+        return context
+
+    def form_valid(self, form):
+        credit_choices = form.credit_choices
+
+        credit_id = form.save()
+
+        for i, choice in enumerate(credit_choices):
+            if credit_id == choice[0]:
+                messages.add_message(self.request, COMPLETED_INDEX, str(i))
         return super().form_valid(form)
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data())
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(expected_nomis_availability(True), name='dispatch')
+class ProcessingCreditsView(TemplateView):
+    title = _('Digital cashbook')
+    template_name = 'cashbook/processing_credits.html'
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        client = api_client.get_connection(self.request)
+        batches = client.credits.batches.get()
+        if batches['count'] == 0 or batches['results'][0]['expired']:
+            return redirect('new-credits')
+        else:
+            credit_ids = batches['results'][0]['credits']
+            total = len(credit_ids)
+            incomplete_credits = client.credits.get(
+                resolution='pending', pk=credit_ids
+            )
+            done_credit_count = total - incomplete_credits['count']
+            context['percentage'] = int((done_credit_count/total)*100)
+        return self.render_to_response(context)
 
 
 @method_decorator(login_required, name='dispatch')

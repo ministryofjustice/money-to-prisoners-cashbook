@@ -14,16 +14,16 @@ from django.utils.dateformat import format as format_date
 from django.utils.text import capfirst
 from django.utils.translation import gettext, gettext_lazy, ngettext
 from form_error_reporting import GARequestErrorReportingMixin
-from mtp_common import nomis
 from mtp_common.api import retrieve_all_pages
 from mtp_common.auth.api_client import get_connection
-from requests.exceptions import HTTPError
 
 from .form_fields import MtpTextInput, MtpDateInput
-from .tasks import schedule_credit_confirmation_email
+from .tasks import credit_selected_credits_to_nomis
 from .templatetags.credits import parse_date_fields
 
 logger = logging.getLogger('mtp')
+
+COMPLETED_INDEX = 21
 
 
 class ProcessCreditBatchForm(GARequestErrorReportingMixin, forms.Form):
@@ -347,7 +347,7 @@ class ProcessNewCreditsForm(GARequestErrorReportingMixin, forms.Form):
 
     def _request_all_credits(self):
         return retrieve_all_pages(
-            self.client.credits.get, status='available',
+            self.client.credits.get, status='available', resolution='pending',
             ordering=self.ordering
         )
 
@@ -371,47 +371,59 @@ class ProcessNewCreditsForm(GARequestErrorReportingMixin, forms.Form):
         credit_ids = [int(c_id) for c_id in set(self.cleaned_data['credits'])]
         credits = dict(self.credit_choices)
 
-        credited = []
-        failed = []
-        uncreditable = []
-        unavailable = []
+        self.client.credits.batches.post({'credits': credit_ids})
+        credit_selected_credits_to_nomis(
+            self.request.user, self.request.session, credit_ids, credits
+        )
 
-        for credit_id in credit_ids:
-            if credit_id in credits:
-                credit = credits[credit_id]
-                try:
-                    nomis.credit_prisoner(
-                        credit['prison'],
-                        credit['prisoner_number'],
-                        credit['amount'],
-                        str(credit_id),
-                        'Sent by {sender}'.format(sender=credit['sender_name']),
-                        retries=1
-                    )
-                    credited.append(credit_id)
-                    schedule_credit_confirmation_email(
-                        credit.get('sender_email'), credit['prisoner_name'],
-                        credit['amount'], credit.get('short_ref_number'),
-                        credit['received_at']
-                    )
-                except HTTPError as e:
-                    if e.response.status_code == 409:
-                        credited.append(credit_id)
-                        logger.warn('Credit %s was already present in NOMIS' % credit_id)
-                    elif e.response.status_code >= 500:
-                        failed.append(credit_id)
-                        logger.error('Credit %s could not credited as NOMIS is unavailable' % credit_id)
-                    else:
-                        uncreditable.append(credit_id)
-                        logger.error('Credit %s cannot be automatically credited to NOMIS' % credit_id)
-            else:
-                unavailable.append(credit_id)
-                logger.warn('Credit %s is no longer available' % credit_id)
 
-        self.client.credits.actions.credit.post({
-            'credit_ids': [int(c_id) for c_id in credited]
-        })
-        return (credited, failed, uncreditable, unavailable)
+class ProcessManualCreditsForm(GARequestErrorReportingMixin, forms.Form):
+    credit = forms.ChoiceField(choices=(), required=False)
+
+    def __init__(self, request, ordering='-received_at', *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.request = request
+        self.user = request.user
+        self.client = get_connection(request)
+        self.ordering = ordering
+
+        self.fields['credit'].choices = self.credit_choices
+
+    def _request_all_credits(self):
+        return retrieve_all_pages(
+            self.client.credits.get, resolution='manual',
+            ordering=self.ordering
+        )
+
+    def clean_credit(self):
+        prefix = 'submit_manual_'
+        if self.request.method == 'POST':
+            for key in self.request.POST:
+                if key.startswith(prefix):
+                    credit_id = int(key[len(prefix):])
+                    if not self.credit_choices or credit_id not in next(zip(*self.credit_choices)):
+                        raise forms.ValidationError(
+                            gettext_lazy('That credit cannot be manually credited'), code='invalid'
+                        )
+                    return credit_id
+
+    @cached_property
+    def credit_choices(self):
+        """
+        Gets the credits currently available the user.
+        """
+        credits = self._request_all_credits()
+        id_credits = []
+        for credit in parse_date_fields(credits):
+            id_credits.append((credit['id'], credit))
+        return id_credits
+
+    def save(self):
+        credit_id = int(self.cleaned_data['credit'])
+        self.client.credits.actions.credit.post([
+            {'id': credit_id, 'credited': True}
+        ])
+        return credit_id
 
 
 class FilterAllCreditsForm(GARequestErrorReportingMixin, forms.Form):

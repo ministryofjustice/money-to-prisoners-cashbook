@@ -12,10 +12,12 @@
   </p>
 
   <table cellspacing="10" style="font-family: sans-serif;">
+    {% if prisoner_name %}
     <tr>
       <th valign="top" align="left">{% trans 'Payment to:' %}</th>
       <td>{{ prisoner_name }}</td>
     </tr>
+    {% endif %}
     <tr>
       <th valign="top" align="left">{% trans 'Amount paid:' %}</th>
       <td>£{{ amount|currency }}</td>
