@@ -99,11 +99,11 @@
 
         <tbody>
           {% for credit_pk, credit in manual_object_list %}
-            {% if completed_index == forloop.counter0 %}
+            {% if completed_index == 0 and forloop.counter0 == 0 %}
               <tr class="mtp-manual-credit-complete">
                 <td colspan="1"></td>
                 <td colspan="{% if pre_approval_required%}5{% else %}4{% endif %}">
-                  {% trans 'Credit marked as credited' %}
+                  {% trans 'You have manually put this into NOMIS' %}
                 </td>
               </tr>
             {% endif %}
@@ -187,6 +187,14 @@
                 </div>
               </div>
             </tr>
+            {% if completed_index == forloop.counter %}
+              <tr class="mtp-manual-credit-complete">
+                <td colspan="1"></td>
+                <td colspan="{% if pre_approval_required%}5{% else %}4{% endif %}">
+                  {% trans 'You have manually put this into NOMIS' %}
+                </td>
+              </tr>
+            {% endif %}
           {% endfor %}
         </tbody>
       </table>
