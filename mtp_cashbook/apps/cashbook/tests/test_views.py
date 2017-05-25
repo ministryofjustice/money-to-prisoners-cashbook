@@ -495,5 +495,5 @@ class HistoryViewTestCase(MTPBaseTestCase):
         response = self.client.get(self.history_url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['current_page'], 7)
-        self.assertSequenceEqual(response.context['page_range'], [1, 2, 3, None, 5, 6, 7, 8, 9, None, 25, 26, 27])
+        self.assertSequenceEqual(response.context['page_range'], [1, 2, None, 5, 6, 7, 8, 9, None, 26, 27])
         self.assertContains(response, text='…', count=2)

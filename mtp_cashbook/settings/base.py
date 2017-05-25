@@ -121,6 +121,7 @@ TEMPLATES = [
                 'mtp_common.context_processors.analytics',
                 'mtp_common.context_processors.app_environment',
                 'mtp_common.context_processors.govuk_localisation',
+                'mtp_cashbook.apps.cashbook.context_processors.nomis_integration',
             ],
         },
     },

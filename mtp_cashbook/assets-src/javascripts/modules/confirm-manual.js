@@ -22,7 +22,6 @@ exports.ConfirmManual = {
   // Called when the user submits the form,
   // either clicking 'Done' or 'Yes' in the popup.
   onSubmit: function (e) {
-    debugger
     var $el = $(e.target);
     var type = $el.val();
 

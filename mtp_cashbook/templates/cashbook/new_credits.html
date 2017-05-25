@@ -79,7 +79,7 @@
       <table>
         <thead>
           <tr class="print-hidden">
-            <td colspan="100%" class="cell--compact">
+            <td colspan="{% if pre_approval_required%}6{% else %}5{% endif %}" class="cell--compact">
               {% if print != False %}
                 <a href="#" class="js-Print">{% trans "Print these credits" %}</a>
               {% endif %}
@@ -355,9 +355,9 @@
         {% else %}
           <tbody>
             <tr>
-              <td class="mtp-no-credits" colspan="100%">
-                <h2 class="heading-large">Thank you</h2>
-                <p>All credits have been processed</p>
+              <td class="mtp-no-credits" colspan="{% if pre_approval_required%}6{% else %}5{% endif %}">
+                <h2 class="heading-large">{% trans 'Thank you' %}</h2>
+                <p>{% trans 'All credits have been processed' %}</p>
               </td>
             </tr>
           </tbody>
