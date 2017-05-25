@@ -54,7 +54,7 @@
   {% endif %}
 
   {% if manual_credits %}
-  <div class="mtp-crediting-result mtp-manual-credits">
+  <div class="mtp-crediting-result mtp-manual-credits print-hidden">
       {% blocktrans count manual_credits=manual_credits %}
       {{ manual_credits }} credit needs your manual input in NOMIS - see below
       {% plural %}
@@ -70,7 +70,7 @@
   </div>
 
   {% if manual_object_list %}
-  <div class='print-hidden'><p>{% trans ' These credits need your manual input to be processed.' %}</p></div>
+  <div class="print-hidden"><p>{% trans ' These credits need your manual input to be processed.' %}</p></div>
 
   <form class="js-ConfirmManual" method="post" action="" data-credits-name="{{ form.manual.credits.html_name }}">
     {% csrf_token %}
@@ -78,6 +78,13 @@
     <div class="mtp-batch">
       <table>
         <thead>
+          <tr class="print-hidden">
+            <td colspan="100%" class="cell--compact">
+              {% if print != False %}
+                <a href="#" class="js-Print">{% trans "Print these credits" %}</a>
+              {% endif %}
+            </td>
+          </tr>
           <tr>
             <th>{% trans 'Date sent' %}</th>
             <th>{% trans 'Prisoner' %}</th>
@@ -196,7 +203,7 @@
 
     {% include 'mtp_common/forms/error-summary.html' with form=form.new only %}
 
-    <div class="mtp-batch">
+    <div class="mtp-batch {% if not new_object_list %}print-hidden{% endif %}">
       {% if new_object_list %}
         <div class="mtp-floating-header js-StickyHeader print-hidden">
           <div class="grid-row">
