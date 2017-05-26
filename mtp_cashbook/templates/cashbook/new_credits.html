@@ -18,10 +18,10 @@
 
   {% if credited_credits %}
   <div class="mtp-crediting-result mtp-credited-credits print-hidden">
-      {% blocktrans count credited_credits=credited_credits %}
-      {{ credited_credits }} credit sent to NOMIS
+      {% blocktrans count credited_credits=credited_credits trimmed %}
+        {{ credited_credits }} credit sent to NOMIS
       {% plural %}
-      {{ credited_credits }} credits sent to NOMIS
+        {{ credited_credits }} credits sent to NOMIS
       {% endblocktrans %}
       <a href="{% url 'all-credits' %}" class="mtp-end-link">{% trans "View" %}</a>
   </div>
@@ -29,10 +29,10 @@
 
   {% if failed_credits %}
   <div class="mtp-crediting-result mtp-failed-credits print-hidden">
-      {% blocktrans count failed_credits=failed_credits %}
-      {{ failed_credits }} credit couldn’t be processed
+      {% blocktrans count failed_credits=failed_credits trimmed %}
+        {{ failed_credits }} credit couldn’t be processed
       {% plural %}
-      {{ failed_credits }} credits couldn’t be processed
+        {{ failed_credits }} credits couldn’t be processed
       {% endblocktrans %}
       <a href="#failed-credits-dialog" class="js-Dialog mtp-end-link">{% trans "Why?" %}</a>
   </div>
@@ -55,10 +55,10 @@
 
   {% if manual_credits %}
   <div class="mtp-crediting-result mtp-manual-credits print-hidden">
-      {% blocktrans count manual_credits=manual_credits %}
-      {{ manual_credits }} credit needs your manual input in NOMIS - see below
+      {% blocktrans count manual_credits=manual_credits trimmed %}
+        {{ manual_credits }} credit needs your manual input in NOMIS - see below
       {% plural %}
-      {{ manual_credits }} credits need your manual input in NOMIS - see below
+        {{ manual_credits }} credits need your manual input in NOMIS - see below
       {% endblocktrans %}
   </div>
   {% endif %}
@@ -113,10 +113,10 @@
                   {% if days == 0 %}
                     {% trans 'Today' %}
                   {% else %}
-                    {% blocktrans count days=days %}
-                    {{ days }} day ago
+                    {% blocktrans count days=days trimmed %}
+                      {{ days }} day ago
                     {% plural %}
-                    {{ days }} days ago
+                      {{ days }} days ago
                     {% endblocktrans %}
                   {% endif %}
                 </div>
@@ -158,8 +158,8 @@
                   {% if credit.new_location.nomis_id == 'TRN' %}
                     {% trans 'Prisoner in transit' %}
                   {% elif credit.new_location.nomis_id %}
-                    {% blocktrans with new_prison=credit.new_location.name %}
-                    Prisoner transferred to {{ new_prison }}
+                    {% blocktrans with new_prison=credit.new_location.name trimmed %}
+                      Prisoner transferred to {{ new_prison }}
                     {% endblocktrans %}
                   {% else %}
                     {% trans 'Prisoner left this prison' %}
@@ -215,18 +215,14 @@
           <div class="grid-row">
             <div class="column-two-thirds">
               <p class="print-hidden">
-                {% if new_credits == 1 %}
-                  {% trans '<strong>{{ new_credits }}</strong> new credit.' %}
-                {% else %}
-                  {% blocktrans trimmed %}
+                {% blocktrans count new_credits=new_credits trimmed %}
+                  <strong>{{ new_credits }}</strong> new credit.
+                {% plural %}
                   <strong>{{ new_credits }}</strong> new credits.
-                  {% endblocktrans %}
-                {% endif %}
-                <span class="mtp-none-selected">{% trans "You haven’t selected any to process yet." %}</span>
+                {% endblocktrans %}
+                <span class="mtp-none-selected">{% trans 'You haven’t selected any to process yet.' %}</span>
                 <span class="mtp-some-selected">
-                  {% blocktrans trimmed %}
-                  <strong><span class="js-SelectionCount"></span></strong> credits selected for processing in NOMIS.
-                  {% endblocktrans %}
+                  <strong><span class="js-SelectionCount"></span></strong>{% trans 'credits selected for processing in NOMIS' %}.
                 </span>
               </p>
             </div>
@@ -305,10 +301,10 @@
                     {% if days == 0 %}
                       {% trans 'Today' %}
                     {% else %}
-                      {% blocktrans count days=days %}
-                      {{ days }} day ago
+                      {% blocktrans count days=days trimmed %}
+                        {{ days }} day ago
                       {% plural %}
-                      {{ days }} days ago
+                        {{ days }} days ago
                       {% endblocktrans %}
                     {% endif %}
                   </div>
