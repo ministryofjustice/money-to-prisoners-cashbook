@@ -17,7 +17,6 @@ from form_error_reporting import GARequestErrorReportingMixin
 from mtp_common.api import retrieve_all_pages
 from mtp_common.auth.api_client import get_connection
 
-from .form_fields import MtpTextInput, MtpDateInput
 from .tasks import credit_selected_credits_to_nomis
 from .templatetags.credits import parse_date_fields
 
@@ -171,12 +170,9 @@ class DiscardLockedCreditsForm(GARequestErrorReportingMixin, forms.Form):
 
 
 class FilterCreditHistoryForm(GARequestErrorReportingMixin, forms.Form):
-    start = forms.DateField(label=gettext_lazy('From'),
-                            required=False, widget=MtpDateInput)
-    end = forms.DateField(label=gettext_lazy('To'),
-                          required=False, widget=MtpDateInput)
-    search = forms.CharField(label=gettext_lazy('Prisoner name, prisoner number or sender name'),
-                             required=False, widget=MtpTextInput)
+    start = forms.DateField(label=gettext_lazy('From'), required=False)
+    end = forms.DateField(label=gettext_lazy('To'), required=False)
+    search = forms.CharField(label=gettext_lazy('Prisoner name, prisoner number or sender name'), required=False)
     page = forms.IntegerField(required=False, widget=forms.HiddenInput)
 
     def __init__(self, request, *args, **kwargs):
@@ -441,13 +437,13 @@ class FilterAllCreditsForm(GARequestErrorReportingMixin, forms.Form):
     )
     start = forms.DateField(label=gettext_lazy('From'),
                             help_text=gettext_lazy('eg 1/6/2016'),
-                            required=False, widget=MtpDateInput)
+                            required=False)
     end = forms.DateField(label=gettext_lazy('To'),
                           help_text=gettext_lazy('eg 5/6/2016'),
-                          required=False, widget=MtpDateInput)
+                          required=False)
     search = forms.CharField(label=gettext_lazy('Keywords'),
                              help_text=gettext_lazy('eg prisoner name, prisoner number or sender name'),
-                             required=False, widget=MtpTextInput)
+                             required=False)
     page = forms.IntegerField(required=False, widget=forms.HiddenInput)
 
     page_size = 20
