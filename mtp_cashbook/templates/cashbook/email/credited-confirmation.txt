@@ -4,13 +4,13 @@ GOV.UK - {% trans 'Send money to a prisoner' %}
 
 {% trans 'Dear sender,' %}
 
-{% blocktrans %}
+{% blocktrans trimmed %}
 The payment you made - confirmation number {{ ref_number }} - has now been credited to the prisoner's account.
 {% endblocktrans %}
 
-{% if prisoner_name %}{% trans 'Payment to' %}: {{ prisoner_name }}{% endif %}
-{% trans 'Amount paid' %}: £{{ amount|currency }}
-{% trans 'Date payment made' %}: {{ received_at|date:'d/m/Y' }}
+{% if prisoner_name %}{% trans 'Payment to:' %} {{ prisoner_name }}{% endif %}
+{% trans 'Amount paid:' %} £{{ amount|currency }}
+{% trans 'Date payment made:' %} {{ received_at|date:'d/m/Y' }}
 
 {% trans 'Thank you for using this service.' %}
 

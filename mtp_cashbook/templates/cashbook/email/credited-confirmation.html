@@ -6,8 +6,8 @@
   <p>{% trans 'Dear sender,' %}</p>
 
   <p>
-    {% blocktrans %}
-    The payment you made - confirmation number {{ ref_number }} - has now been credited to the prisoner’s account.
+    {% blocktrans trimmed %}
+      The payment you made - confirmation number {{ ref_number }} - has now been credited to the prisoner’s account.
     {% endblocktrans %}
   </p>
 
