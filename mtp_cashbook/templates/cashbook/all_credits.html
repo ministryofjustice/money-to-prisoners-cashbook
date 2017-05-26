@@ -95,10 +95,10 @@
                   {% if days == 0 %}
                     {% trans 'Today' %}
                   {% else %}
-                    {% blocktrans count days=days %}
-                    {{ days }} day ago
+                    {% blocktrans count days=days trimmed %}
+                      {{ days }} day ago
                     {% plural %}
-                    {{ days }} days ago
+                      {{ days }} days ago
                     {% endblocktrans %}
                   {% endif %}
                 </div>
