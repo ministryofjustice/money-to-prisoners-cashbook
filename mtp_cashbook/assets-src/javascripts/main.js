@@ -13,6 +13,7 @@
   require('analytics').Analytics.init();
   require('track-printing').TrackPrinting.init();
   require('confirm-manual').ConfirmManual.init();
+  require('footer-feedback').FooterFeedback.init();
 
   require('sticky-header').StickyHeader.init();
   require('align-totals').AlignTotals.init();

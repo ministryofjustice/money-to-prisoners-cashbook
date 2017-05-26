@@ -3,7 +3,7 @@
 {% load mtp_common %}
 {% load staticfiles %}
 
-{% block body_classes %}mtp-change-notification{% endblock %}
+{% block body_classes %}{{ block.super }} mtp-change-notification{% endblock %}
 
 {% block inner_content %}
 

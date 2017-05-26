@@ -8,11 +8,12 @@ class PrisonTicketForm(EmailTicketForm):
     def submit_ticket(self, request, subject, tags, ticket_template_name, **kwargs):
         try:
             accessible_prisons = sorted(prison['name'] for prison in request.user.user_data.get('prisons', []))
-            subject = '%(subject)s (%(accessible_prisons)s)' % {
-                'subject': subject,
-                'accessible_prisons': ', '.join(accessible_prisons)
-            }
-            tags.extend(map(slugify, accessible_prisons))
+            if accessible_prisons:
+                subject = '%(subject)s (%(accessible_prisons)s)' % {
+                    'subject': subject,
+                    'accessible_prisons': ', '.join(accessible_prisons)
+                }
+            prison_tags = list(map(slugify, accessible_prisons))
         except (KeyError, HttpClientError, Unauthorized):
-            pass
-        super().submit_ticket(request, subject, tags, ticket_template_name, **kwargs)
+            prison_tags = []
+        super().submit_ticket(request, subject, tags + prison_tags, ticket_template_name, **kwargs)
