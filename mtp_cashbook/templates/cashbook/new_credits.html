@@ -70,7 +70,7 @@
   </div>
 
   {% if manual_object_list %}
-  <div class="print-hidden"><p>{% trans ' These credits need your manual input to be processed.' %}</p></div>
+  <div class="print-hidden"><p>{% trans 'These credits need your manual input to be processed.' %}</p></div>
 
   <form class="js-ConfirmManual" method="post" action="" data-credits-name="{{ form.manual.credits.html_name }}">
     {% csrf_token %}
