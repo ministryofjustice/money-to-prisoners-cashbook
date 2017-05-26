@@ -17,7 +17,7 @@ def credit_selected_credits_to_nomis(user, session, selected_credit_ids, credits
         if credit_id in credits:
             credit_individual_credit_to_nomis(user, session, credit_id, credits[credit_id])
         else:
-            logger.warn('Credit %s is no longer available' % credit_id)
+            logger.warning('Credit %s is no longer available' % credit_id)
 
 
 @spoolable()
@@ -35,7 +35,7 @@ def credit_individual_credit_to_nomis(user, session, credit_id, credit):
         )
     except HTTPError as e:
         if e.response.status_code == 409:
-            logger.warn('Credit %s was already present in NOMIS' % credit_id)
+            logger.warning('Credit %s was already present in NOMIS' % credit_id)
         elif e.response.status_code >= 500:
             logger.error('Credit %s could not credited as NOMIS is unavailable' % credit_id)
             return
