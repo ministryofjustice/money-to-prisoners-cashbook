@@ -75,14 +75,12 @@
   <form class="js-ConfirmManual" method="post" action="" data-credits-name="{{ form.manual.credits.html_name }}">
     {% csrf_token %}
     {% include 'mtp_common/forms/error-summary.html' with form=form.manual only %}
-    <div class="mtp-batch">
+    <div class="mtp-batch mtp-manual-credits-batch">
       <table>
         <thead>
           <tr class="print-hidden">
             <td colspan="{% if pre_approval_required%}6{% else %}5{% endif %}" class="cell--compact">
-              {% if print != False %}
-                <a href="#" class="js-Print">{% trans "Print these credits" %}</a>
-              {% endif %}
+              <a href="#" class="js-Print" data-do-not-print=".mtp-new-credits-batch">{% trans "Print these credits" %}</a>
             </td>
           </tr>
           <tr>
@@ -211,7 +209,7 @@
 
     {% include 'mtp_common/forms/error-summary.html' with form=form.new only %}
 
-    <div class="mtp-batch {% if not new_object_list %}print-hidden{% endif %}">
+    <div class="mtp-batch mtp-new-credits-batch {% if not new_object_list %}print-hidden{% endif %}">
       {% if new_object_list %}
         <div class="mtp-floating-header js-StickyHeader print-hidden">
           <div class="grid-row">
@@ -260,7 +258,7 @@
       <table>
         <thead>
           {% if new_object_list %}
-            {% include 'cashbook/includes/table_actions.html' with location='header' field_name=form.new.credits.html_name batch_size=batch_size %}
+            {% include 'cashbook/includes/table_actions.html' with location='header' field_name=form.new.credits.html_name batch_size=batch_size print=False %}
           {% endif %}
 
           <tr>
@@ -358,7 +356,7 @@
           </tbody>
 
           <tfoot>
-            {% include 'cashbook/includes/table_actions.html' with location='footer' field_name=form.new.credits.html_name batch_size=batch_size %}
+            {% include 'cashbook/includes/table_actions.html' with location='footer' field_name=form.new.credits.html_name batch_size=batch_size print=False %}
           </tfoot>
         {% else %}
           <tbody>
