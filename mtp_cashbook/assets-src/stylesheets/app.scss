@@ -2,6 +2,8 @@
 
 @import 'mtp-internal';
 
+@import 'elements/footer-feedback';
+
 // Page specific styles
 @import 'views/dashboard';
 @import 'views/batch';
@@ -19,9 +21,8 @@
   width: 65%;
 }
 
-// govuk_elements overrides
-.form-group {
-  margin-bottom: 10px;
+.without-footer-padding #footer .footer-wrapper {
+  padding-top: 2em;
 }
 
 // app-specific styles
