@@ -347,7 +347,7 @@ class ProcessNewCreditsForm(GARequestErrorReportingMixin, forms.Form):
 
     def _request_all_credits(self):
         return retrieve_all_pages(
-            self.client.credits.get, status='available', resolution='pending',
+            self.client.credits.get, status='credit_pending', resolution='pending',
             ordering=self.ordering
         )
 
@@ -391,7 +391,7 @@ class ProcessManualCreditsForm(GARequestErrorReportingMixin, forms.Form):
 
     def _request_all_credits(self):
         return retrieve_all_pages(
-            self.client.credits.get, resolution='manual',
+            self.client.credits.get, status='credit_pending', resolution='manual',
             ordering=self.ordering
         )
 

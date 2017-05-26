@@ -98,7 +98,7 @@ class ChangeNotificationTestCase(MTPBaseTestCase):
             # get new credits
             rsps.add(
                 rsps.GET,
-                api_url('/credits/?ordering=-received_at&offset=0&limit=100&status=available&resolution=pending'),
+                api_url('/credits/?ordering=-received_at&offset=0&limit=100&status=credit_pending&resolution=pending'),
                 json=wrap_response_data(),
                 status=200,
                 match_querystring=True,
@@ -106,7 +106,7 @@ class ChangeNotificationTestCase(MTPBaseTestCase):
             # get manual credits
             rsps.add(
                 rsps.GET,
-                api_url('/credits/?resolution=manual&offset=0&limit=100&ordering=-received_at'),
+                api_url('/credits/?resolution=manual&status=credit_pending&offset=0&limit=100&ordering=-received_at'),
                 json=wrap_response_data(),
                 status=200,
                 match_querystring=True,
@@ -133,7 +133,7 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             # get new credits
             rsps.add(
                 rsps.GET,
-                api_url('/credits/?ordering=-received_at&offset=0&limit=100&status=available&resolution=pending'),
+                api_url('/credits/?ordering=-received_at&offset=0&limit=100&status=credit_pending&resolution=pending'),
                 json=wrap_response_data(CREDIT_1, CREDIT_2),
                 status=200,
                 match_querystring=True,
@@ -141,7 +141,7 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             # get manual credits
             rsps.add(
                 rsps.GET,
-                api_url('/credits/?resolution=manual&offset=0&limit=100&ordering=-received_at'),
+                api_url('/credits/?resolution=manual&status=credit_pending&offset=0&limit=100&ordering=-received_at'),
                 json=wrap_response_data(),
                 status=200,
                 match_querystring=True,
@@ -158,7 +158,7 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             # get new credits
             rsps.add(
                 rsps.GET,
-                api_url('/credits/?ordering=-received_at&offset=0&limit=100&status=available&resolution=pending'),
+                api_url('/credits/?ordering=-received_at&offset=0&limit=100&status=credit_pending&resolution=pending'),
                 json=wrap_response_data(CREDIT_1, CREDIT_2),
                 status=200,
                 match_querystring=True,
@@ -166,7 +166,7 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             # get manual credits
             rsps.add(
                 rsps.GET,
-                api_url('/credits/?resolution=manual&offset=0&limit=100&ordering=-received_at'),
+                api_url('/credits/?resolution=manual&status=credit_pending&offset=0&limit=100&ordering=-received_at'),
                 json=wrap_response_data(),
                 status=200,
                 match_querystring=True,
@@ -233,7 +233,7 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             # get new credits
             rsps.add(
                 rsps.GET,
-                api_url('/credits/?ordering=-received_at&offset=0&limit=100&status=available&resolution=pending'),
+                api_url('/credits/?ordering=-received_at&offset=0&limit=100&status=credit_pending&resolution=pending'),
                 json=wrap_response_data(),
                 status=200,
                 match_querystring=True,
@@ -241,7 +241,7 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             # get manual credits
             rsps.add(
                 rsps.GET,
-                api_url('/credits/?resolution=manual&offset=0&limit=100&ordering=-received_at'),
+                api_url('/credits/?resolution=manual&status=credit_pending&offset=0&limit=100&ordering=-received_at'),
                 json=wrap_response_data(),
                 status=200,
                 match_querystring=True,
@@ -276,7 +276,7 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             # get new credits
             rsps.add(
                 rsps.GET,
-                api_url('/credits/?ordering=-received_at&offset=0&limit=100&status=available&resolution=pending'),
+                api_url('/credits/?ordering=-received_at&offset=0&limit=100&status=credit_pending&resolution=pending'),
                 json=wrap_response_data(CREDIT_1, CREDIT_2),
                 status=200,
                 match_querystring=True,
@@ -284,7 +284,7 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             # get manual credits
             rsps.add(
                 rsps.GET,
-                api_url('/credits/?resolution=manual&offset=0&limit=100&ordering=-received_at'),
+                api_url('/credits/?resolution=manual&status=credit_pending&offset=0&limit=100&ordering=-received_at'),
                 json=wrap_response_data(),
                 status=200,
                 match_querystring=True,
@@ -350,7 +350,7 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             # get new credits
             rsps.add(
                 rsps.GET,
-                api_url('/credits/?ordering=-received_at&offset=0&limit=100&status=available&resolution=pending'),
+                api_url('/credits/?ordering=-received_at&offset=0&limit=100&status=credit_pending&resolution=pending'),
                 json=wrap_response_data(),
                 status=200,
                 match_querystring=True,
@@ -358,7 +358,7 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             # get manual credits
             rsps.add(
                 rsps.GET,
-                api_url('/credits/?resolution=manual&offset=0&limit=100&ordering=-received_at'),
+                api_url('/credits/?resolution=manual&status=credit_pending&offset=0&limit=100&ordering=-received_at'),
                 json=wrap_response_data(),
                 status=200,
                 match_querystring=True,
@@ -381,7 +381,7 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             # get new credits
             rsps.add(
                 rsps.GET,
-                api_url('/credits/?ordering=-received_at&offset=0&limit=100&status=available&resolution=pending'),
+                api_url('/credits/?ordering=-received_at&offset=0&limit=100&status=credit_pending&resolution=pending'),
                 json=wrap_response_data(CREDIT_1, CREDIT_2),
                 status=200,
                 match_querystring=True,
@@ -389,7 +389,7 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             # get manual credits
             rsps.add(
                 rsps.GET,
-                api_url('/credits/?resolution=manual&offset=0&limit=100&ordering=-received_at'),
+                api_url('/credits/?resolution=manual&status=credit_pending&offset=0&limit=100&ordering=-received_at'),
                 json=wrap_response_data(),
                 status=200,
                 match_querystring=True,
@@ -455,7 +455,7 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             # get new credits
             rsps.add(
                 rsps.GET,
-                api_url('/credits/?ordering=-received_at&offset=0&limit=100&status=available&resolution=pending'),
+                api_url('/credits/?ordering=-received_at&offset=0&limit=100&status=credit_pending&resolution=pending'),
                 json=wrap_response_data(),
                 status=200,
                 match_querystring=True,
@@ -463,7 +463,7 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             # get manual credits
             rsps.add(
                 rsps.GET,
-                api_url('/credits/?resolution=manual&offset=0&limit=100&ordering=-received_at'),
+                api_url('/credits/?resolution=manual&status=credit_pending&offset=0&limit=100&ordering=-received_at'),
                 json=wrap_response_data(CREDIT_1),
                 status=200,
                 match_querystring=True,
@@ -498,7 +498,7 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             # get new credits
             rsps.add(
                 rsps.GET,
-                api_url('/credits/?ordering=-received_at&offset=0&limit=100&status=available&resolution=pending'),
+                api_url('/credits/?ordering=-received_at&offset=0&limit=100&status=credit_pending&resolution=pending'),
                 json=wrap_response_data(),
                 status=200,
                 match_querystring=True,
@@ -506,7 +506,7 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             # get manual credits
             rsps.add(
                 rsps.GET,
-                api_url('/credits/?resolution=manual&offset=0&limit=100&ordering=-received_at'),
+                api_url('/credits/?resolution=manual&status=credit_pending&offset=0&limit=100&ordering=-received_at'),
                 json=wrap_response_data(CREDIT_1, CREDIT_2),
                 status=200,
                 match_querystring=True,
@@ -528,7 +528,7 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             # get new credits
             rsps.add(
                 rsps.GET,
-                api_url('/credits/?ordering=-received_at&offset=0&limit=100&status=available&resolution=pending'),
+                api_url('/credits/?ordering=-received_at&offset=0&limit=100&status=credit_pending&resolution=pending'),
                 json=wrap_response_data(),
                 status=200,
                 match_querystring=True,
@@ -536,7 +536,7 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             # get manual credits
             rsps.add(
                 rsps.GET,
-                api_url('/credits/?resolution=manual&offset=0&limit=100&ordering=-received_at'),
+                api_url('/credits/?resolution=manual&status=credit_pending&offset=0&limit=100&ordering=-received_at'),
                 json=wrap_response_data(CREDIT_2),
                 status=200,
                 match_querystring=True,
@@ -687,7 +687,7 @@ class ProcessingCreditsViewTestCase(MTPBaseTestCase):
             # get new credits
             rsps.add(
                 rsps.GET,
-                api_url('/credits/?ordering=-received_at&offset=0&limit=100&status=available&resolution=pending'),
+                api_url('/credits/?ordering=-received_at&offset=0&limit=100&status=credit_pending&resolution=pending'),
                 json=wrap_response_data(),
                 status=200,
                 match_querystring=True,
@@ -695,7 +695,7 @@ class ProcessingCreditsViewTestCase(MTPBaseTestCase):
             # get manual credits
             rsps.add(
                 rsps.GET,
-                api_url('/credits/?resolution=manual&offset=0&limit=100&ordering=-received_at'),
+                api_url('/credits/?resolution=manual&status=credit_pending&offset=0&limit=100&ordering=-received_at'),
                 json=wrap_response_data(CREDIT_2),
                 status=200,
                 match_querystring=True,
