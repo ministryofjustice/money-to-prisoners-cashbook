@@ -436,13 +436,13 @@ class FilterAllCreditsForm(GARequestErrorReportingMixin, forms.Form):
         ]
     )
     start = forms.DateField(label=gettext_lazy('From'),
-                            help_text=gettext_lazy('eg 1/6/2016'),
+                            help_text=gettext_lazy('e.g. 1/6/2016'),
                             required=False)
     end = forms.DateField(label=gettext_lazy('To'),
-                          help_text=gettext_lazy('eg 5/6/2016'),
+                          help_text=gettext_lazy('e.g. 5/6/2016'),
                           required=False)
     search = forms.CharField(label=gettext_lazy('Keywords'),
-                             help_text=gettext_lazy('eg prisoner name, prisoner number or sender name'),
+                             help_text=gettext_lazy('e.g. prisoner name, prisoner number or sender name'),
                              required=False)
     page = forms.IntegerField(required=False, widget=forms.HiddenInput)
 
