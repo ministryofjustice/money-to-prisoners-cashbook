@@ -209,6 +209,7 @@
 
     {% include 'mtp_common/forms/error-summary.html' with form=form.new only %}
 
+    {% if new_object_list or not manual_object_list %}
     <div class="mtp-batch mtp-new-credits-batch {% if not new_object_list %}print-hidden{% endif %}">
       {% if new_object_list %}
         <div class="mtp-floating-header js-StickyHeader print-hidden">
@@ -367,6 +368,7 @@
       </table>
 
     </div>
+    {% endif %}
 
     <div id="incomplete-batch-dialog"
          class="Dialog"
