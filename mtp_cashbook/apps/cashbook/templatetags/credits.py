@@ -28,10 +28,12 @@ def parse_date_fields(credits):
                 continue
             for parser in parsers:
                 try:
-                    value = parser(value)
-                    if isinstance(value, datetime.datetime):
-                        value = timezone.localtime(value)
-                    credit[field] = value
+                    parsed_value = parser(value)
+                    if not parsed_value:
+                        continue
+                    if isinstance(parsed_value, datetime.datetime):
+                        parsed_value = timezone.localtime(parsed_value)
+                    credit[field] = parsed_value
                     break
                 except (ValueError, TypeError):
                     pass

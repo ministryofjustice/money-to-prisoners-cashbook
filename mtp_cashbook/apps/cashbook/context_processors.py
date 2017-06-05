@@ -10,7 +10,8 @@ def nomis_integration(request):
 
 def footer_feedback_context(request):
     view_name = request.resolver_match.url_name if request.resolver_match else None
-    if isinstance(request.user, MojUser) and view_name in ('new-credits', 'all-credits'):
+    if isinstance(request.user, MojUser) and view_name in (
+            'new-credits', 'processed-credits-list'):
         return {'footer_feedback_context': {
             'submit_url': reverse('submit_footer_feedback'),
         }}

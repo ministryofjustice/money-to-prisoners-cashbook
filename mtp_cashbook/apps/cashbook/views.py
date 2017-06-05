@@ -15,7 +15,8 @@ from requests.exceptions import RequestException
 from .utils import expected_nomis_availability, check_pre_approval_required
 from .forms import (
     ProcessCreditBatchForm, DiscardLockedCreditsForm, FilterCreditHistoryForm,
-    ProcessNewCreditsForm, FilterAllCreditsForm, ProcessManualCreditsForm, COMPLETED_INDEX
+    ProcessNewCreditsForm, FilterProcessedCreditsListForm, ProcessManualCreditsForm,
+    COMPLETED_INDEX
 )
 
 logger = logging.getLogger('mtp')
@@ -402,11 +403,11 @@ class ProcessingCreditsView(TemplateView):
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(expected_nomis_availability(True), name='dispatch')
-class AllCreditsView(FormView):
-    title = _('All credits')
-    form_class = FilterAllCreditsForm
-    template_name = 'cashbook/all_credits.html'
-    success_url = reverse_lazy('all-credits')
+class ProcessedCreditsListView(FormView):
+    title = _('Processed credits')
+    form_class = FilterProcessedCreditsListForm
+    template_name = 'cashbook/processed_credits.html'
+    success_url = reverse_lazy('processed-credits-list')
 
     def get_initial(self):
         initial = super().get_initial()

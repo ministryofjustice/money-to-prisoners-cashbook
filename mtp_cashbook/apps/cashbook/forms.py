@@ -422,28 +422,13 @@ class ProcessManualCreditsForm(GARequestErrorReportingMixin, forms.Form):
         return credit_id
 
 
-class FilterAllCreditsForm(GARequestErrorReportingMixin, forms.Form):
-    ordering = forms.ChoiceField(
-        label=gettext_lazy('Order by'), required=False,
-        initial='-received_at',
-        choices=[
-            ('received_at', gettext_lazy('Received date (oldest to newest)')),
-            ('-received_at', gettext_lazy('Received date (newest to oldest)')),
-            ('amount', gettext_lazy('Amount sent (low to high)')),
-            ('-amount', gettext_lazy('Amount sent (high to low)')),
-            ('prisoner_number', gettext_lazy('Prisoner number (A to Z)')),
-            ('-prisoner_number', gettext_lazy('Prisoner number (Z to A)')),
-        ]
-    )
-    start = forms.DateField(label=gettext_lazy('From'),
+class FilterProcessedCreditsListForm(GARequestErrorReportingMixin, forms.Form):
+    start = forms.DateField(label=gettext_lazy('From date'),
                             help_text=gettext_lazy('e.g. 1/6/2016'),
                             required=False)
-    end = forms.DateField(label=gettext_lazy('To'),
+    end = forms.DateField(label=gettext_lazy('to date'),
                           help_text=gettext_lazy('e.g. 5/6/2016'),
                           required=False)
-    search = forms.CharField(label=gettext_lazy('Keywords'),
-                             help_text=gettext_lazy('e.g. prisoner name, prisoner number or sender name'),
-                             required=False)
     page = forms.IntegerField(required=False, widget=forms.HiddenInput)
 
     page_size = 20
@@ -466,9 +451,6 @@ class FilterAllCreditsForm(GARequestErrorReportingMixin, forms.Form):
         if start and end and start >= end:
             self.add_error('end', gettext('The end date must be after the start date'))
         return super().clean()
-
-    def clean_ordering(self):
-        return self.cleaned_data['ordering'] or self.fields['ordering'].initial
 
     def clean_end(self):
         end = self.cleaned_data.get('end')
@@ -497,8 +479,8 @@ class FilterAllCreditsForm(GARequestErrorReportingMixin, forms.Form):
                     filters[field] = self.initial[field]
 
         renames = (
-            ('start', 'received_at__gte'),
-            ('end', 'received_at__lt'),
+            ('start', 'logged_at__gte'),
+            ('end', 'logged_at__lt'),
         )
         for field_name, api_name in renames:
             if field_name in filters:
@@ -507,7 +489,7 @@ class FilterAllCreditsForm(GARequestErrorReportingMixin, forms.Form):
 
         page = self.cleaned_data.get('page') or 1
         offset = (page - 1) * self.page_size
-        response = self.client.credits.get(offset=offset, limit=self.page_size, **filters)
+        response = self.client.credits.processed.get(offset=offset, limit=self.page_size, **filters)
         count = response.get('count', 0)
         self.pagination = {
             'page': page,
@@ -518,8 +500,6 @@ class FilterAllCreditsForm(GARequestErrorReportingMixin, forms.Form):
 
     def _get_filter_description(self):
         if self.cleaned_data:
-            search_description = self.cleaned_data.get('search')
-
             def get_date(date_key):
                 date = self.cleaned_data.get(date_key)
                 if date:
@@ -541,9 +521,8 @@ class FilterAllCreditsForm(GARequestErrorReportingMixin, forms.Form):
             else:
                 date_range_description = None
         else:
-            search_description = None
             date_range_description = None
-        return search_description, date_range_description
+        return date_range_description
 
     def get_search_description(self):
         if self.pagination['count']:
@@ -555,19 +534,8 @@ class FilterAllCreditsForm(GARequestErrorReportingMixin, forms.Form):
         else:
             credit_description = gettext('no credits')
 
-        search_description, date_range_description = self._get_filter_description()
-        if search_description and date_range_description:
-            description = gettext('%(credits)s received %(date_range)s when searching for “%(search)s”') % {
-                'search': search_description,
-                'date_range': date_range_description,
-                'credits': credit_description,
-            }
-        elif search_description:
-            description = gettext('Searching for “%(search)s” returned %(credits)s') % {
-                'search': search_description,
-                'credits': credit_description,
-            }
-        elif date_range_description:
+        date_range_description = self._get_filter_description()
+        if date_range_description:
             description = gettext('%(credits)s received %(date_range)s') % {
                 'date_range': date_range_description,
                 'credits': credit_description,

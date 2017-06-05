@@ -6,7 +6,7 @@ from django.shortcuts import redirect
 from .utils import nomis_integration_available
 from .views import (
     CreditBatchListView, CreditsLockedView, CreditHistoryView, DashboardView,
-    inactive_password_change_view, NewCreditsView, AllCreditsView,
+    inactive_password_change_view, NewCreditsView, ProcessedCreditsListView,
     ChangeNotificationView, ProcessingCreditsView
 )
 from .views_training import ServiceOverview, Training
@@ -55,6 +55,6 @@ urlpatterns = [
 
     url(r'^change-notification/$', ChangeNotificationView.as_view(), name='change-notification'),
     url(r'^new/$', NewCreditsView.as_view(), name='new-credits'),
-    url(r'^all/$', AllCreditsView.as_view(), name='all-credits'),
+    url(r'^processed/$', ProcessedCreditsListView.as_view(), name='processed-credits-list'),
     url(r'^processing/$', ProcessingCreditsView.as_view(), name='processing-credits'),
 ]

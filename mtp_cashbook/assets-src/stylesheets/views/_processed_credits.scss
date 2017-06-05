@@ -1,0 +1,39 @@
+.mtp-processed-credits-search {
+  &__inputs {
+    display: inline-block;
+    padding: 0 1em .5em 0;
+
+    input {
+      width: 100%;
+    }
+  }
+
+  &__date-start,
+  &__date-end {
+    display: inline-block;
+    width: 6.7em;
+  }
+
+  &__date-end {
+    padding-left: 1em;
+  }
+
+  &__field {
+    display: inline-block;
+    margin-right: 1em;
+
+    input {
+      width: 100%;
+    }
+  }
+
+  &__submit {
+    display: inline-block;
+    width: 6.7em;
+    padding-left: 1em;
+  }
+
+  @media print {
+    display: none;
+  }
+}

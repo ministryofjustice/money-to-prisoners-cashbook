@@ -1,0 +1,98 @@
+{% extends 'cashbook/credits_base.html' %}
+{% load i18n %}
+{% load currency %}
+{% load mtp_common %}
+{% load credits %}
+
+{% block body_classes %}{{ block.super }} mtp-credits{% endblock %}
+
+{% block page_content %}
+
+  <header>
+    {% language_switch %}
+    <h1 class="heading-xlarge">{{ view.title }}</h1>
+  </header>
+
+  {% include "mtp_common/includes/message_box.html" %}
+
+  <form method="get" class="mtp-processed-credits-search" action="">
+    {% include 'mtp_common/forms/error-summary.html' with form=form only %}
+
+    <div class="mtp-processed-credits-search__inputs">
+      <div class="mtp-processed-credits-search__date-start">
+        {% include 'mtp_common/forms/field.html' with field=form.start input_classes='js-FormDateControl' value=form.start.value|date:'d/m/Y'|default:form.start.value|default_if_none:'' only %}
+      </div>
+      <div class="mtp-processed-credits-search__date-end">
+        {% include 'mtp_common/forms/field.html' with field=form.end input_classes='js-FormDateControl' value=form.end.value|date:'d/m/Y'|default:form.end.value|default_if_none:'' only %}
+      </div>
+      <div class="mtp-processed-credits-search__submit">
+        <div class="form-group">
+          <input class="button" type="submit" value="{% trans 'Filter list' %}">
+        </div>
+      </div>
+    </div>
+
+    {# always forces a search to start on page 1 #}
+    <input type="hidden" name="{{ form.page.html_name }}" value="1">
+  </form>
+
+
+  <div class="mtp-batch">
+    {% if object_list %}
+
+      <p>{{ form.get_search_description }}</p>
+      <table>
+        <thead>
+
+          <tr>
+            <th>{% trans 'Date credited' %}</th>
+            <th>{% trans 'Number of credits' %}</th>
+            <th class="number">{% trans 'Total' %}</th>
+            <th>{% trans 'Credited by' %}</th>
+            <th>{% trans 'Options' %}</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for batch in object_list %}
+            <tr>
+              <td>
+                <div>{{ batch.credited_at|date:'d/m/Y' }}</div>
+                {% with days=batch.credited_at|dayssince %}
+                <div class="sub">
+                  {% if days == 0 %}
+                    {% trans 'Today' %}
+                  {% else %}
+                    {% blocktrans count days=days trimmed %}
+                      {{ days }} day ago
+                    {% plural %}
+                      {{ days }} days ago
+                    {% endblocktrans %}
+                  {% endif %}
+                </div>
+                {% endwith %}
+              </td>
+              <td>
+                {% blocktrans count count=batch.count %}
+                  {{ count }} credit
+                {% plural %}
+                  {{ count }} credits
+                {% endblocktrans %}
+              </td>
+              <td class="number">&pound;{{ batch.total|currency }}</td>
+              <td>{{ batch.username }}</td>
+              <td>{% trans 'Print' %}</td>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      {% page_list page=current_page page_count=page_count query_string=form.query_string %}
+
+    {% else %}
+
+      <p><strong>{{ form.get_search_description }}</strong></p>
+
+    {% endif %}
+  </div>
+
+{% endblock %}
