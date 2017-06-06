@@ -433,8 +433,8 @@ class FilterProcessedCreditsListForm(GARequestErrorReportingMixin, forms.Form):
 
     page_size = 20
     renames = (
-        ('start', 'credited_at__gte'),
-        ('end', 'credited_at__lt'),
+        ('start', 'logged_at__gte'),
+        ('end', 'logged_at__lt'),
     )
 
     def __init__(self, request, *args, **kwargs):
@@ -509,3 +509,51 @@ class FilterProcessedCreditsListForm(GARequestErrorReportingMixin, forms.Form):
     @cached_property
     def query_string(self):
         return urlencode(self.get_query_data(), doseq=True)
+
+
+class FilterProcessedCreditsDetailForm(FilterProcessedCreditsListForm):
+    search = forms.CharField(
+        label=gettext_lazy('Name of prisoner or sender'),
+        help_text=gettext_lazy('e.g. Bob Phillips'),
+        required=False
+    )
+    prisoner_number = forms.CharField(
+        label=gettext_lazy('Prisoner number'),
+        help_text=gettext_lazy('e.g. A1234AB'),
+        required=False
+    )
+    ordering = forms.ChoiceField(
+        label=gettext_lazy('Order by'), required=False,
+        initial='-received_at',
+        choices=[
+            ('received_at', gettext_lazy('Received date (oldest to newest)')),
+            ('-received_at', gettext_lazy('Received date (newest to oldest)')),
+            ('amount', gettext_lazy('Amount sent (low to high)')),
+            ('-amount', gettext_lazy('Amount sent (high to low)')),
+            ('prisoner_number', gettext_lazy('Prisoner number (A to Z)')),
+            ('-prisoner_number', gettext_lazy('Prisoner number (Z to A)')),
+        ]
+    )
+    renames = (
+        ('start', 'received_at__gte'),
+        ('end', 'received_at__lt'),
+    )
+
+    def __init__(self, request, date, user_id, *args, **kwargs):
+        super().__init__(request, *args, **kwargs)
+        self.batch_date = date
+        self.default_filters = {
+            'log__action': 'credited',
+            'logged_at__gte': self.batch_date,
+            'logged_at__lt': self.batch_date + timedelta(days=1),
+            'user': user_id
+        }
+
+    def clean_ordering(self):
+        return self.cleaned_data['ordering'] or self.fields['ordering'].initial
+
+    def retrieve_credits(self, offset, limit, **filters):
+        response = self.client.credits.get(
+            offset=offset, limit=self.page_size, **dict(self.default_filters, **filters)
+        )
+        return response.get('count', 0), response.get('results', [])

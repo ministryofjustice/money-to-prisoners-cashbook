@@ -1,7 +1,8 @@
 .mtp-processed-credits-search {
+  padding: 0 0 1em 0;
+
   &__inputs {
     display: inline-block;
-    padding: 0 1em .5em 0;
 
     input {
       width: 100%;
@@ -12,10 +13,7 @@
   &__date-end {
     display: inline-block;
     width: 6.7em;
-  }
-
-  &__date-end {
-    padding-left: 1em;
+    margin-right: 1em;
   }
 
   &__field {
@@ -30,7 +28,6 @@
   &__submit {
     display: inline-block;
     width: 6.7em;
-    padding-left: 1em;
   }
 
   @media print {

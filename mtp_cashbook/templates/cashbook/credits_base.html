@@ -2,7 +2,7 @@
 {% load i18n %}
 
 {% block inner_content %}
-<div class="mtp-cashbook-navigation">
+<div class="mtp-cashbook-navigation print-hidden">
 	<ol>
     {% trans 'New credits' as new_link %}
     <li>{% include 'cashbook/includes/context_sensitive_link.html' with view_name='new-credits' link_text=new_link %}</li>

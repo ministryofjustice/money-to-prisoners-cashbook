@@ -10,7 +10,7 @@
 
   <header>
     {% language_switch %}
-    <h1 class="heading-xlarge">{{ view.title }}</h1>
+    <h1 class="heading-xlarge__chopped">{{ view.title }}</h1>
   </header>
 
   {% include "mtp_common/includes/message_box.html" %}
@@ -51,6 +51,7 @@
             {% if pre_approval_required %}
               <th>{% trans 'Security notes' %}</th>
             {% endif %}
+            <th>{% trans 'Options' %}</th>
           </tr>
         </thead>
 
@@ -58,8 +59,8 @@
           {% for batch in object_list %}
             <tr>
               <td>
-                <div>{{ batch.credited_at|date:'d/m/Y' }}</div>
-                {% with days=batch.credited_at|dayssince %}
+                <div>{{ batch.logged_at|date:'d/m/Y' }}</div>
+                {% with days=batch.logged_at|dayssince %}
                 <div class="sub">
                   {% if days == 0 %}
                     {% trans 'Today' %}
@@ -74,11 +75,13 @@
                 {% endwith %}
               </td>
               <td>
-                {% blocktrans count count=batch.count %}
-                  {{ count }} credit
-                {% plural %}
-                  {{ count }} credits
-                {% endblocktrans %}
+                <a href="{% url 'processed-credits-detail' date=batch.logged_at|date:'Ymd' user_id=batch.owner %}">
+                  {% blocktrans count count=batch.count %}
+                    {{ count }} credit
+                  {% plural %}
+                    {{ count }} credits
+                  {% endblocktrans %}
+                </a>
               </td>
               <td class="number">&pound;{{ batch.total|currency }}</td>
               <td>{{ batch.username }}</td>
@@ -95,6 +98,8 @@
                   <td>{% trans 'No' %}</td>
                 {% endif %}
               {% endif %}
+              <td><a href="{% url 'processed-credits-detail' date=batch.logged_at|date:'Ymd' user_id=batch.owner %}">{% trans 'Print' %}</a></td>
+            </tr>
           {% endfor %}
         </tbody>
       </table>
@@ -103,7 +108,7 @@
 
     {% else %}
 
-      <p><strong>{{ form.get_search_description }}</strong></p>
+      <p><strong>{% trans 'No credits' %}</strong></p>
 
     {% endif %}
   </div>

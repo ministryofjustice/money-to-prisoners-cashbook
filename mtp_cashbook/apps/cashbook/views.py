@@ -1,3 +1,4 @@
+from datetime import datetime
 import logging
 
 from django.conf import settings
@@ -16,7 +17,7 @@ from .utils import expected_nomis_availability, check_pre_approval_required
 from .forms import (
     ProcessCreditBatchForm, DiscardLockedCreditsForm, FilterCreditHistoryForm,
     ProcessNewCreditsForm, FilterProcessedCreditsListForm, ProcessManualCreditsForm,
-    COMPLETED_INDEX
+    COMPLETED_INDEX, FilterProcessedCreditsDetailForm
 )
 
 logger = logging.getLogger('mtp')
@@ -431,16 +432,28 @@ class ProcessedCreditsListView(FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         form = context['form']
-        object_list = form.credit_choices
-        current_page = form.pagination['page']
-        page_count = form.pagination['page_count']
         context.update({
-            'object_list': object_list,
-            'current_page': current_page,
-            'page_count': page_count,
-            'credit_owner_name': self.request.user.get_full_name(),
+            'object_list': list(form.credit_choices),
+            'object_count': form.pagination['count'],
+            'current_page': form.pagination['page'],
+            'page_count': form.pagination['page_count'],
         })
         return context
 
     def form_valid(self, form):
         return self.render_to_response(self.get_context_data(form=form))
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(expected_nomis_availability(True), name='dispatch')
+class ProcessedCreditsDetailView(ProcessedCreditsListView):
+    form_class = FilterProcessedCreditsDetailForm
+    template_name = 'cashbook/processed_credits_detail.html'
+    success_url = reverse_lazy('processed-credits-detail')
+
+    def get_form_kwargs(self):
+        return dict(
+            super().get_form_kwargs(),
+            date=datetime.strptime(self.kwargs['date'], '%Y%m%d'),
+            user_id=self.kwargs['user_id']
+        )
