@@ -40,7 +40,6 @@
   <div class="mtp-batch">
     {% if object_list %}
 
-      <p>{{ form.get_search_description }}</p>
       <table>
         <thead>
 
@@ -49,7 +48,9 @@
             <th>{% trans 'Number of credits' %}</th>
             <th class="number">{% trans 'Total' %}</th>
             <th>{% trans 'Credited by' %}</th>
-            <th>{% trans 'Options' %}</th>
+            {% if pre_approval_required %}
+              <th>{% trans 'Security notes' %}</th>
+            {% endif %}
           </tr>
         </thead>
 
@@ -81,7 +82,19 @@
               </td>
               <td class="number">&pound;{{ batch.total|currency }}</td>
               <td>{{ batch.username }}</td>
-              <td>{% trans 'Print' %}</td>
+              {% if pre_approval_required %}
+                {% if batch.comment_count %}
+                  <td>
+                    {% blocktrans count count=batch.comment_count %}
+                      {{ count }} note
+                    {% plural %}
+                      {{ count }} notes
+                    {% endblocktrans %}
+                  </td>
+                {% else %}
+                  <td>{% trans 'No' %}</td>
+                {% endif %}
+              {% endif %}
           {% endfor %}
         </tbody>
       </table>

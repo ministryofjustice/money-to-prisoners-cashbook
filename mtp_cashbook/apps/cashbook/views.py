@@ -63,7 +63,6 @@ class DashboardView(TemplateView):
             'locked_credits': locked['count'],
             'all_credits': all_credits['count'],
             'batch_size': my_locked['count'] or min(available['count'], 20),
-            'pre_approval_required': pre_approval_required,
             'in_progress_users': list({credit['owner_name'] for credit in locked['results']})
         })
         return context_data
@@ -103,8 +102,6 @@ class CreditBatchListView(FormView, CashbookSubviewMixin):
         context['object_list'] = credit_choices
         context['total'] = sum([x[1]['amount'] for x in credit_choices])
         context['batch_size'] = len(credit_choices)
-
-        context['pre_approval_required'] = check_pre_approval_required(self.request)
 
         credit_client = context['form'].client.credits
         available = credit_client.get(status='available')
@@ -347,8 +344,6 @@ class NewCreditsView(FormView):
                 pass
         context['manual_object_list'] = manual_credit_choices
         context['manual_credits'] = len(manual_credit_choices)
-
-        context['pre_approval_required'] = check_pre_approval_required(self.request)
 
         if context.get('credited_count', 0):
             username = self.request.user.user_data.get('username', 'Unknown')

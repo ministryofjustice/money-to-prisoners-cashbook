@@ -432,6 +432,10 @@ class FilterProcessedCreditsListForm(GARequestErrorReportingMixin, forms.Form):
     page = forms.IntegerField(required=False, widget=forms.HiddenInput)
 
     page_size = 20
+    renames = (
+        ('start', 'credited_at__gte'),
+        ('end', 'credited_at__lt'),
+    )
 
     def __init__(self, request, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -457,12 +461,6 @@ class FilterProcessedCreditsListForm(GARequestErrorReportingMixin, forms.Form):
         if end is not None:
             return end + timedelta(days=1)
 
-    @property
-    def has_filters(self):
-        if not hasattr(self, 'cleaned_data'):
-            return False
-        return any(self.cleaned_data.get(key) for key in ['start', 'end', 'search'])
-
     @cached_property
     def credit_choices(self):
         filters = {}
@@ -478,73 +476,24 @@ class FilterProcessedCreditsListForm(GARequestErrorReportingMixin, forms.Form):
                 if field in self.initial:
                     filters[field] = self.initial[field]
 
-        renames = (
-            ('start', 'logged_at__gte'),
-            ('end', 'logged_at__lt'),
-        )
-        for field_name, api_name in renames:
+        for field_name, api_name in self.renames:
             if field_name in filters:
                 filters[api_name] = filters[field_name]
                 del filters[field_name]
 
         page = self.cleaned_data.get('page') or 1
         offset = (page - 1) * self.page_size
-        response = self.client.credits.processed.get(offset=offset, limit=self.page_size, **filters)
-        count = response.get('count', 0)
+        count, results = self.retrieve_credits(offset, self.page_size, **filters)
         self.pagination = {
             'page': page,
             'count': count,
             'page_count': int(ceil(count / self.page_size)),
         }
-        return parse_date_fields(response.get('results', []))
+        return parse_date_fields(results)
 
-    def _get_filter_description(self):
-        if self.cleaned_data:
-            def get_date(date_key):
-                date = self.cleaned_data.get(date_key)
-                if date:
-                    return format_date(date, 'd/m/Y')
-
-            date_range = {
-                'start': get_date('start'),
-                'end': get_date('end'),
-            }
-            if date_range['start'] and date_range['end']:
-                if date_range['start'] == date_range['end']:
-                    date_range_description = gettext('on %(start)s') % date_range
-                else:
-                    date_range_description = gettext('between %(start)s and %(end)s') % date_range
-            elif date_range['start']:
-                date_range_description = gettext('since %(start)s') % date_range
-            elif date_range['end']:
-                date_range_description = gettext('up to %(end)s') % date_range
-            else:
-                date_range_description = None
-        else:
-            date_range_description = None
-        return date_range_description
-
-    def get_search_description(self):
-        if self.pagination['count']:
-            credit_description = ngettext(
-                '%(count)d credit',
-                '%(count)d credits',
-                self.pagination['count'],
-            ) % self.pagination
-        else:
-            credit_description = gettext('no credits')
-
-        date_range_description = self._get_filter_description()
-        if date_range_description:
-            description = gettext('%(credits)s received %(date_range)s') % {
-                'date_range': date_range_description,
-                'credits': credit_description,
-            }
-        else:
-            description = gettext('%(credits)s received') % {
-                'credits': credit_description,
-            }
-        return capfirst(description)
+    def retrieve_credits(self, offset, limit, **filters):
+        response = self.client.credits.processed.get(offset=offset, limit=self.page_size, **filters)
+        return response.get('count', 0), response.get('results', [])
 
     def get_query_data(self):
         data = collections.OrderedDict()
