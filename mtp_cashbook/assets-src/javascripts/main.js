@@ -14,6 +14,7 @@
   require('track-printing').TrackPrinting.init();
   require('confirm-manual').ConfirmManual.init();
   require('footer-feedback').FooterFeedback.init();
+  require('print-batch').PrintBatch.init();
 
   require('sticky-header').StickyHeader.init();
   require('align-totals').AlignTotals.init();

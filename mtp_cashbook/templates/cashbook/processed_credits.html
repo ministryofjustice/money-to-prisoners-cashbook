@@ -98,7 +98,7 @@
                   <td>{% trans 'No' %}</td>
                 {% endif %}
               {% endif %}
-              <td><a href="{% url 'processed-credits-detail' date=batch.logged_at|date:'Ymd' user_id=batch.owner %}">{% trans 'Print' %}</a></td>
+              <td><a href="{% url 'processed-credits-detail' date=batch.logged_at|date:'Ymd' user_id=batch.owner %}" class="js-PrintBatch">{% trans 'Print' %}</a></td>
             </tr>
           {% endfor %}
         </tbody>
