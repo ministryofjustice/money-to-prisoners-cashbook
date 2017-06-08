@@ -84,7 +84,7 @@
                 </a>
               </td>
               <td class="number">&pound;{{ batch.total|currency }}</td>
-              <td>{{ batch.username }}</td>
+              <td>{{ batch.owner_name }}</td>
               {% if pre_approval_required %}
                 {% if batch.comment_count %}
                   <td>

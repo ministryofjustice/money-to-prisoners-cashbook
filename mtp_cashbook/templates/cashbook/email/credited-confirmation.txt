@@ -5,7 +5,7 @@ GOV.UK - {% trans 'Send money to a prisoner' %}
 {% trans 'Dear sender,' %}
 
 {% blocktrans trimmed %}
-The payment you made - confirmation number {{ ref_number }} - has now been credited to the prisoner's account.
+The payment you made - confirmation number {{ ref_number }} - has now been credited to the prisoner’s account.
 {% endblocktrans %}
 
 {% if prisoner_name %}{% trans 'Payment to:' %} {{ prisoner_name }}{% endif %}
