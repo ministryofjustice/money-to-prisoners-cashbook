@@ -706,21 +706,101 @@ class ProcessingCreditsViewTestCase(MTPBaseTestCase):
             self.assertRedirects(response, reverse('new-credits'))
 
 
-class AllCreditsViewTestCase(MTPBaseTestCase):
+class ProcessedCreditsListViewTestCase(MTPBaseTestCase):
 
     @property
     def url(self):
-        return reverse('all-credits')
+        return reverse('processed-credits-list')
 
     @override_nomis_settings
-    def test_history_view(self):
+    def test_processed_credits_list_view(self):
         with responses.RequestsMock() as rsps:
             self.login()
-            login_data = self._default_login_data
 
             rsps.add(
                 rsps.GET,
-                api_url('/credits/'),
+                api_url('/credits/processed/'),
+                json={
+                    'count': 3,
+                    'results': [
+                        {
+                            'logged_at': '2017-06-04',
+                            'owner': 1,
+                            'owner_name': 'Clerk 1',
+                            'count': 10,
+                            'total': 10500,
+                            'comment_count': 0
+                        },
+                        {
+                            'logged_at': '2017-06-03',
+                            'owner': 1,
+                            'owner_name': 'Clerk 1',
+                            'count': 4,
+                            'total': 6000,
+                            'comment_count': 4
+                        },
+                        {
+                            'logged_at': '2017-06-03',
+                            'owner': 2,
+                            'owner_name': 'Clerk 2',
+                            'count': 5,
+                            'total': 3200,
+                            'comment_count': 5
+                        },
+                    ]
+                },
+                status=200,
+            )
+
+            response = self.client.get(self.url)
+            self.assertEqual(response.status_code, 200)
+            self.assertSequenceEqual(response.context['page_range'], [1])
+            self.assertEqual(response.context['current_page'], 1)
+            self.assertContains(response, text='10 credits')
+            self.assertContains(response, text='4 credits')
+            self.assertContains(response, text='5 credits')
+
+    @override_nomis_settings
+    def test_processed_credits_list_view_no_results(self):
+        with responses.RequestsMock() as rsps:
+            self.login()
+
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/processed/'),
+                json={
+                    'count': 0,
+                    'results': []
+                },
+                status=200,
+            )
+
+            response = self.client.get(self.url)
+            self.assertEqual(response.status_code, 200)
+            self.assertContains(response, text='No credits')
+
+
+class ProcessedCreditsDetailViewTestCase(MTPBaseTestCase):
+
+    @property
+    def url(self):
+        return reverse(
+            'processed-credits-detail',
+            kwargs={'date': '20170603', 'user_id': 1}
+        )
+
+    @override_nomis_settings
+    def test_processed_credits_detail_view(self):
+        with responses.RequestsMock() as rsps:
+            self.login()
+
+            rsps.add(
+                rsps.GET,
+                api_url(
+                    '/credits/?logged_at__gte=2017-06-03+00:00:00&limit=20'
+                    '&logged_at__lt=2017-06-04+00:00:00&user=1'
+                    '&log__action=credited&offset=0&ordering=-received_at'
+                ),
                 json={
                     'count': 2,
                     'results': [
@@ -732,14 +812,11 @@ class AllCreditsViewTestCase(MTPBaseTestCase):
                             'formatted_amount': '£52.00',
                             'sender_name': 'Fred Smith',
                             'prison': 'BXI',
-                            'owner': login_data['user_pk'],
-                            'owner_name': '%s %s' % (
-                                login_data['user_data']['first_name'],
-                                login_data['user_data']['last_name'],
-                            ),
-                            'received_at': '2017-01-25T12:00:00Z',
+                            'owner': 1,
+                            'owner_name': 'Clerk 1',
+                            'received_at': '2017-06-02T12:00:00Z',
                             'resolution': 'credited',
-                            'credited_at': '2017-01-26T12:00:00Z',
+                            'credited_at': '2017-06-03T12:00:00Z',
                             'refunded_at': None,
                         },
                         {
@@ -750,18 +827,16 @@ class AllCreditsViewTestCase(MTPBaseTestCase):
                             'formatted_amount': '£26.50',
                             'sender_name': 'Mary Smith',
                             'prison': 'BXI',
-                            'owner': login_data['user_pk'],
-                            'owner_name': '%s %s' % (
-                                login_data['user_data']['first_name'],
-                                login_data['user_data']['last_name'],
-                            ),
-                            'received_at': '2017-01-25T12:00:00Z',
+                            'owner': 1,
+                            'owner_name': 'Clerk 1',
+                            'received_at': '2017-06-01T12:00:00Z',
                             'resolution': 'credited',
-                            'credited_at': '2017-01-26T12:00:00Z',
+                            'credited_at': '2017-06-03T12:00:00Z',
                             'refunded_at': None,
                         },
                     ]
                 },
+                match_querystring=True,
                 status=200,
             )
 
@@ -769,9 +844,28 @@ class AllCreditsViewTestCase(MTPBaseTestCase):
             self.assertEqual(response.status_code, 200)
             self.assertSequenceEqual(response.context['page_range'], [1])
             self.assertEqual(response.context['current_page'], 1)
-            self.assertEqual(response.context['credit_owner_name'], '%s %s' % (
-                login_data['user_data']['first_name'],
-                login_data['user_data']['last_name'],
-            ))
-            self.assertContains(response, text='2 credits received', count=1)
             self.assertContains(response, text='John Smith', count=2)
+
+    @override_nomis_settings
+    def test_processed_credits_detail_view_no_results(self):
+        with responses.RequestsMock() as rsps:
+            self.login()
+
+            rsps.add(
+                rsps.GET,
+                api_url(
+                    '/credits/?logged_at__gte=2017-06-03+00:00:00&limit=20'
+                    '&logged_at__lt=2017-06-04+00:00:00&user=1'
+                    '&log__action=credited&offset=0&ordering=-received_at'
+                ),
+                json={
+                    'count': 0,
+                    'results': []
+                },
+                match_querystring=True,
+                status=200,
+            )
+
+            response = self.client.get(self.url)
+            self.assertEqual(response.status_code, 200)
+            self.assertContains(response, text='No credits')

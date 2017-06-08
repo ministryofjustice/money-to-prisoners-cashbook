@@ -13,7 +13,7 @@
 
   <header>
     {% language_switch %}
-    <h1 class="heading-xlarge">{{ view.title }}</h1>
+    <h1 class="heading-xlarge__chopped">{{ view.title }}</h1>
   </header>
 
   {% if credited_credits %}
@@ -23,7 +23,7 @@
       {% plural %}
         {{ credited_credits }} credits sent to NOMIS
       {% endblocktrans %}
-      <a href="{% url 'all-credits' %}" class="mtp-end-link">{% trans "View" %}</a>
+      <a href="{% url 'processed-credits-list' %}" class="mtp-end-link">{% trans "View" %}</a>
   </div>
   {% endif %}
 

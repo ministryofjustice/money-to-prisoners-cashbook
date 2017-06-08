@@ -123,6 +123,7 @@ TEMPLATES = [
                 'mtp_common.context_processors.govuk_localisation',
                 'cashbook.context_processors.nomis_integration',
                 'cashbook.context_processors.footer_feedback_context',
+                'cashbook.context_processors.pre_approval_required',
             ],
         },
     },

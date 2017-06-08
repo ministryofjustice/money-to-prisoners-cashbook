@@ -1,0 +1,150 @@
+{% extends 'cashbook/credits_base.html' %}
+{% load i18n %}
+{% load currency %}
+{% load mtp_common %}
+{% load credits %}
+
+{% block body_classes %}{{ block.super }} mtp-credits{% endblock %}
+
+{% block page_content %}
+
+  <header>
+    {% language_switch %}
+    <h2 class="heading-xlarge__chopped">
+      {% blocktrans with date=form.batch_date|date:'d/m/Y' name=object_list.0.owner_name|default:'unknown' count count=form.pagination.count trimmed %}
+        {{ count }} credits processed {{ date }} by {{ name }}
+      {% plural %}
+        {{ count }} credits processed {{ date }} by {{ name }}
+      {% endblocktrans %}
+    </h2>
+  </header>
+
+  {% include "mtp_common/includes/message_box.html" %}
+
+  <form method="get" class="mtp-processed-credits-search" action="">
+    {% include 'mtp_common/forms/error-summary.html' with form=form only %}
+
+    <div class="mtp-processed-credits-search__inputs">
+      <div class="mtp-processed-credits-search__date-start">
+        {% include 'mtp_common/forms/field.html' with field=form.start input_classes='js-FormDateControl' value=form.start.value|date:'d/m/Y'|default:form.start.value|default_if_none:'' only %}
+      </div>
+      <div class="mtp-processed-credits-search__date-end">
+        {% include 'mtp_common/forms/field.html' with field=form.end input_classes='js-FormDateControl' value=form.end.value|date:'d/m/Y'|default:form.end.value|default_if_none:'' only %}
+      </div>
+      <div class="mtp-processed-credits-search__field">
+        {% include 'mtp_common/forms/field.html' with field=form.search only %}
+      </div>
+      <div class="mtp-processed-credits-search__field">
+        {% include 'mtp_common/forms/field.html' with field=form.prisoner_number only %}
+      </div>
+
+      {# always forces a search to start on page 1 #}
+      <input type="hidden" name="{{ form.page.html_name }}" value="1">
+    </div>
+    <div>
+      <input class="button" type="submit" value="{% trans 'Filter list' %}">
+    </div>
+  </form>
+
+
+  <div class="mtp-batch">
+    {% if object_list %}
+
+      <p><a href="#print-dialog" class="js-Print print-hidden">{% trans 'Print this page of credits' %}</a></p>
+      <table>
+        <thead>
+
+          <tr>
+            <th class="{{ request|ordering_classes:'received_at' }}">
+              <a href="?{{ request|query_string_with_reversed_ordering:'received_at' }}">
+                <span>
+                  {% trans 'Date sent' %}
+                  {% describe_ordering_for_screenreader request 'received_at' %}
+                </span>
+              </a>
+            </th>
+            <th class="{{ request|ordering_classes:'prisoner_number' }}">
+              <a href="?{{ request|query_string_with_reversed_ordering:'prisoner_number' }}">
+                <span>
+                  {% trans 'Prisoner' %}
+                  {% describe_ordering_for_screenreader request 'prisoner_number' %}
+                </span>
+              </a>
+            </th>
+            <th class="{{ request|ordering_classes:'amount' }} number">
+              <a href="?{{ request|query_string_with_reversed_ordering:'amount' }}">
+                <span>
+                  {% trans 'Amount' %}
+                  {% describe_ordering_for_screenreader request 'amount' %}
+                </span>
+              </a>
+            </th>
+            <th>{% trans 'Sender' %}</th>
+            {% if pre_approval_required %}
+              <th>{% trans 'Security' %}</th>
+            {% endif %}
+            <th>{% trans 'NOMIS reference' %}</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for credit in object_list %}
+            <tr>
+              <td>
+                <div>{{ credit.received_at.date|date:'d/m/Y' }}</div>
+                {% with days=credit.received_at.date|dayssince %}
+                <div class="sub {% if days >= 7 %}old{% endif %}">
+                  {% if days == 0 %}
+                    {% trans 'Today' %}
+                  {% else %}
+                    {% blocktrans count days=days trimmed %}
+                      {{ days }} day ago
+                    {% plural %}
+                      {{ days }} days ago
+                    {% endblocktrans %}
+                  {% endif %}
+                </div>
+                {% endwith %}
+              </td>
+              <td>
+                <div>{{ credit.prisoner_number }}</div>
+                <div class="sub">{{ credit.prisoner_name }}</div>
+              </td>
+              <td class="number">&pound;{{ credit.amount|currency }}</td>
+              <td>{{ credit.sender_name }}</td>
+              {% if pre_approval_required %}
+                <td>
+                  {% if credit.reviewed %}
+                    {% trans 'Checked' %}
+                  {% else %}
+                    {% trans 'Not checked' %}
+                  {% endif %}
+                </td>
+              {% endif %}
+              <td>{{ credit.nomis_transaction_id|default:'—' }}</td>
+            </tr>
+            {% if credit.comments %}
+              <tr>
+                <td class="mtp-security" colspan="{% if pre_approval_required%}6{% else %}5{% endif %}">
+                  {% for comment in credit.comments %}
+                    <div class="mtp-security__comment">
+                      {{ comment.comment|linebreaks }}
+                    </div>
+                  {% endfor %}
+                </td>
+              </tr>
+            {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+
+      {% page_list page=current_page page_count=page_count query_string=form.query_string %}
+
+      <p><a href="#print-dialog" class="js-Print print-hidden">{% trans 'Print this page of credits' %}</a></p>
+
+    {% else %}
+      <p><strong>{% trans 'No credits' %}</strong></p>
+    {% endif %}
+  </div>
+
+{% endblock %}
