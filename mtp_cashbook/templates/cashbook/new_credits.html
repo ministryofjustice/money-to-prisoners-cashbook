@@ -17,50 +17,50 @@
   </header>
 
   {% if credited_credits %}
-  <div class="mtp-crediting-result mtp-credited-credits print-hidden">
+    <div class="mtp-crediting-result mtp-credited-credits print-hidden">
       {% blocktrans count credited_credits=credited_credits trimmed %}
         {{ credited_credits }} credit sent to NOMIS
       {% plural %}
         {{ credited_credits }} credits sent to NOMIS
       {% endblocktrans %}
-      <a href="{% url 'processed-credits-list' %}" class="mtp-end-link">{% trans "View" %}</a>
-  </div>
+      <a href="{% url 'processed-credits-list' %}" class="mtp-end-link">{% trans 'View' %}</a>
+    </div>
   {% endif %}
 
   {% if failed_credits %}
-  <div class="mtp-crediting-result mtp-failed-credits print-hidden">
+    <div class="mtp-crediting-result mtp-failed-credits print-hidden">
       {% blocktrans count failed_credits=failed_credits trimmed %}
         {{ failed_credits }} credit couldn’t be processed
       {% plural %}
         {{ failed_credits }} credits couldn’t be processed
       {% endblocktrans %}
-      <a href="#failed-credits-dialog" class="js-Dialog mtp-end-link">{% trans "Why?" %}</a>
-  </div>
-
-  <div id="failed-credits-dialog"
-       class="Dialog"
-       style="display: none"
-       data-hide-close="true"
-       data-disable-backdrop-close="true">
-    <div class="Dialog-inner">
-      <h2 class="heading-large">{% trans 'Why didn’t it work?' %}</h2>
-      <p>
-        {% trans 'Sometimes a fault in the system prevents credits from being processed.' %}
-        {% trans 'Please wait a few minutes and try sending to NOMIS again.' %}
-      </p>
-      <button type="button" class="button js-Dialog-close">{% trans 'OK' %}</button>
+      <a href="#failed-credits-dialog" class="js-Dialog mtp-end-link">{% trans 'Why?' %}</a>
     </div>
-  </div>
+
+    <div id="failed-credits-dialog"
+         class="Dialog"
+         style="display: none"
+         data-hide-close="true"
+         data-disable-backdrop-close="true">
+      <div class="Dialog-inner">
+        <h2 class="heading-large">{% trans 'Why didn’t it work?' %}</h2>
+        <p>
+          {% trans 'Sometimes a fault in the system prevents credits from being processed.' %}
+          {% trans 'Please wait a few minutes and try sending to NOMIS again.' %}
+        </p>
+        <button type="button" class="button js-Dialog-close">{% trans 'OK' %}</button>
+      </div>
+    </div>
   {% endif %}
 
   {% if manual_credits %}
-  <div class="mtp-crediting-result mtp-manual-credits print-hidden">
+    <div class="mtp-crediting-result mtp-manual-credits print-hidden">
       {% blocktrans count manual_credits=manual_credits trimmed %}
         {{ manual_credits }} credit needs your manual input in NOMIS - see below
       {% plural %}
         {{ manual_credits }} credits need your manual input in NOMIS - see below
       {% endblocktrans %}
-  </div>
+    </div>
   {% endif %}
 
   <div class="print-only">
@@ -263,11 +263,11 @@
                   </div>
                   <div class="panel panel-border-narrow help-box-contents" id="help-box-contents">
                     <p>
-                      {% blocktrans %}
-                      The credits on this page are from the <a href="{{ start_page_url }}">Send money to a prisoner</a> service.
+                      {% blocktrans trimmed %}
+                        The credits on this page are from the <a href="{{ start_page_url }}">Send money to a prisoner</a> service.
                       {% endblocktrans %}
                     </p>
-                    <p>{% trans 'Use this page to credit to NOMIS automatically ' %}</p>
+                    <p>{% trans 'Use this page to credit to NOMIS automatically' %}</p>
                     <p>{% trans 'Do not manually enter these credits into NOMIS' %}</p>
                     <p>
                       {% trans 'All credits are from known senders and should be credited - if there is any concern or suspicion about a credit, it should be bought on hold after crediting and passed to security.' %}
@@ -277,7 +277,7 @@
                       <li class="first">{% trans 'Review all credits for suspicious activity' %}</li>
                       <li class="second">{% trans 'Tick all credits' %}</li>
                       <li class="third">{% trans 'Click the green ‘Credit to NOMIS’ button' %}</li>
-                      <li  class="fourth">{% trans 'Place any suspicious credits on hold in NOMIS' %}</li>
+                      <li class="fourth">{% trans 'Place any suspicious credits on hold in NOMIS' %}</li>
                     </ol>
                     <p>{% trans 'Remember, the credits will automatically be entered into NOMIS and there is no longer any need to print records' %}</p>
                  </div>
@@ -293,27 +293,27 @@
           {% endif %}
 
           <tr>
-            <th class="{{ request|ordering_classes:'received_at' }}">
-              <a href="?{{ request|query_string_with_reversed_ordering:'received_at' }}">
+            <th class="{{ request_params|ordering_classes:'received_at' }}">
+              <a href="?{{ request_params|query_string_with_reversed_ordering:'received_at' }}">
                 <span>
                   {% trans 'Date sent' %}
-                  {% describe_ordering_for_screenreader request 'received_at' %}
+                  {% describe_ordering_for_screenreader request_params 'received_at' %}
                 </span>
               </a>
             </th>
-            <th class="{{ request|ordering_classes:'prisoner_number' }}">
-              <a href="?{{ request|query_string_with_reversed_ordering:'prisoner_number' }}">
+            <th class="{{ request_params|ordering_classes:'prisoner_number' }}">
+              <a href="?{{ request_params|query_string_with_reversed_ordering:'prisoner_number' }}">
                 <span>
                   {% trans 'Prisoner' %}
-                  {% describe_ordering_for_screenreader request 'prisoner_number' %}
+                  {% describe_ordering_for_screenreader request_params 'prisoner_number' %}
                 </span>
               </a>
             </th>
-            <th class="{{ request|ordering_classes:'amount' }} number">
-              <a href="?{{ request|query_string_with_reversed_ordering:'amount' }}">
+            <th class="{{ request_params|ordering_classes:'amount' }} number">
+              <a href="?{{ request_params|query_string_with_reversed_ordering:'amount' }}">
                 <span>
                   {% trans 'Amount' %}
-                  {% describe_ordering_for_screenreader request 'amount' %}
+                  {% describe_ordering_for_screenreader request_params 'amount' %}
                 </span>
               </a>
             </th>

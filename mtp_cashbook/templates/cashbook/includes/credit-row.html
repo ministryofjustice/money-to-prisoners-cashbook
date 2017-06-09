@@ -1,0 +1,84 @@
+{% load i18n %}
+{% load credits %}
+{% load currency %}
+
+<tr>
+  <td>
+    {{ credit.received_at.date|date:'d/m/Y' }}
+    {% if credit.resolution != 'credited' %}
+      {% with days=credit.received_at.date|dayssince %}
+        <div class="sub {% if days >= 7 %}old{% endif %}">
+          {% if days == 0 %}
+            {% trans 'Today' %}
+          {% else %}
+            {% blocktrans count days=days trimmed %}
+              {{ days }} day ago
+            {% plural %}
+              {{ days }} days ago
+            {% endblocktrans %}
+          {% endif %}
+        </div>
+      {% endwith %}
+    {% endif %}
+  </td>
+  <td>
+    {{ credit.prisoner_number }}
+    <div class="sub">{{ credit.prisoner_name }}</div>
+  </td>
+  <td class="number">£{{ credit.amount|currency }}</td>
+  <td>
+    {% if credit.anonymous %}
+      {% trans 'Anonymous sender' %}
+      <div class="sub">
+        {% trans 'Will not be credited' %}
+      </div>
+    {% else %}
+      {{ credit.sender_name }}
+    {% endif %}
+  </td>
+  {% if include_status %}
+    {% if pre_approval_required %}
+      <td>
+        {% if credit.reviewed %}
+          {% trans 'Checked' %}
+        {% else %}
+          {% trans 'Not checked' %}
+        {% endif %}
+      </td>
+    {% endif %}
+    <td>{{ credit.nomis_transaction_id|default:'—' }}</td>
+    <td>
+      {% if credit.resolution == 'credited' %}
+        {{ credit.credited_at.date }}
+        <div class="sub">
+          {% blocktrans trimmed with name_of_clerk=credit.owner_name|default:'—' %}
+            by {{ name_of_clerk }}
+          {% endblocktrans %}
+        </div>
+      {% elif credit.resolution == 'refunded' %}
+        {% trans 'Refunded' %}
+        <div class="sub">
+          {{ credit.refunded_at.date }}
+        </div>
+      {% elif credit.anonymous %}
+        {% trans 'Anonymous sender' %}
+        <div class="sub">
+          {% trans 'Will not be credited' %}
+        </div>
+      {% else %}
+        {% trans 'Not credited' %}
+      {% endif %}
+    </td>
+  {% endif %}
+</tr>
+{% if credit.comments %}
+  <tr>
+    <td class="mtp-security" colspan="{% if include_status and pre_approval_required %}7{% elif include_status %}6{% else %}4{% endif %}">
+      {% for comment in credit.comments %}
+        <div class="mtp-security__comment">
+          {{ comment.comment|linebreaks }}
+        </div>
+      {% endfor %}
+    </td>
+  </tr>
+{% endif %}

@@ -22,6 +22,6 @@
   require('running-total').RunningTotal.init();
   require('selection-count').SelectionCount.init();
   require('confirmation-button').ConfirmationButton.init();
-  require('search-focus').SearchFocus.init();
+  require('filter-box').FilterBox.init();
   require('training').Training.init();
 }());

@@ -4,9 +4,12 @@ import re
 from mtp_common.test_utils import silence_logger
 from mtp_common.test_utils.functional_tests import FunctionalTestCase
 
+from cashbook.tests.test_nomis_views import override_nomis_settings
+
 logger = logging.getLogger('mtp')
 
 
+@override_nomis_settings
 class CashbookTestCase(FunctionalTestCase):
     """
     Base class to define common methods to test subclasses below

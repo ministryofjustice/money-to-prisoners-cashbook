@@ -13,29 +13,25 @@
     <h1 class="heading-xlarge__chopped">{{ view.title }}</h1>
   </header>
 
-  {% include "mtp_common/includes/message_box.html" %}
+  {% include 'mtp_common/includes/message_box.html' %}
 
   <form method="get" class="mtp-processed-credits-search" action="">
     {% include 'mtp_common/forms/error-summary.html' with form=form only %}
 
-    <div class="mtp-processed-credits-search__inputs">
-      <div class="mtp-processed-credits-search__date-start">
-        {% include 'mtp_common/forms/field.html' with field=form.start input_classes='js-FormDateControl' value=form.start.value|date:'d/m/Y'|default:form.start.value|default_if_none:'' only %}
-      </div>
-      <div class="mtp-processed-credits-search__date-end">
-        {% include 'mtp_common/forms/field.html' with field=form.end input_classes='js-FormDateControl' value=form.end.value|date:'d/m/Y'|default:form.end.value|default_if_none:'' only %}
-      </div>
-      <div class="mtp-processed-credits-search__submit">
-        <div class="form-group">
-          <input class="button" type="submit" value="{% trans 'Filter list' %}">
-        </div>
+    <div class="mtp-processed-credits-search__date-start">
+      {% include 'mtp_common/forms/field.html' with field=form.start value=form.start.value|date:'d/m/Y'|default:form.start.value|default_if_none:'' only %}
+    </div>
+    <div class="mtp-processed-credits-search__date-end">
+      {% include 'mtp_common/forms/field.html' with field=form.end value=form.end.value|date:'d/m/Y'|default:form.end.value|default_if_none:'' only %}
+    </div>
+    <div class="mtp-processed-credits-search__submit">
+      <div class="form-group">
+        {# always forces a search to start on page 1 #}
+        <input type="hidden" name="{{ form.page.html_name }}" value="1">
+        <input class="button" type="submit" value="{% trans 'Filter list' %}">
       </div>
     </div>
-
-    {# always forces a search to start on page 1 #}
-    <input type="hidden" name="{{ form.page.html_name }}" value="1">
   </form>
-
 
   <div class="mtp-batch">
     {% if object_list %}
@@ -59,24 +55,24 @@
           {% for batch in object_list %}
             <tr>
               <td>
-                <div>{{ batch.logged_at|date:'d/m/Y' }}</div>
+                {{ batch.logged_at|date:'d/m/Y' }}
                 {% with days=batch.logged_at|dayssince %}
-                <div class="sub">
-                  {% if days == 0 %}
-                    {% trans 'Today' %}
-                  {% else %}
-                    {% blocktrans count days=days trimmed %}
-                      {{ days }} day ago
-                    {% plural %}
-                      {{ days }} days ago
-                    {% endblocktrans %}
-                  {% endif %}
-                </div>
+                  <div class="sub">
+                    {% if days == 0 %}
+                      {% trans 'Today' %}
+                    {% else %}
+                      {% blocktrans count days=days trimmed %}
+                        {{ days }} day ago
+                      {% plural %}
+                        {{ days }} days ago
+                      {% endblocktrans %}
+                    {% endif %}
+                  </div>
                 {% endwith %}
               </td>
               <td>
                 <a href="{% url 'processed-credits-detail' date=batch.logged_at|date:'Ymd' user_id=batch.owner %}">
-                  {% blocktrans count count=batch.count %}
+                  {% blocktrans count count=batch.count trimmed %}
                     {{ count }} credit
                   {% plural %}
                     {{ count }} credits
@@ -88,7 +84,7 @@
               {% if pre_approval_required %}
                 {% if batch.comment_count %}
                   <td>
-                    {% blocktrans count count=batch.comment_count %}
+                    {% blocktrans count count=batch.comment_count trimmed %}
                       {{ count }} note
                     {% plural %}
                       {{ count }} notes

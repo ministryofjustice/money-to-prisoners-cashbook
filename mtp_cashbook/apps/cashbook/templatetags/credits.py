@@ -135,8 +135,8 @@ def truncate_user_list(terms):
 
 
 @register.filter
-def ordering_classes(request, ordering):
-    current_ordering = request.GET.get('ordering')
+def ordering_classes(data, ordering):
+    current_ordering = data.get('ordering')
     if current_ordering == ordering:
         return 'mtp-results-ordering mtp-results-ordering--asc'
     if current_ordering == '-%s' % ordering:
@@ -145,8 +145,8 @@ def ordering_classes(request, ordering):
 
 
 @register.inclusion_tag('cashbook/includes/result-ordering-for-screenreader.html')
-def describe_ordering_for_screenreader(request, ordering):
-    current_ordering = request.GET.get('ordering')
+def describe_ordering_for_screenreader(data, ordering):
+    current_ordering = data.get('ordering')
     if current_ordering == ordering:
         ordering = 'ascending'
     elif current_ordering == '-%s' % ordering:
@@ -157,8 +157,8 @@ def describe_ordering_for_screenreader(request, ordering):
 
 
 @register.filter
-def query_string_with_reversed_ordering(request, ordering):
-    data = request.GET.copy()
+def query_string_with_reversed_ordering(data, ordering):
+    data = {key: value for key, value in data.items() if value and key != 'page'}
     current_ordering = data.get('ordering')
     if current_ordering == ordering:
         ordering = '-%s' % ordering

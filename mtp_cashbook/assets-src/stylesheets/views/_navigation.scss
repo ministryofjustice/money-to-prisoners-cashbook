@@ -1,22 +1,75 @@
 .mtp-cashbook-navigation {
-  padding-top: 0.75em;
-  padding-bottom: 0.75em;
+  margin-top: 0.2em;
 
-  ol {
-    @extend %contain-floats;
+  @media print {
+    display: none;
   }
+}
+
+.mtp-cashbook-navigation__links {
+  @extend %contain-floats;
 
   li {
+    display: block;
     float: left;
-    list-style: none;
+    margin-right: 3px;
+  }
 
-    > * {
-      padding: 0.4em 1em 0.4em 1em;
-    }
+  a {
+    display: block;
+    padding: em(8) em(18);
 
-    span {
+    &.mtp-cashbook-navigation__active {
       background-color: $link-colour;
       color: $page-colour;
+      text-decoration: none;
     }
+  }
+}
+
+.mtp-cashbook-navigation__search {
+  position: relative;
+
+  @include media(mobile) {
+    margin-top: em(8);
+  }
+
+  .form-group {
+    margin-bottom: 0;
+  }
+
+  #id_search {
+    float: right;
+    padding-right: 44px;
+    width: 75%;
+
+    @include media($max-width: $desktop-breakpoint, $ignore-for-ie: true) {
+      width: 100%;
+    }
+  }
+}
+
+.mtp-nav-search-button {
+  @include box-sizing(border-box);
+  @include core-19;
+  display: inline-block;
+  position: absolute;
+  overflow: hidden;
+  padding: 5px 0 4px; // .form-control doesn't use em, e.g. em(5) em(4);
+  width: 40px;
+  right: 0;
+  top: 0;
+  border: 2px solid $govuk-blue;
+  text-indent: 300px;
+  background: $govuk-blue file-url('icon-search.png') no-repeat 6px 50%;
+  cursor: pointer;
+
+  @include device-pixel-ratio {
+    background-image: file-url('icon-search-2x.png');
+    background-size: 30px 22px;
+  }
+
+  @include ie-lte(8) {
+    padding-bottom: 5px;
   }
 }

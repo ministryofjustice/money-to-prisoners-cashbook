@@ -1,0 +1,38 @@
+// Application specific
+
+.mtp-filter-box__control span {
+  display: inline-block;
+  width: 22px;
+  height: 14px;
+  background: file-url('../mtp_common/images/help-arrows.png') no-repeat -28px;
+
+  @include device-pixel-ratio {
+    background-image: file-url('../mtp_common/images/help-arrows@2x.png');
+    background-size: 42px 14px;
+  }
+}
+
+.mtp-filter-box__control--expanded span {
+  background-position: 0;
+}
+
+.mtp-filter-box__contents {
+  #id_start-wrapper, #id_end-wrapper {
+    float: left;
+    width: 175px;
+
+    input {
+      width: 90%;
+    }
+  }
+
+  @include media($max-width: $desktop-breakpoint, $ignore-for-ie: true) {
+    #id_start-wrapper, #id_end-wrapper {
+      width: 50%;
+    }
+
+    #id_end-wrapper input {
+      width: 100%;
+    }
+  }
+}

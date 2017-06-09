@@ -12,18 +12,16 @@
 @import 'views/training';
 @import 'views/navigation';
 @import 'views/credits';
-@import 'views/all_credits';
 @import 'views/processed_credits';
 @import 'views/change_notification';
 @import 'views/progress_bar';
+@import 'views/filter-box';
 
 // mtp-common overrides
 .help-box div {
   width: 65%;
-}
 
-table {
-  .help-box div {
+  table & {
     width: 100%;
   }
 }
