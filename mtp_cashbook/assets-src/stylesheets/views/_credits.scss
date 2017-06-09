@@ -222,8 +222,10 @@
       }
 
       .mtp-all {
+        vertical-align: top;
         text-align: center;
         padding-left: 80px;
+        white-space: nowrap;
       }
 
       .mtp-security, .mtp-manual-action {
@@ -338,6 +340,54 @@
     .print,
     .button {
       display: none;
+    }
+  }
+}
+
+ol.mtp-numbered-steps {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+  margin-left: 50px;
+
+  li {
+    padding-top: 1px;
+    padding-left: 30px;
+    margin-bottom: 1em;
+  }
+
+  li.first {
+    background: file-url('icon-steps/icon-step-1.png') no-repeat scroll 0 0;
+
+    @include device-pixel-ratio {
+      background-image: file-url('icon-steps/icon-step-1-2x.png');
+      background-size: 23px 23px;
+    }
+  }
+
+  li.second {
+    background: file-url('icon-steps/icon-step-2.png') no-repeat scroll 0 0;
+
+    @include device-pixel-ratio {
+      background-image: file-url('icon-steps/icon-step-2-2x.png');
+      background-size: 23px 23px;
+    }
+  }
+
+  li.third {
+    background: file-url('icon-steps/icon-step-3.png') no-repeat scroll 0 0;
+
+    @include device-pixel-ratio {
+      background-image: file-url('icon-steps/icon-step-3-2x.png');
+      background-size: 23px 23px;
+    }
+  }
+
+  li.fourth {
+    background: file-url('icon-steps/icon-step-4.png') no-repeat scroll 0 0;
+
+    @include device-pixel-ratio {
+      background-image: file-url('icon-steps/icon-step-4-2x.png');
+      background-size: 23px 23px;
     }
   }
 }

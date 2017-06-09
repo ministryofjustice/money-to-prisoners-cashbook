@@ -22,6 +22,12 @@
   width: 65%;
 }
 
+table {
+  .help-box div {
+    width: 100%;
+  }
+}
+
 .without-footer-padding #footer .footer-wrapper {
   padding-top: 2em;
 }
