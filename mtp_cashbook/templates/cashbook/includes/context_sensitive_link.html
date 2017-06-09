@@ -1,6 +1,1 @@
-{% url view_name as view_url %}
-{% if request.path == view_url %}
-<span>{{ link_text }}</span>
-{% else %}
-<a href="{{ view_url }}">{{ link_text }}</a>
-{% endif %}
+<a href="{% url view_name %}" class="{% if request.resolver_match.url_name in subview_names.split %}mtp-cashbook-navigation__active{% endif %}">{{ link_text }}</a>

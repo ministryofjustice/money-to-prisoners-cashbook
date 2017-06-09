@@ -15,9 +15,11 @@ from requests.exceptions import RequestException
 
 from .utils import expected_nomis_availability, check_pre_approval_required
 from .forms import (
+    COMPLETED_INDEX,
     ProcessCreditBatchForm, DiscardLockedCreditsForm, FilterCreditHistoryForm,
-    ProcessNewCreditsForm, FilterProcessedCreditsListForm, ProcessManualCreditsForm,
-    COMPLETED_INDEX, FilterProcessedCreditsDetailForm
+    ProcessNewCreditsForm, ProcessManualCreditsForm,
+    FilterProcessedCreditsListForm, FilterProcessedCreditsDetailForm,
+    FilterAllCreditsForm,
 )
 
 logger = logging.getLogger('mtp')
@@ -359,6 +361,10 @@ class NewCreditsView(FormView):
                 }
             })
 
+        request_params = self.request.GET.dict()
+        request_params.setdefault('ordering', '-received_at')
+        context['request_params'] = request_params
+
         return context
 
     def form_valid(self, form):
@@ -458,3 +464,66 @@ class ProcessedCreditsDetailView(ProcessedCreditsListView):
             date=datetime.strptime(self.kwargs['date'], '%Y%m%d'),
             user_id=self.kwargs['user_id']
         )
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(expected_nomis_availability(True), name='dispatch')
+class AllCreditsView(FormView):
+    title = _('All credits')
+    form_class = FilterAllCreditsForm
+    template_name = 'cashbook/all_credits.html'
+    success_url = reverse_lazy('all-credits')
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial.update({
+            'page': 1,
+        })
+        return initial
+
+    def get_form_kwargs(self):
+        return {
+            'request': self.request,
+            'data': self.request.GET or {},
+            'initial': self.get_initial(),
+            'prefix': self.get_prefix(),
+        }
+
+    def get(self, request, *args, **kwargs):
+        form = self.get_form()
+        if form.is_bound:
+            if form.is_valid():
+                return self.form_valid(form)
+            else:
+                return self.form_invalid(form)
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        form = context['form']
+        search_field = form['search']
+        new_credit_list = list(form.credit_choices)
+        old_credit_list = []
+        for index, credit in enumerate(new_credit_list):
+            if credit['resolution'] == 'credited':
+                new_credit_list, old_credit_list = new_credit_list[:index], new_credit_list[index:]
+                break
+        current_page = form.pagination['page']
+        page_count = form.pagination['page_count']
+        if form.is_valid() and form.cleaned_data.get('search'):
+            self.title = _('Search for “%(query)s”') % {'query': form.cleaned_data['search']}
+        else:
+            self.title = _('Search all credits')
+        context.update({
+            'search_field': search_field,
+            'new_credit_list': new_credit_list,
+            'old_credit_list': old_credit_list,
+            'credits_returned': form.is_valid() and (new_credit_list or old_credit_list),
+            'current_page': current_page,
+            'page_count': page_count,
+            'credit_owner_name': self.request.user.get_full_name(),
+        })
+        return context
+
+    def form_valid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))

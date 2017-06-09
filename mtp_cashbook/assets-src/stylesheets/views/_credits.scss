@@ -45,10 +45,6 @@
     }
   }
 
-  .phase-banner-beta {
-    border-bottom: 2px solid #bfc1c3;
-  }
-
   .Dialog {
     margin-top: 120px;
     position: fixed;
@@ -145,6 +141,13 @@
 
   .mtp-batch {
     margin: 0;
+
+    th {
+      padding: .8em;
+    }
+    th, td {
+      vertical-align: top;
+    }
 
     .mtp-results-ordering {
       height: 100%;

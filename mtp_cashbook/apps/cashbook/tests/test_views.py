@@ -94,7 +94,7 @@ class DashboardViewTestCase(MTPBaseTestCase):
                 return {'count': available}
             else:
                 return {'count': all_credits}
-            return None
+
         return mock_response
 
     def test_0_available_0_locked_gives_correct_new_count(self):

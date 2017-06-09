@@ -11,6 +11,7 @@ from django.conf import settings
 from django.utils.dateparse import parse_datetime
 from django.utils.functional import cached_property
 from django.utils.dateformat import format as format_date
+from django.utils.safestring import mark_safe
 from django.utils.text import capfirst
 from django.utils.translation import gettext, gettext_lazy, ngettext
 from form_error_reporting import GARequestErrorReportingMixin
@@ -424,10 +425,10 @@ class ProcessManualCreditsForm(GARequestErrorReportingMixin, forms.Form):
 
 class FilterProcessedCreditsListForm(GARequestErrorReportingMixin, forms.Form):
     start = forms.DateField(label=gettext_lazy('From date'),
-                            help_text=gettext_lazy('e.g. 1/6/2016'),
+                            help_text=gettext_lazy('e.g. 1/6/2017'),
                             required=False)
-    end = forms.DateField(label=gettext_lazy('to date'),
-                          help_text=gettext_lazy('e.g. 5/6/2016'),
+    end = forms.DateField(label=gettext_lazy('To date'),
+                          help_text=gettext_lazy('e.g. 5/6/2017'),
                           required=False)
     page = forms.IntegerField(required=False, widget=forms.HiddenInput)
 
@@ -512,7 +513,7 @@ class FilterProcessedCreditsListForm(GARequestErrorReportingMixin, forms.Form):
 
 
 class FilterProcessedCreditsDetailForm(FilterProcessedCreditsListForm):
-    search = forms.CharField(
+    names = forms.CharField(
         label=gettext_lazy('Name of prisoner or sender'),
         help_text=gettext_lazy('e.g. Bob Phillips'),
         required=False
@@ -537,6 +538,7 @@ class FilterProcessedCreditsDetailForm(FilterProcessedCreditsListForm):
     renames = (
         ('start', 'received_at__gte'),
         ('end', 'received_at__lt'),
+        ('names', 'search'),
     )
 
     def __init__(self, request, date, user_id, *args, **kwargs):
@@ -557,3 +559,174 @@ class FilterProcessedCreditsDetailForm(FilterProcessedCreditsListForm):
             offset=offset, limit=self.page_size, **dict(self.default_filters, **filters)
         )
         return response.get('count', 0), response.get('results', [])
+
+
+class FilterAllCreditsForm(GARequestErrorReportingMixin, forms.Form):
+    ordering = forms.ChoiceField(
+        label=gettext_lazy('Order by'), required=False,
+        initial='-received_at',
+        choices=[
+            ('received_at', gettext_lazy('Received date (oldest to newest)')),
+            ('-received_at', gettext_lazy('Received date (newest to oldest)')),
+            ('amount', gettext_lazy('Amount sent (low to high)')),
+            ('-amount', gettext_lazy('Amount sent (high to low)')),
+            ('prisoner_number', gettext_lazy('Prisoner number (A to Z)')),
+            ('-prisoner_number', gettext_lazy('Prisoner number (Z to A)')),
+        ]
+    )
+    start = forms.DateField(label=gettext_lazy('From date'),
+                            help_text=gettext_lazy('e.g. 1/6/2017'),
+                            required=False)
+    end = forms.DateField(label=gettext_lazy('To date'),
+                          help_text=gettext_lazy('e.g. 5/6/2017'),
+                          required=False)
+    search = forms.CharField(label=gettext_lazy('Keywords'),
+                             help_text=gettext_lazy('e.g. prisoner name, prisoner number or sender name'),
+                             required=False)
+    page = forms.IntegerField(required=False, widget=forms.HiddenInput)
+
+    page_size = 20
+
+    def __init__(self, request, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.label_suffix = ''
+        self.request = request
+        self.user = request.user
+        self.client = get_connection(request)
+        self.pagination = {
+            'page': 1,
+            'count': 0,
+            'page_count': 0,
+        }
+
+    def clean(self):
+        start = self.cleaned_data.get('start')
+        end = self.cleaned_data.get('end')
+        if start and end and start >= end:
+            self.add_error('end', gettext('The end date must be after the start date'))
+        return super().clean()
+
+    def clean_ordering(self):
+        return self.cleaned_data.get('ordering') or self.fields['ordering'].initial
+
+    def clean_end(self):
+        end = self.cleaned_data.get('end')
+        if end is not None:
+            return end + timedelta(days=1)
+
+    @property
+    def has_filters(self):
+        if not hasattr(self, 'cleaned_data'):
+            return False
+        return any(self.cleaned_data.get(key) for key in ['start', 'end', 'search'])
+
+    @cached_property
+    def credit_choices(self):
+        filters = {}
+        fields = set(self.fields.keys())
+        if self.is_valid():
+            # valid form
+            for field in fields:
+                if field in self.cleaned_data:
+                    filters[field] = self.cleaned_data[field]
+        elif not self.is_bound:
+            # no form submission
+            for field in fields:
+                if field in self.initial:
+                    filters[field] = self.initial[field]
+
+        renames = (
+            ('start', 'received_at__gte'),
+            ('end', 'received_at__lt'),
+        )
+        for field_name, api_name in renames:
+            if field_name in filters:
+                filters[api_name] = filters[field_name]
+                del filters[field_name]
+
+        page = self.cleaned_data.get('page') or 1
+        offset = (page - 1) * self.page_size
+        response = self.client.credits.get(offset=offset, limit=self.page_size, resolution='credited', **filters)
+        count = response.get('count', 0)
+        self.pagination = {
+            'page': page,
+            'count': count,
+            'full_count': count,
+            'page_count': int(ceil(count / self.page_size)),
+        }
+        results = response.get('results', [])
+        if page == 1:
+            new_credits = retrieve_all_pages(self.client.credits.get, status='credit_pending', **filters)
+            self.pagination['full_count'] += len(new_credits)
+            results = new_credits + results
+        return parse_date_fields(results)
+
+    def _get_filter_description(self):
+        if self.cleaned_data:
+            search_description = self.cleaned_data.get('search')
+
+            def get_date(date_key):
+                date = self.cleaned_data.get(date_key)
+                if date:
+                    return format_date(date, 'd/m/Y')
+
+            date_range = {
+                'start': get_date('start'),
+                'end': get_date('end'),
+            }
+            if date_range['start'] and date_range['end']:
+                if date_range['start'] == date_range['end']:
+                    date_range_description = gettext('on %(start)s') % date_range
+                else:
+                    date_range_description = gettext('between %(start)s and %(end)s') % date_range
+            elif date_range['start']:
+                date_range_description = gettext('since %(start)s') % date_range
+            elif date_range['end']:
+                date_range_description = gettext('up to %(end)s') % date_range
+            else:
+                date_range_description = None
+        else:
+            search_description = None
+            date_range_description = None
+        return search_description, date_range_description
+
+    def get_search_description(self):
+        if self.pagination['full_count']:
+            credit_description = ngettext(
+                '%(count)s credit',
+                '%(count)s credits',
+                self.pagination['full_count'],
+            ) % {'count': '<strong>{:,}</strong>'.format(self.pagination['full_count'])}
+        else:
+            return gettext('No credits found')
+
+        search_description, date_range_description = self._get_filter_description()
+        if date_range_description:
+            description = gettext('Showing %(credits)s received %(date_range)s') % {
+                'date_range': date_range_description,
+                'credits': credit_description,
+            }
+        elif search_description:
+            description = gettext('Showing %(credits)s received') % {
+                'credits': credit_description,
+            }
+        else:
+            description = gettext('Showing all %(credits)s received') % {
+                'credits': credit_description,
+            }
+        return mark_safe(description)
+
+    def get_query_data(self):
+        data = collections.OrderedDict()
+        for field in self:
+            if field.name == 'page':
+                continue
+            value = self.cleaned_data.get(field.name)
+            if value in [None, '', []]:
+                continue
+            data[field.name] = value
+        return data
+
+    @cached_property
+    def query_string(self):
+        return urlencode(self.get_query_data(), doseq=True)
