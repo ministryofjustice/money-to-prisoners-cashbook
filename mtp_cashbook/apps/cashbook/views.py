@@ -330,6 +330,7 @@ class NewCreditsView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['start_page_url'] = settings.START_PAGE_URL
 
         new_credit_choices = context['form']['new'].credit_choices
         context['new_object_list'] = new_credit_choices

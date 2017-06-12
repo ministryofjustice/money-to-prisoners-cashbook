@@ -255,7 +255,41 @@
       <table>
         <thead>
           {% if new_object_list %}
-            {% include 'cashbook/includes/table_actions.html' with location='header' field_name=form.new.credits.html_name batch_size=batch_size print=False %}
+            <tr class="print-hidden">
+              <td colspan="{% if pre_approval_required %}5{% else %}4{% endif %}" class="cell--compact">
+                <div class="help-box">
+                  <div class="help-box-title" aria-controls="help-box-contents" aria-expanded="false" role="heading">
+                    <div></div><a href="#">{% trans 'What do I do here?' %}</a>
+                  </div>
+                  <div class="panel panel-border-narrow help-box-contents" id="help-box-contents">
+                    <p>
+                      {% blocktrans %}
+                      The credits on this page are from the <a href="{{ start_page_url }}">Send money to a prisoner</a> service.
+                      {% endblocktrans %}
+                    </p>
+                    <p>{% trans 'Use this page to credit to NOMIS automatically ' %}</p>
+                    <p>{% trans 'Do not manually enter these credits into NOMIS' %}</p>
+                    <p>
+                      {% trans 'All credits are from known senders and should be credited - if there is any concern or suspicion about a credit, it should be bought on hold after crediting and passed to security.' %}
+                    </p>
+                    <p><strong>{% trans 'How to credit' %}</strong></p>
+                    <ol class="mtp-numbered-steps">
+                      <li class="first">{% trans 'Review all credits for suspicious activity' %}</li>
+                      <li class="second">{% trans 'Tick all credits' %}</li>
+                      <li class="third">{% trans 'Click the green ‘Credit to NOMIS’ button' %}</li>
+                      <li  class="fourth">{% trans 'Place any suspicious credits on hold in NOMIS' %}</li>
+                    </ol>
+                    <p>{% trans 'Remember, the credits will automatically be entered into NOMIS and there is no longer any need to print records' %}</p>
+                 </div>
+                </div>
+              </td>
+              <td class="mtp-all">
+                <div>
+                  <input type="checkbox" id="select-all-header" class="Checkbox Checkbox--left js-SelectAll" data-name="{{ form.new.credits.html_name }}">
+                  <label data-analytics="event,select-all,header" for="select-all-header">{% trans "Select all" %}</label>
+                </div>
+              </td>
+            </tr>
           {% endif %}
 
           <tr>
@@ -353,7 +387,13 @@
           </tbody>
 
           <tfoot>
-            {% include 'cashbook/includes/table_actions.html' with location='footer' field_name=form.new.credits.html_name batch_size=batch_size print=False %}
+            <tr class="print-hidden">
+              <td colspan="{% if pre_approval_required%}5{% else %}4{% endif %}" class="cell--compact"></td>
+              <td class="mtp-all">
+                <input type="checkbox" id="select-all-footer" class="Checkbox Checkbox--left js-SelectAll" data-name="{{ form.new.credits.html_name }}">
+                <label data-analytics="event,select-all,footer" for="select-all-footer">{% trans "Select all" %}</label>
+              </td>
+            </tr>
           </tfoot>
         {% else %}
           <tbody>
