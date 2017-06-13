@@ -18,14 +18,6 @@
 @import 'views/filter-box';
 
 // mtp-common overrides
-.help-box div {
-  width: 65%;
-
-  table & {
-    width: 100%;
-  }
-}
-
 .without-footer-padding #footer .footer-wrapper {
   padding-top: 2em;
 }

@@ -11,25 +11,25 @@
     <h1 class="heading-xlarge">{{ view.title }}</h1>
   </header>
 
-  <div class="help-box">
-    <p>
-      {% trans 'Below you’ll find all the credits listed to date.' %}
-      {% trans 'You can also use the search to find specific credits.' %}
-    </p>
+  <p>
+    {% trans 'Below you’ll find all the credits listed to date.' %}
+    {% trans 'You can also use the search to find specific credits.' %}
+  </p>
 
-    <div class="help-box-title" aria-controls="help-box-contents" aria-expanded="false" role="heading">
-      <div></div><a href="#">{% trans 'Help' %}</a>
-    </div>
-    <div class="panel panel-border-narrow help-box-contents" id="help-box-contents">
-      <p>{% trans 'To help with your search:' %}</p>
-      <ul>
-        <li>{% trans 'Search by prisoner name, prisoner number, sender name or amount' %}</li>
-        <li>{% trans 'To bring up the whole history, don’t enter search dates although you can enter start and finish dates if you have a specific search' %}</li>
-        <li>{% trans 'Click on ‘Expand’ to see a list of credits for that day, then click on ‘Collapse’ to go back' %}</li>
-        <li>{% trans 'Remember the credits in ‘Uncredited’ haven’t been processed yet' %}</li>
-        <li><a href="{% url 'training' page='history' %}">{% trans 'More information is available in the training section' %}</a></li>
-      </ul>
-    </div>
+  <p>
+    <a class="mtp-disclosure" href="#" aria-controls="mtp-help-box" aria-expanded="false" role="button" data-analytics="pageview,/-help_open/{{ request.resolver_match.url_name }}/">
+      <span></span>{% trans 'Help' %}
+    </a>
+  </p>
+  <div id="mtp-help-box" class="mtp-disclosure__contents panel panel-border-narrow">
+    <p>{% trans 'To help with your search:' %}</p>
+    <ul class="list list-bullet">
+      <li>{% trans 'Search by prisoner name, prisoner number, sender name or amount' %}</li>
+      <li>{% trans 'To bring up the whole history, don’t enter search dates although you can enter start and finish dates if you have a specific search' %}</li>
+      <li>{% trans 'Click on ‘Expand’ to see a list of credits for that day, then click on ‘Collapse’ to go back' %}</li>
+      <li>{% trans 'Remember the credits in ‘Uncredited’ haven’t been processed yet' %}</li>
+      <li><a href="{% url 'training' page='history' %}">{% trans 'More information is available in the training section' %}</a></li>
+    </ul>
   </div>
 
   {% include "mtp_common/includes/message_box.html" %}

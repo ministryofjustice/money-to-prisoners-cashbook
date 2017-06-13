@@ -9,7 +9,7 @@
   require('print').Print.init();
   require('select-all').SelectAll.init();
   require('unload').Unload.init();
-  require('help-popup').HelpPopup.init();
+  require('disclosure').Disclosure.init();
   require('analytics').Analytics.init();
   require('track-printing').TrackPrinting.init();
   require('confirm-manual').ConfirmManual.init();
@@ -22,6 +22,5 @@
   require('running-total').RunningTotal.init();
   require('selection-count').SelectionCount.init();
   require('confirmation-button').ConfirmationButton.init();
-  require('filter-box').FilterBox.init();
   require('training').Training.init();
 }());

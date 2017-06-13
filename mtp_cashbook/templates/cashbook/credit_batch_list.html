@@ -60,19 +60,19 @@
         </p>
       </div>
 
-      <div class="help-box">
-        <div class="help-box-title" aria-controls="help-box-contents" aria-expanded="false" role="heading">
-          <div></div><a href="#">{% trans 'How to use this with NOMIS' %}</a>
-        </div>
-        <div class="panel panel-border-narrow help-box-contents" id="help-box-contents">
-          <ul>
-            <li>{% trans 'You can credit in NOMIS in the usual way but remember to select the <strong>‘Misc Receipt - Private Cash’ category as Credit Type</strong>' %}</li>
-            <li>{% trans 'You don’t need to use a reference' %}</li>
-            <li>{% trans 'In the digital cashbook below, tick off the credits you’ve entered in NOMIS and click ‘Confirm entered in NOMIS’' %}</li>
-            <li>{% trans 'You might find it easier to copy and paste the prisoner number from the digital cashbook into NOMIS' %}</li>
-            <li><a href="{% url 'training' page='new' %}">{% trans 'More information is available in the training section' %}</a></li>
-          </ul>
-       </div>
+      <p>
+        <a class="mtp-disclosure" href="#" aria-controls="mtp-help-box" aria-expanded="false" role="button" data-analytics="pageview,/-help_open/{{ request.resolver_match.url_name }}/">
+          <span></span>{% trans 'How to use this with NOMIS' %}
+        </a>
+      </p>
+      <div id="mtp-help-box" class="mtp-disclosure__contents panel panel-border-narrow">
+        <ul class="list list-bullet">
+          <li>{% trans 'You can credit in NOMIS in the usual way but remember to select the <strong>‘Misc Receipt - Private Cash’ category as Credit Type</strong>' %}</li>
+          <li>{% trans 'You don’t need to use a reference' %}</li>
+          <li>{% trans 'In the digital cashbook below, tick off the credits you’ve entered in NOMIS and click ‘Confirm entered in NOMIS’' %}</li>
+          <li>{% trans 'You might find it easier to copy and paste the prisoner number from the digital cashbook into NOMIS' %}</li>
+          <li><a href="{% url 'training' page='new' %}">{% trans 'More information is available in the training section' %}</a></li>
+        </ul>
       </div>
 
       <div class="mtp-batch">

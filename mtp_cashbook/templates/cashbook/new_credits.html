@@ -257,31 +257,33 @@
           {% if new_object_list %}
             <tr class="print-hidden">
               <td colspan="{% if pre_approval_required %}5{% else %}4{% endif %}" class="cell--compact">
-                <div class="help-box">
-                  <div class="help-box-title" aria-controls="help-box-contents" aria-expanded="false" role="heading">
-                    <div></div><a href="#">{% trans 'What do I do here?' %}</a>
-                  </div>
-                  <div class="panel panel-border-narrow help-box-contents" id="help-box-contents">
-                    <p>
-                      {% blocktrans trimmed %}
-                        The credits on this page are from the <a href="{{ start_page_url }}">Send money to a prisoner</a> service.
-                      {% endblocktrans %}
-                    </p>
-                    <p>{% trans 'Use this page to credit to NOMIS automatically' %}</p>
-                    <p>{% trans 'Do not manually enter these credits into NOMIS' %}</p>
-                    <p>
-                      {% trans 'All credits are from known senders and should be credited - if there is any concern or suspicion about a credit, it should be bought on hold after crediting and passed to security.' %}
-                    </p>
-                    <p><strong>{% trans 'How to credit' %}</strong></p>
-                    <ol class="mtp-numbered-steps">
-                      <li class="first">{% trans 'Review all credits for suspicious activity' %}</li>
-                      <li class="second">{% trans 'Tick all credits' %}</li>
-                      <li class="third">{% trans 'Click the green ‘Credit to NOMIS’ button' %}</li>
-                      <li class="fourth">{% trans 'Place any suspicious credits on hold in NOMIS' %}</li>
-                    </ol>
-                    <p>{% trans 'Remember, the credits will automatically be entered into NOMIS and there is no longer any need to print records' %}</p>
-                 </div>
+
+                <p>
+                  <a class="mtp-disclosure" href="#" aria-controls="mtp-help-box" aria-expanded="false" role="button" data-analytics="pageview,/-help_open/{{ request.resolver_match.url_name }}/">
+                    <span></span>{% trans 'What do I do here?' %}
+                  </a>
+                </p>
+                <div id="mtp-help-box" class="mtp-disclosure__contents panel panel-border-narrow">
+                  <p>
+                    {% blocktrans trimmed %}
+                      The credits on this page are from the <a href="{{ start_page_url }}">Send money to a prisoner</a> service.
+                    {% endblocktrans %}
+                  </p>
+                  <p>{% trans 'Use this page to credit to NOMIS automatically' %}</p>
+                  <p>{% trans 'Do not manually enter these credits into NOMIS' %}</p>
+                  <p>
+                    {% trans 'All credits are from known senders and should be credited - if there is any concern or suspicion about a credit, it should be bought on hold after crediting and passed to security.' %}
+                  </p>
+                  <p><strong>{% trans 'How to credit' %}</strong></p>
+                  <ol class="mtp-numbered-steps">
+                    <li class="first">{% trans 'Review all credits for suspicious activity' %}</li>
+                    <li class="second">{% trans 'Tick all credits' %}</li>
+                    <li class="third">{% trans 'Click the green ‘Credit to NOMIS’ button' %}</li>
+                    <li class="fourth">{% trans 'Place any suspicious credits on hold in NOMIS' %}</li>
+                  </ol>
+                  <p>{% trans 'Remember, the credits will automatically be entered into NOMIS and there is no longer any need to print records' %}</p>
                 </div>
+
               </td>
               <td class="mtp-all">
                 <div>

@@ -16,25 +16,24 @@
     {% csrf_token %}
 
     {% if object_list %}
+      <p>
+        {% trans 'Here you can see who is currently processing the credits in your team.' %}
+        {% trans 'You can return these to new credits if you need to take over their work.' %}
+      </p>
 
-      <div class="help-box">
-        <p>
-          {% trans 'Here you can see who is currently processing the credits in your team.' %}
-          {% trans 'You can return these to new credits if you need to take over their work.' %}
-        </p>
-
-        <div class="help-box-title" aria-controls="help-box-contents" aria-expanded="false" role="heading">
-          <div></div><a href="#">{% trans 'Help' %}</a>
-        </div>
-        <div class="panel panel-border-narrow help-box-contents" id="help-box-contents">
-          <p>{% trans 'If you want to return these credits to new credits:' %}</p>
-          <ul>
-            <li>{% trans 'Find your team member under ‘staff name’' %}</li>
-            <li>{% trans 'Select the box at the end of the row' %}</li>
-            <li>{% trans 'When the green ‘Return these to new credits’ button appears, click it to free up their work' %}</li>
-            <li><a href="{% url 'training' page='in-progress' %}">{% trans 'More information is available in the training section' %}</a></li>
-          </ul>
-        </div>
+      <p>
+        <a class="mtp-disclosure" href="#" aria-controls="mtp-help-box" aria-expanded="false" role="button" data-analytics="pageview,/-help_open/{{ request.resolver_match.url_name }}/">
+          <span></span>{% trans 'Help' %}
+        </a>
+      </p>
+      <div id="mtp-help-box" class="mtp-disclosure__contents panel panel-border-narrow">
+        <p>{% trans 'If you want to return these credits to new credits:' %}</p>
+        <ul class="list list-bullet">
+          <li>{% trans 'Find your team member under ‘staff name’' %}</li>
+          <li>{% trans 'Select the box at the end of the row' %}</li>
+          <li>{% trans 'When the green ‘Return these to new credits’ button appears, click it to free up their work' %}</li>
+          <li><a href="{% url 'training' page='in-progress' %}">{% trans 'More information is available in the training section' %}</a></li>
+        </ul>
       </div>
 
       {% include 'mtp_common/forms/error-summary.html' with form=form only %}

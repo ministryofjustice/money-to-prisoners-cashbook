@@ -105,14 +105,14 @@ class InProgressPageTests(CashbookTestCase):
         self.assertInSource('You have now returned')
 
     def test_help_popup(self):
-        help_box_heading = self.driver.find_element_by_css_selector('.help-box-title')
-        self.assertCssProperty('.help-box-contents', 'display', 'none')
+        help_box_heading = self.driver.find_element_by_css_selector('.mtp-disclosure')
+        self.assertCssProperty('.mtp-disclosure__contents', 'display', 'none')
         self.assertEqual('false', help_box_heading.get_attribute('aria-expanded'))
         self.click_on_text('Help')
-        self.assertCssProperty('.help-box-contents', 'display', 'block')
+        self.assertCssProperty('.mtp-disclosure__contents', 'display', 'block')
         self.assertEqual('true', help_box_heading.get_attribute('aria-expanded'))
         self.click_on_text('Help')
-        self.assertCssProperty('.help-box-contents', 'display', 'none')
+        self.assertCssProperty('.mtp-disclosure__contents', 'display', 'none')
         self.assertEqual('false', help_box_heading.get_attribute('aria-expanded'))
 
 
@@ -157,14 +157,14 @@ class NewCreditsPageTests(CashbookTestCase):
         ))
 
     def test_help_popup(self):
-        help_box_heading = self.driver.find_element_by_css_selector('.help-box-title')
-        self.assertCssProperty('.help-box-contents', 'display', 'none')
+        help_box_heading = self.driver.find_element_by_css_selector('.mtp-disclosure')
+        self.assertCssProperty('.mtp-disclosure__contents', 'display', 'none')
         self.assertEqual('false', help_box_heading.get_attribute('aria-expanded'))
         self.click_on_text('How to use this with NOMIS')
-        self.assertCssProperty('.help-box-contents', 'display', 'block')
+        self.assertCssProperty('.mtp-disclosure__contents', 'display', 'block')
         self.assertEqual('true', help_box_heading.get_attribute('aria-expanded'))
         self.click_on_text('How to use this with NOMIS')
-        self.assertCssProperty('.help-box-contents', 'display', 'none')
+        self.assertCssProperty('.mtp-disclosure__contents', 'display', 'none')
         self.assertEqual('false', help_box_heading.get_attribute('aria-expanded'))
 
     def test_go_back_home(self):
@@ -358,14 +358,14 @@ class HistoryPageTests(CashbookTestCase):
         self.assertInSource(re.compile(r'Searching for “1” returned \d+ credits?.'))
 
     def test_help_popup(self):
-        help_box_heading = self.driver.find_element_by_css_selector('.help-box-title')
-        self.assertCssProperty('.help-box-contents', 'display', 'none')
+        help_box_heading = self.driver.find_element_by_css_selector('.mtp-disclosure')
+        self.assertCssProperty('.mtp-disclosure__contents', 'display', 'none')
         self.assertEqual('false', help_box_heading.get_attribute('aria-expanded'))
         self.click_on_text('Help')
-        self.assertCssProperty('.help-box-contents', 'display', 'block')
+        self.assertCssProperty('.mtp-disclosure__contents', 'display', 'block')
         self.assertEqual('true', help_box_heading.get_attribute('aria-expanded'))
         self.click_on_text('Help')
-        self.assertCssProperty('.help-box-contents', 'display', 'none')
+        self.assertCssProperty('.mtp-disclosure__contents', 'display', 'none')
         self.assertEqual('false', help_box_heading.get_attribute('aria-expanded'))
 
 
