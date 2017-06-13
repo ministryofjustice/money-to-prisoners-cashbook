@@ -13,8 +13,17 @@
     <h1 class="heading-xlarge__chopped">{{ view.title }}</h1>
   </header>
 
-  {% include 'mtp_common/includes/message_box.html' %}
+  <p>{% trans 'A list of all processed credits you can filter.' %}</p>
+  <a class="mtp-disclosure" aria-controls="help-box-contents" aria-expanded="false" role="heading" href="#">
+    <span></span>{% trans 'What do I do here?' %}
+  </a>
+  <div class="panel panel-border-narrow mtp-disclosure__contents" id="help-box-contents">
+    {% trans 'These credits have already been processed in NOMIS and batched accordingly.' %}
+    {% trans 'You can filter this list by date range.' %}
+    {% trans 'Just enter the date range of the credits you want to find.' %}
+  </div>
 
+  <h3 class="heading-medium">{% trans 'Filter by' %}</h3>
   <form method="get" class="mtp-processed-credits-search" action="">
     {% include 'mtp_common/forms/error-summary.html' with form=form only %}
 

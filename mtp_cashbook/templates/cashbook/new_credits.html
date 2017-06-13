@@ -30,23 +30,23 @@
   {% if failed_credits %}
     <div class="mtp-crediting-result mtp-failed-credits print-hidden">
       {% blocktrans count failed_credits=failed_credits trimmed %}
-        {{ failed_credits }} credit couldn’t be processed
+        {{ failed_credits }} credit not processed due to technical error, try again soon
       {% plural %}
-        {{ failed_credits }} credits couldn’t be processed
+        {{ failed_credits }} credits not processed due to technical error, try again soon
       {% endblocktrans %}
       <a href="#failed-credits-dialog" class="js-Dialog mtp-end-link">{% trans 'Why?' %}</a>
     </div>
 
     <div id="failed-credits-dialog"
-         class="Dialog"
-         style="display: none"
-         data-hide-close="true"
-         data-disable-backdrop-close="true">
+       class="Dialog"
+       style="display: none"
+       data-hide-close="true"
+       data-disable-backdrop-close="true">
       <div class="Dialog-inner">
         <h2 class="heading-large">{% trans 'Why didn’t it work?' %}</h2>
         <p>
-          {% trans 'Sometimes a fault in the system prevents credits from being processed.' %}
-          {% trans 'Please wait a few minutes and try sending to NOMIS again.' %}
+          {% trans 'We’re sorry but sometimes a fault in our system stops credits from being processed.' %}
+          {% trans 'Please wait a few minutes then send to NOMIS again.' %}
         </p>
         <button type="button" class="button js-Dialog-close">{% trans 'OK' %}</button>
       </div>
@@ -257,7 +257,6 @@
           {% if new_object_list %}
             <tr class="print-hidden">
               <td colspan="{% if pre_approval_required %}5{% else %}4{% endif %}" class="cell--compact">
-
                 <p>
                   <a class="mtp-disclosure" href="#" aria-controls="mtp-help-box" aria-expanded="false" role="button" data-analytics="pageview,/-help_open/{{ request.resolver_match.url_name }}/">
                     <span></span>{% trans 'What do I do here?' %}
@@ -269,10 +268,9 @@
                       The credits on this page are from the <a href="{{ start_page_url }}">Send money to a prisoner</a> service.
                     {% endblocktrans %}
                   </p>
-                  <p>{% trans 'Use this page to credit to NOMIS automatically' %}</p>
-                  <p>{% trans 'Do not manually enter these credits into NOMIS' %}</p>
+                  <p>{% trans 'Use this page to credit to NOMIS automatically, you no longer need to manually enter these credits.' %}</p>
                   <p>
-                    {% trans 'All credits are from known senders and should be credited - if there is any concern or suspicion about a credit, it should be bought on hold after crediting and passed to security.' %}
+                    {% trans 'All credits are from known senders and should be credited - if there is any concern or suspicion about a credit, it should be placed on hold after crediting and passed to security.' %}
                   </p>
                   <p><strong>{% trans 'How to credit' %}</strong></p>
                   <ol class="mtp-numbered-steps">
@@ -281,9 +279,8 @@
                     <li class="third">{% trans 'Click the green ‘Credit to NOMIS’ button' %}</li>
                     <li class="fourth">{% trans 'Place any suspicious credits on hold in NOMIS' %}</li>
                   </ol>
-                  <p>{% trans 'Remember, the credits will automatically be entered into NOMIS and there is no longer any need to print records' %}</p>
+                  <p>{% trans 'There is no longer any need to print records.' %}</p>
                 </div>
-
               </td>
               <td class="mtp-all">
                 <div>
