@@ -168,22 +168,42 @@
               </td>
               <td class="mtp-manual-action print-hidden" style="text-align: center;">
                 <button type="submit" name="submit_manual_{{ credit_pk }}" value="submit"  class="button" data-credit-id="{{ credit_pk }}">{% trans 'Done' %}</button>
-              </td>
-              <div id="manual-confirm-dialog-{{credit_pk}}"
+                <div id="manual-confirm-dialog-{{credit_pk}}"
                    class="Dialog"
                    style="display: none"
                    data-hide-close="true"
                    data-disable-backdrop-close="true">
-                <div class="Dialog-inner">
-                  <h2 class="heading-large">{% trans 'Have you updated NOMIS?' %}</h2>
-                  <button type="submit"
-                          name="submit_manual_{{credit_pk}}"
-                          class="button"
-                          value="override">{% trans 'Yes' %}</button>
-                  <br/><br/>
-                  <a href="#" class="js-Dialog-close">{% trans 'No, I’ll do that now' %}</a>
+                  <div class="Dialog-inner">
+                    <h2 class="heading-medium">{% trans 'Have you entered this credit into NOMIS?' %}</h2>
+                    <div class="mtp-dialog-info-table">
+                      <table>
+                        <tr>
+                          <td>{% trans 'Date sent:' %}</td>
+                          <td><strong>{{ credit.received_at.date|date:'d/m/Y' }}</strong></td>
+                        </tr>
+                        <tr>
+                          <td>{% trans 'Prisoner:' %}</td>
+                          <td><strong>{{ credit.prisoner_number }} {{ credit.prisoner_name }}</strong></td>
+                        </tr>
+                        <tr>
+                          <td>{% trans 'Amount:' %}</td>
+                          <td><strong>&pound;{{ credit.amount|currency }}</strong></td>
+                        </tr>
+                        <tr>
+                          <td>{% trans 'Sender:' %}</td>
+                          <td><strong>{{ credit.sender_name }}</strong></td>
+                        </tr>
+                      </table>
+                    </div>
+                    <button type="submit"
+                            name="submit_manual_{{credit_pk}}"
+                            class="button"
+                            value="override">{% trans 'Yes' %}</button>
+                    <br/><br/>
+                    <a href="#" class="js-Dialog-close">{% trans 'No, I’ll do that now' %}</a>
+                  </div>
                 </div>
-              </div>
+              </td>
             </tr>
             {% if completed_index == forloop.counter %}
               <tr class="mtp-manual-credit-complete">

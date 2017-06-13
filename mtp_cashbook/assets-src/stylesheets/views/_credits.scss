@@ -251,6 +251,20 @@
         height: 240px;
       }
     }
+
+    .mtp-dialog-info-table {
+      margin-bottom: 1em;
+
+      table {
+        width: 75%;
+        margin: 0 auto;
+        border-bottom: none;
+
+        td {
+          padding: 0.35em;
+        }
+      }
+    }
   }
 
   &.no-js {
