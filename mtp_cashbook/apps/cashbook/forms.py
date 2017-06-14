@@ -8,6 +8,7 @@ from urllib.parse import urlencode
 
 from django import forms
 from django.conf import settings
+from django.contrib import messages
 from django.utils.dateparse import parse_datetime
 from django.utils.functional import cached_property
 from django.utils.dateformat import format as format_date
@@ -23,7 +24,7 @@ from .templatetags.credits import parse_date_fields
 
 logger = logging.getLogger('mtp')
 
-COMPLETED_INDEX = 21
+MANUALLY_CREDITED_LOG_LEVEL = 21
 
 
 class ProcessCreditBatchForm(GARequestErrorReportingMixin, forms.Form):
@@ -420,6 +421,14 @@ class ProcessManualCreditsForm(GARequestErrorReportingMixin, forms.Form):
         self.client.credits.actions.credit.post([
             {'id': credit_id, 'credited': True}
         ])
+        manually_credited = 1
+        try:
+            manually_credited += int(self.request.GET.get('manually_credited'))
+        except (ValueError, TypeError):
+            pass
+        messages.add_message(
+            self.request, MANUALLY_CREDITED_LOG_LEVEL, str(manually_credited)
+        )
         return credit_id
 
 

@@ -19,7 +19,10 @@ CREDIT_1 = {
     'sender_name': 'Fred Smith',
     'sender_email': 'fred.smith@mail.local',
     'short_ref_number': '89AF76GH',
-    'received_at': '2017-01-25T12:00:00Z'
+    'received_at': '2017-01-25T12:00:00Z',
+    'owner': 100,
+    'owner_name': 'Staff 1',
+    'set_manual_at': '2017-01-26T12:00:00Z',
 }
 CREDIT_2 = {
     'id': 2,
@@ -30,7 +33,10 @@ CREDIT_2 = {
     'sender_name': 'Fred Jones',
     'sender_email': 'fred.jones@mail.local',
     'short_ref_number': '98KI32SA',
-    'received_at': '2017-01-25T12:00:00Z'
+    'received_at': '2017-01-25T12:00:00Z',
+    'owner': 100,
+    'owner_name': 'Staff 1',
+    'set_manual_at': '2017-01-26T12:00:00Z',
 }
 PROCESSING_BATCH = {
     'id': 10,
@@ -557,7 +563,7 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
                 [{'id': 1, 'credited': True}]
             )
             self.assertEqual(response.status_code, 200)
-            self.assertContains(response, 'You have manually put this into NOMIS')
+            self.assertContains(response, '1 credit manually input by you into NOMIS')
 
 
 class ProcessingCreditsViewTestCase(MTPBaseTestCase):

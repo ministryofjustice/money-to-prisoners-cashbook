@@ -1,0 +1,152 @@
+{% load i18n %}
+{% load currency %}
+{% load credits %}
+
+<div class="mtp-batch mtp-manual-credits-batch">
+  <table>
+    <thead>
+      <tr class="print-hidden">
+        <td colspan="{% if pre_approval_required%}6{% else %}5{% endif %}" class="cell--compact">
+          <a href="#" class="js-Print" data-do-not-print=".mtp-new-credits-batch">{% trans "Print these credits" %}</a>
+        </td>
+      </tr>
+      <tr>
+        <th>{% trans 'Date sent' %}</th>
+        <th>{% trans 'Prisoner' %}</th>
+        <th class="number">{% trans 'Amount' %}</th>
+        <th>{% trans 'Sender' %}</th>
+        {% if pre_approval_required %}
+          <th>{% trans 'Security' %}</th>
+        {% endif %}
+        <th class="print-hidden"></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for credit_pk, credit in manual_object_list %}
+        <tr>
+          <td>
+            <div>{{ credit.received_at.date|date:'d/m/Y' }}</div>
+            {% with days=credit.received_at.date|dayssince %}
+            <div class="sub {% if days >= 7 %}old{% endif %}">
+              {% if days == 0 %}
+                {% trans 'Today' %}
+              {% else %}
+                {% blocktrans count days=days trimmed %}
+                  {{ days }} day ago
+                {% plural %}
+                  {{ days }} days ago
+                {% endblocktrans %}
+              {% endif %}
+            </div>
+            {% endwith %}
+          </td>
+          <td>
+            <div>{{ credit.prisoner_number }}</div>
+            <div class="sub">{{ credit.prisoner_name }}</div>
+          </td>
+          <td class="number">&pound;{{ credit.amount|currency }}</td>
+          <td>{{ credit.sender_name }}</td>
+          {% if pre_approval_required %}
+            <td>
+              {% if credit.reviewed %}
+                {% trans 'Checked' %}
+              {% else %}
+                {% trans 'Not checked' %}
+              {% endif %}
+            </td>
+          {% endif %}
+          <td></td>
+        </tr>
+        {% if credit.comments %}
+          <tr>
+            <td class="mtp-security" colspan="{% if pre_approval_required%}6{% else %}5{% endif %}">
+              {% for comment in credit.comments %}
+                <div class="mtp-security__comment">
+                  {{ comment.comment|linebreaks }}
+                </div>
+              {% endfor %}
+            </td>
+          </tr>
+        {% endif %}
+        <tr>
+          <td class="mtp-manual-action"></td>
+          <td class="mtp-manual-action" colspan="{% if pre_approval_required %}4{% else %}3{% endif %}">
+            <div class="mtp-manual-action__details">
+              {% if owned %}
+                {% trans 'You need to manually put this into NOMIS:' %}
+              {% elif credit.set_manual_at %}
+                {% with days=credit.set_manual_at.date|dayssince %}
+                  {% if days == 0 %}
+                    {% blocktrans with owner=credit.owner_name trimmed %}
+                      {{ owner }} started processing this credit today:
+                    {% endblocktrans %}
+                  {% elif days == 1 %}
+                    {% blocktrans with owner=credit.owner_name trimmed %}
+                      {{ owner }} started processing this credit yesterday:
+                    {% endblocktrans %}
+                  {% else %}
+                      {% blocktrans with owner=credit.owner_name processed=credit.set_manual_at.date|date:'d/m/Y' trimmed %}
+                        {{ owner }} started processing this credit {{ processed }}:
+                      {% endblocktrans %}
+                  {% endif %}
+                {% endwith %}
+              {% else %}
+                {% blocktrans with owner=credit.owner_name trimmed %}
+                  {{ owner }} started processing this credit:
+                {% endblocktrans %}
+              {% endif %}
+              {% if credit.new_location.nomis_id == 'TRN' %}
+                {% trans 'Prisoner in transit' %}
+              {% elif credit.new_location.nomis_id %}
+                {% blocktrans with new_prison=credit.new_location.name trimmed %}
+                  Prisoner transferred to {{ new_prison }}
+                {% endblocktrans %}
+              {% else %}
+                {% trans 'Prisoner left this prison' %}
+              {% endif %}
+            </div>
+          </td>
+          <td class="mtp-manual-action print-hidden" style="text-align: center;">
+            <button type="submit" name="submit_manual_{{ credit_pk }}" value="submit"  class="button" data-credit-id="{{ credit_pk }}">{% trans 'Done' %}</button>
+            <div id="manual-confirm-dialog-{{credit_pk}}"
+               class="Dialog"
+               style="display: none"
+               data-hide-close="true"
+               data-disable-backdrop-close="true">
+              <div class="Dialog-inner">
+                <h2 class="heading-medium">{% trans 'Have you entered this credit into NOMIS?' %}</h2>
+                <div class="mtp-dialog-info-table">
+                  <table>
+                    <tr>
+                      <td>{% trans 'Date sent:' %}</td>
+                      <td><strong>{{ credit.received_at.date|date:'d/m/Y' }}</strong></td>
+                    </tr>
+                    <tr>
+                      <td>{% trans 'Prisoner:' %}</td>
+                      <td><strong>{{ credit.prisoner_number }} {{ credit.prisoner_name }}</strong></td>
+                    </tr>
+                    <tr>
+                      <td>{% trans 'Amount:' %}</td>
+                      <td><strong>&pound;{{ credit.amount|currency }}</strong></td>
+                    </tr>
+                    <tr>
+                      <td>{% trans 'Sender:' %}</td>
+                      <td><strong>{{ credit.sender_name }}</strong></td>
+                    </tr>
+                  </table>
+                </div>
+                <button type="submit"
+                        name="submit_manual_{{credit_pk}}"
+                        class="button"
+                        value="override">{% trans 'Yes' %}</button>
+                <br/><br/>
+                <a href="#" class="js-Dialog-close">{% trans 'No, I’ll do that now' %}</a>
+              </div>
+            </div>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
