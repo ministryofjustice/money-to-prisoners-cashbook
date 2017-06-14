@@ -15,7 +15,6 @@ from requests.exceptions import RequestException
 
 from .utils import expected_nomis_availability, check_pre_approval_required
 from .forms import (
-    COMPLETED_INDEX,
     ProcessCreditBatchForm, DiscardLockedCreditsForm, FilterCreditHistoryForm,
     ProcessNewCreditsForm, ProcessManualCreditsForm,
     FilterProcessedCreditsListForm, FilterProcessedCreditsDetailForm,
@@ -307,10 +306,6 @@ class NewCreditsView(FormView):
             kwargs['failed_credits'] = incomplete_credits['count']
             client.credits.batches(last_batch['id']).delete()
 
-        for message in messages.get_messages(request):
-            if message.level == COMPLETED_INDEX:
-                kwargs['completed_index'] = int(message.message)
-
         return self.render_to_response(self.get_context_data(**kwargs))
 
     def post(self, request, *args, **kwargs):
@@ -340,14 +335,35 @@ class NewCreditsView(FormView):
         context['new_credits'] = len(new_credit_choices)
 
         manual_credit_choices = context['form']['manual'].credit_choices
+        context['manual_credits'] = len(manual_credit_choices)
+
+        owned_manual_credits = []
+        unowned_manual_credits = []
+        other_owners = set()
+        unowned_oldest_date = None
         for credit_id, manual_credit in manual_credit_choices:
             try:
                 location = nomis.get_location(manual_credit['prisoner_number'])
                 manual_credit['new_location'] = location
             except RequestException:
                 pass
-        context['manual_object_list'] = manual_credit_choices
-        context['manual_credits'] = len(manual_credit_choices)
+            if manual_credit['owner'] == self.request.user.pk:
+                owned_manual_credits.append((credit_id, manual_credit))
+            else:
+                unowned_manual_credits.append((credit_id, manual_credit))
+                other_owners.add(manual_credit['owner_name'])
+                if unowned_oldest_date is None or (
+                        manual_credit['set_manual_at'] is not None and
+                        unowned_oldest_date > manual_credit['set_manual_at']):
+                    unowned_oldest_date = manual_credit['set_manual_at']
+
+        context['owned_manual_object_list'] = owned_manual_credits
+        context['owned_manual_credits'] = len(owned_manual_credits)
+
+        context['unowned_manual_object_list'] = unowned_manual_credits
+        context['unowned_manual_credits'] = len(unowned_manual_credits)
+        context['other_owners'] = list(other_owners)
+        context['unowned_oldest_date'] = unowned_oldest_date
 
         if context.get('credited_count', 0):
             username = self.request.user.user_data.get('username', 'Unknown')
@@ -368,13 +384,7 @@ class NewCreditsView(FormView):
         return context
 
     def form_valid(self, form):
-        credit_choices = form.credit_choices
-
-        credit_id = form.save()
-
-        for i, choice in enumerate(credit_choices):
-            if credit_id == choice[0]:
-                messages.add_message(self.request, COMPLETED_INDEX, str(i))
+        form.save()
         return super().form_valid(form)
 
     def form_invalid(self, form):

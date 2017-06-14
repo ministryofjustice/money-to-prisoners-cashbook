@@ -18,7 +18,7 @@ def parse_date_fields(credits):
     MTP API responds with string date/time fields,
     this filter converts them to python objects
     """
-    fields = ['received_at', 'credited_at', 'refunded_at', 'logged_at']
+    fields = ['received_at', 'credited_at', 'refunded_at', 'logged_at', 'set_manual_at']
     parsers = [parse_datetime, parse_date]
 
     def convert(credit):
@@ -45,7 +45,7 @@ def parse_date_fields(credits):
 @register.filter
 def dayssince(date):
     if isinstance(date, datetime.datetime):
-        date = date.date
+        date = date.date()
     return (datetime.date.today() - date).days
 
 

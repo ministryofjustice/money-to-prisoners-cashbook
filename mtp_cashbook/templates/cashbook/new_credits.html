@@ -16,6 +16,12 @@
     <h1 class="heading-xlarge__chopped">{{ view.title }}</h1>
   </header>
 
+  <div class="print-only">
+    <h2 class="heading-small">
+      {% trans "CONFIDENTIAL: dispose of securely" %}
+    </h2>
+  </div>
+
   {% if credited_credits %}
     <div class="mtp-crediting-result mtp-credited-credits print-hidden">
       {% blocktrans count credited_credits=credited_credits trimmed %}
@@ -53,171 +59,93 @@
     </div>
   {% endif %}
 
-  {% if manual_credits %}
-    <div class="mtp-crediting-result mtp-manual-credits print-hidden">
-      {% blocktrans count manual_credits=manual_credits trimmed %}
-        {{ manual_credits }} credit needs your manual input in NOMIS - see below
-      {% plural %}
-        {{ manual_credits }} credits need your manual input in NOMIS - see below
-      {% endblocktrans %}
-    </div>
-  {% endif %}
+  {% if owned_manual_credits or unowned_manual_credits %}
+    <form class="js-ConfirmManual" method="post" action="" data-credits-name="{{ form.manual.credits.html_name }}">
+      {% csrf_token %}
 
-  <div class="print-only">
-    <h2 class="heading-small">
-      {% trans "CONFIDENTIAL: dispose of securely" %}
-    </h2>
-  </div>
+      {% include 'mtp_common/forms/error-summary.html' with form=form.manual only %}
 
-  {% if manual_object_list %}
-  <div class="print-hidden"><p>{% trans 'These credits need your manual input to be processed.' %}</p></div>
+      {% if owned_manual_credits %}
+        <div class="mtp-crediting-result mtp-manual-credits print-hidden">
+          {% blocktrans count manual_credits=owned_manual_credits trimmed %}
+            {{ manual_credits }} credit needs your manual input in NOMIS
+          {% plural %}
+            {{ manual_credits }} credits need your manual input in NOMIS
+          {% endblocktrans %}
+          <a href="#manual-credits-dialog" class="js-Dialog mtp-end-link">{% trans 'How?' %}</a>
+        </div>
 
-  <form class="js-ConfirmManual" method="post" action="" data-credits-name="{{ form.manual.credits.html_name }}">
-    {% csrf_token %}
-    {% include 'mtp_common/forms/error-summary.html' with form=form.manual only %}
-    <div class="mtp-batch mtp-manual-credits-batch">
-      <table>
-        <thead>
-          <tr class="print-hidden">
-            <td colspan="{% if pre_approval_required%}6{% else %}5{% endif %}" class="cell--compact">
-              <a href="#" class="js-Print" data-do-not-print=".mtp-new-credits-batch">{% trans "Print these credits" %}</a>
-            </td>
-          </tr>
-          <tr>
-            <th>{% trans 'Date sent' %}</th>
-            <th>{% trans 'Prisoner' %}</th>
-            <th class="number">{% trans 'Amount' %}</th>
-            <th>{% trans 'Sender' %}</th>
-            {% if pre_approval_required %}
-              <th>{% trans 'Security' %}</th>
-            {% endif %}
-            <th class="print-hidden"></th>
-          </tr>
-        </thead>
+        <div class="print-hidden"><p>{% trans 'These credits need your manual input to be processed.' %}</p></div>
 
-        <tbody>
-          {% for credit_pk, credit in manual_object_list %}
-            {% if completed_index == 0 and forloop.counter0 == 0 %}
-              <tr class="mtp-manual-credit-complete">
-                <td colspan="1"></td>
-                <td colspan="{% if pre_approval_required%}5{% else %}4{% endif %}">
-                  {% trans 'You have manually put this into NOMIS' %}
-                </td>
-              </tr>
-            {% endif %}
-            <tr>
-              <td>
-                <div>{{ credit.received_at.date|date:'d/m/Y' }}</div>
-                {% with days=credit.received_at.date|dayssince %}
-                <div class="sub {% if days >= 7 %}old{% endif %}">
-                  {% if days == 0 %}
-                    {% trans 'Today' %}
-                  {% else %}
-                    {% blocktrans count days=days trimmed %}
-                      {{ days }} day ago
-                    {% plural %}
-                      {{ days }} days ago
-                    {% endblocktrans %}
-                  {% endif %}
-                </div>
-                {% endwith %}
-              </td>
-              <td>
-                <div>{{ credit.prisoner_number }}</div>
-                <div class="sub">{{ credit.prisoner_name }}</div>
-              </td>
-              <td class="number">&pound;{{ credit.amount|currency }}</td>
-              <td>{{ credit.sender_name }}</td>
-              {% if pre_approval_required %}
-                <td>
-                  {% if credit.reviewed %}
-                    {% trans 'Checked' %}
-                  {% else %}
-                    {% trans 'Not checked' %}
-                  {% endif %}
-                </td>
-              {% endif %}
-              <td></td>
-            </tr>
-            {% if credit.comments %}
-              <tr>
-                <td class="mtp-security" colspan="{% if pre_approval_required%}6{% else %}5{% endif %}">
-                  {% for comment in credit.comments %}
-                    <div class="mtp-security__comment">
-                      {{ comment.comment|linebreaks }}
-                    </div>
-                  {% endfor %}
-                </td>
-              </tr>
-            {% endif %}
-            <tr>
-              <td class="mtp-manual-action"></td>
-              <td class="mtp-manual-action" colspan="{% if pre_approval_required %}4{% else %}3{% endif %}">
-                <div class="mtp-manual-action__details">
-                  {% trans 'You need to manually put this into NOMIS:' %}
-                  {% if credit.new_location.nomis_id == 'TRN' %}
-                    {% trans 'Prisoner in transit' %}
-                  {% elif credit.new_location.nomis_id %}
-                    {% blocktrans with new_prison=credit.new_location.name trimmed %}
-                      Prisoner transferred to {{ new_prison }}
-                    {% endblocktrans %}
-                  {% else %}
-                    {% trans 'Prisoner left this prison' %}
-                  {% endif %}
-                </div>
-              </td>
-              <td class="mtp-manual-action print-hidden" style="text-align: center;">
-                <button type="submit" name="submit_manual_{{ credit_pk }}" value="submit"  class="button" data-credit-id="{{ credit_pk }}">{% trans 'Done' %}</button>
-                <div id="manual-confirm-dialog-{{credit_pk}}"
-                   class="Dialog"
-                   style="display: none"
-                   data-hide-close="true"
-                   data-disable-backdrop-close="true">
-                  <div class="Dialog-inner">
-                    <h2 class="heading-medium">{% trans 'Have you entered this credit into NOMIS?' %}</h2>
-                    <div class="mtp-dialog-info-table">
-                      <table>
-                        <tr>
-                          <td>{% trans 'Date sent:' %}</td>
-                          <td><strong>{{ credit.received_at.date|date:'d/m/Y' }}</strong></td>
-                        </tr>
-                        <tr>
-                          <td>{% trans 'Prisoner:' %}</td>
-                          <td><strong>{{ credit.prisoner_number }} {{ credit.prisoner_name }}</strong></td>
-                        </tr>
-                        <tr>
-                          <td>{% trans 'Amount:' %}</td>
-                          <td><strong>&pound;{{ credit.amount|currency }}</strong></td>
-                        </tr>
-                        <tr>
-                          <td>{% trans 'Sender:' %}</td>
-                          <td><strong>{{ credit.sender_name }}</strong></td>
-                        </tr>
-                      </table>
-                    </div>
-                    <button type="submit"
-                            name="submit_manual_{{credit_pk}}"
-                            class="button"
-                            value="override">{% trans 'Yes' %}</button>
-                    <br/><br/>
-                    <a href="#" class="js-Dialog-close">{% trans 'No, I’ll do that now' %}</a>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            {% if completed_index == forloop.counter %}
-              <tr class="mtp-manual-credit-complete">
-                <td colspan="1"></td>
-                <td colspan="{% if pre_approval_required%}5{% else %}4{% endif %}">
-                  {% trans 'You have manually put this into NOMIS' %}
-                </td>
-              </tr>
-            {% endif %}
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-  </form>
+        <div id="manual-credits-dialog"
+           class="Dialog"
+           style="display: none"
+           data-hide-close="true"
+           data-disable-backdrop-close="true">
+          <div class="Dialog-inner">
+            <h2 class="heading-large">{% trans 'These credits need further processing' %}</h2>
+            <p>
+              {% trans 'The prisoner may be in transit, may have moved prisons or may have been released.' %}
+              {% trans 'Please enter these credits into NOMIS manually, then click ‘Done’.' %}
+            </p>
+            <button type="button" class="button js-Dialog-close">{% trans 'OK' %}</button>
+          </div>
+        </div>
+
+        {% include 'cashbook/includes/manual_credit_table.html' with manual_object_list=owned_manual_object_list owned=True only %}
+      {% endif %}
+
+
+      {% if unowned_manual_credits %}
+        <div class="print-hidden"><p>
+          {% if unowned_oldest_date and unowned_oldest_date|dayssince > 0 %}
+            {% blocktrans with owner=other_owners.0 count owners=other_owners|length trimmed %}
+              {{ owner }} started to process these credits but may not have finished
+            {% plural %}
+              Your colleagues started to process these credits but may not have finished
+            {% endblocktrans %}
+          {% else %}
+            {% blocktrans with owner=other_owners.0 count owners=other_owners|length trimmed %}
+              {{ owner }} should be processing these credits into NOMIS manually
+            {% plural %}
+              Your colleagues should be processing these credits into NOMIS manually
+            {% endblocktrans %}
+          {% endif %}
+        </p></div>
+
+        <p>
+          <a class="mtp-disclosure" href="#" aria-controls="mtp-finish-manual" aria-expanded="false" role="button" data-analytics="pageview,/-help_open/{{ request.resolver_match.url_name }}/">
+            <span></span>{% trans 'How to finish processing' %}
+          </a>
+        </p>
+        <div id="mtp-finish-manual" class="mtp-disclosure__contents panel panel-border-narrow">
+          <p>
+            {% blocktrans with owner=other_owners.0 count owners=other_owners|length trimmed %}
+              Your colleague, {{ owner }}, started processing these credits yesterday.
+            {% plural %}
+              Some of your colleagues started processing these credits yesterday.
+            {% endblocktrans %}
+            {% trans 'To make sure they were processed successfully, please check NOMIS.' %}
+          </p>
+          <p>
+            {% blocktrans with owner=other_owners.0 count owners=other_owners|length trimmed %}
+              If they have been entered correctly, just click ‘Done’ and tell {{ owner }} you’ve finished processing the credits.
+            {% plural %}
+              If they have been entered correctly, just click ‘Done’ and tell your colleagues you’ve finished processing the credits.
+            {% endblocktrans %}
+          </p>
+          <p>
+            {% blocktrans with owner=other_owners.0 count owners=other_owners|length trimmed %}
+              If they have not been entered, please manually enter these credits youself, click ‘Done’ and tell {{ owner }} you’ve processed these credits for them.
+            {% plural %}
+              If they have not been entered, please manually enter these credits youself, click ‘Done’ and tell your colleagues you’ve processed these credits for them.
+            {% endblocktrans %}
+          </p>
+        </div>
+
+        {% include 'cashbook/includes/manual_credit_table.html' with manual_object_list=unowned_manual_object_list owned=False only %}
+      {% endif %}
+    </form>
   {% endif %}
 
   <form
@@ -229,7 +157,7 @@
 
     {% include 'mtp_common/forms/error-summary.html' with form=form.new only %}
 
-    {% if new_object_list or not manual_object_list %}
+    {% if new_object_list or not manual_credits %}
     <div class="mtp-batch mtp-new-credits-batch {% if not new_object_list %}print-hidden{% endif %}">
       {% if new_object_list %}
         <div class="mtp-floating-header js-StickyHeader print-hidden">
@@ -263,7 +191,7 @@
               {% trans 'You don’t have to manually enter credits into NOMIS any more' %}
             </h2>
             <div>
-              {% trans 'Now when you ’confirm’ credits, they’ll be sent digitally to NOMIS' %}
+              {% trans 'Now when you ‘confirm’ credits, they’ll be sent digitally to NOMIS' %}
             </div>
           </div>
         </div>

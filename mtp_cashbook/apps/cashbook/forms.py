@@ -23,8 +23,6 @@ from .templatetags.credits import parse_date_fields
 
 logger = logging.getLogger('mtp')
 
-COMPLETED_INDEX = 21
-
 
 class ProcessCreditBatchForm(GARequestErrorReportingMixin, forms.Form):
     credits = forms.MultipleChoiceField(choices=(), required=False)
