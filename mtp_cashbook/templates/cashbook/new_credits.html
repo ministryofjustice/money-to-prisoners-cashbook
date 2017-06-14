@@ -33,6 +33,17 @@
     </div>
   {% endif %}
 
+  {% if credited_manual_credits %}
+    <div class="mtp-crediting-result mtp-credited-credits print-hidden">
+      {% blocktrans count credited_manual_credits=credited_manual_credits trimmed %}
+        {{ credited_manual_credits }} credit manually input by you into NOMIS
+      {% plural %}
+        {{ credited_manual_credits }} credits manually input by you into NOMIS
+      {% endblocktrans %}
+      <a href="{% url 'processed-credits-list' %}" class="mtp-end-link">{% trans 'View' %}</a>
+    </div>
+  {% endif %}
+
   {% if failed_credits %}
     <div class="mtp-crediting-result mtp-failed-credits print-hidden">
       {% blocktrans count failed_credits=failed_credits trimmed %}
@@ -60,7 +71,7 @@
   {% endif %}
 
   {% if owned_manual_credits or unowned_manual_credits %}
-    <form class="js-ConfirmManual" method="post" action="" data-credits-name="{{ form.manual.credits.html_name }}">
+    <form class="js-ConfirmManual" method="post" action="?manually_credited={{ credited_manual_credits }}" data-credits-name="{{ form.manual.credits.html_name }}">
       {% csrf_token %}
 
       {% include 'mtp_common/forms/error-summary.html' with form=form.manual only %}

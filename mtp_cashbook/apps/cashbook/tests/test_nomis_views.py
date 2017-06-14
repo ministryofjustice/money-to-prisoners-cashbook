@@ -563,7 +563,7 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
                 [{'id': 1, 'credited': True}]
             )
             self.assertEqual(response.status_code, 200)
-            self.assertContains(response, '1 credit manually input by you in NOMIS')
+            self.assertContains(response, '1 credit manually input by you into NOMIS')
 
 
 class ProcessingCreditsViewTestCase(MTPBaseTestCase):

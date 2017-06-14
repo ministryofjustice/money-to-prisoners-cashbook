@@ -18,7 +18,7 @@ from .forms import (
     ProcessCreditBatchForm, DiscardLockedCreditsForm, FilterCreditHistoryForm,
     ProcessNewCreditsForm, ProcessManualCreditsForm,
     FilterProcessedCreditsListForm, FilterProcessedCreditsDetailForm,
-    FilterAllCreditsForm,
+    FilterAllCreditsForm, MANUALLY_CREDITED_LOG_LEVEL
 )
 
 logger = logging.getLogger('mtp')
@@ -305,6 +305,10 @@ class NewCreditsView(FormView):
             kwargs['credited_credits'] = credited_credits['count']
             kwargs['failed_credits'] = incomplete_credits['count']
             client.credits.batches(last_batch['id']).delete()
+
+        for message in messages.get_messages(request):
+            if message.level == MANUALLY_CREDITED_LOG_LEVEL:
+                kwargs['credited_manual_credits'] = int(message.message)
 
         return self.render_to_response(self.get_context_data(**kwargs))
 
