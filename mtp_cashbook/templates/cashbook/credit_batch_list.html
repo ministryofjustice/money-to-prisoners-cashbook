@@ -141,17 +141,17 @@
                 <td>
                   <div>{{ credit.received_at.date|date:'d/m/Y' }}</div>
                   {% with days=credit.received_at.date|dayssince %}
-                  <div class="sub {% if days >= 7 %}old{% endif %}">
-                    {% if days == 0 %}
-                      {% trans 'Today' %}
-                    {% else %}
-                      {% blocktrans count days=days %}
-                      {{ days }} day ago
-                      {% plural %}
-                      {{ days }} days ago
-                      {% endblocktrans %}
-                    {% endif %}
-                  </div>
+                    <div class="sub {% if days >= 7 %}old{% endif %}">
+                      {% if days == 0 %}
+                        {% trans 'Today' %}
+                      {% else %}
+                        {% blocktrans count days=days trimmed %}
+                          {{ days }} day ago
+                        {% plural %}
+                          {{ days }} days ago
+                        {% endblocktrans %}
+                      {% endif %}
+                    </div>
                   {% endwith %}
                 </td>
                 <td>
