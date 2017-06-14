@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% load mtp_common %}
+
+{% block body_classes %}{{ block.super }} mtp-landing{% endblock %}
+
+{% block inner_content %}
+
+  <header class="mtp-landing__header">
+    <div class="mtp-landing__content">
+      {% language_switch %}
+
+      <div class="grid-row">
+        <div class="column-two-thirds">
+          <h1 class="heading-xlarge">{% trans 'Process money sent to your prison' %}</h1>
+
+          <aside>
+            {% blocktrans trimmed %}
+              This is where you process credits sent to your prison by a member of the public through the <a href="{{ start_page_url }}">Send money to a prisoner</a> service.
+            {% endblocktrans %}
+          </aside>
+
+          <div class="mtp-landing__start">
+            {% if request.user.is_authenticated %}
+              <a href="{% url 'dashboard' %}" class="button button-start">{% trans 'Process credits' %}</a>
+            {% else %}
+              <a href="{% url 'login' %}" class="button button-start">{% trans 'Sign into cashbook' %}</a>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="column-one-third">
+          <img alt="{% trans 'Digital cashbook' %}"
+               src="{% static 'images/landing-cashbook.png' %}"
+               srcset="{% static 'images/landing-cashbook@2x.png' %} 2x"/>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="mtp-landing__content">
+    <div class="grid-row">
+      <section class="column-half">
+        <h2 class="heading-medium">{% trans 'Easy processing' %}</h2>
+        <p>{% trans 'Process credits automatically into NOMIS – all you need do is ‘tick and click’.' %}</p>
+      </section>
+
+      <section class="column-half">
+        <h2 class="heading-medium">{% trans 'Simple searching' %}</h2>
+        <p>{% trans 'Search credits by prisoner name, prisoner number, date and sender.' %}</p>
+      </section>
+    </div>
+  </div>
+
+{% endblock %}
