@@ -17,7 +17,7 @@
     {% endblocktrans %}
   </div>
 
-  {% include "mtp_common/includes/message_box.html" %}
+  {% include 'mtp_common/includes/message_box.html' %}
 
   <div class="grid-row">
     <div class="mtp-status-box"></div>
@@ -42,10 +42,10 @@
     {% if locked_credits %}
       <div class="mtp-status-box">
         <div class="mtp-status-box__title">
-          {% blocktrans with names=in_progress_users|truncate_user_list count counter=in_progress_users|length %}
-          {{ names }} is entering credits into NOMIS
+          {% blocktrans with names=in_progress_users|truncate_user_list count counter=in_progress_users|length trimmed %}
+            {{ names }} is entering credits into NOMIS
           {% plural %}
-          {{ names }} are entering credits into NOMIS
+            {{ names }} are entering credits into NOMIS
           {% endblocktrans %}
         </div>
         <div class="bold-xlarge mtp-status-box__number">{{ locked_credits|shortenint }}</div>
