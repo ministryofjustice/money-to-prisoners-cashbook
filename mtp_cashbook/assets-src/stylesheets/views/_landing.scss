@@ -7,8 +7,8 @@
     margin: 0;
   }
 
-  .phase-banner-beta {
-    @extend %site-width-container;
+  #global-header-bar, .phase-banner-beta {
+    display: none;
   }
 }
 
