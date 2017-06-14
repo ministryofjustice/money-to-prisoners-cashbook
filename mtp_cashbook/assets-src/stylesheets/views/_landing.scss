@@ -1,0 +1,78 @@
+// Application specific
+
+.mtp-landing {
+  #content {
+    width: auto;
+    max-width: 100%;
+    margin: 0;
+  }
+
+  .phase-banner-beta {
+    @extend %site-width-container;
+  }
+}
+
+.mtp-landing__content {
+  @extend %site-width-container;
+}
+
+.mtp-landing__header {
+  background: $govuk-blue;
+  color: $white;
+
+  a {
+    color: $white;
+
+    &:visited {
+      color: $white;
+    }
+  }
+
+  .mtp-language-switch__item {
+    border-color: $white;
+  }
+
+  .column-two-thirds {
+    padding-right: 3 * $gutter;
+
+    @include media(mobile) {
+      padding-right: $gutter-half;
+    }
+  }
+
+  .column-one-third {
+    overflow: hidden;
+
+    img {
+      display: block;
+      margin: 100px auto;
+      text-align: center;
+
+      @include media(mobile) {
+        display: none;
+      }
+      @include media(tablet) {
+        max-width: 80%;
+      }
+    }
+  }
+}
+
+.mtp-landing__start {
+  margin: 2em 0;
+
+  .button-start {
+    @include button($white);
+    padding: em(7) em(41) em(4) em(16);
+    background-image: file-url('icon-pointer-blue.png');
+
+    @include device-pixel-ratio {
+      background-image: file-url('icon-pointer-blue@2x.png');
+      background-size: 30px 19px;
+    }
+
+    &:link, &:link:focus, &:hover, &:focus, &:visited {
+      color: $govuk-blue;
+    }
+  }
+}

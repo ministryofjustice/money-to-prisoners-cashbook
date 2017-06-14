@@ -1,7 +1,9 @@
+from django.conf import settings
 from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import redirect
+from django.views.generic import TemplateView
 
 from .utils import nomis_integration_available
 from .views import (
@@ -32,8 +34,19 @@ def dashboard_view(request):
     return DashboardView.as_view()(request)
 
 
+class LandingView(TemplateView):
+    template_name = 'cashbook/landing.html'
+
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(
+            start_page_url=settings.START_PAGE_URL,
+            **kwargs
+        )
+
+
 urlpatterns = [
     url(r'^$', dashboard_view, name='dashboard'),
+    url(r'^landing/$', LandingView.as_view(), name='landing'),
     url(r'^dashboard-batch-complete/$', DashboardView.as_view(),
         name='dashboard-batch-complete'),
     url(r'^dashboard-batch-incomplete/$', DashboardView.as_view(),
