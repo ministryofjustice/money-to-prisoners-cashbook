@@ -20,7 +20,7 @@ exports.StickyHeader = {
     if (this.$originalHeader.length) {
       this.$window = $(window);
       this.$body = $('body');
-      this.$form = $('form');
+      this.$form = $('form.js-BatchValidation');
       this.$stickyHeader = this.$originalHeader.clone().addClass(this.stickyClass);
       this.offsetPosition = this.$originalHeader.offset().top + this.$originalHeader.height();
     }
