@@ -564,10 +564,10 @@ class FilterProcessedCreditsDetailForm(FilterProcessedCreditsListForm):
         return self.cleaned_data['ordering'] or self.fields['ordering'].initial
 
     def retrieve_credits(self, offset, limit, **filters):
-        response = self.client.credits.get(
-            offset=offset, limit=self.page_size, **dict(self.default_filters, **filters)
+        credits = retrieve_all_pages(
+            self.client.credits.get, **dict(self.default_filters, **filters)
         )
-        return response.get('count', 0), response.get('results', [])
+        return len(credits), credits
 
 
 class FilterAllCreditsForm(GARequestErrorReportingMixin, forms.Form):

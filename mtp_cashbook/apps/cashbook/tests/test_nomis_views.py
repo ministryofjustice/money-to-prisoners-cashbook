@@ -807,7 +807,7 @@ class ProcessedCreditsDetailViewTestCase(MTPBaseTestCase):
             rsps.add(
                 rsps.GET,
                 api_url(
-                    '/credits/?logged_at__gte=2017-06-03+00:00:00&limit=20'
+                    '/credits/?logged_at__gte=2017-06-03+00:00:00&limit=100'
                     '&logged_at__lt=2017-06-04+00:00:00&user=1'
                     '&log__action=credited&offset=0&ordering=-received_at'
                 ),
@@ -852,8 +852,6 @@ class ProcessedCreditsDetailViewTestCase(MTPBaseTestCase):
 
             response = self.client.get(self.url)
             self.assertEqual(response.status_code, 200)
-            self.assertSequenceEqual(response.context['page_range'], [1])
-            self.assertEqual(response.context['current_page'], 1)
             self.assertContains(response, text='John Smith', count=2)
 
     @override_nomis_settings
@@ -864,7 +862,7 @@ class ProcessedCreditsDetailViewTestCase(MTPBaseTestCase):
             rsps.add(
                 rsps.GET,
                 api_url(
-                    '/credits/?logged_at__gte=2017-06-03+00:00:00&limit=20'
+                    '/credits/?logged_at__gte=2017-06-03+00:00:00&limit=100'
                     '&logged_at__lt=2017-06-04+00:00:00&user=1'
                     '&log__action=credited&offset=0&ordering=-received_at'
                 ),
