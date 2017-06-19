@@ -352,7 +352,7 @@ class ProcessNewCreditsForm(GARequestErrorReportingMixin, forms.Form):
     def clean_credits(self):
         credits = self.cleaned_data.get('credits', [])
         if not credits:
-            self.add_error(None, gettext('Only click ‘Done’ when you’ve selected credits'))
+            self.add_error(None, gettext('Only click ‘Credit to NOMIS’ when you’ve selected credits'))
         return credits
 
     @cached_property
