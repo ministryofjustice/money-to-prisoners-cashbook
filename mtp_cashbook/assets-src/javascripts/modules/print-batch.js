@@ -20,7 +20,7 @@ exports.PrintBatch = {
   onClickPrint: function (e) {
     e.preventDefault();
 
-    this.$iframe = $('<iframe>', {'class': 'hidden'}).appendTo('body');
+    this.$iframe = $('<iframe>', {'style': 'visibility: hidden'}).appendTo('body');
 
     this.$iframe.on('load', $.proxy(this.onLoadIframe, this));
     this.$iframe.attr('src', $(e.target).attr('href'));
