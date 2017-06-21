@@ -1,11 +1,11 @@
-# MTP cashbook
+# Send money to a prisoner
+# Copyright (C) Crown copyright (Ministry of Justice)
 msgid ""
 msgstr ""
-"Project-Id-Version: MTP cashbook\n"
+"Project-Id-Version: mtp-cashbook\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-14 16:12+0100\n"
+"POT-Creation-Date: 2017-06-21 14:25+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Igor U <igor.ushkarev@digital.justice.gov.uk>, 2016\n"
 "Language-Team: Welsh (https://www.transifex.com/ministry-of-justice/teams/34553/cy/)\n"
 "Language: cy\n"
 "MIME-Version: 1.0\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n==2) ? 1 : (n != 8 && n != 11) ? 2 : 3;\n"
 
-#: apps/cashbook/forms.py:56 apps/cashbook/forms.py:355
+#: apps/cashbook/forms.py:56
 msgid "Only click ‘Done’ when you’ve selected credits"
 msgstr ""
 
@@ -64,6 +64,8 @@ msgid "%(count)d credit"
 msgid_plural "%(count)d credits"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: apps/cashbook/forms.py:293
 msgid "no credits"
@@ -87,6 +89,10 @@ msgstr ""
 #: apps/cashbook/forms.py:313
 #, python-format
 msgid "%(credits)s received"
+msgstr ""
+
+#: apps/cashbook/forms.py:355
+msgid "Only click ‘Credit to NOMIS’ when you’ve selected credits"
 msgstr ""
 
 #: apps/cashbook/forms.py:404
@@ -222,6 +228,8 @@ msgid "You’ve added 1 credit to NOMIS."
 msgid_plural "You’ve added %(credited)s credits to NOMIS."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: apps/cashbook/views.py:154
 msgid "Currently being entered into NOMIS"
@@ -233,6 +241,8 @@ msgid "You have now returned the credit your colleagues were processing to ‘Ne
 msgid_plural "You have now returned the %(discarded)s credits your colleagues were processing to ‘New’ credits."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: apps/cashbook/views.py:207 apps/cashbook/views.py:486
 #: apps/cashbook/views_training.py:71 templates/cashbook/dashboard.html:58
@@ -366,7 +376,7 @@ msgstr ""
 #: templates/cashbook/all_credits.html:47
 #: templates/cashbook/credits_history.html:143
 #: templates/cashbook/processed_credits_detail.html:48
-#: templates/cashbook/processed_credits_detail.html:63
+#: templates/cashbook/processed_credits_detail.html:61
 msgid "Print this page of credits"
 msgstr ""
 
@@ -1339,7 +1349,7 @@ msgid "No"
 msgstr ""
 
 #: templates/cashbook/processed_credits.html:116
-#: templates/cashbook/processed_credits_detail.html:66
+#: templates/cashbook/processed_credits_detail.html:64
 msgid "No credits"
 msgstr ""
 
@@ -1352,15 +1362,19 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
-#: templates/cashbook/processing_credits.html:17
+#: templates/cashbook/processing_credits.html:19
 msgid "Digital cashbook is crediting to NOMIS"
 msgstr ""
 
-#: templates/cashbook/processing_credits.html:18
+#: templates/cashbook/processing_credits.html:21
+msgid "Digital cashbook has finished crediting to NOMIS"
+msgstr ""
+
+#: templates/cashbook/processing_credits.html:26
 msgid "This may take a minute or two so please don’t close this page"
 msgstr ""
 
-#: templates/cashbook/processing_credits.html:24
+#: templates/cashbook/processing_credits.html:36
 msgid "Continue"
 msgstr ""
 
