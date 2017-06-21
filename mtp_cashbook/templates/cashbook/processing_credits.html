@@ -14,7 +14,13 @@
 {% block inner_content %}
 <div class="mtp-progress-bar">
   <div class="mtp-progress-bar__content">
-    <h2 class="heading-large">{% trans 'Digital cashbook is crediting to NOMIS' %}</h2>
+    <h2 class="heading-large">
+      {% if percentage < 100 %}
+        {% trans 'Digital cashbook is crediting to NOMIS' %}
+      {% else %}
+        {% trans 'Digital cashbook has finished crediting to NOMIS' %}
+      {% endif %}
+    </h2>
     <p>
       {% if percentage < 100 %}
         {% trans 'This may take a minute or two so please don’t close this page' %}
