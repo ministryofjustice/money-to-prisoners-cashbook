@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mtp-cashbook\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-21 14:25+0100\n"
+"POT-Creation-Date: 2017-06-22 12:40+0100\n"
 "PO-Revision-Date: 2016-11-04 10:00+0000\n"
 "Last-Translator: Welsh Language Unit <welsh.language.unit.manager@hmcts.gsi.gov.uk>\n"
 "Language-Team: Welsh (http://www.transifex.com/ministry-of-justice/mtp/language/cy/)\n"
@@ -374,17 +374,19 @@ msgid "Print this page of credits"
 msgstr ""
 
 #: templates/cashbook/change_notification.html:12
-msgid "Digital cashbook is now connected to NOMIS"
+msgid "Digital cashbook now automatically connects to NOMIS"
 msgstr ""
 
 #: templates/cashbook/change_notification.html:18
-#: templates/cashbook/includes/nomis_print_dialog.html:9
-msgid "You no longer have to enter credits by hand into NOMIS."
+msgid "We’ve updated the cashbook so you no longer have to enter credits by hand into NOMIS."
 msgstr ""
 
 #: templates/cashbook/change_notification.html:19
-#: templates/cashbook/includes/nomis_print_dialog.html:10
-msgid "Now when you confirm credits here they will be sent to NOMIS digitally."
+msgid "Now, when you confirm your selected credits, the cashbook will send them to NOMIS digitally."
+msgstr ""
+
+#: templates/cashbook/change_notification.html:21
+msgid "I understand"
 msgstr ""
 
 #: templates/cashbook/credit_batch_list.html:7
@@ -976,6 +978,14 @@ msgstr ""
 
 #: templates/cashbook/includes/nomis_print_dialog.html:6
 msgid "Planning to enter these credits by hand?"
+msgstr ""
+
+#: templates/cashbook/includes/nomis_print_dialog.html:9
+msgid "You no longer have to enter credits by hand into NOMIS."
+msgstr ""
+
+#: templates/cashbook/includes/nomis_print_dialog.html:10
+msgid "Now when you confirm credits here they will be sent to NOMIS digitally."
 msgstr ""
 
 #: templates/cashbook/includes/nomis_print_dialog.html:14
