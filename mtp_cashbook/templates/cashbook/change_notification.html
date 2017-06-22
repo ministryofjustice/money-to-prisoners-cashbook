@@ -9,16 +9,16 @@
 
   <header>
     {% language_switch %}
-    <h1 class="heading-large">{% trans 'Digital cashbook is now connected to NOMIS' %}</h1>
+    <h1 class="heading-large">{% trans 'Digital cashbook now automatically connects to NOMIS' %}</h1>
   </header>
 
   <div class="mtp-change-notification__page">
     <img class="mtp-change-notification__graphic" src="{% static 'images/nomis-change-graphic.png' %}" srcset="{% static 'images/nomis-change-graphic@2x.png' %} 2x"/>
     <div>
-      {% trans 'You no longer have to enter credits by hand into NOMIS.' %}
-      {% trans 'Now when you confirm credits here they will be sent to NOMIS digitally.' %}
+      {% trans 'We’ve updated the cashbook so you no longer have to enter credits by hand into NOMIS.' %}
+      {% trans 'Now, when you confirm your selected credits, the cashbook will send them to NOMIS digitally.' %}
     </div>
-    <a class="button" href="{% url 'new-credits' %}">I understand</a>
+    <a class="button" href="{% url 'new-credits' %}">{% trans 'I understand' %}</a>
   </div>
 
 {% endblock %}
