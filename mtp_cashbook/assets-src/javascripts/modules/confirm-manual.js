@@ -31,13 +31,13 @@ exports.ConfirmManual = {
       return;
     }
 
-    var credit_id = $el.data('credit-id');
+    var creditID = $el.data('credit-id');
 
     e.preventDefault();
     this.$body.trigger({
       type: 'Dialog.render',
       target: e.target,
-      targetSelector: '#manual-confirm-dialog-' + credit_id
+      targetSelector: '#manual-confirm-dialog-' + creditID
     });
     return;
   }
