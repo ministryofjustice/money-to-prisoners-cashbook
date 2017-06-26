@@ -26,13 +26,13 @@ exports.PrintBatch = {
     this.$iframe.attr('src', $(e.target).attr('href'));
   },
 
-  onLoadIframe: function (e) {
+  onLoadIframe: function () {
     try {
       this.$iframe[0].contentWindow.document.execCommand('print', false, null);
     } catch (e) {
       this.$iframe[0].contentWindow.print();
     } finally {
-      this.$iframe.remove()
+      this.$iframe.remove();
     }
   }
 };
