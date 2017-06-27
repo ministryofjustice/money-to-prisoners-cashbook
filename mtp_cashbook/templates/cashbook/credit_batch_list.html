@@ -50,13 +50,18 @@
 
       <div class="print-only">
         <h2 class="heading-small">
-          {% trans "CONFIDENTIAL: dispose of securely" %}
+          {% trans 'CONFIDENTIAL: dispose of securely' %}
         </h2>
         <p>
-          {% blocktrans trimmed with total=total|currency %}
-          1-{{ batch_size }} of {{ new_credits }} credits <br />
-          <strong>Control total: £{{total}}</strong>
+          {% blocktrans trimmed %}
+            1-{{ batch_size }} of {{ new_credits }} credits
           {% endblocktrans %}
+          <br />
+          <strong>
+            {% blocktrans trimmed with total=total|currency %}
+              Control total: £{{total}}
+            {% endblocktrans %}
+          </strong>
         </p>
       </div>
 
