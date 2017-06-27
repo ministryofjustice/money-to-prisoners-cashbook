@@ -88,7 +88,7 @@
                   {% endblocktrans %}
                 </a>
               </td>
-              <td class="number">&pound;{{ batch.total|currency }}</td>
+              <td class="number">£{{ batch.total|currency }}</td>
               <td>{{ batch.owner_name }}</td>
               {% if pre_approval_required %}
                 {% if batch.comment_count %}
