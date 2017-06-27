@@ -55,7 +55,7 @@
         <p>
           {% blocktrans trimmed with total=total|currency %}
           1-{{ batch_size }} of {{ new_credits }} credits <br />
-          <strong>Control total: &pound;{{total}}</strong>
+          <strong>Control total: £{{total}}</strong>
           {% endblocktrans %}
         </p>
       </div>
@@ -94,7 +94,7 @@
 
             <div class="column-two-thirds">
               <div class="ctrl-total">
-                <p><span class='total control-total'>&pound;{{total|currency}}</span></p>
+                <p><span class='total control-total'>£{{total|currency}}</span></p>
               </div>
             </div>
 
@@ -158,7 +158,7 @@
                   <div>{{ credit.prisoner_number }}</div>
                   <div class="sub">{{ credit.prisoner_name }}</div>
                 </td>
-                <td class="number">&pound;{{ credit.amount|currency }}</td>
+                <td class="number">£{{ credit.amount|currency }}</td>
                 <td>{{ credit.sender_name }}</td>
                 {% if pre_approval_required %}
                   <td>

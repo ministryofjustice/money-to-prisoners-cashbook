@@ -60,7 +60,7 @@
               <tr>
                 <td title="{{ credit_group.owner_prison }}">{{ credit_group.owner_name }}</td>
                 <td class="numeric">{{ credit_group.locked_count }}</td>
-                <td class="numeric">&pound;{{ credit_group.locked_amount|currency }}</td>
+                <td class="numeric">£{{ credit_group.locked_amount|currency }}</td>
                 <td>{{ credit_group.locked_at_earliest|timesince }}</td>
                 <td class="check">
                   <input

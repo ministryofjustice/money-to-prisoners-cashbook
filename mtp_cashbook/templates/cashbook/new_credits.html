@@ -307,7 +307,7 @@
                   <div>{{ credit.prisoner_number }}</div>
                   <div class="sub">{{ credit.prisoner_name }}</div>
                 </td>
-                <td class="number">&pound;{{ credit.amount|currency }}</td>
+                <td class="number">£{{ credit.amount|currency }}</td>
                 <td>{{ credit.sender_name }}</td>
                 {% if pre_approval_required %}
                   <td>
