@@ -46,6 +46,15 @@ class PrisonerForm(DisbursementForm):
     )
 
 
+def serialise_amount(amount):
+    return '{0:.2f}'.format(amount)
+
+
+def unserialise_amount(amount_text):
+    amount_text = force_text(amount_text)
+    return Decimal(amount_text)
+
+
 class AmountForm(DisbursementForm):
     amount = forms.DecimalField(
         label='Amount',
@@ -57,13 +66,8 @@ class AmountForm(DisbursementForm):
             'min_value': 'Amount should be 1p or more',
         }
     )
-
-    def serialise_amount(amount):
-        return '{0:.2f}'.format(amount)
-
-    def unserialise_amount(amount_text):
-        amount_text = force_text(amount_text)
-        return Decimal(amount_text)
+    serialise_amount = serialise_amount
+    unserialise_amount = unserialise_amount
 
 
 class RecipientContactForm(DisbursementForm):
