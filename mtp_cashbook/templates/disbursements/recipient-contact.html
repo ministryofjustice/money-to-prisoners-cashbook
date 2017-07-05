@@ -1,0 +1,32 @@
+{% extends 'disbursements/base.html' %}
+{% load i18n %}
+{% load mtp_common %}
+
+{% block inner_content %}
+  <header>
+    <h1 class="heading-xlarge">
+      <span class="heading-secondary">
+        {% block auth_title %}{% trans 'Online disbursements tool' %}{% endblock %}
+      </span>
+      {%trans 'Recipient contact details' %}
+    </h1>
+  </header>
+
+  <form action="." method="post" id="recipient-contact">
+    {% csrf_token %}
+
+    {% include 'mtp_common/forms/error-summary.html' with form=form only %}
+
+    {% include 'mtp_common/forms/field.html' with field=form.recipient_name only %}
+
+    {% include 'mtp_common/forms/field.html' with field=form.address_line1 only %}
+
+    {% include 'mtp_common/forms/field.html' with field=form.address_line2 only %}
+
+    {% include 'mtp_common/forms/field.html' with field=form.city only %}
+
+    {% include 'mtp_common/forms/field.html' with field=form.postcode only %}
+
+    <button type="submit" class="button" name="create-disbursement">{% trans 'Bank account details' %}</button>
+  </form>
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends 'disbursements/base.html' %}
+{% load i18n %}
+{% load mtp_common %}
+
+{% block inner_content %}
+  <header>
+
+  </header>
+
+  <div class="mtp-confirm">
+    <div class="mtp-checkgroup">
+      <div class="mtp-confirm-fieldset">
+        <h2 class="heading-large">{% trans 'Sent' %}</h2>
+        <table class="mtp-table">
+          <tr>
+            <th>{% trans 'Amount' %}:</th>
+            <td>{{ amount }}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="mtp-checkgroup">
+      <div class="mtp-confirm-fieldset">
+        <h2 class="heading-large">{% trans 'From' %}</h2>
+        <table class="mtp-table">
+          <tr>
+            <th>{% trans 'Name' %}:</th>
+            <td>James Halls</td>
+          </tr>
+          <tr>
+            <th>{% trans 'Date of birth' %}:</th>
+            <td>21/01/1989</td>
+          </tr>
+          <tr>
+            <th>{% trans 'Prisoner number' %}:</th>
+            <td>{{ prisoner_number }}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="mtp-checkgroup">
+      <div class="mtp-confirm-fieldset">
+        <h2 class="heading-large">{% trans 'To' %}</h2>
+        <table class="mtp-table">
+          <tr>
+            <th>{% trans 'Name' %}:</th>
+            <td>{{ recipient_name }}</td>
+          </tr>
+          <tr>
+            <th>{% trans 'Sort code' %}:</th>
+            <td>{{ sort_code }}</td>
+          </tr>
+          <tr>
+            <th>{% trans 'Account number' %}:</th>
+            <td>{{ account_number }}</td>
+          </tr>
+        </table>
+        <table class="mtp-table">
+          <tr>
+            <th>{% trans 'Address' %}:</th>
+            <td>
+              <div>{{ address_line1 }}</div>
+              <div>{{ address_line2 }}</div>
+              <div>{{ city }}</div>
+            </td>
+          </tr>
+          <tr>
+            <th>{% trans 'Postcode' %}:</th>
+            <td>{{ postcode }}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div>
+      <div class="mtp-new-disbursement">
+        <a href="{% url 'disbursements:clear_session' %}">{% trans 'Process another disbursement' %}</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}

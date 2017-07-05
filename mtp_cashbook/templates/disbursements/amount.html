@@ -1,0 +1,24 @@
+{% extends 'disbursements/base.html' %}
+{% load i18n %}
+{% load mtp_common %}
+
+{% block inner_content %}
+  <header>
+    <h1 class="heading-xlarge">
+      <span class="heading-secondary">
+        {% block auth_title %}{% trans 'Online disbursements tool' %}{% endblock %}
+      </span>
+      {%trans 'Prisoner to send money on behalf of' %}
+    </h1>
+  </header>
+
+  <form action="." method="post" id="prisoner">
+    {% csrf_token %}
+
+    {% include 'mtp_common/forms/error-summary.html' with form=form only %}
+
+    {% include 'mtp_common/forms/field.html' with field=form.amount only %}
+
+    <button type="submit" class="button" name="create-disbursement">{% trans 'Recipient details' %}</button>
+  </form>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'mtp_common/mtp_base.html' %}
+{% load i18n %}
+
+{% block page_title %}{% trans 'Disbursements' %}{% endblock %}
+
+{% block proposition_header %}
+  <div class="header-proposition">
+    <div class="content">
+      <nav id="proposition-menu">
+        <a href="{% url 'disbursements:clear_session' %}" id="proposition-name">{% block proposition %}{% trans 'Disbursements' %}{% endblock %}</a>
+        {% block proposition_menu %}{% endblock %}
+      </nav>
+    </div>
+  </div>
+{% endblock %}
+
+{% block phase_banner %}
+  <div style="height: 50px">
+    {% if view.previous_view and not view.final_step %}
+      <a href="{{ view.get_previous_url }}">Back</a>
+    {% endif %}
+  </div>
+{% endblock %}
