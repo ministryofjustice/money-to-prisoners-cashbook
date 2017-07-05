@@ -8,7 +8,7 @@
       <span class="heading-secondary">
         {% block auth_title %}{% trans 'Online disbursements tool' %}{% endblock %}
       </span>
-      {%trans 'Check details before sending' %}
+      {%trans 'Confirm details and send' %}
     </h1>
   </header>
 
@@ -99,7 +99,7 @@
     </div>
 
     <div>
-      <a id="id_next_btn" class="button" href="{{ view.get_success_url }}">{% trans 'Confirm' %}</a>
+      <a id="id_next_btn" class="button" href="{{ view.get_success_url }}">{% trans 'Send payment' %}</a>
     </div>
   </div>
 {% endblock %}

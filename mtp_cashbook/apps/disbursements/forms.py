@@ -48,7 +48,7 @@ class PrisonerForm(DisbursementForm):
 
 class AmountForm(DisbursementForm):
     amount = forms.DecimalField(
-        label='Amount to send',
+        label='Amount',
         help_text='For example, 10.00',
         min_value=Decimal('0.01'),
         decimal_places=2,
@@ -67,7 +67,7 @@ class AmountForm(DisbursementForm):
 
 
 class RecipientContactForm(DisbursementForm):
-    recipient_name = forms.CharField(label='Their name')
+    recipient_name = forms.CharField(label='Name')
     address_line1 = forms.CharField(label='Address')
     address_line2 = forms.CharField(required=False)
     city = forms.CharField(required=False)

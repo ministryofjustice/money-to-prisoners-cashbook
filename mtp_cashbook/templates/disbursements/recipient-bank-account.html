@@ -8,7 +8,7 @@
       <span class="heading-secondary">
         {% block auth_title %}{% trans 'Online disbursements tool' %}{% endblock %}
       </span>
-      {%trans 'Prisoner to send money on behalf of' %}
+      {%trans 'Enter recipient’s bank details' %}
     </h1>
   </header>
 
@@ -21,6 +21,6 @@
 
     {% include 'mtp_common/forms/field.html' with field=form.sort_code input_classes='mtp-sort-code' value=form.sort_code.value only %}
 
-    <button type="submit" class="button mtp-next-button" name="create-disbursement">{% trans 'Check details' %}</button>
+    <button type="submit" class="button mtp-next-button" name="create-disbursement">{% trans 'Check all details' %}</button>
   </form>
 {% endblock %}
