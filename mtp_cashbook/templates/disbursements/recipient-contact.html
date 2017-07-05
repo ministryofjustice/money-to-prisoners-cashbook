@@ -17,16 +17,37 @@
 
     {% include 'mtp_common/forms/error-summary.html' with form=form only %}
 
-    {% include 'mtp_common/forms/field.html' with field=form.recipient_name only %}
+    {% include 'mtp_common/forms/field.html' with field=form.recipient_name input_classes='mtp-recipient-name' value=form.recipient_name.value only %}
 
-    {% include 'mtp_common/forms/field.html' with field=form.address_line1 only %}
+    <fieldset>
+      <div class="form-group {% if field.errors %}form-group-error{% endif %} mtp-address">
+        {% include 'mtp_common/forms/field-label.html' with field=form.address_line1 only %}
 
-    {% include 'mtp_common/forms/field.html' with field=form.address_line2 only %}
+        {% with field=form.address_line1 %}
+          {% include 'mtp_common/forms/field-errors.html' with field=field only %}
+          <div>
+            <input id="{{ field.id_for_label }}" class="form-control {% if field.errors %}form-control-error{% endif %} mtp-address-line" name="{{ field.html_name }}" value="{{ field.value|default:'' }}" type="{{ field.field.widget.input_type|default:'text' }}" />
+          </div>
+        {% endwith %}
 
-    {% include 'mtp_common/forms/field.html' with field=form.city only %}
+        {% with field=form.address_line2 %}
+          {% include 'mtp_common/forms/field-errors.html' with field=field only %}
+          <div>
+            <input id="{{ field.id_for_label }}" class="form-control {% if field.errors %}form-control-error{% endif %} mtp-address-line" name="{{ field.html_name }}" value="{{ field.value|default:'' }}" type="{{ field.field.widget.input_type|default:'text' }}" />
+          </div>
+        {% endwith %}
 
-    {% include 'mtp_common/forms/field.html' with field=form.postcode only %}
+        {% with field=form.city %}
+          {% include 'mtp_common/forms/field-errors.html' with field=field only %}
+          <div>
+            <input id="{{ field.id_for_label }}" class="form-control {% if field.errors %}form-control-error{% endif %} mtp-address-line" name="{{ field.html_name }}" value="{{ field.value|default:'' }}" type="{{ field.field.widget.input_type|default:'text' }}" />
+          </div>
+        {% endwith %}
+      </div>
+    </fieldset>
 
-    <button type="submit" class="button" name="create-disbursement">{% trans 'Bank account details' %}</button>
+    {% include 'mtp_common/forms/field.html' with field=form.postcode input_classes='mtp-postcode' value=form.postcode.value only %}
+
+    <button type="submit" class="button mtp-next-button" name="create-disbursement">{% trans 'Bank account details' %}</button>
   </form>
 {% endblock %}

@@ -15,8 +15,15 @@
   <div class="mtp-confirm">
     <div class="mtp-checkgroup">
       <div class="mtp-confirm-fieldset">
-        <h2 class="heading-large">{% trans 'Prisoner details' %}</h2>
         <table class="mtp-table">
+          <tr>
+            <th><h2 class="heading-large">{% trans 'Prisoner details' %}</h2></th>
+            <td>
+              <div class="mtp-confirm-change">
+                <a href="{% url 'disbursements:prisoner' %}">{% trans 'Change' %} <span class="visually-hidden">{% trans 'Name, date of birth or prisoner number' %}</span></a>
+              </div>
+            </td>
+          </tr>
           <tr>
             <th>{% trans 'Name' %}:</th>
             <td>James Halls</td>
@@ -31,16 +38,10 @@
           </tr>
         </table>
       </div>
-
-      <div class="mtp-confirm-change">
-        <a href="{% url 'disbursements:prisoner' %}">{% trans 'Change' %} <span class="visually-hidden">{% trans 'Name, date of birth or prisoner number' %}</span></a>
-      </div>
     </div>
 
     <div>
-      <div class="mtp-confirm-change">
-        <a id="id_next_btn" class="button" href="{{ view.get_success_url }}">{% trans 'Confirm' %}</a>
-      </div>
+      <a id="id_next_btn" class="button mtp-next-button" href="{{ view.get_success_url }}">{% trans 'Confirm' %}</a>
     </div>
   </div>
 {% endblock %}

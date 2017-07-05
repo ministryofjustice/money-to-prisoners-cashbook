@@ -1,0 +1,148 @@
+.mtp-back-link {
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+
+.mtp-next-button {
+  margin-top: 2em;
+}
+
+.mtp-disbursement-start {
+  max-width: 600px;
+  margin-bottom: 3em;
+}
+
+.mtp-prisoner-number {
+  width: 12em;
+}
+
+.mtp-amount {
+  margin-bottom: 2em;
+  margin-top: 2em;
+}
+
+.mtp-currency-sign {
+  background-color: $highlight-colour;
+  border-right: 0;
+  font-weight: 900;
+  line-height: 1.16;
+  min-width: 1.8em;
+  text-align: center;
+  width: 1.8em;
+}
+
+.mtp-charges-amount {
+  width: 5em;
+}
+
+.mtp-money-box {
+  * {
+    display: inline-block;
+    height: 34px;
+    vertical-align: bottom;
+  }
+}
+
+.mtp-table {
+  th, td {
+    border: none;
+    font-weight: normal;
+  }
+
+  th {
+    min-width: 8em;
+    padding: 0.4em 2em 0.4em 0;
+  }
+
+  td {
+    padding: 0.4em 5em 0.4em 0;
+  }
+}
+
+.mtp-confirm {
+  h2 {
+    font-size: 1.26316em;
+    margin: 0 0 .2em;
+  }
+
+  div div {
+    display: inline-block;
+    margin-top: 2em;
+
+    &.mtp-confirm-fieldset {
+      margin-right: 5%;
+
+      @include media(mobile) {
+        margin-right: 0;
+      }
+    }
+  }
+
+  .mtp-checkgroup {
+    border-top: 2px solid $border-colour;
+    margin-bottom: 1.5em;
+
+    legend {
+      margin-bottom: 0;
+    }
+
+    div {
+      margin-top: .7em;
+    }
+
+    .mtp-confirm-change {
+      vertical-align: top;
+      margin-top: 0;
+      width: 39%;
+
+      @include media(mobile) {
+        width: 100%;
+      }
+    }
+  }
+}
+
+.mtp-recipient-name {
+  width: 16em;
+}
+
+.mtp-address {
+  .mtp-address-line {
+    width: 16em;
+    margin-bottom: 0.5em;
+  }
+}
+
+.mtp-postcode {
+  width: 10em;
+}
+
+.mtp-account-number, .mtp-sort-code {
+  width: 16em;
+}
+
+.mtp-reference-actions {
+  display: none;
+  margin-bottom: 1em;
+
+  .js-enabled & {
+    display: block;
+
+    @media print {
+      display: none;
+    }
+  }
+}
+
+.mtp-print-reference {
+  background: file-url('icon-file-download.png') no-repeat scroll 0 0;
+  display: inline-block;
+  line-height: 40px;
+  min-height: 2.5em;
+  padding-left: 2.5em;
+
+  @include device-pixel-ratio {
+    background-image: file-url('icon-file-download-2x.png');
+    background-size: 30px 39px;
+  }
+}

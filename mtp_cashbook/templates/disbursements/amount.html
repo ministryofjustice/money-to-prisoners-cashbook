@@ -8,7 +8,7 @@
       <span class="heading-secondary">
         {% block auth_title %}{% trans 'Online disbursements tool' %}{% endblock %}
       </span>
-      {%trans 'Prisoner to send money on behalf of' %}
+      {%trans 'Amount they want to send' %}
     </h1>
   </header>
 
@@ -17,8 +17,27 @@
 
     {% include 'mtp_common/forms/error-summary.html' with form=form only %}
 
-    {% include 'mtp_common/forms/field.html' with field=form.amount only %}
+    {% with field=form.amount %}
+    <fieldset>
+      <legend class="visually-hidden">{% trans 'Please enter the amount in pounds' %}</legend>
+      <div id="{{ field.id_for_label }}-wrapper" class="form-group mtp-money-amount {% if field.errors %}form-group-error{% endif %}">
+        {% include 'mtp_common/forms/field-label.html' with field=field only %}
+        {% include 'mtp_common/forms/field-errors.html' with field=field only %}
+        <div class="mtp-money-box">
+          <span class="form-control mtp-currency-sign">
+            £
+          </span><input id="{{ field.id_for_label }}"
+                class="form-control  {% if field.errors %}form-control-error{% endif %} mtp-charges-amount"
+                maxlength="10"
+                name="{{ field.html_name }}"
+                value="{{ field.value|default:'' }}"
+                type="text"
+                autocomplete="off" />
+        </div>
+      </div>
+    </fieldset>
+    {% endwith %}
 
-    <button type="submit" class="button" name="create-disbursement">{% trans 'Recipient details' %}</button>
+    <button type="submit" class="button mtp-next-button" name="create-disbursement">{% trans 'Recipient details' %}</button>
   </form>
 {% endblock %}

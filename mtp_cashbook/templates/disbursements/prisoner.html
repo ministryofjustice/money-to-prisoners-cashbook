@@ -17,8 +17,8 @@
 
     {% include 'mtp_common/forms/error-summary.html' with form=form only %}
 
-    {% include 'mtp_common/forms/field.html' with field=form.prisoner_number only %}
+    {% include 'mtp_common/forms/field.html' with field=form.prisoner_number input_classes='mtp-prisoner-number' value=form.prisoner_number.value only %}
 
-    <button type="submit" class="button" name="create-disbursement">{% trans 'Check prisoner details' %}</button>
+    <button type="submit" class="button mtp-next-button" name="create-disbursement">{% trans 'Check prisoner details' %}</button>
   </form>
 {% endblock %}

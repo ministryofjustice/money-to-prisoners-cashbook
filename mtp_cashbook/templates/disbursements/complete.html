@@ -3,18 +3,25 @@
 {% load mtp_common %}
 
 {% block inner_content %}
-  <header>
+  <div class="govuk-box-highlight">
+    <h1 class="heading-large">£{{ amount }} sent on behalf of James Halls</h1>
+  </div>
 
-  </header>
+  <div class="print-hidden mtp-reference-actions">
+    <a class="mtp-print-reference" href="#" onclick="window.print()">{% trans 'Print this page' %}</a>
+  </div>
 
   <div class="mtp-confirm">
     <div class="mtp-checkgroup">
       <div class="mtp-confirm-fieldset">
-        <h2 class="heading-large">{% trans 'Sent' %}</h2>
         <table class="mtp-table">
           <tr>
+            <th><h2 class="heading-large">{% trans 'Send' %}</h2></th>
+            <td></td>
+          </tr>
+          <tr>
             <th>{% trans 'Amount' %}:</th>
-            <td>{{ amount }}</td>
+            <td>£{{ amount }}</td>
           </tr>
         </table>
       </div>
@@ -22,8 +29,11 @@
 
     <div class="mtp-checkgroup">
       <div class="mtp-confirm-fieldset">
-        <h2 class="heading-large">{% trans 'From' %}</h2>
         <table class="mtp-table">
+          <tr>
+            <th><h2 class="heading-large">{% trans 'From' %}</h2></th>
+            <td></td>
+          </tr>
           <tr>
             <th>{% trans 'Name' %}:</th>
             <td>James Halls</td>
@@ -42,31 +52,32 @@
 
     <div class="mtp-checkgroup">
       <div class="mtp-confirm-fieldset">
-        <h2 class="heading-large">{% trans 'To' %}</h2>
         <table class="mtp-table">
+          <tr>
+            <th><h2 class="heading-large">{% trans 'To' %}</h2></th>
+            <td></td>
+          </tr>
           <tr>
             <th>{% trans 'Name' %}:</th>
             <td>{{ recipient_name }}</td>
+            <th>{% trans 'Address' %}:</th>
+            <td>{{ address_line1 }}</td>
           </tr>
           <tr>
             <th>{% trans 'Sort code' %}:</th>
             <td>{{ sort_code }}</td>
+            <th></th>
+            <td>{{ address_line2 }}</td>
           </tr>
           <tr>
             <th>{% trans 'Account number' %}:</th>
             <td>{{ account_number }}</td>
-          </tr>
-        </table>
-        <table class="mtp-table">
-          <tr>
-            <th>{% trans 'Address' %}:</th>
-            <td>
-              <div>{{ address_line1 }}</div>
-              <div>{{ address_line2 }}</div>
-              <div>{{ city }}</div>
-            </td>
+            <th></th>
+            <td>{{ city }}</td>
           </tr>
           <tr>
+            <th></th>
+            <td></td>
             <th>{% trans 'Postcode' %}:</th>
             <td>{{ postcode }}</td>
           </tr>
@@ -74,10 +85,8 @@
       </div>
     </div>
 
-    <div>
-      <div class="mtp-new-disbursement">
-        <a href="{% url 'disbursements:clear_session' %}">{% trans 'Process another disbursement' %}</a>
-      </div>
+    <div class="mtp-new-disbursement print-hidden">
+      <a href="{% url 'disbursements:clear_session' %}">{% trans 'Process another disbursement' %}</a>
     </div>
   </div>
 {% endblock %}

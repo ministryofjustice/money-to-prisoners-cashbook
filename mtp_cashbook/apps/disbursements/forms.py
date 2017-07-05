@@ -48,7 +48,8 @@ class PrisonerForm(DisbursementForm):
 
 class AmountForm(DisbursementForm):
     amount = forms.DecimalField(
-        label='Amount',
+        label='Amount to send',
+        help_text='For example, 10.00',
         min_value=Decimal('0.01'),
         decimal_places=2,
         error_messages={

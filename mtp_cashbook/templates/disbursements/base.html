@@ -15,7 +15,7 @@
 {% endblock %}
 
 {% block phase_banner %}
-  <div style="height: 50px">
+  <div class="mtp-back-link">
     {% if view.previous_view and not view.final_step %}
       <a href="{{ view.get_previous_url }}">Back</a>
     {% endif %}
