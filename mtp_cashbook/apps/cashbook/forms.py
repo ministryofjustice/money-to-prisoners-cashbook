@@ -371,7 +371,8 @@ class ProcessNewCreditsForm(GARequestErrorReportingMixin, forms.Form):
 
         self.client.credits.batches.post({'credits': credit_ids})
         credit_selected_credits_to_nomis(
-            self.request.user, self.request.session, credit_ids, credits
+            user=self.request.user, session=self.request.session,
+            selected_credit_ids=credit_ids, credits=credits
         )
 
 

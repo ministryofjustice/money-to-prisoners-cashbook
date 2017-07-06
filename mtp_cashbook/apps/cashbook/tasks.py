@@ -11,8 +11,8 @@ from requests.exceptions import HTTPError
 logger = logging.getLogger('mtp')
 
 
-@spoolable(body_params=('credits',))
-def credit_selected_credits_to_nomis(user, session, selected_credit_ids, credits):
+@spoolable(body_params=('user', 'session', 'selected_credit_ids', 'credits',))
+def credit_selected_credits_to_nomis(*, user, session, selected_credit_ids, credits):
     for credit_id in selected_credit_ids:
         if credit_id in credits:
             credit_individual_credit_to_nomis(user, session, credit_id, credits[credit_id])
