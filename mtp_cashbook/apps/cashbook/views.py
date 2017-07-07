@@ -479,6 +479,11 @@ class ProcessedCreditsDetailView(ProcessedCreditsListView):
             user_id=self.kwargs['user_id']
         )
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total'] = sum([c['amount'] for c in context['object_list']])
+        return context
+
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(expected_nomis_availability(True), name='dispatch')
