@@ -12,7 +12,7 @@
     <h1 class="heading-xlarge">{{ view.title }}</h1>
   </header>
 
-  {% include "mtp_common/includes/message_box.html" %}
+  {% include 'mtp_common/includes/message_box.html' %}
 
   <form method="post" action="" class="mtp-locked">
     {% csrf_token %}
@@ -42,11 +42,11 @@
 
       <div class="mtp-batch">
 
-        {% include "cashbook/includes/locked_buttons.html" %}
+        {% include 'cashbook/includes/locked_buttons.html' %}
 
         <table>
           <thead>
-            {% include "cashbook/includes/table_actions.html" with location='header' field_name=form.credits.html_name print=False %}
+            {% include 'cashbook/includes/table_actions.html' with location='header' field_name=form.credits.html_name print=False %}
 
             <tr>
               <th>{% trans 'Staff name' %}</th>
@@ -79,11 +79,11 @@
           </tbody>
 
           <tfoot>
-            {% include "cashbook/includes/table_actions.html" with location='footer' field_name=form.credits.html_name print=False %}
+            {% include 'cashbook/includes/table_actions.html' with location='footer' field_name=form.credits.html_name print=False %}
           </tfoot>
         </table>
 
-        {% include "cashbook/includes/locked_buttons.html" %}
+        {% include 'cashbook/includes/locked_buttons.html' %}
 
       </div>
 
