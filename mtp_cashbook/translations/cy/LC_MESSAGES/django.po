@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-07 15:22+0100\n"
+"POT-Creation-Date: 2017-07-07 16:29+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Igor U <igor.ushkarev@digital.justice.gov.uk>, 2017\n"
 "Language-Team: Welsh (https://www.transifex.com/ministry-of-justice/teams/34553/cy/)\n"
@@ -168,7 +168,7 @@ msgstr "Allweddeiriau"
 msgid "e.g. prisoner name, prisoner number or sender name"
 msgstr "e.e. enw'r carcharor, rhif y carcharor neu enw'r anfonwr"
 
-#: apps/cashbook/forms.py:706 templates/cashbook/processed_credits.html:86
+#: apps/cashbook/forms.py:706 templates/cashbook/processed_credits.html:87
 #, python-format
 msgid "%(count)s credit"
 msgid_plural "%(count)s credits"
@@ -205,14 +205,14 @@ msgid "No staff"
 msgstr "Dim staff"
 
 #: apps/cashbook/templatetags/credits.py:132
-#, python-brace-format
-msgid "{name1} and {name2}"
-msgstr "{enw1} ac {enw2}"
+#, python-format
+msgid "%(name1)s and %(name2)s"
+msgstr "%(name1)s ac %(name2)s"
 
 #: apps/cashbook/templatetags/credits.py:134
-#, python-brace-format
-msgid "{name} and {number} others"
-msgstr "{enw} a {nifer} eraill"
+#, python-format
+msgid "%(name)s and %(number)d others"
+msgstr "%(name)s a %(number)d eraill"
 
 #: apps/cashbook/views.py:80 apps/cashbook/views_training.py:52
 #: templates/base.html:25 templates/training/page.html:57
@@ -256,8 +256,9 @@ msgstr "Yr holl gredydau"
 
 #: apps/cashbook/views.py:264 apps/cashbook/views_training.py:67
 #: templates/cashbook/all_credits.html:58
+#: templates/cashbook/all_credits.html:60
 #: templates/cashbook/credit_batch_list.html:7
-#: templates/cashbook/credits_base.html:7 templates/cashbook/new_credits.html:8
+#: templates/cashbook/credits_base.html:7
 msgid "New credits"
 msgstr "Credydau newydd"
 
@@ -268,7 +269,8 @@ msgid "Digital cashbook"
 msgstr "Llyfr arian digidol"
 
 #: apps/cashbook/views.py:424 apps/cashbook/views.py:471
-#: templates/cashbook/all_credits.html:73
+#: templates/cashbook/all_credits.html:75
+#: templates/cashbook/all_credits.html:77
 #: templates/cashbook/credits_base.html:8
 msgid "Processed credits"
 msgstr "Credydau sydd wedi cael eu prosesu"
@@ -379,7 +381,7 @@ msgstr "Rhestr hidlo"
 #: templates/cashbook/all_credits.html:49
 #: templates/cashbook/credits_history.html:145
 #: templates/cashbook/processed_credits_detail.html:51
-#: templates/cashbook/processed_credits_detail.html:64
+#: templates/cashbook/processed_credits_detail.html:65
 msgid "Print this page of credits"
 msgstr "Argraffwch y dudalen hon o gredydau"
 
@@ -476,7 +478,7 @@ msgid "More information is available in the training section"
 msgstr "Mae yna fwy o wybodaeth yn yr adran hyfforddiant"
 
 #: templates/cashbook/credit_batch_list.html:86
-#: templates/cashbook/credit_batch_list.html:219
+#: templates/cashbook/credit_batch_list.html:221
 msgid "Remember to confirm all credits as processed in the digital cashbook."
 msgstr "Cofiwch gadarnhau bod yr holl gredydau wedi cael eu prosesu yn y llyfr arian digidol."
 
@@ -494,62 +496,63 @@ msgid "Confirm entered in NOMIS"
 msgstr "Cadarnhau eu bod wedi cael eu rhoi yn NOMIS"
 
 #: templates/cashbook/credit_batch_list.html:124
+#: templates/cashbook/credit_batch_list.html:128
 msgid "To be entered into NOMIS by you"
 msgstr "I'w rhoi yn NOMIS gennych chi"
 
-#: templates/cashbook/credit_batch_list.html:132
+#: templates/cashbook/credit_batch_list.html:134
 #: templates/cashbook/includes/credits-header-row.html:8
-#: templates/cashbook/includes/manual_credit_table.html:14
-#: templates/cashbook/new_credits.html:257
+#: templates/cashbook/includes/manual_credit_table.html:22
+#: templates/cashbook/new_credits.html:259
 msgid "Date sent"
 msgstr "Dyddiad anfon"
 
-#: templates/cashbook/credit_batch_list.html:133
+#: templates/cashbook/credit_batch_list.html:135
 #: templates/cashbook/includes/credits-header-row.html:16
-#: templates/cashbook/includes/manual_credit_table.html:15
-#: templates/cashbook/new_credits.html:265
+#: templates/cashbook/includes/manual_credit_table.html:23
+#: templates/cashbook/new_credits.html:267
 msgid "Prisoner"
 msgstr "Carcharor"
 
-#: templates/cashbook/credit_batch_list.html:134
-#: templates/cashbook/credits_locked.html:54
+#: templates/cashbook/credit_batch_list.html:136
+#: templates/cashbook/credits_locked.html:56
 #: templates/cashbook/includes/credits-header-row.html:24
-#: templates/cashbook/includes/manual_credit_table.html:16
-#: templates/cashbook/new_credits.html:273
+#: templates/cashbook/includes/manual_credit_table.html:24
+#: templates/cashbook/new_credits.html:275
 msgid "Amount"
 msgstr "Swm"
 
-#: templates/cashbook/credit_batch_list.html:135
+#: templates/cashbook/credit_batch_list.html:137
 #: templates/cashbook/credits_history.html:100
 #: templates/cashbook/includes/credits-header-row.html:29
-#: templates/cashbook/includes/manual_credit_table.html:17
-#: templates/cashbook/new_credits.html:278
+#: templates/cashbook/includes/manual_credit_table.html:25
+#: templates/cashbook/new_credits.html:280
 msgid "Sender"
 msgstr "Anfonwr"
 
-#: templates/cashbook/credit_batch_list.html:137
-#: templates/cashbook/includes/manual_credit_table.html:19
-#: templates/cashbook/new_credits.html:280
+#: templates/cashbook/credit_batch_list.html:139
+#: templates/cashbook/includes/manual_credit_table.html:27
+#: templates/cashbook/new_credits.html:282
 msgid "Security"
 msgstr "Diogelwch"
 
-#: templates/cashbook/credit_batch_list.html:139
+#: templates/cashbook/credit_batch_list.html:141
 msgid "Entered in NOMIS?"
 msgstr "Wedi cael eu rhoi yn NOMIS?"
 
-#: templates/cashbook/credit_batch_list.html:151
+#: templates/cashbook/credit_batch_list.html:153
 #: templates/cashbook/includes/credit-row.html:12
-#: templates/cashbook/includes/manual_credit_table.html:33
-#: templates/cashbook/new_credits.html:295
-#: templates/cashbook/processed_credits.html:73
+#: templates/cashbook/includes/manual_credit_table.html:41
+#: templates/cashbook/new_credits.html:297
+#: templates/cashbook/processed_credits.html:74
 msgid "Today"
 msgstr "Heddiw"
 
-#: templates/cashbook/credit_batch_list.html:153
+#: templates/cashbook/credit_batch_list.html:155
 #: templates/cashbook/includes/credit-row.html:14
-#: templates/cashbook/includes/manual_credit_table.html:35
-#: templates/cashbook/new_credits.html:297
-#: templates/cashbook/processed_credits.html:75
+#: templates/cashbook/includes/manual_credit_table.html:43
+#: templates/cashbook/new_credits.html:299
+#: templates/cashbook/processed_credits.html:76
 #, python-format
 msgid "%(days)s day ago"
 msgid_plural "%(days)s days ago"
@@ -558,46 +561,46 @@ msgstr[1] "%(days)s diwrnod yn ôl"
 msgstr[2] "%(days)s diwrnod yn ôl"
 msgstr[3] "%(days)s diwrnod yn ôl"
 
-#: templates/cashbook/credit_batch_list.html:171
+#: templates/cashbook/credit_batch_list.html:173
 #: templates/cashbook/includes/credit-row.html:43
-#: templates/cashbook/includes/manual_credit_table.html:53
-#: templates/cashbook/new_credits.html:315
+#: templates/cashbook/includes/manual_credit_table.html:61
+#: templates/cashbook/new_credits.html:317
 msgid "Checked"
 msgstr "Wedi cael eu gwirio"
 
-#: templates/cashbook/credit_batch_list.html:173
+#: templates/cashbook/credit_batch_list.html:175
 #: templates/cashbook/includes/credit-row.html:45
-#: templates/cashbook/includes/manual_credit_table.html:55
-#: templates/cashbook/new_credits.html:317
+#: templates/cashbook/includes/manual_credit_table.html:63
+#: templates/cashbook/new_credits.html:319
 msgid "Not checked"
 msgstr "Heb gael eu gwirio"
 
-#: templates/cashbook/credit_batch_list.html:187
+#: templates/cashbook/credit_batch_list.html:189
 #: templates/cashbook/credits_history.html:79
 msgid "Credited"
 msgstr "Wedi cael ei gredydu"
 
-#: templates/cashbook/credit_batch_list.html:211
+#: templates/cashbook/credit_batch_list.html:213
 msgid "There aren’t any credits available"
 msgstr "Nid oes yna gredydau ar gael"
 
-#: templates/cashbook/credit_batch_list.html:215
+#: templates/cashbook/credit_batch_list.html:217
 msgid "Confirm all credits processed"
 msgstr "Cadarnhau bod yr holl gredydau wedi cael eu prosesu"
 
-#: templates/cashbook/credit_batch_list.html:231
-#: templates/cashbook/new_credits.html:384
+#: templates/cashbook/credit_batch_list.html:233
+#: templates/cashbook/new_credits.html:386
 msgid "Do you want to submit only the selected credits?"
 msgstr "Ydych chi eisiau cyflwyno dim ond y credydau sydd wedi cael eu dethol?"
 
-#: templates/cashbook/credit_batch_list.html:234
-#: templates/cashbook/includes/manual_credit_table.html:142
-#: templates/cashbook/new_credits.html:388
+#: templates/cashbook/credit_batch_list.html:236
+#: templates/cashbook/includes/manual_credit_table.html:150
+#: templates/cashbook/new_credits.html:390
 msgid "Yes"
 msgstr "Ie"
 
-#: templates/cashbook/credit_batch_list.html:237
-#: templates/cashbook/new_credits.html:391
+#: templates/cashbook/credit_batch_list.html:239
+#: templates/cashbook/new_credits.html:393
 msgid "No, continue processing"
 msgstr "Na, parhau i brosesu"
 
@@ -669,7 +672,7 @@ msgid "Uncredited"
 msgstr "Heb gael ei gredydu"
 
 #: templates/cashbook/credits_history.html:88
-#: templates/cashbook/processed_credits.html:56
+#: templates/cashbook/processed_credits.html:57
 msgid "Total"
 msgstr "Cyfanswm"
 
@@ -740,30 +743,30 @@ msgstr "Dewiswch y blwch ar ddiwedd y rhes"
 msgid "When the green ‘Return these to new credits’ button appears, click it to free up their work"
 msgstr "Pan fydd y botwm gwyrdd 'Dychwelyd y rhain i gredydau newydd' yn ymddangos, cliciwch arno i ryddhau eu gwaith."
 
-#: templates/cashbook/credits_locked.html:52
+#: templates/cashbook/credits_locked.html:54
 msgid "Staff name"
 msgstr "Enw staff"
 
-#: templates/cashbook/credits_locked.html:53
+#: templates/cashbook/credits_locked.html:55
 msgid "Credits"
 msgstr "Credydau"
 
-#: templates/cashbook/credits_locked.html:55
+#: templates/cashbook/credits_locked.html:57
 msgid "Time in progress"
 msgstr "Amser hyd yma"
 
-#: templates/cashbook/credits_locked.html:56
+#: templates/cashbook/credits_locked.html:58
 #: templates/cashbook/dashboard.html:53
 #: templates/cashbook/includes/locked_buttons.html:4
 msgid "Return these to new credits"
 msgstr "Dychwylyd y rhain i gredydau newydd"
 
-#: templates/cashbook/credits_locked.html:75
-#: templates/cashbook/new_credits.html:282
+#: templates/cashbook/credits_locked.html:77
+#: templates/cashbook/new_credits.html:284
 msgid "Select"
 msgstr "Dethol"
 
-#: templates/cashbook/credits_locked.html:91
+#: templates/cashbook/credits_locked.html:95
 msgid "No credits in progress"
 msgstr "Dim credydau ar hyn o bryd"
 
@@ -890,7 +893,7 @@ msgid "During training it is not possible to change your password"
 msgstr "Nid yw'n bosibl i chi newid eich cyfrinair yn ystod yr hyfforddiant"
 
 #: templates/cashbook/includes/batch_table_actions.html:9
-#: templates/cashbook/includes/manual_credit_table.html:10
+#: templates/cashbook/includes/manual_credit_table.html:18
 #: templates/cashbook/includes/table_actions.html:5
 msgid "Print these credits"
 msgstr "Argraffu'r credydau hyn"
@@ -926,68 +929,78 @@ msgstr "Cyfeirnod NOMIS"
 msgid "Status"
 msgstr "Statws"
 
-#: templates/cashbook/includes/manual_credit_table.html:77
+#: templates/cashbook/includes/manual_credit_table.html:8
+#: templates/cashbook/new_credits.html:81
+#, python-format
+msgid "%(manual_credits)s credit needs your manual input in NOMIS"
+msgid_plural "%(manual_credits)s credits need your manual input in NOMIS"
+msgstr[0] "Mae angen i chi fewnbynnu %(manual_credits)s â llaw yn NOMIS. "
+msgstr[1] "Mae angen i chi fewnbynnu %(manual_credits)s â llaw yn NOMIS. "
+msgstr[2] "Mae angen i chi fewnbynnu %(manual_credits)s â llaw yn NOMIS. "
+msgstr[3] "Mae angen i chi fewnbynnu %(manual_credits)s â llaw yn NOMIS. "
+
+#: templates/cashbook/includes/manual_credit_table.html:85
 msgid "You need to manually put this into NOMIS:"
 msgstr "Mae'n angen i chi roi hwn â llaw yn NOMIS:"
 
-#: templates/cashbook/includes/manual_credit_table.html:81
+#: templates/cashbook/includes/manual_credit_table.html:89
 #, python-format
 msgid "%(owner)s started processing this credit today:"
 msgstr "Mi ddechreuodd %(owner)s brosesu'r credyd hwn heddiw:"
 
-#: templates/cashbook/includes/manual_credit_table.html:85
+#: templates/cashbook/includes/manual_credit_table.html:93
 #, python-format
 msgid "%(owner)s started processing this credit yesterday:"
 msgstr "Mi ddechreuodd %(owner)s brosesu'r credyd hwn ddoe:"
 
-#: templates/cashbook/includes/manual_credit_table.html:89
+#: templates/cashbook/includes/manual_credit_table.html:97
 #, python-format
 msgid "%(owner)s started processing this credit %(processed)s:"
 msgstr "Mi ddechreuodd %(owner)s brosesu'r credyd hwn %(processed)s:"
 
-#: templates/cashbook/includes/manual_credit_table.html:95
+#: templates/cashbook/includes/manual_credit_table.html:103
 #, python-format
 msgid "%(owner)s started processing this credit:"
 msgstr "Mi ddechreuodd %(owner)s brosesu'r credyd hwn:"
 
-#: templates/cashbook/includes/manual_credit_table.html:100
+#: templates/cashbook/includes/manual_credit_table.html:108
 msgid "Prisoner in transit"
 msgstr "Carcharor yn cael ei symud"
 
-#: templates/cashbook/includes/manual_credit_table.html:102
+#: templates/cashbook/includes/manual_credit_table.html:110
 #, python-format
 msgid "Prisoner transferred to %(new_prison)s"
 msgstr "Carcharor wedi'i drosglwyddo i %(new_prison)s"
 
-#: templates/cashbook/includes/manual_credit_table.html:106
+#: templates/cashbook/includes/manual_credit_table.html:114
 msgid "Prisoner left this prison"
 msgstr "Mae'r carcharor wedi gadael y carchar hwn"
 
-#: templates/cashbook/includes/manual_credit_table.html:111
+#: templates/cashbook/includes/manual_credit_table.html:119
 msgid "Done"
 msgstr "Wedi gorffen"
 
-#: templates/cashbook/includes/manual_credit_table.html:118
+#: templates/cashbook/includes/manual_credit_table.html:127
 msgid "Have you entered this credit into NOMIS?"
 msgstr "Ydych chi wedi rhoi'r credyd hwn yn NOMIS?"
 
-#: templates/cashbook/includes/manual_credit_table.html:122
+#: templates/cashbook/includes/manual_credit_table.html:130
 msgid "Date sent:"
 msgstr "Dyddiad anfon:"
 
-#: templates/cashbook/includes/manual_credit_table.html:126
+#: templates/cashbook/includes/manual_credit_table.html:134
 msgid "Prisoner:"
 msgstr "Carcharor:"
 
-#: templates/cashbook/includes/manual_credit_table.html:130
+#: templates/cashbook/includes/manual_credit_table.html:138
 msgid "Amount:"
 msgstr "Swm:"
 
-#: templates/cashbook/includes/manual_credit_table.html:134
+#: templates/cashbook/includes/manual_credit_table.html:142
 msgid "Sender:"
 msgstr "Anfonwr:"
 
-#: templates/cashbook/includes/manual_credit_table.html:144
+#: templates/cashbook/includes/manual_credit_table.html:152
 msgid "No, I’ll do that now"
 msgstr "Na, mi wnaf hynny nawr"
 
@@ -1036,7 +1049,7 @@ msgid "Don’t show this message again"
 msgstr "Peidiwch â dangos y neges hon eto "
 
 #: templates/cashbook/includes/print_dialog.html:17
-#: templates/cashbook/processed_credits.html:108
+#: templates/cashbook/processed_credits.html:109
 msgid "Print"
 msgstr "Argraffu"
 
@@ -1053,8 +1066,8 @@ msgid "In descending order"
 msgstr "Trefn ddisgynnol"
 
 #: templates/cashbook/includes/table_actions.html:11
-#: templates/cashbook/new_credits.html:247
-#: templates/cashbook/new_credits.html:356
+#: templates/cashbook/new_credits.html:249
+#: templates/cashbook/new_credits.html:358
 msgid "Select all"
 msgstr "Dewis bob un"
 
@@ -1143,15 +1156,6 @@ msgstr "Arhoswch ychydig o funudau ac yna'i anfon i NOMIS eto. "
 #: templates/cashbook/new_credits.html:102
 msgid "OK"
 msgstr "Iawn"
-
-#: templates/cashbook/new_credits.html:81
-#, python-format
-msgid "%(manual_credits)s credit needs your manual input in NOMIS"
-msgid_plural "%(manual_credits)s credits need your manual input in NOMIS"
-msgstr[0] "Mae angen i chi fewnbynnu %(manual_credits)s â llaw yn NOMIS. "
-msgstr[1] "Mae angen i chi fewnbynnu %(manual_credits)s â llaw yn NOMIS. "
-msgstr[2] "Mae angen i chi fewnbynnu %(manual_credits)s â llaw yn NOMIS. "
-msgstr[3] "Mae angen i chi fewnbynnu %(manual_credits)s â llaw yn NOMIS. "
 
 #: templates/cashbook/new_credits.html:86
 msgid "How?"
@@ -1259,58 +1263,58 @@ msgstr "Nawr, pan fyddwch yn 'cadarnhau' credydau byddant yn cael eu hanfon yn d
 msgid "No new credits received"
 msgstr "Dim credydau newydd"
 
-#: templates/cashbook/new_credits.html:221
+#: templates/cashbook/new_credits.html:223
 #: templates/cashbook/processed_credits.html:20
 msgid "What do I do here?"
 msgstr "Beth i'w wneud yma?"
 
-#: templates/cashbook/new_credits.html:226
+#: templates/cashbook/new_credits.html:228
 #, python-format
 msgid "The credits on this page are from the <a href=\"%(start_page_url)s\">Send money to a prisoner</a> service."
 msgstr "Mae'r credydau sydd ar y dudalen hon o'r <a href=\"%(start_page_url)s\">gwasanaeth</a> Anfon arian at garcharor."
 
-#: templates/cashbook/new_credits.html:230
+#: templates/cashbook/new_credits.html:232
 msgid "Use this page to credit to NOMIS automatically, you no longer need to manually enter these credits."
 msgstr "Defnyddiwch y dudalen hon i anfon credydau i NOMIS yn awtomatig, nid oes rhaid i chi bellach fewnbynnu'r credydau hyn â llaw. "
 
-#: templates/cashbook/new_credits.html:232
+#: templates/cashbook/new_credits.html:234
 msgid "All credits are from known senders and should be credited - if there is any concern or suspicion about a credit, it should be placed on hold after crediting and passed to security."
 msgstr "Mae'r holl gredydau gan anfonwyr hysbys a dylid eu prosesu - os oes yna unrhyw bryder neu amheuaeth ynghylch credyd, dylid ei drosglwyddo i'r staff diogelwch. "
 
-#: templates/cashbook/new_credits.html:234
+#: templates/cashbook/new_credits.html:236
 msgid "How to credit"
 msgstr "Sut i gredydu"
 
-#: templates/cashbook/new_credits.html:236
+#: templates/cashbook/new_credits.html:238
 msgid "Review all credits for suspicious activity"
 msgstr "Adolygu'r holl gredydau am weithgarwch amheus "
 
-#: templates/cashbook/new_credits.html:237
+#: templates/cashbook/new_credits.html:239
 msgid "Tick all credits"
 msgstr "Ticiwch yr holl gredydau"
 
-#: templates/cashbook/new_credits.html:238
+#: templates/cashbook/new_credits.html:240
 msgid "Click the green ‘Credit to NOMIS’ button"
 msgstr "Cliciwch y botwm gwyrdd 'Anfon i NOMIS' "
 
-#: templates/cashbook/new_credits.html:239
+#: templates/cashbook/new_credits.html:241
 msgid "Place any suspicious credits on hold in NOMIS"
 msgstr "Dal unrhyw credydau amheus yn ôl yn NOMIS "
 
-#: templates/cashbook/new_credits.html:241
+#: templates/cashbook/new_credits.html:243
 msgid "There is no longer any need to print records."
 msgstr "Erbyn hyn, nid oes angen argraffu cofnodion "
 
-#: templates/cashbook/new_credits.html:331
+#: templates/cashbook/new_credits.html:333
 #, python-format
 msgid "Credit £%(amount)s to %(prisoner_name)s"
 msgstr ""
 
-#: templates/cashbook/new_credits.html:366
+#: templates/cashbook/new_credits.html:368
 msgid "Thank you"
 msgstr "Diolch yn fawr"
 
-#: templates/cashbook/new_credits.html:367
+#: templates/cashbook/new_credits.html:369
 msgid "All credits have been processed"
 msgstr "Mae'r holl gredydau wedi cael eu prosesu "
 
@@ -1334,27 +1338,27 @@ msgstr "Nodwch ddyddiadau'r credydau yr ydych eisiau dod o hyd iddynt. "
 msgid "Filter by"
 msgstr "Hidlo yn ôl"
 
-#: templates/cashbook/processed_credits.html:54
+#: templates/cashbook/processed_credits.html:55
 msgid "Date credited"
 msgstr "Dyddiad cafodd ei gredydu "
 
-#: templates/cashbook/processed_credits.html:55
+#: templates/cashbook/processed_credits.html:56
 msgid "Number of credits"
 msgstr "Nifer o gredydau"
 
-#: templates/cashbook/processed_credits.html:57
+#: templates/cashbook/processed_credits.html:58
 msgid "Credited by"
 msgstr "Wedi cael ei gredydu gan "
 
-#: templates/cashbook/processed_credits.html:59
+#: templates/cashbook/processed_credits.html:60
 msgid "Security notes"
 msgstr "Nodiadau diogelwch"
 
-#: templates/cashbook/processed_credits.html:61
+#: templates/cashbook/processed_credits.html:62
 msgid "Options"
 msgstr "Opsiynau"
 
-#: templates/cashbook/processed_credits.html:98
+#: templates/cashbook/processed_credits.html:99
 #, python-format
 msgid "%(count)s note"
 msgid_plural "%(count)s notes"
@@ -1363,12 +1367,12 @@ msgstr[1] "%(count)s nodiadau"
 msgstr[2] "%(count)s nodiadau"
 msgstr[3] "%(count)s nodiadau"
 
-#: templates/cashbook/processed_credits.html:105
+#: templates/cashbook/processed_credits.html:106
 msgid "No"
 msgstr "Na"
 
-#: templates/cashbook/processed_credits.html:118
-#: templates/cashbook/processed_credits_detail.html:67
+#: templates/cashbook/processed_credits.html:119
+#: templates/cashbook/processed_credits_detail.html:68
 msgid "No credits"
 msgstr "Dim credydau"
 

@@ -129,9 +129,9 @@ def truncate_user_list(terms):
     elif len(terms) == 1:
         return terms[0]
     elif len(terms) == 2:
-        return _('{name1} and {name2}').format(name1=terms[0], name2=terms[1])
+        return _('%(name1)s and %(name2)s') % {'name1': terms[0], 'name2': terms[1]}
     else:
-        return _('{name} and {number} others').format(name=terms[0], number=len(terms) - 1)
+        return _('%(name)s and %(number)d others') % {'name': terms[0], 'number': len(terms) - 1}
 
 
 @register.filter
