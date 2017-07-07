@@ -116,34 +116,34 @@
             </div>
           </td>
           <td class="mtp-manual-action print-hidden" style="text-align: center;">
-            <button type="submit" name="submit_manual_{{ credit_pk }}" value="submit"  class="button" data-credit-id="{{ credit_pk }}">{% trans 'Done' %}</button>
+            <button type="submit" name="submit_manual_{{ credit_pk }}" value="submit" class="button" data-credit-id="{{ credit_pk }}">{% trans 'Done' %}</button>
             <div id="manual-confirm-dialog-{{credit_pk}}"
                class="Dialog"
                style="display: none"
                data-hide-close="true"
                data-disable-backdrop-close="true">
               <div class="Dialog-inner">
-                <h2 class="heading-medium">{% trans 'Have you entered this credit into NOMIS?' %}</h2>
-                <div class="mtp-dialog-info-table">
-                  <table>
+                <table class="mtp-dialog-info-table">
+                  <caption class="heading-medium">{% trans 'Have you entered this credit into NOMIS?' %}</caption>
+                  <tbody>
                     <tr>
-                      <td>{% trans 'Date sent:' %}</td>
-                      <td><strong>{{ credit.received_at.date|date:'d/m/Y' }}</strong></td>
+                      <th>{% trans 'Date sent:' %}</th>
+                      <td>{{ credit.received_at.date|date:'d/m/Y' }}</td>
                     </tr>
                     <tr>
-                      <td>{% trans 'Prisoner:' %}</td>
-                      <td><strong>{{ credit.prisoner_number }} {{ credit.prisoner_name }}</strong></td>
+                      <th>{% trans 'Prisoner:' %}</th>
+                      <td>{{ credit.prisoner_number }} {{ credit.prisoner_name }}</td>
                     </tr>
                     <tr>
-                      <td>{% trans 'Amount:' %}</td>
-                      <td><strong>£{{ credit.amount|currency }}</strong></td>
+                      <th>{% trans 'Amount:' %}</th>
+                      <td>£{{ credit.amount|currency }}</td>
                     </tr>
                     <tr>
-                      <td>{% trans 'Sender:' %}</td>
-                      <td><strong>{{ credit.sender_name }}</strong></td>
+                      <th>{% trans 'Sender:' %}</th>
+                      <td>{{ credit.sender_name }}</td>
                     </tr>
-                  </table>
-                </div>
+                  </tbody>
+                </table>
                 <button type="submit"
                         name="submit_manual_{{credit_pk}}"
                         class="button"

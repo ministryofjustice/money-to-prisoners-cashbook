@@ -267,16 +267,17 @@
     }
 
     .mtp-dialog-info-table {
-      margin-bottom: 1em;
+      width: 75%;
+      margin: 0 auto 1em;
 
-      table {
-        width: 75%;
-        margin: 0 auto;
+      tbody {
         border-bottom: none;
+      }
 
-        td {
-          padding: 0.35em;
-        }
+      th, td {
+        border: none;
+        padding: 0.35em;
+        font-weight: bold;
       }
     }
   }
