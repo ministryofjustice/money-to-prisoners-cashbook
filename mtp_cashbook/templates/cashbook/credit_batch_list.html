@@ -83,7 +83,7 @@
       <div class="mtp-batch">
         <div class="print-box">
           <p>
-            {% trans "Remember to confirm all credits as processed in the digital cashbook." %}
+            {% trans 'Remember to confirm all credits as processed in the digital cashbook.' %}
           </p>
         </div>
 
@@ -150,7 +150,7 @@
                       {% if days == 0 %}
                         {% trans 'Today' %}
                       {% else %}
-                        {% blocktrans count days=days trimmed %}
+                        {% blocktrans trimmed count days=days %}
                           {{ days }} day ago
                         {% plural %}
                           {{ days }} days ago
@@ -208,15 +208,15 @@
 
       </div>
     {% else %}
-      <p>{% trans "There aren’t any credits available" %}</p>
+      <p>{% trans 'There aren’t any credits available' %}</p>
     {% endif %}
 
     <div class="print-only print-reminder">
-      <strong>{% trans "Confirm all credits processed" %}</strong>
+      <strong>{% trans 'Confirm all credits processed' %}</strong>
       <div class="print-only print-checkbox"></div>
       <div class="print-box">
         <p>
-          {% trans "Remember to confirm all credits as processed in the digital cashbook." %}
+          {% trans 'Remember to confirm all credits as processed in the digital cashbook.' %}
         </p>
       </div>
     </div>

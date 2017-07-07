@@ -18,13 +18,13 @@
 
   <div class="print-only">
     <h2 class="heading-small">
-      {% trans "CONFIDENTIAL: dispose of securely" %}
+      {% trans 'CONFIDENTIAL: dispose of securely' %}
     </h2>
   </div>
 
   {% if credited_credits %}
     <div class="mtp-crediting-result mtp-credited-credits print-hidden">
-      {% blocktrans count credited_credits=credited_credits trimmed %}
+      {% blocktrans trimmed count credited_credits=credited_credits %}
         {{ credited_credits }} credit sent to NOMIS
       {% plural %}
         {{ credited_credits }} credits sent to NOMIS
@@ -35,7 +35,7 @@
 
   {% if credited_manual_credits %}
     <div class="mtp-crediting-result mtp-credited-credits print-hidden">
-      {% blocktrans count credited_manual_credits=credited_manual_credits trimmed %}
+      {% blocktrans trimmed count credited_manual_credits=credited_manual_credits %}
         {{ credited_manual_credits }} credit manually input by you into NOMIS
       {% plural %}
         {{ credited_manual_credits }} credits manually input by you into NOMIS
@@ -46,7 +46,7 @@
 
   {% if failed_credits %}
     <div class="mtp-crediting-result mtp-failed-credits print-hidden">
-      {% blocktrans count failed_credits=failed_credits trimmed %}
+      {% blocktrans trimmed count failed_credits=failed_credits %}
         {{ failed_credits }} credit not processed due to technical error, try again soon
       {% plural %}
         {{ failed_credits }} credits not processed due to technical error, try again soon
@@ -78,7 +78,7 @@
 
       {% if owned_manual_credits %}
         <div class="mtp-crediting-result mtp-manual-credits print-hidden">
-          {% blocktrans count manual_credits=owned_manual_credits trimmed %}
+          {% blocktrans trimmed count manual_credits=owned_manual_credits %}
             {{ manual_credits }} credit needs your manual input in NOMIS
           {% plural %}
             {{ manual_credits }} credits need your manual input in NOMIS
@@ -110,13 +110,13 @@
       {% if unowned_manual_credits %}
         <div class="print-hidden"><p>
           {% if unowned_oldest_date and unowned_oldest_date|dayssince > 0 %}
-            {% blocktrans with owner=other_owners.0 count owners=other_owners|length trimmed %}
+            {% blocktrans trimmed with owner=other_owners.0 count owners=other_owners|length %}
               {{ owner }} started to process these credits but may not have finished
             {% plural %}
               Your colleagues started to process these credits but may not have finished
             {% endblocktrans %}
           {% else %}
-            {% blocktrans with owner=other_owners.0 count owners=other_owners|length trimmed %}
+            {% blocktrans trimmed with owner=other_owners.0 count owners=other_owners|length %}
               {{ owner }} should be processing these credits into NOMIS manually
             {% plural %}
               Your colleagues should be processing these credits into NOMIS manually
@@ -131,7 +131,7 @@
         </p>
         <div id="mtp-finish-manual" class="mtp-disclosure__contents panel panel-border-narrow">
           <p>
-            {% blocktrans with owner=other_owners.0 count owners=other_owners|length trimmed %}
+            {% blocktrans trimmed with owner=other_owners.0 count owners=other_owners|length %}
               Your colleague, {{ owner }}, started processing these credits yesterday.
             {% plural %}
               Some of your colleagues started processing these credits yesterday.
@@ -139,14 +139,14 @@
             {% trans 'To make sure they were processed successfully, please check NOMIS.' %}
           </p>
           <p>
-            {% blocktrans with owner=other_owners.0 count owners=other_owners|length trimmed %}
+            {% blocktrans trimmed with owner=other_owners.0 count owners=other_owners|length %}
               If they have been entered correctly, just click ‘Done’ and tell {{ owner }} you’ve finished processing the credits.
             {% plural %}
               If they have been entered correctly, just click ‘Done’ and tell your colleagues you’ve finished processing the credits.
             {% endblocktrans %}
           </p>
           <p>
-            {% blocktrans with owner=other_owners.0 count owners=other_owners|length trimmed %}
+            {% blocktrans trimmed with owner=other_owners.0 count owners=other_owners|length %}
               If they have not been entered, please manually enter these credits youself, click ‘Done’ and tell {{ owner }} you’ve processed these credits for them.
             {% plural %}
               If they have not been entered, please manually enter these credits youself, click ‘Done’ and tell your colleagues you’ve processed these credits for them.
@@ -175,7 +175,7 @@
           <div class="grid-row">
             <div class="column-two-thirds">
               <p class="print-hidden">
-                {% blocktrans count new_credits=new_credits trimmed %}
+                {% blocktrans trimmed count new_credits=new_credits %}
                   <strong>{{ new_credits }}</strong> new credit.
                 {% plural %}
                   <strong>{{ new_credits }}</strong> new credits.
@@ -207,7 +207,7 @@
           </div>
         </div>
       {% else %}
-        <p>{% trans "No new credits received" %}</p>
+        <p>{% trans 'No new credits received' %}</p>
       {% endif %}
 
 
@@ -244,7 +244,7 @@
               <td class="mtp-all">
                 <div>
                   <input type="checkbox" id="select-all-header" class="Checkbox Checkbox--left js-SelectAll" data-name="{{ form.new.credits.html_name }}">
-                  <label data-analytics="event,select-all,header" for="select-all-header">{% trans "Select all" %}</label>
+                  <label data-analytics="event,select-all,header" for="select-all-header">{% trans 'Select all' %}</label>
                 </div>
               </td>
             </tr>
@@ -294,7 +294,7 @@
                     {% if days == 0 %}
                       {% trans 'Today' %}
                     {% else %}
-                      {% blocktrans count days=days trimmed %}
+                      {% blocktrans trimmed count days=days %}
                         {{ days }} day ago
                       {% plural %}
                         {{ days }} days ago
@@ -353,11 +353,13 @@
               <td colspan="{% if pre_approval_required%}5{% else %}4{% endif %}" class="cell--compact"></td>
               <td class="mtp-all">
                 <input type="checkbox" id="select-all-footer" class="Checkbox Checkbox--left js-SelectAll" data-name="{{ form.new.credits.html_name }}">
-                <label data-analytics="event,select-all,footer" for="select-all-footer">{% trans "Select all" %}</label>
+                <label data-analytics="event,select-all,footer" for="select-all-footer">{% trans 'Select all' %}</label>
               </td>
             </tr>
           </tfoot>
+
         {% else %}
+
           <tbody>
             <tr>
               <td class="mtp-no-credits" colspan="{% if pre_approval_required%}6{% else %}5{% endif %}">
@@ -366,6 +368,7 @@
               </td>
             </tr>
           </tbody>
+
         {% endif %}
       </table>
 
