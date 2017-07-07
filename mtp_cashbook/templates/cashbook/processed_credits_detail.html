@@ -16,6 +16,7 @@
       {% plural %}
         {{ count }} credits processed on {{ date }}
       {% endblocktrans %}
+      <span class="heading-secondary">{% trans 'Total:' %} £{{ total|currency }}</span>
     </h2>
   </header>
 
@@ -31,10 +32,10 @@
       {% include 'mtp_common/forms/field.html' with field=form.end value=form.end.value|date:'d/m/Y'|default:form.end.value|default_if_none:'' only %}
     </div>
     <div class="mtp-processed-credits-search__field">
-      {% include 'mtp_common/forms/field.html' with field=form.names only %}
+      {% include 'mtp_common/forms/field.html' with field=form.names value=form.names.value|default_if_none:'' only %}
     </div>
     <div class="mtp-processed-credits-search__field">
-      {% include 'mtp_common/forms/field.html' with field=form.prisoner_number only %}
+      {% include 'mtp_common/forms/field.html' with field=form.prisoner_number value=form.prisoner_number.value|default_if_none:'' only %}
     </div>
     <div class="form-group">
       {# always forces a search to start on page 1 #}
