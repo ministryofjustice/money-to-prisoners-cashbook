@@ -327,7 +327,11 @@
                     {% if credit_pk|to_string in form.new.credits.value %}checked{% endif %}
                     class="js-SelectionCount-item Checkbox"
                     data-amount="{{ credit.amount|currency }}">
-                  <label for="check-{{ credit.id }}">{% trans 'Credited' %}</label>
+                  <label for="check-{{ credit.id }}">
+                    {% blocktrans trimmed with amount=credit.amount|currency prisoner_name=credit.prisoner_name %}
+                      Credit £{{ amount }} to {{ prisoner_name }}
+                    {% endblocktrans %}
+                  </label>
                 </td>
               </tr>
               {% if credit.comments %}
