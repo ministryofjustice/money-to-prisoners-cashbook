@@ -51,6 +51,7 @@
       <p><a href="#print-dialog" class="js-Print print-hidden">{% trans 'Print this page of credits' %}</a></p>
 
       <table>
+        <caption class="visually-hidden">{{ view.title }}</caption>
         <thead>
           {% include 'cashbook/includes/credits-header-row.html' with form=form include_status=True pre_approval_required=pre_approval_required only %}
         </thead>

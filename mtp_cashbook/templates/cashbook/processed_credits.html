@@ -48,8 +48,9 @@
     {% if object_list %}
 
       <table>
-        <thead>
+        <caption class="visually-hidden">{{ view.title }}</caption>
 
+        <thead>
           <tr>
             <th>{% trans 'Date credited' %}</th>
             <th>{% trans 'Number of credits' %}</th>

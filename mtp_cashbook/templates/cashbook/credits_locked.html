@@ -14,10 +14,10 @@
 
   {% include 'mtp_common/includes/message_box.html' %}
 
-  <form method="post" action="" class="mtp-locked">
-    {% csrf_token %}
+  {% if object_list %}
+    <form method="post" action="" class="mtp-locked">
+      {% csrf_token %}
 
-    {% if object_list %}
       <p>
         {% trans 'Here you can see who is currently processing the credits in your team.' %}
         {% trans 'You can return these to new credits if you need to take over their work.' %}
@@ -45,6 +45,8 @@
         {% include 'cashbook/includes/locked_buttons.html' %}
 
         <table>
+          <caption class="visually-hidden">{{ view.title }}</caption>
+
           <thead>
             {% include 'cashbook/includes/table_actions.html' with location='header' field_name=form.credits.html_name print=False %}
 
@@ -86,9 +88,12 @@
         {% include 'cashbook/includes/locked_buttons.html' %}
 
       </div>
+    </form>
 
-    {% else %}
-      <p>{% trans 'No credits in progress' %}</p>
-    {% endif %}
-  </form>
+  {% else %}
+
+    <p><strong role="alert">{% trans 'No credits in progress' %}</strong></p>
+
+  {% endif %}
+
 {% endblock %}

@@ -57,6 +57,8 @@
       {% if new_credit_list %}
         <h2 class="heading-medium">{% trans 'New credits' %}</h2>
         <table>
+          <caption class="visually-hidden">{% trans 'New credits' %}</caption>
+
           <thead>
             {% include 'cashbook/includes/credits-header-row.html' with form=form include_status=False only %}
           </thead>
@@ -72,6 +74,8 @@
       {% if old_credit_list %}
         <h2 class="heading-medium">{% trans 'Processed credits' %}</h2>
         <table>
+          <caption class="visually-hidden">{% trans 'Processed credits' %}</caption>
+
           <thead>
             {% include 'cashbook/includes/credits-header-row.html' with form=form include_status=True pre_approval_required=pre_approval_required only %}
           </thead>

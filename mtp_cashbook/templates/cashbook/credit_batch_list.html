@@ -125,6 +125,8 @@
         </h2>
 
         <table>
+          <caption class="visually-hidden">{% trans 'To be entered into NOMIS by you' %}</caption>
+
           <thead>
             {% include 'cashbook/includes/batch_table_actions.html' with location='header' field_name=form.credits.html_name batch_size=batch_size %}
 
