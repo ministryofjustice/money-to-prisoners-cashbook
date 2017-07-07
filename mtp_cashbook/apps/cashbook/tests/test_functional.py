@@ -148,7 +148,7 @@ class NewCreditsPageTests(CashbookTestCase):
         self.select_first_credit()
         self.click_on_text('Confirm entered in NOMIS')
         self.click_on_text('No, continue processing')
-        self.assertEqual('New credits - Digital cashbook', self.driver.title)
+        self.assertEqual('New credits – Digital cashbook', self.driver.title)
 
     def test_printing(self):
         self.click_on_text('Print these credits')

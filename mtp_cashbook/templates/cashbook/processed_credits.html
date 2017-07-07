@@ -4,6 +4,8 @@
 {% load mtp_common %}
 {% load credits %}
 
+{% block page_title %}{{ view.title }} – {{ block.super }}{% endblock %}
+
 {% block body_classes %}{{ block.super }} mtp-credits{% endblock %}
 
 {% block page_content %}

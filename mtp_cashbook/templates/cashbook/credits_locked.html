@@ -3,6 +3,8 @@
 {% load currency %}
 {% load mtp_common %}
 
+{% block page_title %}{{ view.title }} – {{ block.super }}{% endblock %}
+
 {% block inner_content %}
 
   <header>
