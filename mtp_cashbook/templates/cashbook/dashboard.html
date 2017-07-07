@@ -42,7 +42,7 @@
     {% if locked_credits %}
       <div class="mtp-status-box">
         <div class="mtp-status-box__title">
-          {% blocktrans with names=in_progress_users|truncate_user_list count counter=in_progress_users|length trimmed %}
+          {% blocktrans trimmed with names=in_progress_users|truncate_user_list count counter=in_progress_users|length %}
             {{ names }} is entering credits into NOMIS
           {% plural %}
             {{ names }} are entering credits into NOMIS

@@ -2,13 +2,13 @@
 <tr class="print-hidden">
   <td colspan="{% if pre_approval_required%}5{% else %}4{% endif %}" class="cell--compact">
     {% if print != False %}
-      <a href="#print-dialog" class="js-Dialog">{% trans "Print these credits" %}</a>
+      <a href="#print-dialog" class="js-Dialog">{% trans 'Print these credits' %}</a>
     {% endif %}
   </td>
   <td class="mtp-all">
     {% if select_all != False %}
       <input type="checkbox" id="select-all-{{ location }}" class="Checkbox Checkbox--left js-SelectAll" data-name="{{ field_name }}">
-      <label data-analytics="event,select-all,{{ location }}" for="select-all-{{ location }}">{% trans "Select all" %}</label>
+      <label data-analytics="event,select-all,{{ location }}" for="select-all-{{ location }}">{% trans 'Select all' %}</label>
     {% endif %}
   </td>
 </tr>

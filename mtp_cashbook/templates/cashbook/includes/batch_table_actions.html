@@ -6,7 +6,7 @@
     <td colspan="4">
   {% endif %}
     {% if print != False %}
-      <a href="#print-dialog" class="js-Dialog">{% trans "Print these credits" %}</a>
+      <a href="#print-dialog" class="js-Dialog">{% trans 'Print these credits' %}</a>
     {% endif %}
     </td>
   <td class="mtp-all" colspan="1">
@@ -14,7 +14,7 @@
       <input type="checkbox" id="select-all-{{ location }}" class="Checkbox Checkbox--left js-SelectAll" data-name="{{ field_name }}">
       <label data-analytics="event,select-all,{{ location }}" for="select-all-{{ location }}">
         {% blocktrans trimmed %}
-        All {{ batch_size }}
+          All {{ batch_size }}
         {% endblocktrans %}
       </label>
     {% endif %}

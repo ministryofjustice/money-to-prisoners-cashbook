@@ -7,7 +7,7 @@
     <thead>
       <tr class="print-hidden">
         <td colspan="{% if pre_approval_required%}6{% else %}5{% endif %}" class="cell--compact">
-          <a href="#" class="js-Print" data-do-not-print=".mtp-new-credits-batch">{% trans "Print these credits" %}</a>
+          <a href="#" class="js-Print" data-do-not-print=".mtp-new-credits-batch">{% trans 'Print these credits' %}</a>
         </td>
       </tr>
       <tr>
@@ -32,7 +32,7 @@
               {% if days == 0 %}
                 {% trans 'Today' %}
               {% else %}
-                {% blocktrans count days=days trimmed %}
+                {% blocktrans trimmed count days=days %}
                   {{ days }} day ago
                 {% plural %}
                   {{ days }} days ago
@@ -78,28 +78,28 @@
               {% elif credit.set_manual_at %}
                 {% with days=credit.set_manual_at.date|dayssince %}
                   {% if days == 0 %}
-                    {% blocktrans with owner=credit.owner_name trimmed %}
+                    {% blocktrans trimmed with owner=credit.owner_name %}
                       {{ owner }} started processing this credit today:
                     {% endblocktrans %}
                   {% elif days == 1 %}
-                    {% blocktrans with owner=credit.owner_name trimmed %}
+                    {% blocktrans trimmed with owner=credit.owner_name %}
                       {{ owner }} started processing this credit yesterday:
                     {% endblocktrans %}
                   {% else %}
-                      {% blocktrans with owner=credit.owner_name processed=credit.set_manual_at.date|date:'d/m/Y' trimmed %}
+                      {% blocktrans trimmed with owner=credit.owner_name processed=credit.set_manual_at.date|date:'d/m/Y' %}
                         {{ owner }} started processing this credit {{ processed }}:
                       {% endblocktrans %}
                   {% endif %}
                 {% endwith %}
               {% else %}
-                {% blocktrans with owner=credit.owner_name trimmed %}
+                {% blocktrans trimmed with owner=credit.owner_name %}
                   {{ owner }} started processing this credit:
                 {% endblocktrans %}
               {% endif %}
               {% if credit.new_location.nomis_id == 'TRN' %}
                 {% trans 'Prisoner in transit' %}
               {% elif credit.new_location.nomis_id %}
-                {% blocktrans with new_prison=credit.new_location.name trimmed %}
+                {% blocktrans trimmed with new_prison=credit.new_location.name %}
                   Prisoner transferred to {{ new_prison }}
                 {% endblocktrans %}
               {% else %}

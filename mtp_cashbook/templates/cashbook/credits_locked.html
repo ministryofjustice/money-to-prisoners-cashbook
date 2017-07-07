@@ -47,11 +47,11 @@
             {% include "cashbook/includes/table_actions.html" with location='header' field_name=form.credits.html_name print=False %}
 
             <tr>
-              <th>{% trans "Staff name" %}</th>
-              <th class="mtp-right-align">{% trans "Credits" %}</th>
-              <th class="mtp-right-align">{% trans "Amount" %}</th>
-              <th>{% trans "Time in progress" %}</th>
-              <th>{% trans "Return these to new credits" %}</th>
+              <th>{% trans 'Staff name' %}</th>
+              <th class="mtp-right-align">{% trans 'Credits' %}</th>
+              <th class="mtp-right-align">{% trans 'Amount' %}</th>
+              <th>{% trans 'Time in progress' %}</th>
+              <th>{% trans 'Return these to new credits' %}</th>
             </tr>
           </thead>
 
@@ -70,7 +70,7 @@
                     id="check-{{ credit_group.owner }}"
                     class="Checkbox"
                     {% if credit_locked_ids in form.credits.value %}checked{% endif %}>
-                  <label for="check-{{ credit_group.owner }}">{% trans "Select" %}</label>
+                  <label for="check-{{ credit_group.owner }}">{% trans 'Select' %}</label>
                 </td>
               </tr>
             {% endfor %}
@@ -86,7 +86,7 @@
       </div>
 
     {% else %}
-      <p>{% trans "No credits in progress" %}</p>
+      <p>{% trans 'No credits in progress' %}</p>
     {% endif %}
   </form>
 {% endblock %}

@@ -11,7 +11,7 @@
           {% if days == 0 %}
             {% trans 'Today' %}
           {% else %}
-            {% blocktrans count days=days trimmed %}
+            {% blocktrans trimmed count days=days %}
               {{ days }} day ago
             {% plural %}
               {{ days }} days ago
