@@ -4,6 +4,14 @@
 
 <div class="mtp-batch mtp-manual-credits-batch">
   <table>
+    <caption class="visually-hidden">
+      {% blocktrans trimmed count manual_credits=manual_object_list|length %}
+        {{ manual_credits }} credit needs your manual input in NOMIS
+      {% plural %}
+        {{ manual_credits }} credits need your manual input in NOMIS
+      {% endblocktrans %}
+    </caption>
+
     <thead>
       <tr class="print-hidden">
         <td colspan="{% if pre_approval_required%}6{% else %}5{% endif %}" class="cell--compact">
