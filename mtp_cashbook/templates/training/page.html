@@ -3,6 +3,8 @@
 {% load mtp_common %}
 {% load training %}
 
+{% block page_title %}{{ view.training_title }} – {{ block.super }}{% endblock %}
+
 {% block inner_content %}
   <header>
     {% language_switch %}

@@ -5,7 +5,7 @@
 {% load credits %}
 {% load staticfiles %}
 
-{% block page_title %}{% trans 'New credits - Digital cashbook' %}{% endblock %}
+{% block page_title %}{% trans 'New credits' %} – {{ block.super }}{% endblock %}
 
 {% block body_classes %}{{ block.super }} mtp-credits{% endblock %}
 

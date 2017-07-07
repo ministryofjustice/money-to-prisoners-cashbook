@@ -468,6 +468,7 @@ class ProcessedCreditsListView(FormView):
 @method_decorator(login_required, name='dispatch')
 @method_decorator(expected_nomis_availability(True), name='dispatch')
 class ProcessedCreditsDetailView(ProcessedCreditsListView):
+    title = _('Processed credits')
     form_class = FilterProcessedCreditsDetailForm
     template_name = 'cashbook/processed_credits_detail.html'
     success_url = reverse_lazy('processed-credits-detail')
@@ -481,7 +482,7 @@ class ProcessedCreditsDetailView(ProcessedCreditsListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['total'] = sum([c['amount'] for c in context['object_list']])
+        context['total'] = sum(c['amount'] for c in context['object_list'])
         return context
 
 
