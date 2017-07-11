@@ -3,6 +3,7 @@
 {% load mtp_common %}
 
 {% block body_end %}
+  <script src="{% url 'js-i18n' %}?{{ APP_GIT_COMMIT_SHORT }}"></script>
   {{ block.super }}
   <!--[{{ request.resolver_match.url_name }}]-->
   {% sentry_js %}
