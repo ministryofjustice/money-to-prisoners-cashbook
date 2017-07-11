@@ -3,7 +3,9 @@ from django.conf.urls import include, url
 from django.conf.urls.i18n import i18n_patterns
 from django.http import HttpResponse
 from django.template.response import TemplateResponse
+from django.views.decorators.cache import cache_control
 from django.views.generic.base import RedirectView
+from django.views.i18n import JavaScriptCatalog
 
 from moj_irat.views import HealthcheckView, PingJsonView
 
@@ -12,6 +14,8 @@ urlpatterns = i18n_patterns(
     url(r'^', include('cashbook.urls')),
     url(r'^', include('feedback.urls')),
     url(r'^', include('mtp_common.user_admin.urls')),
+
+    url(r'^js-i18n.js$', cache_control(public=True, max_age=86400)(JavaScriptCatalog.as_view()), name='js-i18n'),
 
     url(r'^404.html$', lambda request: TemplateResponse(request, 'mtp_common/errors/404.html', status=404)),
     url(r'^500.html$', lambda request: TemplateResponse(request, 'mtp_common/errors/500.html', status=500)),
