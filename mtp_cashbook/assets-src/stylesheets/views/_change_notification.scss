@@ -17,17 +17,13 @@
 }
 
 .mtp-change-notification__dialog {
-  text-align: center;
-
-  div {
-    text-align: left;
-    width: 95%;
-    margin: 0 auto;
-    padding-top: 1em;
-    padding-bottom: 1em;
+  header {
+    text-align: center;
   }
 
-  + a.Dialog-close {
-    display: none;
+  .mtp-dialogue__contents {
+    width: 90%;
+    margin: 0 auto;
+    padding-top: 1em;
   }
 }

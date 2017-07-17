@@ -44,10 +44,10 @@
       </div>
     </div>
 
-    <div class="column-one-third" style="text-align:right">
+    <div class="column-one-third">
       {% if credits_returned %}
-        <p><a href="#print-dialog" class="js-Dialog">{% trans 'Print this page of credits' %}</a></p>
-        {% include 'cashbook/includes/nomis_print_dialog.html' %}
+        <p style="text-align:right"><a href="#print-dialog" class="print-hidden mtp-dialogue-trigger">{% trans 'Print this page of credits' %}</a></p>
+        {% include 'cashbook/includes/print_dialog.html' %}
       {% endif %}
     </div>
   </div>

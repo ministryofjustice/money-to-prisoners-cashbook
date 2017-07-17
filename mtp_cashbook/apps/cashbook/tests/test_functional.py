@@ -133,7 +133,8 @@ class NewCreditsPageTests(CashbookTestCase):
         self.select_first_credit()
         self.click_on_text('Confirm entered in NOMIS')
         self.assertIsNotNone(self.driver.find_element_by_xpath(
-            '//div[@class="Dialog-inner"]/p/strong[text()="Do you want to submit only the selected credits?"]'
+            '//div[contains(@class, "mtp-dialogue")]'
+            '/header[contains(text(), "Do you want to submit only the selected credits?")]'
         ))
 
     @silence_logger(name='mtp', level=logging.WARNING)
@@ -153,7 +154,8 @@ class NewCreditsPageTests(CashbookTestCase):
     def test_printing(self):
         self.click_on_text('Print these credits')
         self.assertIsNotNone(self.driver.find_element_by_xpath(
-            '//div[@class="Dialog-inner"]/h3[text()="Do you need to print?"]'
+            '//div[contains(@class, "mtp-dialogue")]'
+            '/header[contains(text(), "Do you need to print?")]'
         ))
 
     def test_help_popup(self):
