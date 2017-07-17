@@ -15,7 +15,6 @@ exports.ConfirmManual = {
   },
 
   bindEvents: function () {
-    this.$body.on('ConfirmManual.render', this.render);
     this.$form.on('click', ':submit', $.proxy(this.onSubmit, this));
   },
 
