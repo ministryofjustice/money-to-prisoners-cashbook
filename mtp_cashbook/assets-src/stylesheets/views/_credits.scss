@@ -386,39 +386,14 @@ ol.mtp-numbered-steps {
     padding-left: 30px;
     margin-bottom: 1em;
   }
+}
 
-  li.first {
-    background: file-url('icon-steps/icon-step-1.png') no-repeat scroll 0 0;
-
-    @include device-pixel-ratio {
-      background-image: file-url('icon-steps/icon-step-1-2x.png');
-      background-size: 23px 23px;
-    }
-  }
-
-  li.second {
-    background: file-url('icon-steps/icon-step-2.png') no-repeat scroll 0 0;
+@for $step from 1 through 4 {
+  .mtp-numbered-step-#{$step} {
+    background: file-url('icon-steps/icon-step-#{$step}.png') no-repeat scroll 0 0;
 
     @include device-pixel-ratio {
-      background-image: file-url('icon-steps/icon-step-2-2x.png');
-      background-size: 23px 23px;
-    }
-  }
-
-  li.third {
-    background: file-url('icon-steps/icon-step-3.png') no-repeat scroll 0 0;
-
-    @include device-pixel-ratio {
-      background-image: file-url('icon-steps/icon-step-3-2x.png');
-      background-size: 23px 23px;
-    }
-  }
-
-  li.fourth {
-    background: file-url('icon-steps/icon-step-4.png') no-repeat scroll 0 0;
-
-    @include device-pixel-ratio {
-      background-image: file-url('icon-steps/icon-step-4-2x.png');
+      background-image: file-url('icon-steps/icon-step-#{$step}-2x.png');
       background-size: 23px 23px;
     }
   }
