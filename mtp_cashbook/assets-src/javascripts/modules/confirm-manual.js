@@ -30,14 +30,9 @@ exports.ConfirmManual = {
       return;
     }
 
-    var creditID = $el.data('credit-id');
-
     e.preventDefault();
-    this.$body.trigger({
-      type: 'Dialog.render',
-      target: e.target,
-      targetSelector: '#manual-confirm-dialog-' + creditID
-    });
-    return;
+
+    var creditID = $el.data('credit-id');
+    $('#manual-confirm-dialog-' + creditID).trigger('dialogue:open');
   }
 };

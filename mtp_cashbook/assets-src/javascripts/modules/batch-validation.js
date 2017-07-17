@@ -69,13 +69,8 @@ exports.BatchValidation = {
     if (!checkedValid && numChecked > 0) {
       // Partial: ask for confirmation
       e.preventDefault();
-      this.$body.trigger({
-        type: 'Dialog.render',
-        target: e.target,
-        targetSelector: '#incomplete-batch-dialog'
-      });
+      $('#incomplete-batch-dialog').trigger('dialogue:open');
       analytics.Analytics.send('pageview', '/batch/-dialog_open/');
-      return;
     }
   }
 };

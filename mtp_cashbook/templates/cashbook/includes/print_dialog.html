@@ -1,20 +1,23 @@
 {% load i18n %}
-<div id="print-dialog" class="Dialog" style="display: none">
-  <div class="Dialog-inner">
-    <h3 class="heading-medium">{% trans 'Do you need to print?' %}</h3>
-    <p>{% trans 'Did you know:' %}</p>
-    <ul class="list list-bullet">
-      <li>{% trans 'you can see the digital cashbook and NOMIS screens at the same time by changing the size of your windows' %}</li>
-      <li>{% trans 'you can switch between windows using the ALT + TAB keys' %}</li>
-      <li>{% trans 'you can copy and paste the prisoner number from one window to the other' %}</li>
-    </ul>
+{% load mtp_common %}
 
-    <p>
-      <input type="checkbox" class="Checkbox--left" name="remove-print-prompt" id="remove-print-prompt" value="1">
-      <label for="remove-print-prompt">{% trans 'Don’t show this message again' %}</label>
-    </p>
+{% dialoguebox title=_('Do you need to print?') html_id='print-dialog' %}
+  <p>{% trans 'Did you know:' %}</p>
+  <ul class="list list-bullet">
+    <li>{% trans 'you can see the digital cashbook and NOMIS screens at the same time by changing the size of your windows' %}</li>
+    <li>{% trans 'you can switch between windows using the ALT + TAB keys' %}</li>
+    <li>{% trans 'you can copy and paste the prisoner number from one window to the other' %}</li>
+  </ul>
 
-    <button type="button" class="button js-Print">{% trans 'Print' %}</button>
-    <button type="button" class="button js-Dialog-close">{% trans 'Cancel' %}</button>
+  <div class="form-group ">
+    <div class="multiple-choice">
+      <input id="remove-print-prompt" class="checkbox" name="remove-print-prompt" value="1" type="checkbox">
+      <label for="remove-print-prompt" class="form-label">
+        {% trans 'Don’t show this message again' %}
+      </label>
+    </div>
   </div>
-</div>
+
+  <button type="button" class="button js-Print">{% trans 'Print' %}</button>
+  <button type="button" class="button button-secondary {{ dialogue_close_class }}">{% trans 'Cancel' %}</button>
+{% enddialoguebox %}

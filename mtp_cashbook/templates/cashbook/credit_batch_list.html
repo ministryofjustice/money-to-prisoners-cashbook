@@ -223,22 +223,14 @@
       </div>
     </div>
 
-
-    <div id="incomplete-batch-dialog"
-         class="Dialog"
-         style="display: none"
-         data-hide-close="true"
-         data-disable-backdrop-close="true">
-      <div class="Dialog-inner">
-        <p><strong>{% trans 'Do you want to submit only the selected credits?' %}</strong></p>
-        <button type="submit"
-                class="button"
-                value="override">{% trans 'Yes' %}</button>
-        <button type="button"
-                class="button button-secondary js-Dialog-close"
-                data-analytics="pageview,/batch/-dialog_close/">{% trans 'No, continue processing' %}</button>
-      </div>
-    </div>
+    {% dialoguebox html_id='incomplete-batch-dialog' title=_('Do you want to submit only the selected credits?') %}
+      <button type="submit"
+              class="button"
+              value="override">{% trans 'Yes' %}</button>
+      <button type="button"
+              class="button button-secondary {{ dialogue_close_class }}"
+              data-analytics="pageview,/batch/-dialog_close/">{% trans 'No, continue processing' %}</button>
+    {% enddialoguebox %}
   </form>
 
   {% include 'cashbook/includes/print_dialog.html' %}

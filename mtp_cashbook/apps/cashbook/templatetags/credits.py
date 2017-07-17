@@ -7,6 +7,7 @@ from django import template
 from django.utils import timezone
 from django.utils.dateparse import parse_datetime, parse_date
 from django.utils.http import urlencode
+from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
 register = template.Library()
@@ -132,6 +133,11 @@ def truncate_user_list(terms):
         return _('%(name1)s and %(name2)s') % {'name1': terms[0], 'name2': terms[1]}
     else:
         return _('%(name)s and %(number)d others') % {'name': terms[0], 'number': len(terms) - 1}
+
+
+@register.filter
+def prefixed_slug(value, prefix='item-'):
+    return '%s%s' % (prefix, slugify(value))
 
 
 @register.filter

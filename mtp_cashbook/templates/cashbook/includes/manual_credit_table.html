@@ -1,6 +1,7 @@
 {% load i18n %}
 {% load currency %}
 {% load credits %}
+{% load mtp_common %}
 
 <div class="mtp-batch mtp-manual-credits-batch">
   <table>
@@ -117,41 +118,35 @@
           </td>
           <td class="mtp-manual-action print-hidden" style="text-align: center;">
             <button type="submit" name="submit_manual_{{ credit_pk }}" value="submit" class="button" data-credit-id="{{ credit_pk }}">{% trans 'Done' %}</button>
-            <div id="manual-confirm-dialog-{{credit_pk}}"
-               class="Dialog"
-               style="display: none"
-               data-hide-close="true"
-               data-disable-backdrop-close="true">
-              <div class="Dialog-inner">
-                <table class="mtp-dialog-info-table">
-                  <caption class="heading-medium">{% trans 'Have you entered this credit into NOMIS?' %}</caption>
-                  <tbody>
-                    <tr>
-                      <th>{% trans 'Date sent:' %}</th>
-                      <td>{{ credit.received_at.date|date:'d/m/Y' }}</td>
-                    </tr>
-                    <tr>
-                      <th>{% trans 'Prisoner:' %}</th>
-                      <td>{{ credit.prisoner_number }} {{ credit.prisoner_name }}</td>
-                    </tr>
-                    <tr>
-                      <th>{% trans 'Amount:' %}</th>
-                      <td>£{{ credit.amount|currency }}</td>
-                    </tr>
-                    <tr>
-                      <th>{% trans 'Sender:' %}</th>
-                      <td>{{ credit.sender_name }}</td>
-                    </tr>
-                  </tbody>
-                </table>
-                <button type="submit"
-                        name="submit_manual_{{credit_pk}}"
-                        class="button"
-                        value="override">{% trans 'Yes' %}</button>
-                <br/><br/>
-                <a href="#" class="js-Dialog-close">{% trans 'No, I’ll do that now' %}</a>
-              </div>
-            </div>
+            {% dialoguebox html_id=credit_pk|prefixed_slug:'manual-confirm-dialog-' %}
+              <table class="mtp-dialog-info-table">
+                <caption class="heading-medium">{% trans 'Have you entered this credit into NOMIS?' %}</caption>
+                <tbody>
+                  <tr>
+                    <th>{% trans 'Date sent:' %}</th>
+                    <td>{{ credit.received_at.date|date:'d/m/Y' }}</td>
+                  </tr>
+                  <tr>
+                    <th>{% trans 'Prisoner:' %}</th>
+                    <td>{{ credit.prisoner_number }} {{ credit.prisoner_name }}</td>
+                  </tr>
+                  <tr>
+                    <th>{% trans 'Amount:' %}</th>
+                    <td>£{{ credit.amount|currency }}</td>
+                  </tr>
+                  <tr>
+                    <th>{% trans 'Sender:' %}</th>
+                    <td>{{ credit.sender_name }}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <button type="submit"
+                      name="submit_manual_{{ credit_pk }}"
+                      class="button"
+                      value="override">{% trans 'Yes' %}</button>
+              <br/><br/>
+              <a href="#" class="{{ dialogue_close_class }}" role="button">{% trans 'No, I’ll do that now' %}</a>
+            {% enddialoguebox %}
           </td>
         </tr>
       {% endfor %}
