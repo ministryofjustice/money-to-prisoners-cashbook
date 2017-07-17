@@ -19,7 +19,6 @@ exports.BatchValidation = {
   },
 
   bindEvents: function () {
-    this.$body.on('BatchValidation.render', this.render);
     this.$form.on('click', ':submit', $.proxy(this.onSubmit, this));
   },
 
