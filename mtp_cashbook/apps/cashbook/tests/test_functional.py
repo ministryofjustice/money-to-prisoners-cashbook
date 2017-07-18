@@ -50,6 +50,9 @@ class CashbookTestCase(FunctionalTestCase):
     def assertShowingView(self, view_name):  # noqa
         self.assertInSource('<!--[%s]-->' % view_name)
 
+    def click_on_link(self, text):
+        self.driver.find_element_by_link_text(text).click()
+
 
 class LoginTests(CashbookTestCase):
     """
@@ -108,10 +111,10 @@ class InProgressPageTests(CashbookTestCase):
         help_box_heading = self.driver.find_element_by_css_selector('.mtp-disclosure')
         self.assertCssProperty('.mtp-disclosure__contents', 'display', 'none')
         self.assertEqual('false', help_box_heading.get_attribute('aria-expanded'))
-        self.click_on_text('Help')
+        self.click_on_link('Help')
         self.assertCssProperty('.mtp-disclosure__contents', 'display', 'block')
         self.assertEqual('true', help_box_heading.get_attribute('aria-expanded'))
-        self.click_on_text('Help')
+        self.click_on_link('Help')
         self.assertCssProperty('.mtp-disclosure__contents', 'display', 'none')
         self.assertEqual('false', help_box_heading.get_attribute('aria-expanded'))
 
@@ -162,10 +165,10 @@ class NewCreditsPageTests(CashbookTestCase):
         help_box_heading = self.driver.find_element_by_css_selector('.mtp-disclosure')
         self.assertCssProperty('.mtp-disclosure__contents', 'display', 'none')
         self.assertEqual('false', help_box_heading.get_attribute('aria-expanded'))
-        self.click_on_text('How to use this with NOMIS')
+        self.click_on_link('How to use this with NOMIS')
         self.assertCssProperty('.mtp-disclosure__contents', 'display', 'block')
         self.assertEqual('true', help_box_heading.get_attribute('aria-expanded'))
-        self.click_on_text('How to use this with NOMIS')
+        self.click_on_link('How to use this with NOMIS')
         self.assertCssProperty('.mtp-disclosure__contents', 'display', 'none')
         self.assertEqual('false', help_box_heading.get_attribute('aria-expanded'))
 
@@ -363,10 +366,10 @@ class HistoryPageTests(CashbookTestCase):
         help_box_heading = self.driver.find_element_by_css_selector('.mtp-disclosure')
         self.assertCssProperty('.mtp-disclosure__contents', 'display', 'none')
         self.assertEqual('false', help_box_heading.get_attribute('aria-expanded'))
-        self.click_on_text('Help')
+        self.click_on_link('Help')
         self.assertCssProperty('.mtp-disclosure__contents', 'display', 'block')
         self.assertEqual('true', help_box_heading.get_attribute('aria-expanded'))
-        self.click_on_text('Help')
+        self.click_on_link('Help')
         self.assertCssProperty('.mtp-disclosure__contents', 'display', 'none')
         self.assertEqual('false', help_box_heading.get_attribute('aria-expanded'))
 
