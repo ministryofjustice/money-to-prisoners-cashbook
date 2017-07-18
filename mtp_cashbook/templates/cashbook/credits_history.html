@@ -142,7 +142,7 @@
 
       {% page_list page=current_page page_count=page_count query_string=form.query_string %}
 
-      <p><a href="#print-dialog" class="print-hidden mtp-dialogue-trigger">{% trans 'Print this page of credits' %}</a></p>
+      <p><a href="#" class="print-hidden js-print-trigger" data-confirmation-dialogue="#print-dialog">{% trans 'Print this page of credits' %}</a></p>
       {% include 'cashbook/includes/print_dialog.html' %}
 
     {% else %}

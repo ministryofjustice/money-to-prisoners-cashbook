@@ -3,7 +3,7 @@
 <tr class="print-hidden">
   <td colspan="{% if pre_approval_required %}5{% else %}4{% endif %}" class="cell--compact">
     {% if print != False %}
-      <a href="#print-dialog" class="mtp-dialogue-trigger">{% trans 'Print these credits' %}</a>
+      <a href="#" class="js-print-trigger" data-confirmation-dialogue="#print-dialog">{% trans 'Print these credits' %}</a>
     {% endif %}
   </td>
   <td class="mtp-all">
