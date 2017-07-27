@@ -213,6 +213,11 @@
           margin-bottom: -10px;
           margin-top: 0.5em;
 
+          div {
+            display: inline-block;
+            padding-bottom: 1em;
+          }
+
           nav.mtp-disbursements-proposition-menu {
             a {
               display: inline-block;
@@ -238,5 +243,46 @@
         }
       }
     }
+  }
+
+  table.mtp-processed-disbursements {
+    width: 100%;
+    margin-bottom: 2em;
+
+    tbody {
+      border-bottom: 1px solid #bfc1c3;
+    }
+
+    td, th {
+      border-bottom: 0;
+      border-top: 1px solid #bfc1c3;
+
+      &.number {
+        text-align: right;
+      }
+    }
+
+    td {
+      vertical-align: top;
+    }
+
+    .mtp-disbursement-label {
+      color: $secondary-text-colour;
+      font-size: 16px;
+    }
+  }
+
+  .heading-large__chopped {
+    @extend .heading-large;
+
+    margin-bottom: 0.3em;
+    margin-top: 0.3em;
+  }
+
+  .heading-medium__chopped {
+    @extend .heading-medium;
+
+    margin-bottom: 0.1em;
+    margin-top: 0.1em;
   }
 }

@@ -26,4 +26,85 @@
       </div>
     </div>
   </form>
+
+  <p><strong>Showing all processed disbursements ordered by date processed</strong></p>
+
+  <table class="mtp-processed-disbursements">
+    <thead>
+      <tr>
+        <th>{% trans 'Date' %}</th>
+        <th>{% trans 'Recipient' %}</th>
+        <th>{% trans 'Address' %}</th>
+        <th class="number">{% trans 'Amount' %}</th>
+        <th>{% trans 'Prisoner' %}</th>
+        <th>{% trans 'Status' %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for disbursement in disbursements %}
+        <tr>
+          <td>
+            {{ disbursement.date }}
+          </td>
+          <td>
+            <div class="mtp-disbursement-label">{% trans 'Name' %}</div>
+            <div>{{ disbursement.name|default_if_none:'—' }}</div>
+            <br/>
+
+            <div class="mtp-disbursement-label">{% trans 'Account number' %}</div>
+            <div>{{ disbursement.account_number|default_if_none:'—' }}</div>
+            <br/>
+
+            <div class="mtp-disbursement-label">{% trans 'Sort code' %}</div>
+            <div>{{ disbursement.sort_code|default_if_none:'—' }}</div>
+            <br/>
+
+            {% if disbursement.email %}
+              <div class="mtp-disbursement-label">{% trans 'Email' %}</div>
+              <div>{{ disbursement.email|default_if_none:'—' }}</div>
+            {% endif %}
+          </td>
+          <td>
+            <div class="mtp-disbursement-label">{% trans 'Address' %}</div>
+            <div>{{ disbursement.address.line1|default_if_none:'—' }}</div>
+            <div>{{ disbursement.address.line2|default_if_none:'—' }}</div>
+            <div>{{ disbursement.address.city|default_if_none:'—' }}</div>
+            <div>{{ disbursement.address.postcode|default_if_none:'—' }}</div>
+          </td>
+          <td class="number">
+            <div class="mtp-disbursement-label">{% trans 'Amount' %}</div>
+            <div>{{ disbursement.amount }}</div>
+          </td>
+          <td>
+            <div class="mtp-disbursement-label">{% trans 'Number' %}</div>
+            <div>{{ disbursement.prisoner_number|default_if_none:'—' }}</div>
+            <br/>
+
+            <div class="mtp-disbursement-label">{% trans 'Name' %}</div>
+            <div>{{ disbursement.prisoner_name|default_if_none:'—' }}</div>
+            <br/>
+          </td>
+          <td>
+            <div class="mtp-disbursement-label">{% trans 'Processed by' %}</div>
+            <div>{{ disbursement.processed_by|default_if_none:'—' }}</div>
+            <br/>
+
+            <div class="mtp-disbursement-label">{% trans 'NOMIS ID' %}</div>
+            <div>{{ disbursement.nomis_transaction_id|default_if_none:'—' }}</div>
+            <br/>
+          </td>
+        </tr>
+      {% empty %}
+        <tr class="no-border">
+          <td colspan="6">{% trans 'No matching credits found' %}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <ul class="mtp-page-list">
+      <li>{% trans 'Page' %}</li>
+      <li>1</li>
+      <li><a href="#">2</a></li>
+    </ul>
 {% endblock %}

@@ -45,6 +45,12 @@ class PrisonerForm(DisbursementForm):
         max_length=7,
     )
 
+    def clean_prisoner_number(self):
+        prisoner_number = self.cleaned_data['prisoner_number']
+        if prisoner_number == 'A1001AE':
+            raise forms.ValidationError('A1001AE Gilly Hall has moved or been released')
+        prisoner_number
+
 
 def serialise_amount(amount):
     return '{0:.2f}'.format(amount)
@@ -69,6 +75,15 @@ class AmountForm(DisbursementForm):
     serialise_amount = serialise_amount
     unserialise_amount = unserialise_amount
 
+    def clean_amount(self):
+        amount = self.cleaned_data['amount']
+        if amount >= 30:
+            raise forms.ValidationError(
+                'A1409AE James Halls has insufficient funds in their spends '
+                'account, you cannot process this transaction'
+            )
+        return amount
+
 
 class RecipientContactForm(DisbursementForm):
     recipient_name = forms.CharField(label='Name')
@@ -76,6 +91,7 @@ class RecipientContactForm(DisbursementForm):
     address_line2 = forms.CharField(required=False)
     city = forms.CharField(required=False)
     postcode = forms.CharField(label='Postcode')
+    email = forms.CharField(label='Email (if provided)')
 
 
 class RecipientBankAccountForm(DisbursementForm):

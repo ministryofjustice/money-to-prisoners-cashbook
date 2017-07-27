@@ -179,5 +179,100 @@ class ProcessedDisbursementsView(FormView):
     template_name = 'disbursements/processed-disbursements.html'
     form_class = disbursement_forms.FilterProcessedDisbursementsListForm
 
+    def get_context_data(self, **kwargs):
+        kwargs['disbursements'] = [
+            {
+                'date': '15/01/17',
+                'name': 'Bob Jones',
+                'account_number': '12345555',
+                'sort_code': '12-35-61',
+                'email': 'bob.jones@smail.com',
+                'address': {
+                    'line1': '44 Evering Road',
+                    'line2': 'Stoke Newington',
+                    'city': 'London',
+                    'postcode': 'N16 7SR'
+                },
+                'amount': '£20.00',
+                'prisoner_number': 'A1345XZ',
+                'prisoner_name': 'Gareth Barlow',
+                'processed_by': 'Tina Wilson',
+                'nomis_transaction_id': '1637589323-1'
+            },
+            {
+                'date': '15/01/17',
+                'name': 'John Smith',
+                'account_number': '46465757',
+                'sort_code': '21-08-34',
+                'email': 'john.smitch@coldmail.com',
+                'address': {
+                    'line1': '12 Down Street',
+                    'line2': '',
+                    'city': 'Nottingham',
+                    'postcode': 'NG1 6UP'
+                },
+                'amount': '£30.00',
+                'prisoner_number': 'A8494HJ',
+                'prisoner_name': 'Jason Orange',
+                'processed_by': 'Tina Wilson',
+                'nomis_transaction_id': '1637589094-1'
+            },
+            {
+                'date': '16/01/17',
+                'name': 'James Buck',
+                'account_number': '83954674',
+                'sort_code': '08-36-94',
+                'email': 'james.buck@smail.com',
+                'address': {
+                    'line1': '70 Petty France',
+                    'line2': '',
+                    'city': 'London',
+                    'postcode': 'SW1H 9EX'
+                },
+                'amount': '£15.00',
+                'prisoner_number': 'A0947AD',
+                'prisoner_name': 'Marcus Owen',
+                'processed_by': 'Tina Wilson',
+                'nomis_transaction_id': '1637589738-1'
+            },
+            {
+                'date': '17/01/17',
+                'name': 'Lucy Williams',
+                'account_number': '28424315',
+                'sort_code': '12-09-09',
+                'email': 'lwilliams87@nowmail.com',
+                'address': {
+                    'line1': '55 The Street',
+                    'line2': 'Banningham',
+                    'city': 'Cambridgeshire',
+                    'postcode': 'C18 9PR'
+                },
+                'amount': '£40.00',
+                'prisoner_number': 'A1678PO',
+                'prisoner_name': 'Robert Williams',
+                'processed_by': 'Daniel McGuinness',
+                'nomis_transaction_id': '1637589897-1'
+            },
+            {
+                'date': '17/01/17',
+                'name': 'Diana Ross',
+                'account_number': '19067822',
+                'sort_code': '13-73-92',
+                'email': 'dfross@btinternet.com',
+                'address': {
+                    'line1': 'The Vicarage',
+                    'line2': 'Burgh',
+                    'city': 'Suffolk',
+                    'postcode': 'IP13 6SU'
+                },
+                'amount': '£20.00',
+                'prisoner_number': 'A0925LK',
+                'prisoner_name': 'Howard Donald',
+                'processed_by': 'Daniel McGuinness',
+                'nomis_transaction_id': '1637589894-1'
+            },
+        ]
+        return super().get_context_data(**kwargs)
+
     def form_valid(self, form):
         return super().form_valid(form)

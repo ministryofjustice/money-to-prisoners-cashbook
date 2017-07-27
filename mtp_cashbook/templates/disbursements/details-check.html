@@ -89,8 +89,8 @@
             <td>{{ city }}</td>
           </tr>
           <tr>
-            <th></th>
-            <td></td>
+            <th>{% if email %}{% trans 'Email' %}:{% endif %}</th>
+            <td>{{ email }}</td>
             <th>{% trans 'Postcode' %}:</th>
             <td>{{ postcode }}</td>
           </tr>

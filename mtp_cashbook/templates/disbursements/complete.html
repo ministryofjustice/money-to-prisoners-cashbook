@@ -4,7 +4,9 @@
 
 {% block inner_content %}
   <div class="govuk-box-highlight">
-    <h1 class="heading-large">£{{ amount }} sent on behalf of James Halls</h1>
+    <h1 class="heading-large__chopped">Success</h1>
+    <h3 class="heading-medium__chopped">The payment has now been automatically processed by NOMIS.</h3>
+    <h3 class="heading-medium__chopped">It should reach the recipient within 3 - 4 working days.</h3>
   </div>
 
   <div class="print-hidden mtp-reference-actions">
@@ -16,7 +18,7 @@
       <div class="mtp-confirm-fieldset">
         <table class="mtp-table">
           <tr>
-            <th><h2 class="heading-large">{% trans 'Send' %}</h2></th>
+            <th><h2 class="heading-large">{% trans 'Amount sent' %}</h2></th>
             <td></td>
           </tr>
           <tr>
@@ -86,7 +88,7 @@
     </div>
 
     <div class="mtp-new-disbursement print-hidden">
-      <a href="{% url 'disbursements:clear_session' %}">{% trans 'Process next disbursement' %}</a>
+      <a href="{% url 'disbursements:clear_session' %}">{% trans 'Process another disbursement' %}</a>
     </div>
   </div>
 {% endblock %}

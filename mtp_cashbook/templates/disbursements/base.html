@@ -22,23 +22,26 @@
 {% endblock %}
 
 {% block proposition_header %}
-  <div class="mtp-disbursements-header grid-row">
-    <div class="mtp-disbursements-header-proposition column-half">
-        <nav class="mtp-disbursements-proposition-menu">
-          {% include 'cashbook/includes/context_sensitive_link.html' with view_name='disbursements:clear_session' subview_names='start' link_text=_('Home') %}
-          {% include 'cashbook/includes/context_sensitive_link.html' with view_name='disbursements:processed' subview_names='processed' link_text=_('Processed disbursements') %}
-        </nav>
+  {% if not view.previous_view or view.final_step %}
+    <div class="mtp-disbursements-header grid-row">
+      <div class="mtp-disbursements-header-proposition column-half">
+          <nav class="mtp-disbursements-proposition-menu">
+            {% include 'cashbook/includes/context_sensitive_link.html' with view_name='disbursements:clear_session' subview_names='start' link_text=_('Home') %}
+            {% include 'cashbook/includes/context_sensitive_link.html' with view_name='disbursements:processed' subview_names='processed' link_text=_('Processed disbursements') %}
+            <div>&nbsp;</div>
+          </nav>
+      </div>
+      <div class="column-half">
+        <form class="mtp-cashbook-navigation__search" method="get" action="{% url 'all-credits' %}">
+          <div class="form-group">
+            <label class="visually-hidden" for="id_search">{% trans 'Search all eg by NOMIS ID' %}</label>
+            <input id="id_search" class="form-control" name="search" value="{{ search_field.value|default_if_none:'' }}" placeholder="{% trans 'Search all eg by NOMIS ID' %}" required/>
+            <button class="mtp-nav-search-button" type="submit">{% trans 'Search' %}</button>
+          </div>
+        </form>
+      </div>
     </div>
-    <div class="column-half">
-      <form class="mtp-cashbook-navigation__search" method="get" action="{% url 'all-credits' %}">
-        <div class="form-group">
-          <label class="visually-hidden" for="id_search">{% trans 'Search all eg by NOMIS ID' %}</label>
-          <input id="id_search" class="form-control" name="search" value="{{ search_field.value|default_if_none:'' }}" placeholder="{% trans 'Search all eg by NOMIS ID' %}" required/>
-          <button class="mtp-nav-search-button" type="submit">{% trans 'Search' %}</button>
-        </div>
-      </form>
-    </div>
-  </div>
+  {% endif %}
 {% endblock %}
 
 {% block phase_banner %}
