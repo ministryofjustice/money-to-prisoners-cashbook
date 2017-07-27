@@ -29,4 +29,7 @@ urlpatterns = [
         views.DisbursementCompleteView.as_view(),
         name=views.DisbursementCompleteView.url_name),
     url(r'^clear-session/$', views.clear_session_view, name='clear_session'),
+    url(r'^processed/$',
+        views.ProcessedDisbursementsView.as_view(),
+        name=views.ProcessedDisbursementsView.url_name),
 ]

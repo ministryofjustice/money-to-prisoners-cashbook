@@ -172,3 +172,12 @@ class DisbursementCompleteView(DisbursementView, TemplateView):
         kwargs.update(**recipient_bank_details)
         kwargs.update(**amount_details)
         return super().get_context_data(**kwargs)
+
+
+class ProcessedDisbursementsView(FormView):
+    url_name = 'processed'
+    template_name = 'disbursements/processed-disbursements.html'
+    form_class = disbursement_forms.FilterProcessedDisbursementsListForm
+
+    def form_valid(self, form):
+        return super().form_valid(form)

@@ -87,3 +87,12 @@ class RecipientBankAccountForm(DisbursementForm):
         label='Sort code',
         help_text='For example, 02-02-80'
     )
+
+
+class FilterProcessedDisbursementsListForm(forms.Form):
+    start = forms.DateField(label='From',
+                            help_text='eg 1/6/2017',
+                            required=False)
+    end = forms.DateField(label='To',
+                          help_text='eg 5/6/2017',
+                          required=False)
