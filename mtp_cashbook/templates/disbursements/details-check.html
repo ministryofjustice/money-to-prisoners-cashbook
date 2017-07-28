@@ -6,9 +6,9 @@
   <header>
     <h1 class="heading-xlarge">
       <span class="heading-secondary">
-        {% block auth_title %}{% trans 'Online disbursements tool' %}{% endblock %}
+        {% block auth_title %}{% trans 'Process a cash disbursement' %}{% endblock %}
       </span>
-      {%trans 'Confirm details and send' %}
+      {%trans 'Check details before sending' %}
     </h1>
   </header>
 
@@ -98,8 +98,14 @@
       </div>
     </div>
 
+    <br/>
+    <p>
+      When you click 'Confirm payment' below, the transfer will be made digitally by NOMIS.
+    </p>
+    <br/>
+
     <div>
-      <a id="id_next_btn" class="button" href="{{ view.get_success_url }}">{% trans 'Send payment' %}</a>
+      <a id="id_next_btn" class="button" href="{{ view.get_success_url }}">{% trans 'Confirm payment' %}</a>
     </div>
   </div>
 {% endblock %}

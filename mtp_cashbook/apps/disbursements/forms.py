@@ -49,7 +49,7 @@ class PrisonerForm(DisbursementForm):
         prisoner_number = self.cleaned_data['prisoner_number']
         if prisoner_number == 'A1001AE':
             raise forms.ValidationError('A1001AE Gilly Hall has moved or been released')
-        prisoner_number
+        return prisoner_number
 
 
 def serialise_amount(amount):
@@ -63,7 +63,7 @@ def unserialise_amount(amount_text):
 
 class AmountForm(DisbursementForm):
     amount = forms.DecimalField(
-        label='Amount',
+        label='Amount to send',
         help_text='For example, 10.00',
         min_value=Decimal('0.01'),
         decimal_places=2,
@@ -112,3 +112,15 @@ class FilterProcessedDisbursementsListForm(forms.Form):
     end = forms.DateField(label='To',
                           help_text='eg 5/6/2017',
                           required=False)
+
+
+class FilterAllDisbursementsForm(forms.Form):
+    start = forms.DateField(label='From date',
+                            help_text='eg 1/6/2017',
+                            required=False)
+    end = forms.DateField(label='To date',
+                          help_text='eg 5/6/2017',
+                          required=False)
+    search = forms.CharField(label='Keywords',
+                             help_text='Search all by eg NOMIS ID',
+                             required=False)

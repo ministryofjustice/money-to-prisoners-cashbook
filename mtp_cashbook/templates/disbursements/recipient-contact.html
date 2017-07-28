@@ -6,9 +6,9 @@
   <header>
     <h1 class="heading-xlarge">
       <span class="heading-secondary">
-        {% block auth_title %}{% trans 'Online disbursements tool' %}{% endblock %}
+        {% block auth_title %}{% trans 'Process a cash disbursement' %}{% endblock %}
       </span>
-      {%trans 'Enter recipient details' %}
+      {%trans 'Recipient contact details' %}
     </h1>
   </header>
 
@@ -47,6 +47,8 @@
     </fieldset>
 
     {% include 'mtp_common/forms/field.html' with field=form.postcode input_classes='mtp-postcode' value=form.postcode.value only %}
+
+    {% include 'mtp_common/forms/field.html' with field=form.email input_classes='mtp-email' value=form.email.value only %}
 
     <button type="submit" class="button mtp-next-button" name="create-disbursement">{% trans 'Enter their bank details' %}</button>
   </form>

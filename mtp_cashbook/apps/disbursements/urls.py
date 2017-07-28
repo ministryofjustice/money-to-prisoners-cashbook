@@ -32,4 +32,7 @@ urlpatterns = [
     url(r'^processed/$',
         views.ProcessedDisbursementsView.as_view(),
         name=views.ProcessedDisbursementsView.url_name),
+    url(r'^all/$',
+        views.AllDisbursementsView.as_view(),
+        name=views.AllDisbursementsView.url_name),
 ]

@@ -6,9 +6,9 @@
   <header>
     <h1 class="heading-xlarge">
       <span class="heading-secondary">
-        {% block auth_title %}{% trans 'Online disbursements tool' %}{% endblock %}
+        {% block auth_title %}{% trans 'Process a cash disbursement' %}{% endblock %}
       </span>
-      {%trans 'Enter amount prisoner wants to send' %}
+      {%trans 'Amount to send' %}
     </h1>
   </header>
 
@@ -36,6 +36,6 @@
     </fieldset>
     {% endwith %}
 
-    <button type="submit" class="button mtp-next-button" name="create-disbursement">{% trans 'Enter recipient details' %}</button>
+    <button type="submit" class="button mtp-next-button" name="create-disbursement">{% trans 'Recipient details' %}</button>
   </form>
 {% endblock %}
