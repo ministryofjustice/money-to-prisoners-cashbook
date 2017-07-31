@@ -79,8 +79,7 @@ class AmountForm(DisbursementForm):
         amount = self.cleaned_data['amount']
         if amount >= 30:
             raise forms.ValidationError(
-                'A1409AE James Halls has insufficient funds in their spends '
-                'account, you cannot process this transaction'
+                'A1409AE James Halls has insufficient funds in their spends account'
             )
         return amount
 
