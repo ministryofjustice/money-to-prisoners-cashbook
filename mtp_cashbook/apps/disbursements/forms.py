@@ -90,7 +90,7 @@ class RecipientContactForm(DisbursementForm):
     address_line2 = forms.CharField(required=False)
     city = forms.CharField(required=False)
     postcode = forms.CharField(label='Postcode')
-    email = forms.CharField(label='Email (if provided)')
+    email = forms.CharField(label='Email (if provided)', required=False)
 
 
 class RecipientBankAccountForm(DisbursementForm):
