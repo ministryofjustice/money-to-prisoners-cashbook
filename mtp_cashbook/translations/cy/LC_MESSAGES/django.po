@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-18 12:02+0100\n"
+"POT-Creation-Date: 2017-07-31 12:52+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Igor U <igor.ushkarev@digital.justice.gov.uk>, 2017\n"
 "Language-Team: Welsh (https://www.transifex.com/ministry-of-justice/teams/34553/cy/)\n"
@@ -16,11 +16,11 @@ msgstr ""
 
 #: apps/cashbook/forms.py:56
 msgid "Only click ‘Done’ when you’ve selected credits"
-msgstr "Cliciwch ar 'wedi gorffen' dim ond pan fyddwch wedi dethol y credydau"
+msgstr "Cliciwch ar 'wedi gorffen' dim ond pan fyddwch wedi dewis credydau"
 
 #: apps/cashbook/forms.py:120
 msgid "Only click ‘Done’ when you’ve selected the row of credits you want to release"
-msgstr "Cliciwch ar 'wedi gorffen' dim ond pan fyddwch wedi dethol y rhes o gredydau yr ydych eisiau eu rhyddhau"
+msgstr "Cliciwch ar 'wedi gorffen' dim ond pan fyddwch wedi dewis y rhes o gredydau yr ydych eisiau eu rhyddhau"
 
 #: apps/cashbook/forms.py:175
 msgid "From"
@@ -227,10 +227,10 @@ msgstr "Credydau newydd i'w hychwanegu"
 #, python-format
 msgid "You’ve added 1 credit to NOMIS."
 msgid_plural "You’ve added %(credited)s credits to NOMIS."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Rydych wedi ychwanegu 1 credyd i NOMIS."
+msgstr[1] "Rydych wedi ychwanegu %(credited)s credyd i NOMIS."
+msgstr[2] "Rydych wedi ychwanegu %(credited)s credyd i NOMIS."
+msgstr[3] "Rydych wedi ychwanegu %(credited)s credyd i NOMIS."
 
 #: apps/cashbook/views.py:154
 msgid "Currently being entered into NOMIS"
@@ -1183,19 +1183,19 @@ msgstr "Rhowch y credydau hyn yn NOMIS â llaw ac yna cliciwch ar 'wedi gorffen'
 #, python-format
 msgid "%(owner)s started to process these credits but may not have finished"
 msgid_plural "Your colleagues started to process these credits but may not have finished"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "%(owner)s wedi dechrau prosesu'r credydau hyn ond efallai nad yw wedi gorffen"
+msgstr[1] "Mae eich cydweithwyr wedi dechrau prosesu'r credydau hyn ond efallai nad ydynt wedi gorffen"
+msgstr[2] "Mae eich cydweithwyr wedi dechrau prosesu'r credydau hyn ond efallai nad ydynt wedi gorffen"
+msgstr[3] "Mae eich cydweithwyr wedi dechrau prosesu'r credydau hyn ond efallai nad ydynt wedi gorffen"
 
 #: templates/cashbook/new_credits.html:106
 #, python-format
 msgid "%(owner)s should be processing these credits into NOMIS manually"
 msgid_plural "Your colleagues should be processing these credits into NOMIS manually"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Dylai %(owner)s brosesu'r credydau hyn ar NOMIS â llaw"
+msgstr[1] "Dylai eich cydweithwyr brosesu'r credydau hyn ar NOMIS â llaw"
+msgstr[2] "Dylai eich cydweithwyr brosesu'r credydau hyn ar NOMIS â llaw"
+msgstr[3] "Dylai eich cydweithwyr brosesu'r credydau hyn ar NOMIS â llaw"
 
 #: templates/cashbook/new_credits.html:116
 msgid "How to finish processing"
@@ -1205,10 +1205,10 @@ msgstr "Sut i orffen prosesu"
 #, python-format
 msgid "Your colleague, %(owner)s, started processing these credits yesterday."
 msgid_plural "Some of your colleagues started processing these credits yesterday."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Mae eich cydweithiwr, %(owner)s, wedi dechrau prosesu'r credydau hyn ddoe."
+msgstr[1] "Mae rhai o'ch cydweithwyr wedi dechrau prosesu'r credydau hyn ddoe."
+msgstr[2] "Mae rhai o'ch cydweithwyr wedi dechrau prosesu'r credydau hyn ddoe."
+msgstr[3] "Mae rhai o'ch cydweithwyr wedi dechrau prosesu'r credydau hyn ddoe."
 
 #: templates/cashbook/new_credits.html:126
 msgid "To make sure they were processed successfully, please check NOMIS."
@@ -1218,19 +1218,19 @@ msgstr "Gwiriwch NOMIS er mwyn gwneud yn siwr eu bod wedi cael eu prosesu'n llwy
 #, python-format
 msgid "If they have been entered correctly, just click ‘Done’ and tell %(owner)s you’ve finished processing the credits."
 msgid_plural "If they have been entered correctly, just click ‘Done’ and tell your colleagues you’ve finished processing the credits."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Os ydynt wedi cael eu mewnbynnu yn gywir, cliciwch 'wedi gorffen' a dywedwch wrth %(owner)s eich bod wedi gorffen prosesu'r credydau."
+msgstr[1] "Os ydynt wedi cael eu mewnbynnu yn gywir, cliciwch 'wedi gorffen' a dywedwch wrth eich cydweithwyr eich bod wedi gorffen prosesu'r credydau."
+msgstr[2] "Os ydynt wedi cael eu mewnbynnu yn gywir, cliciwch 'wedi gorffen' a dywedwch wrth eich cydweithwyr eich bod wedi gorffen prosesu'r credydau."
+msgstr[3] "Os ydynt wedi cael eu mewnbynnu yn gywir, cliciwch 'wedi gorffen' a dywedwch wrth eich cydweithwyr eich bod wedi gorffen prosesu'r credydau. "
 
 #: templates/cashbook/new_credits.html:136
 #, python-format
 msgid "If they have not been entered, please manually enter these credits youself, click ‘Done’ and tell %(owner)s you’ve processed these credits for them."
 msgid_plural "If they have not been entered, please manually enter these credits youself, click ‘Done’ and tell your colleagues you’ve processed these credits for them."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Os nad ydynt wedi cael eu mewnbynnu, rhowch y credydau hyn i mewn eich hun â llaw, cliciwch 'wedi gorffen' a dywedwch wrth  %(owner)s eich bod wedi prosesu'r credydau ar eu rhan. "
+msgstr[1] "Os nad ydynt wedi cael eu mewnbynnu, rhowch y credydau hyn i mewn eich hun â llaw, cliciwch 'wedi gorffen' a dywedwch wrth eich cydweithwyr eich bod wedi prosesu'r credydau ar eu rhan. "
+msgstr[2] "Os nad ydynt wedi cael eu mewnbynnu, rhowch y credydau hyn i mewn eich hun â llaw, cliciwch 'wedi gorffen' a dywedwch wrth eich cydweithwyr eich bod wedi prosesu'r credydau ar eu rhan. "
+msgstr[3] "Os nad ydynt wedi cael eu mewnbynnu, rhowch y credydau hyn i mewn eich hun â llaw, cliciwch 'wedi gorffen' a dywedwch wrth eich cydweithwyr eich bod wedi prosesu'r credydau ar eu rhan. "
 
 #: templates/cashbook/new_credits.html:165
 #, python-format
