@@ -121,7 +121,6 @@ TEMPLATES = [
                 'mtp_common.context_processors.analytics',
                 'mtp_common.context_processors.app_environment',
                 'mtp_common.context_processors.govuk_localisation',
-                'cashbook.context_processors.nomis_integration',
                 'cashbook.context_processors.footer_feedback_context',
                 'cashbook.context_processors.pre_approval_required',
             ],
@@ -231,7 +230,6 @@ LOGOUT_URL = 'logout'
 OAUTHLIB_INSECURE_TRANSPORT = True
 
 REQUEST_PAGE_SIZE = 100
-REQUEST_PAGE_DAYS = 5
 
 GOOGLE_ANALYTICS_ID = os.environ.get('GOOGLE_ANALYTICS_ID', None)
 
@@ -249,8 +247,6 @@ ZENDESK_CUSTOM_FIELDS = {
 
 SHOW_LANGUAGE_SWITCH = os.environ.get('SHOW_LANGUAGE_SWITCH', 'False') == 'True'
 
-NOMIS_API_AVAILABLE = os.environ.get('NOMIS_API_AVAILABLE', 'False') == 'True'
-NOMIS_API_PRISONS = os.environ.get('NOMIS_API_PRISONS', '').split(',')
 NOMIS_API_BASE_URL = os.environ.get('NOMIS_API_BASE_URL', '')
 NOMIS_API_CLIENT_TOKEN = os.environ.get('NOMIS_API_CLIENT_TOKEN', '')
 NOMIS_API_PRIVATE_KEY = os.environ.get('NOMIS_API_PRIVATE_KEY', '').encode('utf8').decode('unicode_escape')

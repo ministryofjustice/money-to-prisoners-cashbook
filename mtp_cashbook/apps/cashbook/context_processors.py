@@ -1,11 +1,7 @@
 from django.urls import reverse
 from mtp_common.auth.models import MojUser
 
-from .utils import nomis_integration_available, check_pre_approval_required
-
-
-def nomis_integration(request):
-    return {'nomis_integration_available': nomis_integration_available(request)}
+from .utils import check_pre_approval_required
 
 
 def footer_feedback_context(request):
