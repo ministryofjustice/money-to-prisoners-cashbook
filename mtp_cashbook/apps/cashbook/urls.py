@@ -8,11 +8,9 @@ from django.views.generic import TemplateView
 from .utils import nomis_integration_available
 from .views import (
     CreditBatchListView, CreditsLockedView, CreditHistoryView, DashboardView,
-    inactive_password_change_view, NewCreditsView, ProcessedCreditsListView,
-    ChangeNotificationView, ProcessingCreditsView, ProcessedCreditsDetailView,
-    AllCreditsView,
+    NewCreditsView, ProcessedCreditsListView, ChangeNotificationView,
+    ProcessingCreditsView, ProcessedCreditsDetailView, AllCreditsView,
 )
-from .views_training import ServiceOverview, Training
 
 
 @login_required
@@ -55,17 +53,9 @@ urlpatterns = [
         name='dashboard-batch-discard'),
     url(r'^dashboard-unlocked-payments/$', DashboardView.as_view(),
         name='dashboard-unlocked-payments'),
-
     url(r'^locked/$', CreditsLockedView.as_view(), name='credits-locked'),
-
     url(r'^batch/$', CreditBatchListView.as_view(), name='credit-list'),
-
     url(r'^history/$', CreditHistoryView.as_view(), name='credit-history'),
-
-    url(r'^service-overview/(?:(?P<page>[^/]+)/)?$', ServiceOverview.as_view(), name='service-overview'),
-    url(r'^training/(?:(?P<page>[^/]+)/)?$', Training.as_view(), name='training'),
-
-    url(r'^inactive_password_change/$', inactive_password_change_view, name='inactive_password_change'),
 
     url(r'^change-notification/$', ChangeNotificationView.as_view(), name='change-notification'),
     url(r'^new/$', NewCreditsView.as_view(), name='new-credits'),

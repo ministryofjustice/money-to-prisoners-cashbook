@@ -13,9 +13,6 @@
 
 {% block proposition %}
   {% trans 'Digital cashbook' %}
-  {% if ENVIRONMENT != 'prod' %}
-    – {% trans 'TRAINING SITE' %}
-  {% endif %}
 {% endblock %}
 
 {% block proposition_menu %}
@@ -25,21 +22,13 @@
         {% url 'dashboard' as home_url %}
         <a href="{{ view.home_url|default:home_url }}">{% trans 'Home' %}</a>
       </li>
-      {% if nomis_integration_available %}
-      {% else %}
-      <li><a href="{% url 'training' page='intro' %}">{% trans 'Training materials' %}</a></li>
-      {% endif %}
       {% if perms.auth.change_user %}
         <li>
           <a href="{% url 'list-users' %}">{% trans 'Manage users' %}</a>
         </li>
       {% endif %}
       <li>
-        {% if ENVIRONMENT == 'test' %}
-          <a href="{% url 'inactive_password_change' %}">{% trans 'Change password' %}</a>
-        {% else %}
-          <a href="{% url 'password_change' %}">{% trans 'Change password' %}</a>
-        {% endif %}
+        <a href="{% url 'password_change' %}">{% trans 'Change password' %}</a>
       </li>
       <li>
         <a href="{% url 'logout' %}">
@@ -62,12 +51,7 @@
       {% endif %}
       {% url 'submit_ticket' as ticket_url %}
       <span>
-        {% if ENVIRONMENT == 'prod' %}
-          {% trans 'This is a new service.' %}
-        {% else %}
-          {% trans 'Please try out this site. The credits and prisoners listed are not real.' %}
-          {% trans 'All data on the digital cashbook training site will be reset at the start of each day.' %}
-        {% endif %}
+        {% trans 'This is a new service.' %}
         {% blocktrans trimmed %}
           If you have any comments or need help please <a href="{{ ticket_url }}">contact us</a>.
         {% endblocktrans %}

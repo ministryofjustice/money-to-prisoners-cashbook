@@ -22,5 +22,4 @@
   require('running-total').RunningTotal.init();
   require('selection-count').SelectionCount.init();
   require('confirmation-button').ConfirmationButton.init();
-  require('training').Training.init();
 }());

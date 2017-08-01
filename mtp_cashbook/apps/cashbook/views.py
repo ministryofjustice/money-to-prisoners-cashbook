@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy, reverse
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _, ngettext
 from django.views.generic import FormView, TemplateView
@@ -22,10 +22,6 @@ from .forms import (
 )
 
 logger = logging.getLogger('mtp')
-
-
-def inactive_password_change_view(request):
-    return render(request, 'cashbook/inactive_password_change.html')
 
 
 class DashboardView(TemplateView):
