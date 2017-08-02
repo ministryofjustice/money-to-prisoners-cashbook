@@ -1,6 +1,7 @@
 {% extends 'disbursements/base.html' %}
 {% load i18n %}
 {% load mtp_common %}
+{% load disbursements %}
 
 {% block inner_content %}
   <div class="govuk-box-highlight">
@@ -20,6 +21,10 @@
           <tr>
             <th><h2 class="heading-large">{% trans 'Amount sent' %}</h2></th>
             <td></td>
+          </tr>
+          <tr>
+            <th>{% trans 'Account' %}:</th>
+            <td>{{ account|accountlabel }}</td>
           </tr>
           <tr>
             <th>{% trans 'Amount' %}:</th>

@@ -3,6 +3,11 @@ from decimal import Decimal
 from django import forms
 from django.utils.encoding import force_text
 
+ACCOUNTS = {
+    'spends': 'Spends',
+    'private': 'Private cash'
+}
+
 
 class DisbursementForm(forms.Form):
     @classmethod
@@ -50,6 +55,15 @@ class PrisonerForm(DisbursementForm):
         if prisoner_number == 'A1001AE':
             raise forms.ValidationError('A1001AE Gilly Hall has moved or been released')
         return prisoner_number
+
+
+class PrisonerAccountForm(DisbursementForm):
+    account = forms.ChoiceField(
+        label='Account',
+        initial='spends',
+        choices=ACCOUNTS.items(),
+        widget=forms.RadioSelect()
+    )
 
 
 def serialise_amount(amount):

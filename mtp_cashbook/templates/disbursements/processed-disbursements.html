@@ -1,6 +1,7 @@
 {% extends 'disbursements/base.html' %}
 {% load i18n %}
 {% load mtp_common %}
+{% load disbursements %}
 
 {% block inner_content %}
   <header>
@@ -74,6 +75,9 @@
           <td class="number">
             <div class="mtp-disbursement-label">{% trans 'Amount' %}</div>
             <div>{{ disbursement.amount }}</div>
+            <br/>
+            <div class="mtp-disbursement-label">{% trans 'Account' %}</div>
+            <div>{{ disbursement.account|accountlabel }}</div>
           </td>
           <td>
             <div class="mtp-disbursement-label">{% trans 'Number' %}</div>

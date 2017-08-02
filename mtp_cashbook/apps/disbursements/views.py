@@ -17,6 +17,7 @@ TEST_DISBURSEMENTS = [
             'city': 'London',
             'postcode': 'N16 7SR'
         },
+        'account': 'spends',
         'amount': '£20.00',
         'prisoner_number': 'A1345XZ',
         'prisoner_name': 'Gareth Barlow',
@@ -35,6 +36,7 @@ TEST_DISBURSEMENTS = [
             'city': 'Nottingham',
             'postcode': 'NG1 6UP'
         },
+        'account': 'private',
         'amount': '£30.00',
         'prisoner_number': 'A8494HJ',
         'prisoner_name': 'Jason Orange',
@@ -53,6 +55,7 @@ TEST_DISBURSEMENTS = [
             'city': 'London',
             'postcode': 'SW1H 9EX'
         },
+        'account': 'spends',
         'amount': '£15.00',
         'prisoner_number': 'A0947AD',
         'prisoner_name': 'Marcus Owen',
@@ -71,6 +74,7 @@ TEST_DISBURSEMENTS = [
             'city': 'Cambridgeshire',
             'postcode': 'C18 9PR'
         },
+        'account': 'private',
         'amount': '£40.00',
         'prisoner_number': 'A1678PO',
         'prisoner_name': 'Robert Williams',
@@ -89,6 +93,7 @@ TEST_DISBURSEMENTS = [
             'city': 'Suffolk',
             'postcode': 'IP13 6SU'
         },
+        'account': 'spends',
         'amount': '£20.00',
         'prisoner_number': 'A0925LK',
         'prisoner_name': 'Howard Donald',
@@ -196,12 +201,22 @@ class PrisonerCheckView(DisbursementView, TemplateView):
         return super().get_context_data(**kwargs)
 
     def get_success_url(self):
+        return build_view_url(self.request, PrisonerAccountView.url_name)
+
+
+class PrisonerAccountView(DisbursementFormView):
+    url_name = 'prisoner-account'
+    previous_view = PrisonerCheckView
+    template_name = 'disbursements/prisoner-account.html'
+    form_class = disbursement_forms.PrisonerAccountForm
+
+    def get_success_url(self):
         return build_view_url(self.request, AmountView.url_name)
 
 
 class AmountView(DisbursementFormView):
     url_name = 'amount'
-    previous_view = PrisonerCheckView
+    previous_view = PrisonerAccountView
     template_name = 'disbursements/amount.html'
     form_class = disbursement_forms.AmountForm
 
@@ -238,10 +253,12 @@ class DetailsCheckView(DisbursementView, TemplateView):
         prisoner_details = self.valid_form_data[PrisonerView.url_name]
         recipient_contact_details = self.valid_form_data[RecipientContactView.url_name]
         recipient_bank_details = self.valid_form_data[RecipientBankAccountView.url_name]
+        prisoner_account_details = self.valid_form_data[PrisonerAccountView.url_name]
         amount_details = self.valid_form_data[AmountView.url_name]
         kwargs.update(**prisoner_details)
         kwargs.update(**recipient_contact_details)
         kwargs.update(**recipient_bank_details)
+        kwargs.update(**prisoner_account_details)
         kwargs.update(**amount_details)
         return super().get_context_data(**kwargs)
 
@@ -259,10 +276,12 @@ class DisbursementCompleteView(DisbursementView, TemplateView):
         prisoner_details = self.valid_form_data[PrisonerView.url_name]
         recipient_contact_details = self.valid_form_data[RecipientContactView.url_name]
         recipient_bank_details = self.valid_form_data[RecipientBankAccountView.url_name]
+        prisoner_account_details = self.valid_form_data[PrisonerAccountView.url_name]
         amount_details = self.valid_form_data[AmountView.url_name]
         kwargs.update(**prisoner_details)
         kwargs.update(**recipient_contact_details)
         kwargs.update(**recipient_bank_details)
+        kwargs.update(**prisoner_account_details)
         kwargs.update(**amount_details)
         return super().get_context_data(**kwargs)
 
