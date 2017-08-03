@@ -55,8 +55,6 @@ EXPIRED_PROCESSING_BATCH = {
 
 
 override_nomis_settings = override_settings(
-    NOMIS_API_AVAILABLE=True,
-    NOMIS_API_PRISONS=['BXI'],
     NOMIS_API_BASE_URL='https://nomis.local/',
     NOMIS_API_CLIENT_TOKEN='hello',
     NOMIS_API_PRIVATE_KEY=(

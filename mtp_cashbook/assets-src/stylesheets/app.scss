@@ -6,10 +6,6 @@
 
 // Page specific styles
 @import 'views/landing';
-@import 'views/dashboard';
-@import 'views/batch';
-@import 'views/history';
-@import 'views/locked';
 @import 'views/navigation';
 @import 'views/credits';
 @import 'views/processed_credits';
@@ -23,6 +19,10 @@
 }
 
 // app-specific styles
+.mtp-heading--compact {
+  margin-bottom: 0.5em;
+}
+
 .mtp-inactive__form {
   .form-label {
     color: $grey-2;

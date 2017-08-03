@@ -12,7 +12,7 @@
 
   <header>
     {% language_switch %}
-    <h2 class="heading-xlarge__chopped">
+    <h2 class="heading-xlarge mtp-heading--compact">
       {% blocktrans trimmed with date=form.batch_date|date:'d/m/Y' count count=form.pagination.count %}
         {{ count }} credit processed on {{ date }}
       {% plural %}

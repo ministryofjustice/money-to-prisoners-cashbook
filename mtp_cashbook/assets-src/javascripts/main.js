@@ -4,7 +4,6 @@
 
   require('proposition-header').PropositionHeader.init();
   require('dialogue-box').DialogueBox.init();
-  require('collapsing-table').CollapsingTable.init();
   require('messages').Messages.init();
   require('print').Print.init();
   require('select-all').SelectAll.init();
