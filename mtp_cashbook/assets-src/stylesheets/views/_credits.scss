@@ -1,127 +1,4 @@
 .mtp-credits {
-
-  .mtp-crediting-result {
-    font-size: 26px;
-    color: $page-colour;
-    padding-left: 70px;
-    padding-top: 0.8em;
-    padding-bottom: 0.8em;
-    background-size: 34px 34px;
-    background-repeat: no-repeat;
-    background-position: 0.8em 0.8em;
-    margin-bottom: 0.5em;
-
-    &.mtp-credited-credits {
-      background-image: file-url('tick.png');
-      background-color: $turquoise;
-
-      @include device-pixel-ratio {
-        background-image: file-url('tick@2x.png');
-      }
-    }
-
-    &.mtp-failed-credits {
-      background-image: file-url('cross.png');
-      background-color: $red;
-
-      @include device-pixel-ratio {
-        background-image: file-url('cross@2x.png');
-      }
-    }
-
-    &.mtp-manual-credits {
-      background-image: file-url('alert.png');
-      background-color: $orange;
-
-      @include device-pixel-ratio {
-        background-image: file-url('alert@2x.png');
-      }
-    }
-
-    a.mtp-end-link {
-      color: $white;
-      font-size: 19px;
-      margin-left: 1em;
-    }
-  }
-
-  .mtp-floating-header {
-    .mtp-none-selected {
-      display: none;
-    }
-
-
-    .mtp-some-selected {
-      display: none;
-    }
-
-    p {
-      font-size: 19px;
-    }
-
-    .grid-row {
-      width: 100%;
-      margin: 0;
-    }
-
-    .column-one-third {
-      padding: 0;
-    }
-
-    .column-two-thirds {
-      padding: 0;
-      margin-top: 0;
-    }
-
-    .total {
-      font-weight: bold;
-    }
-
-    .green {
-      color: $button-colour;
-    }
-
-    .mtp-submit__button {
-      text-align: right;
-    }
-
-    &.is-sticky {
-      background: $page-colour;
-      border-top: 0;
-      border-bottom: solid $text-colour;
-      position: fixed;
-      z-index: 1000;
-      top: 0;
-      left: 0;
-      width: 100%;
-      margin: 0;
-      padding-top: 1em;
-      padding-bottom: 1em;
-
-      .grid-row {
-        width: 960px;
-        margin: 0 auto;
-      }
-
-      .mtp-submit__button {
-        text-align: right;
-        font-size: 1.1em;
-      }
-
-      p {
-        font-size: 1em;
-        margin-top: 0;
-        margin-bottom: 0;
-        padding-top: 0.3em;
-        padding-bottom: 0.3em;
-      }
-
-      .column-two-thirds {
-        padding: 0;
-      }
-    }
-  }
-
   .mtp-batch {
     margin: 0;
 
@@ -183,16 +60,16 @@
       margin-bottom: 2em;
 
       tbody {
-        border-bottom: 1px solid #bfc1c3;
+        border-bottom: 1px solid $grey-2;
       }
 
       td, th {
         border-bottom: 0;
-        border-top: 1px solid #bfc1c3;
+        border-top: 1px solid $grey-2;
 
         .sub {
           font-size: 16px;
-          color: #666666;
+          color: $grey-1;
         }
 
         .old {
@@ -238,7 +115,7 @@
       }
 
       .mtp-manual-credit-complete {
-        background-color: #cce9ff;
+        background-color: #cce9ff;  // would $light-blue-25 work?
       }
 
       .mtp-no-credits {
@@ -261,13 +138,6 @@
         padding: 0.35em;
         font-weight: bold;
       }
-    }
-  }
-
-  &.no-js {
-    .print,
-    .select-all {
-      display: none;
     }
   }
 
@@ -341,87 +211,58 @@
       display: none;
     }
 
-    .mtp-floating-header {
-      display: none;
-    }
-
     .mtp-batch {
       width: 100%;
       margin-bottom: 2em;
     }
 
-    .select-all,
-    .print,
     .button {
       display: none;
     }
   }
 }
 
-ol.mtp-numbered-steps {
-  margin-top: 1.5em;
-  margin-bottom: 1.5em;
-  margin-left: 50px;
+.mtp-crediting-result {
+  font-size: 26px;
+  color: $page-colour;
+  padding-left: 70px;
+  padding-top: 0.8em;
+  padding-bottom: 0.8em;
+  background-size: 34px 34px;
+  background-repeat: no-repeat;
+  background-position: 0.8em 0.8em;
+  margin-bottom: 0.5em;
 
-  li {
-    padding-top: 1px;
-    padding-left: 30px;
-    margin-bottom: 1em;
-  }
-}
-
-@for $step from 1 through 4 {
-  .mtp-numbered-step-#{$step} {
-    background: file-url('icon-steps/icon-step-#{$step}.png') no-repeat scroll 0 0;
+  &.mtp-credited-credits {
+    background-image: file-url('tick.png');
+    background-color: $turquoise;
 
     @include device-pixel-ratio {
-      background-image: file-url('icon-steps/icon-step-#{$step}-2x.png');
-      background-size: 23px 23px;
+      background-image: file-url('tick@2x.png');
     }
   }
-}
 
-.mtp-security__comment {
-  position: relative;
-  padding: 15px;
-  border: 3px solid $beta-colour;
-  color: $text-colour;
-  background: $page-colour;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-  float: right;
-  min-width: 400px;
-  max-width: 700px;
-  margin-bottom: 15px;
+  &.mtp-failed-credits {
+    background-image: file-url('cross.png');
+    background-color: $red;
 
-  p {
-    margin: 0;
+    @include device-pixel-ratio {
+      background-image: file-url('cross@2x.png');
+    }
   }
-}
 
-.mtp-security__comment:before {
-  content: '';
-  position: absolute;
-  border-style: solid;
-  display: block;
-  width: 0;
-  top: 24px;
-  bottom: auto;
-  left: -12px;
-  border-width: 0 10px 12px 0;
-  border-color: transparent $beta-colour;
-}
+  &.mtp-manual-credits {
+    background-image: file-url('alert.png');
+    background-color: $orange;
 
-.mtp-security__comment:after {
-  content: '';
-  position: absolute;
-  border-style: solid;
-  display: block;
-  width: 0;
-  top: 26px;
-  bottom: auto;
-  left: -7px;
-  border-width: 0 14px 15px 0;
-  border-color: transparent $page-colour;
+    @include device-pixel-ratio {
+      background-image: file-url('alert@2x.png');
+    }
+  }
+
+  a.mtp-end-link {
+    color: $white;
+    font-size: 19px;
+    margin-left: 1em;
+  }
 }
