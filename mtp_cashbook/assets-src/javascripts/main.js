@@ -2,6 +2,7 @@
   'use strict';
   require('polyfills').Polyfills.init();
 
+  // common
   require('proposition-header').PropositionHeader.init();
   require('dialogue-box').DialogueBox.init();
   require('messages').Messages.init();
@@ -11,14 +12,15 @@
   require('disclosure').Disclosure.init();
   require('analytics').Analytics.init();
   require('track-printing').TrackPrinting.init();
-  require('confirm-manual').ConfirmManual.init();
   require('footer-feedback').FooterFeedback.init();
-  require('print-batch').PrintBatch.init();
 
+  // cashbook
   require('sticky-header').StickyHeader.init();
   require('align-totals').AlignTotals.init();
   require('batch-validation').BatchValidation.init();
   require('running-total').RunningTotal.init();
   require('selection-count').SelectionCount.init();
   require('confirmation-button').ConfirmationButton.init();
+  require('confirm-manual').ConfirmManual.init();
+  require('print-batch').PrintBatch.init();
 }());
