@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-03 14:26+0100\n"
+"POT-Creation-Date: 2017-08-03 15:17+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Igor U <igor.ushkarev@digital.justice.gov.uk>, 2017\n"
 "Language-Team: Welsh (https://www.transifex.com/ministry-of-justice/teams/34553/cy/)\n"
@@ -152,35 +152,35 @@ msgstr "Anfon arian at garcharor: mae cyfrif y carcharor wedi cael ei gredydu"
 msgid "New credits"
 msgstr "Credydau newydd"
 
-#: apps/cashbook/views.py:168 templates/base.html:12 templates/base.html:15
+#: apps/cashbook/views.py:183 templates/base.html:12 templates/base.html:15
 #: templates/cashbook/landing.html:34 templates/mtp_auth/login.html:4
 msgid "Digital cashbook"
 msgstr "Llyfr arian digidol"
 
-#: apps/cashbook/views.py:190 apps/cashbook/views.py:236
+#: apps/cashbook/views.py:205 apps/cashbook/views.py:251
 #: templates/cashbook/all_credits.html:75
 #: templates/cashbook/all_credits.html:77
 #: templates/cashbook/credits_base.html:8
 msgid "Processed credits"
 msgstr "Credydau sydd wedi cael eu prosesu"
 
-#: apps/cashbook/views.py:256
+#: apps/cashbook/views.py:271
 msgid "All credits"
 msgstr "Yr holl gredydau"
 
-#: apps/cashbook/views.py:312
+#: apps/cashbook/views.py:313
 #, python-format
 msgid "Search for “%(query)s”"
 msgstr "Chwilio am “%(query)s”"
 
-#: apps/cashbook/views.py:314 templates/cashbook/credits_base.html:14
+#: apps/cashbook/views.py:315 templates/cashbook/credits_base.html:14
 #: templates/cashbook/credits_base.html:15
 msgid "Search all credits"
 msgstr "Chwilio'r holl gredydau"
 
-#: templates/base.html:23
-msgid "Home"
-msgstr "Cartref"
+#: templates/base.html:23 templates/cashbook/landing.html:26
+msgid "Process credits"
+msgstr "Prosesu credydau"
 
 #: templates/base.html:27
 msgid "Manage users"
@@ -552,10 +552,6 @@ msgstr "Prosesu arian a anfonwyd i'ch carchar chi "
 msgid "This is where you process credits sent to your prison by a member of the public through the <a href=\"%(start_page_url)s\">Send money to a prisoner</a> service."
 msgstr "Dyma lle'r ydych yn prosesu credydau a anfonwyd i'ch carchar chi gan aelod o'r cyhoedd drwy'r <a href=\"%(start_page_url)s\">gwasanaeth</a> Anfon arian at garcharor."
 
-#: templates/cashbook/landing.html:26
-msgid "Process credits"
-msgstr "Prosesu credydau"
-
 #: templates/cashbook/landing.html:28
 msgid "Sign into cashbook"
 msgstr "Mewngofnodi i'r llyfr arian "
@@ -901,6 +897,9 @@ msgstr "Gall hyn gymryd munud neu ddau felly peidiwch â chau'r dudalen hon"
 #: templates/cashbook/processing_credits.html:36
 msgid "Continue"
 msgstr "Parhau"
+
+#~ msgid "Home"
+#~ msgstr "Cartref"
 
 #~ msgid "All %(batch_size)s"
 #~ msgstr "Pob un %(batch_size)s"

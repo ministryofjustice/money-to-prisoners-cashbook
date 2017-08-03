@@ -78,7 +78,7 @@ class ChangeNotificationTestCase(MTPBaseTestCase):
 
     @property
     def url(self):
-        return reverse('dashboard')
+        return reverse('new-credits')
 
     @override_nomis_settings
     def test_first_visit_with_nomis_available_shows_change_notification(self):
@@ -118,10 +118,13 @@ class ChangeNotificationTestCase(MTPBaseTestCase):
                 match_querystring=True,
             )
             response = self.client.get(self.url, follow=True)
-            self.assertRedirects(response, reverse('new-credits'))
+            self.assertContains(response, 'New credits')
 
 
 class NewCreditsViewTestCase(MTPBaseTestCase):
+    def setUp(self):
+        super().setUp()
+        self.set_change_notification_seen()
 
     @property
     def url(self):
@@ -565,6 +568,9 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
 
 
 class ProcessingCreditsViewTestCase(MTPBaseTestCase):
+    def setUp(self):
+        super().setUp()
+        self.set_change_notification_seen()
 
     @property
     def url(self):
@@ -715,6 +721,9 @@ class ProcessingCreditsViewTestCase(MTPBaseTestCase):
 
 
 class ProcessedCreditsListViewTestCase(MTPBaseTestCase):
+    def setUp(self):
+        super().setUp()
+        self.set_change_notification_seen()
 
     @property
     def url(self):
@@ -789,6 +798,9 @@ class ProcessedCreditsListViewTestCase(MTPBaseTestCase):
 
 
 class ProcessedCreditsDetailViewTestCase(MTPBaseTestCase):
+    def setUp(self):
+        super().setUp()
+        self.set_change_notification_seen()
 
     @property
     def url(self):
@@ -879,6 +891,9 @@ class ProcessedCreditsDetailViewTestCase(MTPBaseTestCase):
 
 @override_nomis_settings
 class AllCreditsViewTestCase(MTPBaseTestCase):
+    def setUp(self):
+        super().setUp()
+        self.set_change_notification_seen()
 
     @property
     def url(self):

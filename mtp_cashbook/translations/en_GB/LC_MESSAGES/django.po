@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mtp-cashbook\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-03 14:26+0100\n"
+"POT-Creation-Date: 2017-08-03 15:17+0100\n"
 "PO-Revision-Date: 2016-11-04 10:00+0000\n"
 "Last-Translator: Welsh Language Unit <welsh.language.unit.manager@hmcts.gsi.gov.uk>\n"
 "Language-Team: Welsh (http://www.transifex.com/ministry-of-justice/mtp/language/cy/)\n"
@@ -150,34 +150,34 @@ msgstr ""
 msgid "New credits"
 msgstr ""
 
-#: apps/cashbook/views.py:168 templates/base.html:12 templates/base.html:15
+#: apps/cashbook/views.py:183 templates/base.html:12 templates/base.html:15
 #: templates/cashbook/landing.html:34 templates/mtp_auth/login.html:4
 msgid "Digital cashbook"
 msgstr ""
 
-#: apps/cashbook/views.py:190 apps/cashbook/views.py:236
+#: apps/cashbook/views.py:205 apps/cashbook/views.py:251
 #: templates/cashbook/all_credits.html:75
 #: templates/cashbook/all_credits.html:77
 #: templates/cashbook/credits_base.html:8
 msgid "Processed credits"
 msgstr ""
 
-#: apps/cashbook/views.py:256
+#: apps/cashbook/views.py:271
 msgid "All credits"
 msgstr ""
 
-#: apps/cashbook/views.py:312
+#: apps/cashbook/views.py:313
 #, python-format
 msgid "Search for “%(query)s”"
 msgstr ""
 
-#: apps/cashbook/views.py:314 templates/cashbook/credits_base.html:14
+#: apps/cashbook/views.py:315 templates/cashbook/credits_base.html:14
 #: templates/cashbook/credits_base.html:15
 msgid "Search all credits"
 msgstr ""
 
-#: templates/base.html:23
-msgid "Home"
+#: templates/base.html:23 templates/cashbook/landing.html:26
+msgid "Process credits"
 msgstr ""
 
 #: templates/base.html:27
@@ -544,10 +544,6 @@ msgstr ""
 #: templates/cashbook/landing.html:19
 #, python-format
 msgid "This is where you process credits sent to your prison by a member of the public through the <a href=\"%(start_page_url)s\">Send money to a prisoner</a> service."
-msgstr ""
-
-#: templates/cashbook/landing.html:26
-msgid "Process credits"
 msgstr ""
 
 #: templates/cashbook/landing.html:28

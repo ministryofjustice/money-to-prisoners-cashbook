@@ -4,7 +4,7 @@ import logging
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.core.urlresolvers import reverse_lazy
+from django.core.urlresolvers import reverse_lazy, reverse
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
@@ -27,8 +27,25 @@ class ChangeNotificationView(TemplateView):
     template_name = 'cashbook/change_notification.html'
 
 
+class ChangeNotificationMixin:
+    def dispatch(self, request, *args, **kwargs):
+        cookie_content = request.COOKIES.get('change-notification-read') or ''
+        users_notified = cookie_content.split(',')
+        if request.user.username not in users_notified:
+            cookie_content = ','.join(users_notified + [request.user.username])
+            response = redirect(reverse('change-notification'))
+            response.set_cookie(
+                'change-notification-read',
+                cookie_content,
+                max_age=5 * 365 * 24 * 60 * 60
+            )
+            return response
+
+        return super().dispatch(request, *args, **kwargs)
+
+
 @method_decorator(login_required, name='dispatch')
-class NewCreditsView(FormView):
+class NewCreditsView(ChangeNotificationMixin, FormView):
     title = _('New credits')
     form_class = {
         'new': ProcessNewCreditsForm,
@@ -164,7 +181,7 @@ class NewCreditsView(FormView):
 
 
 @method_decorator(login_required, name='dispatch')
-class ProcessingCreditsView(TemplateView):
+class ProcessingCreditsView(ChangeNotificationMixin, TemplateView):
     title = _('Digital cashbook')
     template_name = 'cashbook/processing_credits.html'
 
@@ -186,7 +203,7 @@ class ProcessingCreditsView(TemplateView):
 
 
 @method_decorator(login_required, name='dispatch')
-class ProcessedCreditsListView(FormView):
+class ProcessedCreditsListView(ChangeNotificationMixin, FormView):
     title = _('Processed credits')
     form_class = FilterProcessedCreditsListForm
     template_name = 'cashbook/processed_credits.html'
@@ -252,7 +269,7 @@ class ProcessedCreditsDetailView(ProcessedCreditsListView):
 
 
 @method_decorator(login_required, name='dispatch')
-class AllCreditsView(FormView):
+class AllCreditsView(ChangeNotificationMixin, FormView):
     title = _('All credits')
     form_class = FilterAllCreditsForm
     template_name = 'cashbook/all_credits.html'
