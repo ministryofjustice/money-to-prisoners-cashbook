@@ -1,10 +1,12 @@
 from django.conf import settings
 from django.conf.urls import url
-from django.views.generic import TemplateView
+from django.views.generic import RedirectView, TemplateView
 
 from .views import (
-    NewCreditsView, ProcessedCreditsListView, ChangeNotificationView,
-    ProcessingCreditsView, ProcessedCreditsDetailView, AllCreditsView,
+    ChangeNotificationView,
+    NewCreditsView, ProcessingCreditsView,
+    ProcessedCreditsListView, ProcessedCreditsDetailView,
+    SearchView,
 )
 
 
@@ -21,10 +23,14 @@ class LandingView(TemplateView):
 urlpatterns = [
     url(r'^$', LandingView.as_view(), name='home'),
     url(r'^change-notification/$', ChangeNotificationView.as_view(), name='change-notification'),
+
     url(r'^new/$', NewCreditsView.as_view(), name='new-credits'),
-    url(r'^all/$', AllCreditsView.as_view(), name='all-credits'),
+
     url(r'^processed/$', ProcessedCreditsListView.as_view(), name='processed-credits-list'),
     url(r'^processed/(?P<date>[0-9]{8})-(?P<user_id>[0-9]+)/$',
         ProcessedCreditsDetailView.as_view(), name='processed-credits-detail'),
     url(r'^processing/$', ProcessingCreditsView.as_view(), name='processing-credits'),
+
+    url(r'^search/$', SearchView.as_view(), name='search'),
+    url(r'^all/$', RedirectView.as_view(pattern_name='search', permanent=True)),
 ]

@@ -262,7 +262,7 @@ class FilterProcessedCreditsDetailForm(FilterProcessedCreditsListForm):
         return len(credits), credits
 
 
-class FilterAllCreditsForm(GARequestErrorReportingMixin, forms.Form):
+class SearchForm(GARequestErrorReportingMixin, forms.Form):
     ordering = forms.ChoiceField(
         label=gettext_lazy('Order by'), required=False,
         initial='-received_at',

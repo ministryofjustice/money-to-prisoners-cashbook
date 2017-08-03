@@ -9,7 +9,7 @@
     </ul>
 
     <div class="column-half">
-      <form class="mtp-cashbook-navigation__search" method="get" action="{% url 'all-credits' %}">
+      <form class="mtp-cashbook-navigation__search" method="get" action="{% url 'search' %}">
         <div class="form-group">
           <label class="visually-hidden" for="id_search">{% trans 'Search all credits' %}</label>
           <input id="id_search" class="form-control" name="search" value="{{ search_field.value|default_if_none:'' }}" placeholder="{% trans 'Search all credits' %}" required/>

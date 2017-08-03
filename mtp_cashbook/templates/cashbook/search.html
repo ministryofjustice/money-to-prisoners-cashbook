@@ -10,13 +10,13 @@
 
   <header>
     {% language_switch %}
-    <h1 class="heading-xlarge">{{ view.title }}</h1>
+    <h1 class="heading-xlarge mtp-heading--compact">{{ view.title }}</h1>
   </header>
 
   {% include 'mtp_common/includes/message_box.html' %}
 
   {% if form.is_valid %}
-    <p class="mtp-all-credits__description">{{ form.get_search_description }}</p>
+    <p>{{ form.get_search_description }}</p>
   {% endif %}
 
   <div class="grid-row print-hidden">

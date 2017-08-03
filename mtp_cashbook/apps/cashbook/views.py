@@ -16,7 +16,7 @@ from requests.exceptions import RequestException
 from .forms import (
     ProcessNewCreditsForm, ProcessManualCreditsForm,
     FilterProcessedCreditsListForm, FilterProcessedCreditsDetailForm,
-    FilterAllCreditsForm, MANUALLY_CREDITED_LOG_LEVEL
+    SearchForm, MANUALLY_CREDITED_LOG_LEVEL,
 )
 
 logger = logging.getLogger('mtp')
@@ -269,11 +269,11 @@ class ProcessedCreditsDetailView(ProcessedCreditsListView):
 
 
 @method_decorator(login_required, name='dispatch')
-class AllCreditsView(ChangeNotificationMixin, FormView):
-    title = _('All credits')
-    form_class = FilterAllCreditsForm
-    template_name = 'cashbook/all_credits.html'
-    success_url = reverse_lazy('all-credits')
+class SearchView(ChangeNotificationMixin, FormView):
+    title = _('Search all credits')
+    form_class = SearchForm
+    template_name = 'cashbook/search.html'
+    success_url = reverse_lazy('search')
 
     def get_initial(self):
         initial = super().get_initial()
@@ -313,8 +313,6 @@ class AllCreditsView(ChangeNotificationMixin, FormView):
         page_count = form.pagination['page_count']
         if form.is_valid() and form.cleaned_data.get('search'):
             self.title = _('Search for “%(query)s”') % {'query': form.cleaned_data['search']}
-        else:
-            self.title = _('Search all credits')
         context.update({
             'search_field': search_field,
             'new_credit_list': new_credit_list,

@@ -890,14 +890,14 @@ class ProcessedCreditsDetailViewTestCase(MTPBaseTestCase):
 
 
 @override_nomis_settings
-class AllCreditsViewTestCase(MTPBaseTestCase):
+class SearchViewTestCase(MTPBaseTestCase):
     def setUp(self):
         super().setUp()
         self.set_change_notification_seen()
 
     @property
     def url(self):
-        return reverse('all-credits')
+        return reverse('search')
 
     def test_search_view(self):
         with responses.RequestsMock() as rsps:
