@@ -7,256 +7,45 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
-from django.utils.translation import gettext_lazy as _, ngettext
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView, TemplateView
 from mtp_common.auth import api_client
 from mtp_common import nomis
 from requests.exceptions import RequestException
 
-from .utils import expected_nomis_availability, check_pre_approval_required
 from .forms import (
-    ProcessCreditBatchForm, DiscardLockedCreditsForm, FilterCreditHistoryForm,
     ProcessNewCreditsForm, ProcessManualCreditsForm,
     FilterProcessedCreditsListForm, FilterProcessedCreditsDetailForm,
-    FilterAllCreditsForm, MANUALLY_CREDITED_LOG_LEVEL
+    SearchForm, MANUALLY_CREDITED_LOG_LEVEL,
 )
 
 logger = logging.getLogger('mtp')
 
 
-class DashboardView(TemplateView):
-    template_name = 'cashbook/dashboard.html'
-    discard_batch = False
-
-    @method_decorator(login_required)
-    @method_decorator(expected_nomis_availability(False))
-    def dispatch(self, request, *args, **kwargs):
-        self.client = api_client.get_connection(request)
-        if self.discard_batch:
-            form = ProcessCreditBatchForm(request, data={
-                'discard': '1'
-            })
-            if form.is_valid():
-                form.save()
-        return super().dispatch(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-
-        # new credits == available + my locked
-        credit_client = self.client.credits
-        available = credit_client.get(status='available')
-        my_locked = credit_client.get(user=self.request.user.pk, status='locked')
-        locked = credit_client.get(status='locked')
-        all_credits = credit_client.get()
-
-        pre_approval_required = check_pre_approval_required(self.request)
-        if pre_approval_required:
-            reviewed = credit_client.get(status='available', reviewed=True)
-            context_data['reviewed'] = reviewed['count']
-
-        context_data.update({
-            'start_page_url': settings.START_PAGE_URL,
-            'new_credits': available['count'] + my_locked['count'],
-            'locked_credits': locked['count'],
-            'all_credits': all_credits['count'],
-            'batch_size': my_locked['count'] or min(available['count'], 20),
-            'in_progress_users': list({credit['owner_name'] for credit in locked['results']})
-        })
-        return context_data
-
-
-class CashbookSubviewMixin(TemplateView):
-    title = NotImplemented
-    home_url = reverse_lazy('dashboard')
-
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        context_data['breadcrumbs'] = [
-            {'name': _('Home'), 'url': self.home_url},
-            {'name': self.title}
-        ]
-        return context_data
-
-
 @method_decorator(login_required, name='dispatch')
-@method_decorator(expected_nomis_availability(False), name='dispatch')
-class CreditBatchListView(FormView, CashbookSubviewMixin):
-    title = _('New credits to enter')
-    form_class = ProcessCreditBatchForm
-    template_name = 'cashbook/credit_batch_list.html'
-    success_url = reverse_lazy('dashboard')
-    home_url = reverse_lazy('dashboard-batch-discard')
-
-    def get_form_kwargs(self):
-        form_kwargs = super().get_form_kwargs()
-        form_kwargs['request'] = self.request
-        return form_kwargs
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        credit_choices = context['form'].credit_choices
-        context['object_list'] = credit_choices
-        context['total'] = sum([x[1]['amount'] for x in credit_choices])
-        context['batch_size'] = len(credit_choices)
-
-        credit_client = context['form'].client.credits
-        available = credit_client.get(status='available')
-        my_locked = credit_client.get(user=self.request.user.pk, status='locked')
-        context['new_credits'] = available['count'] + my_locked['count']
-
-        return context
-
-    def form_valid(self, form):
-        credited, discarded = form.save()
-        credited_count = len(credited)
-        discarded_count = len(discarded)
-
-        if credited_count:
-            messages.success(
-                self.request,
-                ngettext(
-                    'You’ve added 1 credit to NOMIS.',
-                    'You’ve added %(credited)s credits to NOMIS.',
-                    credited_count
-                ) % {
-                    'credited': credited_count
-                }
-            )
-
-            username = self.request.user.user_data.get('username', 'Unknown')
-            logger.info('User "%(username)s" added %(credited)d credits(s) to NOMIS' % {
-                'username': username,
-                'credited': credited_count,
-            }, extra={
-                'elk_fields': {
-                    '@fields.credited_count': credited_count,
-                    '@fields.username': username,
-                }
-            })
-
-        if discarded_count:
-            self.success_url = reverse('dashboard-batch-incomplete')
-        else:
-            self.success_url = reverse('dashboard-batch-complete')
-
-        return super().form_valid(form)
-
-
-@method_decorator(login_required, name='dispatch')
-@method_decorator(expected_nomis_availability(False), name='dispatch')
-class CreditsLockedView(FormView, CashbookSubviewMixin):
-    title = _('Currently being entered into NOMIS')
-    form_class = DiscardLockedCreditsForm
-    template_name = 'cashbook/credits_locked.html'
-    success_url = reverse_lazy('dashboard')
-
-    def get_form_kwargs(self):
-        form_kwargs = super().get_form_kwargs()
-        form_kwargs['request'] = self.request
-        return form_kwargs
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['object_list'] = context['form'].grouped_credit_choices
-        return context
-
-    def form_valid(self, form):
-        discarded = form.save()
-        discarded_count = len(discarded)
-
-        if discarded_count:
-            messages.success(
-                self.request,
-                ngettext(
-                    'You have now returned the credit your '
-                    'colleagues were processing to ‘New’ credits.',
-                    'You have now returned the %(discarded)s credits your '
-                    'colleagues were processing to ‘New’ credits.',
-                    discarded_count
-                ) % {
-                    'discarded': discarded_count
-                }
-            )
-
-        username = self.request.user.user_data.get('username', 'Unknown')
-        logger.info('User "%(username)s" unlocked %(discarded)d credits(s)' % {
-            'username': username,
-            'discarded': discarded_count,
-        }, extra={
-            'elk_fields': {
-                '@fields.discarded_count': discarded_count,
-                '@fields.username': username,
-            }
-        })
-
-        if discarded_count:
-            self.success_url = reverse('dashboard-unlocked-payments')
-
-        return super().form_valid(form)
-
-
-@method_decorator(login_required, name='dispatch')
-@method_decorator(expected_nomis_availability(False), name='dispatch')
-class CreditHistoryView(FormView, CashbookSubviewMixin):
-    title = _('All credits')
-    form_class = FilterCreditHistoryForm
-    template_name = 'cashbook/credits_history.html'
-    success_url = reverse_lazy('credit-history')
-    http_method_names = ['get', 'options']
-
-    def get_initial(self):
-        initial = super().get_initial()
-        initial.update({
-            'page': 1,
-        })
-        return initial
-
-    def get_form_kwargs(self):
-        return {
-            'request': self.request,
-            'data': self.request.GET or {},
-            'initial': self.get_initial(),
-            'prefix': self.get_prefix(),
-        }
-
-    def get(self, request, *args, **kwargs):
-        form = self.get_form()
-        if form.is_bound:
-            if form.is_valid():
-                return self.form_valid(form)
-            else:
-                return self.form_invalid(form)
-        return self.render_to_response(self.get_context_data(form=form))
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        form = context['form']
-        object_list = form.credit_choices
-        current_page = form.pagination['page']
-        page_count = form.pagination['page_count']
-        context.update({
-            'object_list': object_list,
-            'current_page': current_page,
-            'page_count': page_count,
-            'credit_owner_name': self.request.user.get_full_name(),
-        })
-        return context
-
-    def form_valid(self, form):
-        return self.render_to_response(self.get_context_data(form=form))
-
-
-@method_decorator(login_required, name='dispatch')
-@method_decorator(expected_nomis_availability(True), name='dispatch')
 class ChangeNotificationView(TemplateView):
     template_name = 'cashbook/change_notification.html'
 
 
+class ChangeNotificationMixin:
+    def dispatch(self, request, *args, **kwargs):
+        cookie_content = request.COOKIES.get('change-notification-read') or ''
+        users_notified = cookie_content.split(',')
+        if request.user.username not in users_notified:
+            cookie_content = ','.join(users_notified + [request.user.username])
+            response = redirect(reverse('change-notification'))
+            response.set_cookie(
+                'change-notification-read',
+                cookie_content,
+                max_age=5 * 365 * 24 * 60 * 60
+            )
+            return response
+
+        return super().dispatch(request, *args, **kwargs)
+
+
 @method_decorator(login_required, name='dispatch')
-@method_decorator(expected_nomis_availability(True), name='dispatch')
-class NewCreditsView(FormView):
+class NewCreditsView(ChangeNotificationMixin, FormView):
     title = _('New credits')
     form_class = {
         'new': ProcessNewCreditsForm,
@@ -392,8 +181,7 @@ class NewCreditsView(FormView):
 
 
 @method_decorator(login_required, name='dispatch')
-@method_decorator(expected_nomis_availability(True), name='dispatch')
-class ProcessingCreditsView(TemplateView):
+class ProcessingCreditsView(ChangeNotificationMixin, TemplateView):
     title = _('Digital cashbook')
     template_name = 'cashbook/processing_credits.html'
 
@@ -415,8 +203,7 @@ class ProcessingCreditsView(TemplateView):
 
 
 @method_decorator(login_required, name='dispatch')
-@method_decorator(expected_nomis_availability(True), name='dispatch')
-class ProcessedCreditsListView(FormView):
+class ProcessedCreditsListView(ChangeNotificationMixin, FormView):
     title = _('Processed credits')
     form_class = FilterProcessedCreditsListForm
     template_name = 'cashbook/processed_credits.html'
@@ -462,7 +249,6 @@ class ProcessedCreditsListView(FormView):
 
 
 @method_decorator(login_required, name='dispatch')
-@method_decorator(expected_nomis_availability(True), name='dispatch')
 class ProcessedCreditsDetailView(ProcessedCreditsListView):
     title = _('Processed credits')
     form_class = FilterProcessedCreditsDetailForm
@@ -483,12 +269,11 @@ class ProcessedCreditsDetailView(ProcessedCreditsListView):
 
 
 @method_decorator(login_required, name='dispatch')
-@method_decorator(expected_nomis_availability(True), name='dispatch')
-class AllCreditsView(FormView):
-    title = _('All credits')
-    form_class = FilterAllCreditsForm
-    template_name = 'cashbook/all_credits.html'
-    success_url = reverse_lazy('all-credits')
+class SearchView(ChangeNotificationMixin, FormView):
+    title = _('Search all credits')
+    form_class = SearchForm
+    template_name = 'cashbook/search.html'
+    success_url = reverse_lazy('search')
 
     def get_initial(self):
         initial = super().get_initial()
@@ -528,8 +313,6 @@ class AllCreditsView(FormView):
         page_count = form.pagination['page_count']
         if form.is_valid() and form.cleaned_data.get('search'):
             self.title = _('Search for “%(query)s”') % {'query': form.cleaned_data['search']}
-        else:
-            self.title = _('Search all credits')
         context.update({
             'search_field': search_field,
             'new_credit_list': new_credit_list,

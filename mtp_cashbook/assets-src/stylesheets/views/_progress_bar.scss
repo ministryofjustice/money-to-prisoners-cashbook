@@ -1,6 +1,5 @@
 .mtp-progress-bar {
-  margin: 0 auto;
-  margin-top: 2.5em;
+  margin: 2.5em auto 0;
   text-align: center;
   background-color: $govuk-blue;
   width: 100%;
@@ -12,8 +11,7 @@
   }
 
   .mtp-progress-bar__background {
-    margin: 0 auto;
-    margin-top: 2em;
+    margin: 2em auto 0;
     width: 70%;
     height: 60px;
     background-color: $page-colour;
@@ -42,8 +40,7 @@
 
   a.mtp-progress-bar__continue {
     display: block;
-    margin: 0 auto;
-    margin-top: 1em;
+    margin: 1em auto 0;
     font-size: 19px;
     max-width: 200px;
     height: 1.5em;

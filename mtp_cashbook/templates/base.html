@@ -19,8 +19,8 @@
   {% if request.user.is_authenticated %}
     <ul id="proposition-links" class="print-hidden">
       <li>
-        {% url 'dashboard' as home_url %}
-        <a href="{{ view.home_url|default:home_url }}">{% trans 'Home' %}</a>
+        {% url 'new-credits' as home_url %}
+        <a href="{{ view.home_url|default:home_url }}">{% trans 'Process credits' %}</a>
       </li>
       {% if perms.auth.change_user %}
         <li>
