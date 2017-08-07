@@ -1,8 +1,8 @@
 // Application specific
 
-.mtp-filter-box {
+.mtp-search-box {
   #id_start-wrapper, #id_end-wrapper {
-    float: left;
+    display: inline-block;
     width: 175px;
 
     input {
@@ -19,4 +19,9 @@
       width: 100%;
     }
   }
+}
+
+.mtp-search-box__submit {
+  display: inline-block;
+  vertical-align: bottom;
 }
