@@ -222,47 +222,7 @@
   }
 }
 
-.mtp-crediting-result {
-  font-size: 26px;
-  color: $page-colour;
-  padding-left: 70px;
-  padding-top: 0.8em;
-  padding-bottom: 0.8em;
-  background-size: 34px 34px;
-  background-repeat: no-repeat;
-  background-position: 0.8em 0.8em;
-  margin-bottom: 0.5em;
-
-  &.mtp-credited-credits {
-    background-image: file-url('tick.png');
-    background-color: $turquoise;
-
-    @include device-pixel-ratio {
-      background-image: file-url('tick@2x.png');
-    }
-  }
-
-  &.mtp-failed-credits {
-    background-image: file-url('cross.png');
-    background-color: $red;
-
-    @include device-pixel-ratio {
-      background-image: file-url('cross@2x.png');
-    }
-  }
-
-  &.mtp-manual-credits {
-    background-image: file-url('alert.png');
-    background-color: $orange;
-
-    @include device-pixel-ratio {
-      background-image: file-url('alert@2x.png');
-    }
-  }
-
-  a.mtp-end-link {
-    color: $white;
-    font-size: 19px;
-    margin-left: 1em;
-  }
+a.mtp-end-link {
+  @include core-19;
+  margin-left: 1em;
 }

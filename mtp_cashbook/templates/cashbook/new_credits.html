@@ -23,7 +23,7 @@
   </div>
 
   {% if credited_credits %}
-    <div class="mtp-crediting-result mtp-credited-credits print-hidden">
+    <div class="mtp-message mtp-message--success print-hidden">
       {% blocktrans trimmed count credited_credits=credited_credits %}
         {{ credited_credits }} credit sent to NOMIS
       {% plural %}
@@ -34,7 +34,7 @@
   {% endif %}
 
   {% if credited_manual_credits %}
-    <div class="mtp-crediting-result mtp-credited-credits print-hidden">
+    <div class="mtp-message mtp-message--success print-hidden">
       {% blocktrans trimmed count credited_manual_credits=credited_manual_credits %}
         {{ credited_manual_credits }} credit manually input by you into NOMIS
       {% plural %}
@@ -45,7 +45,7 @@
   {% endif %}
 
   {% if failed_credits %}
-    <div class="mtp-crediting-result mtp-failed-credits print-hidden">
+    <div class="mtp-message mtp-message--error print-hidden">
       {% blocktrans trimmed count failed_credits=failed_credits %}
         {{ failed_credits }} credit not processed due to technical error, try again soon
       {% plural %}
@@ -71,7 +71,7 @@
       {% include 'mtp_common/forms/error-summary.html' with form=form.manual only %}
 
       {% if owned_manual_credits %}
-        <div class="mtp-crediting-result mtp-manual-credits print-hidden">
+        <div class="mtp-message mtp-message--warning print-hidden">
           {% blocktrans trimmed count manual_credits=owned_manual_credits %}
             {{ manual_credits }} credit needs your manual input in NOMIS
           {% plural %}
