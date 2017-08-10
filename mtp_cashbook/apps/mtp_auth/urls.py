@@ -21,6 +21,12 @@ urlpatterns = [
         }, name='password_change'
     ),
     url(
+        r'^create_password/$', views.password_change_with_code, {
+            'template_name': 'mtp_common/auth/password_change_with_code.html',
+            'cancel_url': reverse_lazy('new-credits'),
+        }, name='password_change_with_code'
+    ),
+    url(
         r'^password_change_done/$', views.password_change_done, {
             'template_name': 'mtp_common/auth/password_change_done.html',
             'cancel_url': reverse_lazy('new-credits'),
@@ -28,6 +34,7 @@ urlpatterns = [
     ),
     url(
         r'^reset-password/$', views.reset_password, {
+            'password_change_url': reverse_lazy('password_change_with_code'),
             'template_name': 'mtp_common/auth/reset-password.html',
             'cancel_url': reverse_lazy('new-credits'),
         }, name='reset_password'
