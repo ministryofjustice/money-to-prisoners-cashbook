@@ -54,7 +54,7 @@ def credit_individual_credit_to_nomis(user, session, credit_id, credit):
     if credit.get('sender_email'):
         send_email(
             credit['sender_email'], 'cashbook/email/credited-confirmation.txt',
-            _('Send money to a prisoner: the prisoner’s account has been credited'),
+            _('Send money to someone in prison: the prisoner’s account has been credited'),
             context={
                 'amount': credit['amount'],
                 'ref_number': credit.get('short_ref_number'),

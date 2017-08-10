@@ -1,6 +1,6 @@
 {% load i18n %}
 {% load currency %}
-GOV.UK - {% trans 'Send money to a prisoner' %}
+GOV.UK - {% trans 'Send money to someone in prison' %}
 
 {% trans 'Dear sender,' %}
 

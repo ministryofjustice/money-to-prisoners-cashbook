@@ -1,10 +1,10 @@
-# Send money to a prisoner
+# Prisoner money
 # Copyright (C) Crown copyright (Ministry of Justice)
 msgid ""
 msgstr ""
 "Project-Id-Version: mtp-cashbook\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-03 15:17+0100\n"
+"POT-Creation-Date: 2017-08-10 14:38+0100\n"
 "PO-Revision-Date: 2016-11-04 10:00+0000\n"
 "Last-Translator: Welsh Language Unit <welsh.language.unit.manager@hmcts.gsi.gov.uk>\n"
 "Language-Team: Welsh (http://www.transifex.com/ministry-of-justice/mtp/language/cy/)\n"
@@ -141,39 +141,33 @@ msgid "Showing all %(credits)s received"
 msgstr ""
 
 #: apps/cashbook/tasks.py:57
-msgid "Send money to a prisoner: the prisoner’s account has been credited"
+msgid "Send money to someone in prison: the prisoner’s account has been credited"
 msgstr ""
 
-#: apps/cashbook/views.py:32 templates/cashbook/all_credits.html:58
-#: templates/cashbook/all_credits.html:60
-#: templates/cashbook/credits_base.html:7
+#: apps/cashbook/views.py:49 templates/cashbook/credits_base.html:7
+#: templates/cashbook/search.html:58 templates/cashbook/search.html:60
 msgid "New credits"
 msgstr ""
 
-#: apps/cashbook/views.py:183 templates/base.html:12 templates/base.html:15
+#: apps/cashbook/views.py:185 templates/base.html:12 templates/base.html:15
 #: templates/cashbook/landing.html:34 templates/mtp_auth/login.html:4
 msgid "Digital cashbook"
 msgstr ""
 
-#: apps/cashbook/views.py:205 apps/cashbook/views.py:251
-#: templates/cashbook/all_credits.html:75
-#: templates/cashbook/all_credits.html:77
-#: templates/cashbook/credits_base.html:8
+#: apps/cashbook/views.py:207 apps/cashbook/views.py:253
+#: templates/cashbook/credits_base.html:8 templates/cashbook/search.html:75
+#: templates/cashbook/search.html:77
 msgid "Processed credits"
 msgstr ""
 
-#: apps/cashbook/views.py:271
-msgid "All credits"
-msgstr ""
-
-#: apps/cashbook/views.py:313
-#, python-format
-msgid "Search for “%(query)s”"
-msgstr ""
-
-#: apps/cashbook/views.py:315 templates/cashbook/credits_base.html:14
+#: apps/cashbook/views.py:273 templates/cashbook/credits_base.html:14
 #: templates/cashbook/credits_base.html:15
 msgid "Search all credits"
+msgstr ""
+
+#: apps/cashbook/views.py:315
+#, python-format
+msgid "Search for “%(query)s”"
 msgstr ""
 
 #: templates/base.html:23 templates/cashbook/landing.html:26
@@ -204,22 +198,6 @@ msgstr ""
 #: templates/base.html:55
 #, python-format
 msgid "If you have any comments or need help please <a href=\"%(ticket_url)s\">contact us</a>."
-msgstr ""
-
-#: templates/cashbook/all_credits.html:26
-msgid "Filter these credits"
-msgstr ""
-
-#: templates/cashbook/all_credits.html:41
-#: templates/cashbook/processed_credits.html:42
-#: templates/cashbook/processed_credits_detail.html:45
-msgid "Filter list"
-msgstr ""
-
-#: templates/cashbook/all_credits.html:49
-#: templates/cashbook/processed_credits_detail.html:51
-#: templates/cashbook/processed_credits_detail.html:65
-msgid "Print this page of credits"
 msgstr ""
 
 #: templates/cashbook/change_notification.html:6
@@ -286,7 +264,7 @@ msgid "Back to the service"
 msgstr ""
 
 #: templates/cashbook/email/credited-confirmation.txt:3
-msgid "Send money to a prisoner"
+msgid "Send money to someone in prison"
 msgstr ""
 
 #: templates/cashbook/email/credited-confirmation.txt:17
@@ -303,14 +281,14 @@ msgstr ""
 
 #: templates/cashbook/includes/credit-row.html:12
 #: templates/cashbook/includes/manual_credit_table.html:42
-#: templates/cashbook/new_credits.html:284
+#: templates/cashbook/new_credits.html:282
 #: templates/cashbook/processed_credits.html:74
 msgid "Today"
 msgstr ""
 
 #: templates/cashbook/includes/credit-row.html:14
 #: templates/cashbook/includes/manual_credit_table.html:44
-#: templates/cashbook/new_credits.html:286
+#: templates/cashbook/new_credits.html:284
 #: templates/cashbook/processed_credits.html:76
 #, python-format
 msgid "%(days)s day ago"
@@ -330,13 +308,13 @@ msgstr ""
 
 #: templates/cashbook/includes/credit-row.html:43
 #: templates/cashbook/includes/manual_credit_table.html:62
-#: templates/cashbook/new_credits.html:304
+#: templates/cashbook/new_credits.html:302
 msgid "Checked"
 msgstr ""
 
 #: templates/cashbook/includes/credit-row.html:45
 #: templates/cashbook/includes/manual_credit_table.html:64
-#: templates/cashbook/new_credits.html:306
+#: templates/cashbook/new_credits.html:304
 msgid "Not checked"
 msgstr ""
 
@@ -355,25 +333,25 @@ msgstr ""
 
 #: templates/cashbook/includes/credits-header-row.html:8
 #: templates/cashbook/includes/manual_credit_table.html:23
-#: templates/cashbook/new_credits.html:246
+#: templates/cashbook/new_credits.html:244
 msgid "Date sent"
 msgstr ""
 
 #: templates/cashbook/includes/credits-header-row.html:16
 #: templates/cashbook/includes/manual_credit_table.html:24
-#: templates/cashbook/new_credits.html:254
+#: templates/cashbook/new_credits.html:252
 msgid "Prisoner"
 msgstr ""
 
 #: templates/cashbook/includes/credits-header-row.html:24
 #: templates/cashbook/includes/manual_credit_table.html:25
-#: templates/cashbook/new_credits.html:262
+#: templates/cashbook/new_credits.html:260
 msgid "Amount"
 msgstr ""
 
 #: templates/cashbook/includes/credits-header-row.html:29
 #: templates/cashbook/includes/manual_credit_table.html:26
-#: templates/cashbook/new_credits.html:267
+#: templates/cashbook/new_credits.html:265
 msgid "Sender"
 msgstr ""
 
@@ -402,7 +380,7 @@ msgid "Print these credits"
 msgstr ""
 
 #: templates/cashbook/includes/manual_credit_table.html:28
-#: templates/cashbook/new_credits.html:269
+#: templates/cashbook/new_credits.html:267
 msgid "Security"
 msgstr ""
 
@@ -468,7 +446,7 @@ msgid "Sender:"
 msgstr ""
 
 #: templates/cashbook/includes/manual_credit_table.html:146
-#: templates/cashbook/new_credits.html:371
+#: templates/cashbook/new_credits.html:369
 msgid "Yes"
 msgstr ""
 
@@ -543,7 +521,7 @@ msgstr ""
 
 #: templates/cashbook/landing.html:19
 #, python-format
-msgid "This is where you process credits sent to your prison by a member of the public through the <a href=\"%(start_page_url)s\">Send money to a prisoner</a> service."
+msgid "This is where you process credits sent to your prison by a member of the public through the <a href=\"%(start_page_url)s\">Send money to someone in prison</a> service."
 msgstr ""
 
 #: templates/cashbook/landing.html:28
@@ -718,7 +696,7 @@ msgstr ""
 
 #: templates/cashbook/new_credits.html:215
 #, python-format
-msgid "The credits on this page are from the <a href=\"%(start_page_url)s\">Send money to a prisoner</a> service."
+msgid "The credits on this page are from the <a href=\"%(start_page_url)s\">Send money to someone in prison</a> service."
 msgstr ""
 
 #: templates/cashbook/new_credits.html:219
@@ -753,33 +731,33 @@ msgstr ""
 msgid "There is no longer any need to print records."
 msgstr ""
 
-#: templates/cashbook/new_credits.html:236
-#: templates/cashbook/new_credits.html:345
+#: templates/cashbook/new_credits.html:235
+#: templates/cashbook/new_credits.html:343
 msgid "Select all"
 msgstr ""
 
-#: templates/cashbook/new_credits.html:271
+#: templates/cashbook/new_credits.html:269
 msgid "Select"
 msgstr ""
 
-#: templates/cashbook/new_credits.html:320
+#: templates/cashbook/new_credits.html:318
 #, python-format
 msgid "Credit £%(amount)s to %(prisoner_name)s"
 msgstr ""
 
-#: templates/cashbook/new_credits.html:355
+#: templates/cashbook/new_credits.html:353
 msgid "Thank you"
 msgstr ""
 
-#: templates/cashbook/new_credits.html:356
+#: templates/cashbook/new_credits.html:354
 msgid "All credits have been processed"
 msgstr ""
 
-#: templates/cashbook/new_credits.html:367
+#: templates/cashbook/new_credits.html:365
 msgid "Do you want to submit only the selected credits?"
 msgstr ""
 
-#: templates/cashbook/new_credits.html:374
+#: templates/cashbook/new_credits.html:372
 msgid "No, continue processing"
 msgstr ""
 
@@ -801,6 +779,12 @@ msgstr ""
 
 #: templates/cashbook/processed_credits.html:28
 msgid "Filter by"
+msgstr ""
+
+#: templates/cashbook/processed_credits.html:42
+#: templates/cashbook/processed_credits_detail.html:45
+#: templates/cashbook/search.html:41
+msgid "Filter list"
 msgstr ""
 
 #: templates/cashbook/processed_credits.html:55
@@ -854,6 +838,12 @@ msgstr[1] ""
 msgid "Total:"
 msgstr ""
 
+#: templates/cashbook/processed_credits_detail.html:51
+#: templates/cashbook/processed_credits_detail.html:65
+#: templates/cashbook/search.html:49
+msgid "Print this page of credits"
+msgstr ""
+
 #: templates/cashbook/processing_credits.html:19
 msgid "Digital cashbook is crediting to NOMIS"
 msgstr ""
@@ -868,4 +858,8 @@ msgstr ""
 
 #: templates/cashbook/processing_credits.html:36
 msgid "Continue"
+msgstr ""
+
+#: templates/cashbook/search.html:26
+msgid "Filter these credits"
 msgstr ""
