@@ -20,7 +20,7 @@ urlpatterns = [
     url(r'^footer-feedback/$', FeedbackFooterView.as_view(
         form_class=PrisonTicketForm,
         subject=ticket_subject,
-        tags=ticket_tags,
+        tags=ticket_tags + ['footer'],
     ), name='submit_footer_feedback'),
     url(r'^feedback/success/$', views.success,
         {
