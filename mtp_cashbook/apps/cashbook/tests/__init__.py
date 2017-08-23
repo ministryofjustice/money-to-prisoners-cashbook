@@ -69,10 +69,6 @@ class MTPBaseTestCase(SimpleTestCase):
         response = self.client.post(self.logout_url, follow=True)
         self.assertEqual(response.status_code, 200)
 
-    def set_change_notification_seen(self, username=None):
-        username = username or self._default_login_data['credentials']['username']
-        self.client.cookies['change-notification-read'] = username
-
 
 def api_url(path):
     return urljoin(settings.API_URL, path)

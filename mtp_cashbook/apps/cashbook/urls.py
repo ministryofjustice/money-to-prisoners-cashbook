@@ -3,7 +3,6 @@ from django.conf.urls import url
 from django.views.generic import RedirectView, TemplateView
 
 from .views import (
-    ChangeNotificationView,
     NewCreditsView, ProcessingCreditsView,
     ProcessedCreditsListView, ProcessedCreditsDetailView,
     SearchView,
@@ -22,7 +21,6 @@ class LandingView(TemplateView):
 
 urlpatterns = [
     url(r'^$', LandingView.as_view(), name='home'),
-    url(r'^change-notification/$', ChangeNotificationView.as_view(), name='change-notification'),
 
     url(r'^new/$', NewCreditsView.as_view(), name='new-credits'),
 
