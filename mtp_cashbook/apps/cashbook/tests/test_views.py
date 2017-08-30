@@ -74,57 +74,7 @@ def wrap_response_data(*args):
     }
 
 
-class ChangeNotificationTestCase(MTPBaseTestCase):
-
-    @property
-    def url(self):
-        return reverse('new-credits')
-
-    @override_nomis_settings
-    def test_first_visit_with_nomis_available_shows_change_notification(self):
-        self.login()
-        response = self.client.get(self.url, follow=True)
-        self.assertRedirects(response, reverse('change-notification'))
-
-    @override_nomis_settings
-    def test_second_visit_with_nomis_available_skips_change_notification(self):
-        self.login()
-        response = self.client.get(self.url, follow=True)
-        self.assertRedirects(response, reverse('change-notification'))
-
-        # second visit
-        with responses.RequestsMock() as rsps:
-            # get active batches
-            rsps.add(
-                rsps.GET,
-                api_url('/credits/batches/'),
-                json=wrap_response_data(),
-                status=200,
-            )
-            # get new credits
-            rsps.add(
-                rsps.GET,
-                api_url('/credits/?ordering=-received_at&offset=0&limit=100&status=credit_pending&resolution=pending'),
-                json=wrap_response_data(),
-                status=200,
-                match_querystring=True,
-            )
-            # get manual credits
-            rsps.add(
-                rsps.GET,
-                api_url('/credits/?resolution=manual&status=credit_pending&offset=0&limit=100&ordering=-received_at'),
-                json=wrap_response_data(),
-                status=200,
-                match_querystring=True,
-            )
-            response = self.client.get(self.url, follow=True)
-            self.assertContains(response, 'New credits')
-
-
 class NewCreditsViewTestCase(MTPBaseTestCase):
-    def setUp(self):
-        super().setUp()
-        self.set_change_notification_seen()
 
     @property
     def url(self):
@@ -568,9 +518,6 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
 
 
 class ProcessingCreditsViewTestCase(MTPBaseTestCase):
-    def setUp(self):
-        super().setUp()
-        self.set_change_notification_seen()
 
     @property
     def url(self):
@@ -721,9 +668,6 @@ class ProcessingCreditsViewTestCase(MTPBaseTestCase):
 
 
 class ProcessedCreditsListViewTestCase(MTPBaseTestCase):
-    def setUp(self):
-        super().setUp()
-        self.set_change_notification_seen()
 
     @property
     def url(self):
@@ -798,9 +742,6 @@ class ProcessedCreditsListViewTestCase(MTPBaseTestCase):
 
 
 class ProcessedCreditsDetailViewTestCase(MTPBaseTestCase):
-    def setUp(self):
-        super().setUp()
-        self.set_change_notification_seen()
 
     @property
     def url(self):
@@ -891,9 +832,6 @@ class ProcessedCreditsDetailViewTestCase(MTPBaseTestCase):
 
 @override_nomis_settings
 class SearchViewTestCase(MTPBaseTestCase):
-    def setUp(self):
-        super().setUp()
-        self.set_change_notification_seen()
 
     @property
     def url(self):

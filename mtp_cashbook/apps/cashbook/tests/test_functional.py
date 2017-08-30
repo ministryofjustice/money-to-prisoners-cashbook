@@ -39,7 +39,6 @@ class CashbookTestCase(FunctionalTestCase):
         self.driver.find_element_by_css_selector('#proposition-links li:last-child a').click()
 
     def login_and_go_to(self, link_text, substring=False):
-        self.set_change_notification_read_cookie(self.username)
         self.login(self.username, self.username)
         if substring:
             self.click_on_text_substring(link_text)
@@ -60,12 +59,6 @@ class CashbookTestCase(FunctionalTestCase):
     def click_on_link(self, text):
         self.driver.find_element_by_link_text(text).click()
 
-    def set_change_notification_read_cookie(self, username):
-        self.driver.get(self.live_server_url)
-        self.driver.execute_script(
-            'document.cookie = "change-notification-read=%s; path=/;"' % username
-        )
-
 
 class LoginTests(CashbookTestCase):
     """
@@ -84,19 +77,13 @@ class LoginTests(CashbookTestCase):
 
     def test_good_login(self):
         self.login('test-hmp-leeds', 'test-hmp-leeds')
-        self.assertCurrentUrl('/en-gb/change-notification/')
-        self.assertShowingView('change-notification')
-
-    def test_good_login_with_change_notification_cookie(self):
-        self.set_change_notification_read_cookie('test-hmp-leeds')
-        self.login('test-hmp-leeds', 'test-hmp-leeds')
         self.assertCurrentUrl('/en-gb/new/')
         self.assertShowingView('new-credits')
 
     def test_good_login_without_case_sensitivity(self):
         self.login('test-HMP-leeds', 'test-hmp-leeds')
-        self.assertCurrentUrl('/en-gb/change-notification/')
-        self.assertShowingView('change-notification')
+        self.assertCurrentUrl('/en-gb/new/')
+        self.assertShowingView('new-credits')
 
     def test_logout(self):
         self.login('test-hmp-leeds', 'test-hmp-leeds')
@@ -112,7 +99,6 @@ class NewCreditsPageTests(CashbookTestCase):
 
     def setUp(self):
         super().setUp()
-        self.set_change_notification_read_cookie(self.username)
         self.login(self.username, self.username)
 
     def test_going_to_the_credits_page(self):
