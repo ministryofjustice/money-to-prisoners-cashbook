@@ -26,6 +26,10 @@
     &:visited {
       color: $white;
     }
+
+    &:focus {
+      color: $text-colour;
+    }
   }
 
   .mtp-language-switch__item {
@@ -73,6 +77,10 @@
 
     &:link, &:link:focus, &:hover, &:focus, &:visited {
       color: $govuk-blue;
+    }
+
+    &:focus {
+      outline: 3px solid $focus-colour;
     }
   }
 }
