@@ -193,8 +193,6 @@
             </div>
           </div>
         </div>
-      {% else %}
-        <p>{% trans 'No new credits received' %}</p>
       {% endif %}
 
 
@@ -350,7 +348,7 @@
           <tbody>
             <tr>
               <td class="mtp-no-credits" colspan="{% if pre_approval_required%}6{% else %}5{% endif %}">
-                <h2 class="heading-large">{% trans 'Thank you' %}</h2>
+                <p class="heading-large">{% trans 'Thank you' %}</p>
                 <p>{% trans 'All credits have been processed' %}</p>
               </td>
             </tr>
