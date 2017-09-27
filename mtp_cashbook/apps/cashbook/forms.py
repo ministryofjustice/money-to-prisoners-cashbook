@@ -11,8 +11,8 @@ from django.utils.dateformat import format as format_date
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext, gettext_lazy, ngettext
 from form_error_reporting import GARequestErrorReportingMixin
-from mtp_common.api import retrieve_all_pages
-from mtp_common.auth.api_client import get_connection
+from mtp_common.api import retrieve_all_pages_for_path
+from mtp_common.auth.api_client import get_api_session
 
 from .tasks import credit_selected_credits_to_nomis
 from .templatetags.credits import parse_date_fields
@@ -29,14 +29,14 @@ class ProcessNewCreditsForm(GARequestErrorReportingMixin, forms.Form):
         super().__init__(*args, **kwargs)
         self.request = request
         self.user = request.user
-        self.client = get_connection(request)
+        self.session = get_api_session(request)
         self.ordering = ordering
 
         self.fields['credits'].choices = self.credit_choices
 
     def _request_all_credits(self):
-        return retrieve_all_pages(
-            self.client.credits.get, status='credit_pending', resolution='pending',
+        return retrieve_all_pages_for_path(
+            self.session, 'credits/', status='credit_pending', resolution='pending',
             ordering=self.ordering
         )
 
@@ -60,7 +60,7 @@ class ProcessNewCreditsForm(GARequestErrorReportingMixin, forms.Form):
         credit_ids = [int(c_id) for c_id in set(self.cleaned_data['credits'])]
         credits = dict(self.credit_choices)
 
-        self.client.credits.batches.post({'credits': credit_ids})
+        self.session.post('credits/batches/', json={'credits': credit_ids})
         credit_selected_credits_to_nomis(
             user=self.request.user, session=self.request.session,
             selected_credit_ids=credit_ids, credits=credits
@@ -74,14 +74,14 @@ class ProcessManualCreditsForm(GARequestErrorReportingMixin, forms.Form):
         super().__init__(*args, **kwargs)
         self.request = request
         self.user = request.user
-        self.client = get_connection(request)
+        self.session = get_api_session(request)
         self.ordering = ordering
 
         self.fields['credit'].choices = self.credit_choices
 
     def _request_all_credits(self):
-        return retrieve_all_pages(
-            self.client.credits.get, status='credit_pending', resolution='manual',
+        return retrieve_all_pages_for_path(
+            self.session, 'credits/', status='credit_pending', resolution='manual',
             ordering=self.ordering
         )
 
@@ -110,9 +110,10 @@ class ProcessManualCreditsForm(GARequestErrorReportingMixin, forms.Form):
 
     def save(self):
         credit_id = int(self.cleaned_data['credit'])
-        self.client.credits.actions.credit.post([
-            {'id': credit_id, 'credited': True}
-        ])
+        self.session.post(
+            'credits/actions/credit/',
+            json=[{'id': credit_id, 'credited': True}]
+        )
         manually_credited = 1
         try:
             manually_credited += int(self.request.GET.get('manually_credited'))
@@ -144,7 +145,7 @@ class FilterProcessedCreditsListForm(GARequestErrorReportingMixin, forms.Form):
         self.label_suffix = ''
         self.request = request
         self.user = request.user
-        self.client = get_connection(request)
+        self.session = get_api_session(request)
         self.pagination = {
             'page': 1,
             'count': 0,
@@ -194,7 +195,10 @@ class FilterProcessedCreditsListForm(GARequestErrorReportingMixin, forms.Form):
         return parse_date_fields(results)
 
     def retrieve_credits(self, offset, limit, **filters):
-        response = self.client.credits.processed.get(offset=offset, limit=self.page_size, **filters)
+        response = self.session.get(
+            'credits/processed/',
+            params=dict(offset=offset, limit=self.page_size, **filters)
+        ).json()
         return response.get('count', 0), response.get('results', [])
 
     def get_query_data(self):
@@ -256,8 +260,8 @@ class FilterProcessedCreditsDetailForm(FilterProcessedCreditsListForm):
         return self.cleaned_data['ordering'] or self.fields['ordering'].initial
 
     def retrieve_credits(self, offset, limit, **filters):
-        credits = retrieve_all_pages(
-            self.client.credits.get, **dict(self.default_filters, **filters)
+        credits = retrieve_all_pages_for_path(
+            self.session, 'credits/', **dict(self.default_filters, **filters)
         )
         return len(credits), credits
 
@@ -293,7 +297,7 @@ class SearchForm(GARequestErrorReportingMixin, forms.Form):
         self.label_suffix = ''
         self.request = request
         self.user = request.user
-        self.client = get_connection(request)
+        self.session = get_api_session(request)
         self.pagination = {
             'page': 1,
             'count': 0,
@@ -347,7 +351,10 @@ class SearchForm(GARequestErrorReportingMixin, forms.Form):
 
         page = self.cleaned_data.get('page') or 1
         offset = (page - 1) * self.page_size
-        response = self.client.credits.get(offset=offset, limit=self.page_size, resolution='credited', **filters)
+        response = self.session.get(
+            'credits/',
+            params=dict(offset=offset, limit=self.page_size, resolution='credited', **filters)
+        ).json()
         count = response.get('count', 0)
         self.pagination = {
             'page': page,
@@ -357,7 +364,9 @@ class SearchForm(GARequestErrorReportingMixin, forms.Form):
         }
         results = response.get('results', [])
         if page == 1:
-            new_credits = retrieve_all_pages(self.client.credits.get, status='credit_pending', **filters)
+            new_credits = retrieve_all_pages_for_path(
+                self.session, 'credits/', status='credit_pending', **filters
+            )
             self.pagination['full_count'] += len(new_credits)
             results = new_credits + results
         return parse_date_fields(results)

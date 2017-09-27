@@ -2,7 +2,7 @@ import logging
 
 from django.conf import settings
 from django.utils.translation import gettext as _
-from mtp_common.auth.api_client import get_connection_with_session
+from mtp_common.auth.api_client import get_api_session_with_session
 from mtp_common import nomis
 from mtp_common.spooling import spoolable
 from mtp_common.tasks import send_email
@@ -22,7 +22,7 @@ def credit_selected_credits_to_nomis(*, user, session, selected_credit_ids, cred
 
 @spoolable()
 def credit_individual_credit_to_nomis(user, session, credit_id, credit):
-    client = get_connection_with_session(user, session)
+    session = get_api_session_with_session(user, session)
     nomis_response = None
     try:
         nomis_response = nomis.credit_prisoner(
@@ -41,15 +41,16 @@ def credit_individual_credit_to_nomis(user, session, credit_id, credit):
             return
         else:
             logger.error('Credit %s cannot be automatically credited to NOMIS' % credit_id)
-            client.credits.actions.setmanual.post({
-                'credit_ids': [int(credit_id)]
-            })
+            session.post(
+                'credits/actions/setmanual/',
+                json={'credit_ids': [int(credit_id)]}
+            )
             return
 
     credit_update = {'id': credit_id, 'credited': True}
     if nomis_response and 'id' in nomis_response:
         credit_update['nomis_transaction_id'] = nomis_response['id']
-    client.credits.actions.credit.post([credit_update])
+    session.post('credits/actions/credit/', json=[credit_update])
 
     if credit.get('sender_email'):
         send_email(
