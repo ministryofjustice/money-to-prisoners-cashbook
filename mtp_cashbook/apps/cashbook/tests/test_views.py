@@ -218,8 +218,8 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
                 [{'id': 2, 'credited': True, 'nomis_transaction_id': '6244780-1'}]
             ]
             self.assertTrue(
-                json.loads(rsps.calls[4].request.body) in expected_calls and
-                json.loads(rsps.calls[6].request.body) in expected_calls
+                json.loads(rsps.calls[4].request.body.decode('utf-8')) in expected_calls and
+                json.loads(rsps.calls[6].request.body.decode('utf-8')) in expected_calls
             )
             self.assertContains(response, '2 credits sent to NOMIS')
             self.assertEqual(len(mail.outbox), 2)
@@ -510,7 +510,7 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
                 follow=True
             )
             self.assertEqual(
-                json.loads(rsps.calls[2].request.body),
+                json.loads(rsps.calls[2].request.body.decode('utf-8')),
                 [{'id': 1, 'credited': True}]
             )
             self.assertEqual(response.status_code, 200)

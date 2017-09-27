@@ -51,23 +51,25 @@ class NewCreditsView(FormView):
         return form_kwargs
 
     def get(self, request, *args, **kwargs):
-        client = api_client.get_connection(self.request)
-        batches = client.credits.batches.get()
+        session = api_client.get_api_session(self.request)
+        batches = session.get('credits/batches/').json()
         if batches['count']:
             last_batch = batches['results'][0]
             credit_ids = last_batch['credits']
-            incomplete_credits = client.credits.get(
-                resolution='pending', pk=credit_ids
-            )
+            incomplete_credits = session.get(
+                'credits/', params={'resolution': 'pending', 'pk': credit_ids}
+            ).json()
             if not last_batch['expired'] and incomplete_credits['count']:
                 return redirect('processing-credits')
 
-            credited_credits = client.credits.get(
-                resolution='credited', pk=credit_ids
-            )
+            credited_credits = session.get(
+                'credits/', params={'resolution': 'credited', 'pk': credit_ids}
+            ).json()
             kwargs['credited_credits'] = credited_credits['count']
             kwargs['failed_credits'] = incomplete_credits['count']
-            client.credits.batches(last_batch['id']).delete()
+            session.delete(
+                'credits/batches/{batch_id}/'.format(batch_id=last_batch['id'])
+            )
 
         for message in messages.get_messages(request):
             if message.level == MANUALLY_CREDITED_LOG_LEVEL:
@@ -165,16 +167,16 @@ class ProcessingCreditsView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
-        client = api_client.get_connection(self.request)
-        batches = client.credits.batches.get()
+        session = api_client.get_api_session(self.request)
+        batches = session.get('credits/batches/').json()
         if batches['count'] == 0 or batches['results'][0]['expired']:
             return redirect('new-credits')
         else:
             credit_ids = batches['results'][0]['credits']
             total = len(credit_ids)
-            incomplete_credits = client.credits.get(
-                resolution='pending', pk=credit_ids
-            )
+            incomplete_credits = session.get(
+                'credits/', params={'resolution': 'pending', 'pk': credit_ids}
+            ).json()
             done_credit_count = total - incomplete_credits['count']
             context['percentage'] = int((done_credit_count/total)*100)
         return self.render_to_response(context)
