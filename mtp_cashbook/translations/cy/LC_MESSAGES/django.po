@@ -189,10 +189,6 @@ msgstr "Newid cyfrinair"
 msgid "Sign out %(full_name)s"
 msgstr "Allgofnodi %(full_name)s"
 
-#: templates/base.html:48
-msgid "Beta"
-msgstr "Beta"
-
 #: templates/base.html:54
 msgid "This is a new service."
 msgstr "Mae hwn yn wasanaeth newydd."

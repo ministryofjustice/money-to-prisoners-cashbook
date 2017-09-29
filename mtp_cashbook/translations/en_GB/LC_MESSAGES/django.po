@@ -187,10 +187,6 @@ msgstr ""
 msgid "Sign out %(full_name)s"
 msgstr ""
 
-#: templates/base.html:48
-msgid "Beta"
-msgstr ""
-
 #: templates/base.html:54
 msgid "This is a new service."
 msgstr ""
