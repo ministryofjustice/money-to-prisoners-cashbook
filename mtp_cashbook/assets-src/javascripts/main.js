@@ -1,6 +1,8 @@
 (function () {
   'use strict';
+
   require('polyfills').Polyfills.init();
+  require('placeholder-polyfill').PlaceholderPolyfill.init();
 
   // common
   require('proposition-user-menu').PropositionUserMenu.init();
