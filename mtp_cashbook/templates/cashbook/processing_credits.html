@@ -4,38 +4,35 @@
 {% block head %}
   {{ block.super }}
   {% if percentage < 100 %}
-  <meta http-equiv="refresh" content="2">
+    <meta http-equiv="refresh" content="2">
   {% endif %}
 {% endblock %}
 
-{% block phase_banner %}{% endblock %}
-{% block proposition_menu %}{% endblock %}
-
 {% block inner_content %}
-<div class="mtp-progress-bar">
-  <div class="mtp-progress-bar__content">
-    <h2 class="heading-large">
-      {% if percentage < 100 %}
-        {% trans 'Digital cashbook is crediting to NOMIS' %}
-      {% else %}
-        {% trans 'Digital cashbook has finished crediting to NOMIS' %}
-      {% endif %}
-    </h2>
-    <p>
-      {% if percentage < 100 %}
-        {% trans 'This may take a minute or two so please don’t close this page' %}
-      {% else %}
-        &nbsp;
-      {% endif %}
-    </p>
+  <div class="mtp-progress-bar">
+    <div class="mtp-progress-bar__content">
+      <h2 class="heading-large">
+        {% if percentage < 100 %}
+          {% trans 'Digital cashbook is crediting to NOMIS' %}
+        {% else %}
+          {% trans 'Digital cashbook has finished crediting to NOMIS' %}
+        {% endif %}
+      </h2>
+      <p>
+        {% if percentage < 100 %}
+          {% trans 'This may take a minute or two so please don’t close this page' %}
+        {% else %}
+          &nbsp;
+        {% endif %}
+      </p>
+    </div>
+    <div class="mtp-progress-bar__background">
+      <div class="mtp-progress-bar__fill" style="width: {{ percentage }}%"></div>
+    </div>
+    {% if percentage == 100 %}
+      <a class="mtp-progress-bar__continue" href="{% url 'new-credits' %}">{% trans 'Continue' %}</a>
+    {% else %}
+      <div class="mtp-progress-bar__progress">{{ percentage }}%</div>
+    {% endif %}
   </div>
-  <div class="mtp-progress-bar__background">
-    <div class="mtp-progress-bar__fill" style="width: {{ percentage }}%"></div>
-  </div>
-  {% if percentage == 100 %}
-    <a class="mtp-progress-bar__continue" href="{% url 'new-credits' %}">{% trans 'Continue' %}</a>
-  {% else %}
-    <div class="mtp-progress-bar__progress">{{ percentage }}%</div>
-  {% endif %}
-</div>
 {% endblock %}

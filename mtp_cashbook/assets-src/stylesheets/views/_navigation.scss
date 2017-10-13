@@ -1,32 +1,3 @@
-.mtp-cashbook-navigation {
-  margin-top: 0.2em;
-
-  @media print {
-    display: none;
-  }
-}
-
-.mtp-cashbook-navigation__links {
-  @extend %contain-floats;
-
-  li {
-    display: block;
-    float: left;
-    margin-right: 3px;
-  }
-
-  a {
-    display: block;
-    padding: em(8) em(18);
-
-    &.mtp-cashbook-navigation__active {
-      background-color: $link-colour;
-      color: $page-colour;
-      text-decoration: none;
-    }
-  }
-}
-
 .mtp-cashbook-navigation__search {
   position: relative;
 

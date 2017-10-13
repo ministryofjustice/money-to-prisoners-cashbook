@@ -7,18 +7,21 @@
     margin: 0;
   }
 
-  #global-header-bar, .phase-banner {
-    display: none;
+  #global-header-bar {
+    max-width: none;
+    height: 3em;
+    margin: 0;
   }
-}
 
-.mtp-landing__content {
-  @extend %site-width-container;
-}
+  .mtp-sub-nav {
+    margin-top: -3em;
+    background: $govuk-blue;
+    color: $white;
+  }
 
-.mtp-landing__header {
-  background: $govuk-blue;
-  color: $white;
+  .mtp-language-switch__item {
+    border-color: $white;
+  }
 
   a {
     color: $white;
@@ -31,10 +34,15 @@
       color: $text-colour;
     }
   }
+}
 
-  .mtp-language-switch__item {
-    border-color: $white;
-  }
+.mtp-landing__content {
+  @extend %site-width-container;
+}
+
+.mtp-landing__header {
+  background: $govuk-blue;
+  color: $white;
 
   .column-two-thirds {
     padding-right: 3 * $gutter;

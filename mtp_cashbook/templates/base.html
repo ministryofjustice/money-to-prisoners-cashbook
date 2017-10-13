@@ -10,50 +10,32 @@
 {% endblock %}
 
 {% block page_title %}{% trans 'Digital cashbook' %}{% endblock %}
+{% block proposition %}{% trans 'Digital cashbook' %}{% endblock %}
 
-{% block proposition %}
-  {% trans 'Digital cashbook' %}
+
+{% block proposition_extra %}
+  <nav id="mtp-proposition-extra" class="column-full print-hidden">
+    {% spaceless %}
+      <ul id="mtp-proposition-tabs">
+        {% if request.user.is_authenticated %}
+          {% include 'cashbook/includes/proposition-tab.html' with view_name='new-credits' subview_names='new-credits' link_text=_('New credits') %}
+          {% include 'cashbook/includes/proposition-tab.html' with view_name='processed-credits-list' subview_names='processed-credits-list processed-credits-detail' link_text=_('Processed credits') %}
+        {% endif %}
+        {% include 'cashbook/includes/proposition-tab.html' with view_name='submit_ticket' subview_names='submit_ticket feedback_success' link_text=_('Get help') %}
+      </ul>
+    {% endspaceless %}
+  </nav>
 {% endblock %}
 
-{% block proposition_menu %}
-  {% if request.user.is_authenticated %}
-    <ul id="proposition-links" class="print-hidden">
-      <li>
-        {% url 'new-credits' as home_url %}
-        <a href="{{ view.home_url|default:home_url }}">{% trans 'Process credits' %}</a>
-      </li>
-      {% if perms.auth.change_user %}
-        <li>
-          <a href="{% url 'list-users' %}">{% trans 'Manage users' %}</a>
-        </li>
-      {% endif %}
-      <li>
-        <a href="{% url 'password_change' %}">{% trans 'Change password' %}</a>
-      </li>
-      <li>
-        <a href="{% url 'logout' %}">
-          {% blocktrans trimmed with full_name=request.user.get_full_name|default:request.user.username %}
-            Sign out {{ full_name }}
-          {% endblocktrans %}
-        </a>
-      </li>
-    </ul>
-  {% endif %}
-{% endblock %}
 
-{% block phase_banner %}
-  <div class="phase-banner">
-    <p>
-      {% if ENVIRONMENT != 'prod' %}
-        <strong class="phase-tag phase-tag-dev" title="{{ APP }}-{{ ENVIRONMENT }}:{{ APP_GIT_COMMIT_SHORT }}{% if APP_BUILD_DATE %}, built {{ APP_BUILD_DATE }}{% endif %}">{{ ENVIRONMENT }}</strong>
-      {% endif %}
-      {% url 'submit_ticket' as ticket_url %}
-      <span>
-        {% trans 'This is a new service.' %}
-        {% blocktrans trimmed %}
-          If you have any comments or need help please <a href="{{ ticket_url }}">contact us</a>.
-        {% endblocktrans %}
-      </span>
-    </p>
-  </div>
+{% block footer_support_links %}
+  <ul>
+    <li><a href="{% url 'submit_ticket' %}">{% trans 'Get help' %}</a></li>
+    <li>
+      {% trans 'Built by' %}
+      <a href="https://mojdigital.blog.gov.uk/">
+        <abbr title="{% trans 'Ministry of Justice' %}">MOJ</abbr> Digital
+      </a>
+    </li>
+  </ul>
 {% endblock %}

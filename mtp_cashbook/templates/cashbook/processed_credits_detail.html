@@ -1,4 +1,4 @@
-{% extends 'cashbook/credits_base.html' %}
+{% extends 'base.html' %}
 {% load i18n %}
 {% load currency %}
 {% load mtp_common %}
@@ -8,10 +8,9 @@
 
 {% block body_classes %}{{ block.super }} mtp-credits{% endblock %}
 
-{% block page_content %}
+{% block inner_content %}
 
   <header>
-    {% language_switch %}
     <h2 class="heading-xlarge mtp-heading--compact">
       {% blocktrans trimmed with date=form.batch_date|date:'d/m/Y' count count=form.pagination.count %}
         {{ count }} credit processed on {{ date }}
