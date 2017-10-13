@@ -1,4 +1,4 @@
-{% extends 'cashbook/credits_base.html' %}
+{% extends 'base.html' %}
 {% load i18n %}
 {% load credits %}
 {% load currency %}
@@ -9,10 +9,9 @@
 
 {% block body_classes %}{{ block.super }} mtp-credits{% endblock %}
 
-{% block page_content %}
+{% block inner_content %}
 
   <header>
-    {% language_switch %}
     <h1 class="heading-xlarge mtp-heading--compact">{{ view.title }}</h1>
   </header>
 

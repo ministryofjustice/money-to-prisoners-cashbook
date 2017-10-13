@@ -1,7 +1,20 @@
 from django.urls import reverse
+from django.utils.translation import gettext
+from mtp_common.context_processors import govuk_localisation as inherited_localisation
+
 from mtp_common.auth.models import MojUser
 
 from .utils import check_pre_approval_required
+
+
+def govuk_localisation(request):
+    data = inherited_localisation(request)
+    data.update(
+        homepage_url=data['home_url'],
+        logo_link_title=gettext('Go to the homepage'),
+        global_header_text=gettext('Digital cashbook'),
+    )
+    return data
 
 
 def footer_feedback_context(request):

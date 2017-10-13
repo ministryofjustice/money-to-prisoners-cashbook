@@ -3,7 +3,7 @@
   require('polyfills').Polyfills.init();
 
   // common
-  require('proposition-header').PropositionHeader.init();
+  require('proposition-user-menu').PropositionUserMenu.init();
   require('dialogue-box').DialogueBox.init();
   require('messages').Messages.init();
   require('print').Print.init();
