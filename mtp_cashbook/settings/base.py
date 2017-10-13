@@ -121,7 +121,6 @@ TEMPLATES = [
                 'mtp_common.context_processors.analytics',
                 'mtp_common.context_processors.app_environment',
                 'cashbook.context_processors.govuk_localisation',
-                'cashbook.context_processors.footer_feedback_context',
                 'cashbook.context_processors.pre_approval_required',
             ],
         },
