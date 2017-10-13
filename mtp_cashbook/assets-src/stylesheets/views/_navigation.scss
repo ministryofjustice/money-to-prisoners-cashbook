@@ -1,8 +1,21 @@
+$mtp-nav-breakpoint: 830px;
+
+.mtp-proposition-tab-column {
+  @include box-sizing(border-box);
+  float: right;
+  width: 50%;
+
+  @include media($max-width: $mtp-nav-breakpoint, $ignore-for-ie: true) {
+    float: none;
+    width: auto;
+  }
+}
+
 .mtp-cashbook-navigation__search {
   position: relative;
 
-  @include media(mobile) {
-    margin-top: em(8);
+  @include media($max-width: $mtp-nav-breakpoint, $ignore-for-ie: true) {
+    margin-bottom: 10px;
   }
 
   .form-group {
@@ -10,11 +23,22 @@
   }
 
   #id_search {
+    @include core-16;
     float: right;
+    width: 240px;
     padding-right: 44px;
-    width: 75%;
+    border-color: $page-colour;
+    transition: width 0.2s;
 
-    @include media($max-width: $desktop-breakpoint, $ignore-for-ie: true) {
+    @include media($max-width: $mtp-nav-breakpoint, $ignore-for-ie: true) {
+      width: 100%;
+    }
+
+    @include ie-lte(8) {
+      width: 300px;
+    }
+
+    &:focus {
       width: 100%;
     }
   }
@@ -22,7 +46,7 @@
 
 .mtp-nav-search-button {
   @include box-sizing(border-box);
-  @include core-19;
+  @include core-16;
   display: inline-block;
   position: absolute;
   overflow: hidden;
