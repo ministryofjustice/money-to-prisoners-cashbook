@@ -12,7 +12,6 @@
   require('disclosure').Disclosure.init();
   require('analytics').Analytics.init();
   require('track-printing').TrackPrinting.init();
-  require('footer-feedback').FooterFeedback.init();
 
   // cashbook
   require('sticky-header').StickyHeader.init();
