@@ -7,16 +7,13 @@
     margin: 0;
   }
 
-  #global-header-bar {
-    max-width: none;
-    height: 3em;
-    margin: 0;
+  #global-header-bar, .mtp-sub-nav {
+    display: none;
   }
 
-  .mtp-sub-nav {
-    margin-top: -3em;
-    background: $govuk-blue;
-    color: $white;
+  .mtp-language-switch {
+    padding-left: 0;
+    padding-right: 0;
   }
 
   .mtp-language-switch__item {
