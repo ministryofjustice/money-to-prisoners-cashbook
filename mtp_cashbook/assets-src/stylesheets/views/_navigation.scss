@@ -1,5 +1,37 @@
 $mtp-nav-breakpoint: 830px;
 
+@mixin navigation-search-image {
+  background: $govuk-blue file-url('icon-search.png') no-repeat 6px 50%;
+
+  @include device-pixel-ratio {
+    background-image: file-url('icon-search-2x.png');
+    background-size: 30px 22px;
+  }
+}
+
+#mtp-proposition-tabs .mtp-nav-search__trigger {
+  margin: auto;
+  float: right;
+
+  a {
+    display: none;
+    width: 27px;
+    height: 27px;
+    border: solid 3px $govuk-blue;
+    @include navigation-search-image;
+    background-position: 50% 50%;
+
+    &:focus {
+      background-color: $govuk-blue;
+      border-color: $focus-colour;
+    }
+
+    @include media($max-width: $mtp-nav-breakpoint, $ignore-for-ie: true) {
+      display: block;
+    }
+  }
+}
+
 .mtp-proposition-tab-column {
   @include box-sizing(border-box);
   float: right;
@@ -11,11 +43,16 @@ $mtp-nav-breakpoint: 830px;
   }
 }
 
-.mtp-cashbook-navigation__search {
+.mtp-nav-search {
   position: relative;
 
   @include media($max-width: $mtp-nav-breakpoint, $ignore-for-ie: true) {
+    display: none;
     margin-bottom: 10px;
+
+    &.mtp-nav-search--open {
+      display: block;
+    }
   }
 
   .form-group {
@@ -42,29 +79,24 @@ $mtp-nav-breakpoint: 830px;
       width: 100%;
     }
   }
-}
 
-.mtp-nav-search-button {
-  @include box-sizing(border-box);
-  @include core-16;
-  display: inline-block;
-  position: absolute;
-  overflow: hidden;
-  padding: 5px 0 4px; // .form-control doesn't use em, e.g. em(5) em(4);
-  width: 40px;
-  right: 0;
-  top: 0;
-  border: 2px solid $govuk-blue;
-  text-indent: 300px;
-  background: $govuk-blue file-url('icon-search.png') no-repeat 6px 50%;
-  cursor: pointer;
+  button {
+    @include box-sizing(border-box);
+    @include core-16;
+    display: inline-block;
+    position: absolute;
+    overflow: hidden;
+    padding: 5px 0 4px; // .form-control doesn't use em, e.g. em(5) em(4);
+    width: 40px;
+    right: 0;
+    top: 0;
+    border: 2px solid $govuk-blue;
+    text-indent: 300px;
+    @include navigation-search-image;
+    cursor: pointer;
 
-  @include device-pixel-ratio {
-    background-image: file-url('icon-search-2x.png');
-    background-size: 30px 22px;
-  }
-
-  @include ie-lte(8) {
-    padding-bottom: 5px;
+    @include ie-lte(8) {
+      padding-bottom: 5px;
+    }
   }
 }

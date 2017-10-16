@@ -24,4 +24,5 @@
   require('confirmation-button').ConfirmationButton.init();
   require('confirm-manual').ConfirmManual.init();
   require('print-batch').PrintBatch.init();
+  require('navigation').Navigation.init();
 }());

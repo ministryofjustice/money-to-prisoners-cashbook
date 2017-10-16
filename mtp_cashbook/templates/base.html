@@ -16,11 +16,11 @@
 {% block proposition_extra %}
   <nav id="mtp-proposition-extra" class="column-full print-hidden">
     {% if request.user.is_authenticated %}
-      <form class="mtp-proposition-tab-column mtp-cashbook-navigation__search" method="get" action="{% url 'search' %}">
+      <form class="mtp-proposition-tab-column mtp-nav-search" method="get" action="{% url 'search' %}">
         <div class="form-group">
           <label class="visually-hidden" for="id_search">{% trans 'Search all credits' %}</label>
           <input id="id_search" class="form-control" name="search" value="{{ search_field.value|default_if_none:'' }}" placeholder="{% trans 'Search all credits' %}… {% trans 'e.g. by prisoner number' %}" required/>
-          <button class="mtp-nav-search-button" type="submit">{% trans 'Search' %}</button>
+          <button type="submit">{% trans 'Search' %}</button>
         </div>
       </form>
     {% endif %}
@@ -32,6 +32,9 @@
           {% include 'cashbook/includes/proposition-tab.html' with view_name='processed-credits-list' subview_names='processed-credits-list processed-credits-detail' link_text=_('Processed credits') %}
         {% endif %}
         {% include 'cashbook/includes/proposition-tab.html' with view_name='submit_ticket' subview_names='submit_ticket feedback_success' link_text=_('Get help') %}
+        {% if request.user.is_authenticated %}
+          <li class="mtp-nav-search__trigger"><a href="#"><span class="visually-hidden">{% trans 'Search all credits' %}</span></a></li>
+        {% endif %}
       </ul>
     {% endspaceless %}
   </nav>
