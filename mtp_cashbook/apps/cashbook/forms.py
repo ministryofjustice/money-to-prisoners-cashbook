@@ -127,10 +127,10 @@ class ProcessManualCreditsForm(GARequestErrorReportingMixin, forms.Form):
 
 class FilterProcessedCreditsListForm(GARequestErrorReportingMixin, forms.Form):
     start = forms.DateField(label=gettext_lazy('From date'),
-                            help_text=gettext_lazy('e.g. 1/6/2017'),
+                            help_text=gettext_lazy('e.g. 13/6/2017'),
                             required=False)
     end = forms.DateField(label=gettext_lazy('To date'),
-                          help_text=gettext_lazy('e.g. 5/6/2017'),
+                          help_text=gettext_lazy('e.g. 15/6/2017'),
                           required=False)
     page = forms.IntegerField(required=False, widget=forms.HiddenInput)
 
@@ -280,10 +280,10 @@ class SearchForm(GARequestErrorReportingMixin, forms.Form):
         ]
     )
     start = forms.DateField(label=gettext_lazy('From date'),
-                            help_text=gettext_lazy('e.g. 1/6/2017'),
+                            help_text=gettext_lazy('e.g. 13/6/2017'),
                             required=False)
     end = forms.DateField(label=gettext_lazy('To date'),
-                          help_text=gettext_lazy('e.g. 5/6/2017'),
+                          help_text=gettext_lazy('e.g. 15/6/2017'),
                           required=False)
     search = forms.CharField(label=gettext_lazy('Keywords'),
                              help_text=gettext_lazy('e.g. prisoner name, prisoner number or sender name'),

@@ -27,16 +27,16 @@ msgid "From date"
 msgstr "Dyddiad o"
 
 #: apps/cashbook/forms.py:129 apps/cashbook/forms.py:279
-msgid "e.g. 1/6/2017"
-msgstr "e.e. 1/6/2017"
+msgid "e.g. 13/6/2017"
+msgstr "e.e. 13/6/2017"
 
 #: apps/cashbook/forms.py:131 apps/cashbook/forms.py:281
 msgid "To date"
 msgstr "Dyddiad i"
 
 #: apps/cashbook/forms.py:132 apps/cashbook/forms.py:282
-msgid "e.g. 5/6/2017"
-msgstr "e.e. 5/6/2017"
+msgid "e.g. 15/6/2017"
+msgstr "e.e. 15/6/2017"
 
 #: apps/cashbook/forms.py:158 apps/cashbook/forms.py:307
 msgid "The end date must be after the start date"
