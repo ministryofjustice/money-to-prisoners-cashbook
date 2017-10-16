@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mtp-cashbook\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-10 14:38+0100\n"
+"POT-Creation-Date: 2017-10-16 15:24+0100\n"
 "PO-Revision-Date: 2016-11-04 10:00+0000\n"
 "Last-Translator: Welsh Language Unit <welsh.language.unit.manager@hmcts.gsi.gov.uk>\n"
 "Language-Team: Welsh (http://www.transifex.com/ministry-of-justice/mtp/language/cy/)\n"
@@ -14,6 +14,16 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: apps/cashbook/context_processors.py:11
+msgid "Go to the homepage"
+msgstr ""
+
+#: apps/cashbook/context_processors.py:12 apps/cashbook/views.py:165
+#: templates/base.html:12 templates/base.html:13
+#: templates/cashbook/landing.html:38 templates/mtp_auth/login.html:4
+msgid "Digital cashbook"
+msgstr ""
+
 #: apps/cashbook/forms.py:46
 msgid "Only click ‘Credit to NOMIS’ when you’ve selected credits"
 msgstr ""
@@ -22,201 +32,166 @@ msgstr ""
 msgid "That credit cannot be manually credited"
 msgstr ""
 
-#: apps/cashbook/forms.py:128 apps/cashbook/forms.py:278
+#: apps/cashbook/forms.py:129 apps/cashbook/forms.py:282
 msgid "From date"
 msgstr ""
 
-#: apps/cashbook/forms.py:129 apps/cashbook/forms.py:279
+#: apps/cashbook/forms.py:130 apps/cashbook/forms.py:283
 msgid "e.g. 13/6/2017"
 msgstr ""
 
-#: apps/cashbook/forms.py:131 apps/cashbook/forms.py:281
+#: apps/cashbook/forms.py:132 apps/cashbook/forms.py:285
 msgid "To date"
 msgstr ""
 
-#: apps/cashbook/forms.py:132 apps/cashbook/forms.py:282
+#: apps/cashbook/forms.py:133 apps/cashbook/forms.py:286
 msgid "e.g. 15/6/2017"
 msgstr ""
 
-#: apps/cashbook/forms.py:158 apps/cashbook/forms.py:307
+#: apps/cashbook/forms.py:159 apps/cashbook/forms.py:311
 msgid "The end date must be after the start date"
 msgstr ""
 
-#: apps/cashbook/forms.py:218
+#: apps/cashbook/forms.py:222
 msgid "Name of prisoner or sender"
 msgstr ""
 
-#: apps/cashbook/forms.py:219
+#: apps/cashbook/forms.py:223
 msgid "e.g. Bob Phillips"
 msgstr ""
 
-#: apps/cashbook/forms.py:223
+#: apps/cashbook/forms.py:227
 msgid "Prisoner number"
 msgstr ""
 
-#: apps/cashbook/forms.py:224
+#: apps/cashbook/forms.py:228
 msgid "e.g. A1234AB"
 msgstr ""
 
-#: apps/cashbook/forms.py:228 apps/cashbook/forms.py:267
+#: apps/cashbook/forms.py:232 apps/cashbook/forms.py:271
 msgid "Order by"
 msgstr ""
 
-#: apps/cashbook/forms.py:231 apps/cashbook/forms.py:270
+#: apps/cashbook/forms.py:235 apps/cashbook/forms.py:274
 msgid "Received date (oldest to newest)"
 msgstr ""
 
-#: apps/cashbook/forms.py:232 apps/cashbook/forms.py:271
+#: apps/cashbook/forms.py:236 apps/cashbook/forms.py:275
 msgid "Received date (newest to oldest)"
 msgstr ""
 
-#: apps/cashbook/forms.py:233 apps/cashbook/forms.py:272
+#: apps/cashbook/forms.py:237 apps/cashbook/forms.py:276
 msgid "Amount sent (low to high)"
 msgstr ""
 
-#: apps/cashbook/forms.py:234 apps/cashbook/forms.py:273
+#: apps/cashbook/forms.py:238 apps/cashbook/forms.py:277
 msgid "Amount sent (high to low)"
 msgstr ""
 
-#: apps/cashbook/forms.py:235 apps/cashbook/forms.py:274
+#: apps/cashbook/forms.py:239 apps/cashbook/forms.py:278
 msgid "Prisoner number (A to Z)"
 msgstr ""
 
-#: apps/cashbook/forms.py:236 apps/cashbook/forms.py:275
+#: apps/cashbook/forms.py:240 apps/cashbook/forms.py:279
 msgid "Prisoner number (Z to A)"
 msgstr ""
 
-#: apps/cashbook/forms.py:284
+#: apps/cashbook/forms.py:288
 msgid "Keywords"
 msgstr ""
 
-#: apps/cashbook/forms.py:285
+#: apps/cashbook/forms.py:289
 msgid "e.g. prisoner name, prisoner number or sender name"
 msgstr ""
 
-#: apps/cashbook/forms.py:380
+#: apps/cashbook/forms.py:389
 #, python-format
 msgid "on %(start)s"
 msgstr ""
 
-#: apps/cashbook/forms.py:382
+#: apps/cashbook/forms.py:391
 #, python-format
 msgid "between %(start)s and %(end)s"
 msgstr ""
 
-#: apps/cashbook/forms.py:384
+#: apps/cashbook/forms.py:393
 #, python-format
 msgid "since %(start)s"
 msgstr ""
 
-#: apps/cashbook/forms.py:386
+#: apps/cashbook/forms.py:395
 #, python-format
 msgid "up to %(end)s"
 msgstr ""
 
-#: apps/cashbook/forms.py:397 templates/cashbook/processed_credits.html:87
+#: apps/cashbook/forms.py:406 templates/cashbook/processed_credits.html:86
 #, python-format
 msgid "%(count)s credit"
 msgid_plural "%(count)s credits"
 msgstr[0] ""
 msgstr[1] ""
 
-#: apps/cashbook/forms.py:402
-msgid "No credits found"
-msgstr ""
-
-#: apps/cashbook/forms.py:406
-#, python-format
-msgid "Showing %(credits)s received %(date_range)s"
-msgstr ""
-
 #: apps/cashbook/forms.py:411
-#, python-format
-msgid "Showing %(credits)s received"
+msgid "No credits found"
 msgstr ""
 
 #: apps/cashbook/forms.py:415
 #, python-format
+msgid "Showing %(credits)s received %(date_range)s"
+msgstr ""
+
+#: apps/cashbook/forms.py:420
+#, python-format
+msgid "Showing %(credits)s received"
+msgstr ""
+
+#: apps/cashbook/forms.py:424
+#, python-format
 msgid "Showing all %(credits)s received"
 msgstr ""
 
-#: apps/cashbook/tasks.py:57
+#: apps/cashbook/tasks.py:58
 msgid "Send money to someone in prison: the prisoner’s account has been credited"
 msgstr ""
 
-#: apps/cashbook/views.py:49 templates/cashbook/credits_base.html:7
-#: templates/cashbook/search.html:58 templates/cashbook/search.html:60
+#: apps/cashbook/views.py:27 templates/base.html:31
+#: templates/cashbook/search.html:56 templates/cashbook/search.html:58
 msgid "New credits"
 msgstr ""
 
-#: apps/cashbook/views.py:185 templates/base.html:12 templates/base.html:15
-#: templates/cashbook/landing.html:34 templates/mtp_auth/login.html:4
-msgid "Digital cashbook"
-msgstr ""
-
-#: apps/cashbook/views.py:207 apps/cashbook/views.py:253
-#: templates/cashbook/credits_base.html:8 templates/cashbook/search.html:75
-#: templates/cashbook/search.html:77
+#: apps/cashbook/views.py:187 apps/cashbook/views.py:233 templates/base.html:32
+#: templates/cashbook/search.html:73 templates/cashbook/search.html:75
 msgid "Processed credits"
 msgstr ""
 
-#: apps/cashbook/views.py:273 templates/cashbook/credits_base.html:14
-#: templates/cashbook/credits_base.html:15
+#: apps/cashbook/views.py:253 templates/base.html:21 templates/base.html:22
+#: templates/base.html:36
 msgid "Search all credits"
 msgstr ""
 
-#: apps/cashbook/views.py:315
+#: apps/cashbook/views.py:295
 #, python-format
 msgid "Search for “%(query)s”"
 msgstr ""
 
-#: templates/base.html:23 templates/cashbook/landing.html:26
-msgid "Process credits"
+#: templates/base.html:22
+msgid "e.g. by prisoner number"
 msgstr ""
 
-#: templates/base.html:27
-msgid "Manage users"
-msgstr ""
-
-#: templates/base.html:31
-msgid "Change password"
-msgstr ""
-
-#: templates/base.html:35
-#, python-format
-msgid "Sign out %(full_name)s"
-msgstr ""
-
-#: templates/base.html:54
-msgid "This is a new service."
-msgstr ""
-
-#: templates/base.html:55
-#, python-format
-msgid "If you have any comments or need help please <a href=\"%(ticket_url)s\">contact us</a>."
-msgstr ""
-
-#: templates/cashbook/change_notification.html:6
-#: templates/cashbook/change_notification.html:14
-#: templates/cashbook/change_notification.html:18
-#: templates/cashbook/includes/nomis_print_dialog.html:6
-msgid "Digital cashbook now automatically connects to NOMIS"
-msgstr ""
-
-#: templates/cashbook/change_notification.html:20
-msgid "We’ve updated the cashbook so you no longer have to enter credits by hand into NOMIS."
-msgstr ""
-
-#: templates/cashbook/change_notification.html:21
-msgid "Now, when you confirm your selected credits, the cashbook will send them to NOMIS digitally."
-msgstr ""
-
-#: templates/cashbook/change_notification.html:23
-msgid "I understand"
-msgstr ""
-
-#: templates/cashbook/credits_base.html:16
+#: templates/base.html:23
 msgid "Search"
+msgstr ""
+
+#: templates/base.html:34 templates/base.html:46
+msgid "Get help"
+msgstr ""
+
+#: templates/base.html:48
+msgid "Built by"
+msgstr ""
+
+#: templates/base.html:50
+msgid "Ministry of Justice"
 msgstr ""
 
 #: templates/cashbook/email/credited-confirmation.html:6
@@ -277,15 +252,15 @@ msgstr ""
 
 #: templates/cashbook/includes/credit-row.html:12
 #: templates/cashbook/includes/manual_credit_table.html:42
-#: templates/cashbook/new_credits.html:282
-#: templates/cashbook/processed_credits.html:74
+#: templates/cashbook/new_credits.html:279
+#: templates/cashbook/processed_credits.html:73
 msgid "Today"
 msgstr ""
 
 #: templates/cashbook/includes/credit-row.html:14
 #: templates/cashbook/includes/manual_credit_table.html:44
-#: templates/cashbook/new_credits.html:284
-#: templates/cashbook/processed_credits.html:76
+#: templates/cashbook/new_credits.html:281
+#: templates/cashbook/processed_credits.html:75
 #, python-format
 msgid "%(days)s day ago"
 msgid_plural "%(days)s days ago"
@@ -304,13 +279,13 @@ msgstr ""
 
 #: templates/cashbook/includes/credit-row.html:43
 #: templates/cashbook/includes/manual_credit_table.html:62
-#: templates/cashbook/new_credits.html:302
+#: templates/cashbook/new_credits.html:299
 msgid "Checked"
 msgstr ""
 
 #: templates/cashbook/includes/credit-row.html:45
 #: templates/cashbook/includes/manual_credit_table.html:64
-#: templates/cashbook/new_credits.html:304
+#: templates/cashbook/new_credits.html:301
 msgid "Not checked"
 msgstr ""
 
@@ -329,25 +304,25 @@ msgstr ""
 
 #: templates/cashbook/includes/credits-header-row.html:8
 #: templates/cashbook/includes/manual_credit_table.html:23
-#: templates/cashbook/new_credits.html:244
+#: templates/cashbook/new_credits.html:241
 msgid "Date sent"
 msgstr ""
 
 #: templates/cashbook/includes/credits-header-row.html:16
 #: templates/cashbook/includes/manual_credit_table.html:24
-#: templates/cashbook/new_credits.html:252
+#: templates/cashbook/new_credits.html:249
 msgid "Prisoner"
 msgstr ""
 
 #: templates/cashbook/includes/credits-header-row.html:24
 #: templates/cashbook/includes/manual_credit_table.html:25
-#: templates/cashbook/new_credits.html:260
+#: templates/cashbook/new_credits.html:257
 msgid "Amount"
 msgstr ""
 
 #: templates/cashbook/includes/credits-header-row.html:29
 #: templates/cashbook/includes/manual_credit_table.html:26
-#: templates/cashbook/new_credits.html:265
+#: templates/cashbook/new_credits.html:262
 msgid "Sender"
 msgstr ""
 
@@ -364,7 +339,7 @@ msgid "Status"
 msgstr ""
 
 #: templates/cashbook/includes/manual_credit_table.html:9
-#: templates/cashbook/new_credits.html:75
+#: templates/cashbook/new_credits.html:74
 #, python-format
 msgid "%(manual_credits)s credit needs your manual input in NOMIS"
 msgid_plural "%(manual_credits)s credits need your manual input in NOMIS"
@@ -376,7 +351,7 @@ msgid "Print these credits"
 msgstr ""
 
 #: templates/cashbook/includes/manual_credit_table.html:28
-#: templates/cashbook/new_credits.html:267
+#: templates/cashbook/new_credits.html:264
 msgid "Security"
 msgstr ""
 
@@ -442,65 +417,12 @@ msgid "Sender:"
 msgstr ""
 
 #: templates/cashbook/includes/manual_credit_table.html:146
-#: templates/cashbook/new_credits.html:369
+#: templates/cashbook/new_credits.html:366
 msgid "Yes"
 msgstr ""
 
 #: templates/cashbook/includes/manual_credit_table.html:148
 msgid "No, I’ll do that now"
-msgstr ""
-
-#: templates/cashbook/includes/nomis_print_dialog.html:5
-msgid "Planning to enter these credits by hand?"
-msgstr ""
-
-#: templates/cashbook/includes/nomis_print_dialog.html:8
-msgid "You no longer have to enter credits by hand into NOMIS."
-msgstr ""
-
-#: templates/cashbook/includes/nomis_print_dialog.html:9
-msgid "Now when you confirm credits here they will be sent to NOMIS digitally."
-msgstr ""
-
-#: templates/cashbook/includes/nomis_print_dialog.html:12
-msgid "Return to send credits to NOMIS"
-msgstr ""
-
-#: templates/cashbook/includes/nomis_print_dialog.html:15
-msgid "I still want to print"
-msgstr ""
-
-#: templates/cashbook/includes/print_dialog.html:4
-msgid "Do you need to print?"
-msgstr ""
-
-#: templates/cashbook/includes/print_dialog.html:5
-msgid "Did you know:"
-msgstr ""
-
-#: templates/cashbook/includes/print_dialog.html:7
-msgid "you can see the digital cashbook and NOMIS screens at the same time by changing the size of your windows"
-msgstr ""
-
-#: templates/cashbook/includes/print_dialog.html:8
-msgid "you can switch between windows using the ALT + TAB keys"
-msgstr ""
-
-#: templates/cashbook/includes/print_dialog.html:9
-msgid "you can copy and paste the prisoner number from one window to the other"
-msgstr ""
-
-#: templates/cashbook/includes/print_dialog.html:16
-msgid "Don’t show this message again"
-msgstr ""
-
-#: templates/cashbook/includes/print_dialog.html:21
-#: templates/cashbook/processed_credits.html:109
-msgid "Print"
-msgstr ""
-
-#: templates/cashbook/includes/print_dialog.html:22
-msgid "Cancel"
 msgstr ""
 
 #: templates/cashbook/includes/result-ordering-for-screenreader.html:4
@@ -511,332 +433,336 @@ msgstr ""
 msgid "In descending order"
 msgstr ""
 
-#: templates/cashbook/landing.html:16
+#: templates/cashbook/landing.html:20
 msgid "Process money sent to your prison"
 msgstr ""
 
-#: templates/cashbook/landing.html:19
+#: templates/cashbook/landing.html:23
 #, python-format
 msgid "This is where you process credits sent to your prison by a member of the public through the <a href=\"%(start_page_url)s\">Send money to someone in prison</a> service."
 msgstr ""
 
-#: templates/cashbook/landing.html:28
+#: templates/cashbook/landing.html:30
+msgid "Process credits"
+msgstr ""
+
+#: templates/cashbook/landing.html:32
 msgid "Sign into cashbook"
 msgstr ""
 
-#: templates/cashbook/landing.html:45
+#: templates/cashbook/landing.html:49
 msgid "Easy processing"
 msgstr ""
 
-#: templates/cashbook/landing.html:46
+#: templates/cashbook/landing.html:50
 msgid "Process credits automatically into NOMIS – all you need do is ‘tick and click’."
 msgstr ""
 
-#: templates/cashbook/landing.html:50
+#: templates/cashbook/landing.html:54
 msgid "Simple searching"
 msgstr ""
 
-#: templates/cashbook/landing.html:51
+#: templates/cashbook/landing.html:55
 msgid "Search credits by prisoner name, prisoner number, date and sender."
 msgstr ""
 
-#: templates/cashbook/new_credits.html:21
+#: templates/cashbook/new_credits.html:20
 msgid "CONFIDENTIAL: dispose of securely"
 msgstr ""
 
-#: templates/cashbook/new_credits.html:27
+#: templates/cashbook/new_credits.html:26
 #, python-format
 msgid "%(credited_credits)s credit sent to NOMIS"
 msgid_plural "%(credited_credits)s credits sent to NOMIS"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/cashbook/new_credits.html:32
-#: templates/cashbook/new_credits.html:43
+#: templates/cashbook/new_credits.html:31
+#: templates/cashbook/new_credits.html:42
 msgid "View"
 msgstr ""
 
-#: templates/cashbook/new_credits.html:38
+#: templates/cashbook/new_credits.html:37
 #, python-format
 msgid "%(credited_manual_credits)s credit manually input by you into NOMIS"
 msgid_plural "%(credited_manual_credits)s credits manually input by you into NOMIS"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/cashbook/new_credits.html:49
+#: templates/cashbook/new_credits.html:48
 #, python-format
 msgid "%(failed_credits)s credit not processed due to technical error, try again soon"
 msgid_plural "%(failed_credits)s credits not processed due to technical error, try again soon"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/cashbook/new_credits.html:54
+#: templates/cashbook/new_credits.html:53
 msgid "Why?"
 msgstr ""
 
-#: templates/cashbook/new_credits.html:57
+#: templates/cashbook/new_credits.html:56
 msgid "Why didn’t it work?"
 msgstr ""
 
-#: templates/cashbook/new_credits.html:59
+#: templates/cashbook/new_credits.html:58
 msgid "We’re sorry but sometimes a fault in our system stops credits from being processed."
 msgstr ""
 
-#: templates/cashbook/new_credits.html:60
+#: templates/cashbook/new_credits.html:59
 msgid "Please wait a few minutes then send to NOMIS again."
 msgstr ""
 
-#: templates/cashbook/new_credits.html:62
-#: templates/cashbook/new_credits.html:90
+#: templates/cashbook/new_credits.html:61
+#: templates/cashbook/new_credits.html:89
 msgid "OK"
 msgstr ""
 
-#: templates/cashbook/new_credits.html:80
+#: templates/cashbook/new_credits.html:79
 msgid "How?"
 msgstr ""
 
-#: templates/cashbook/new_credits.html:83
+#: templates/cashbook/new_credits.html:82
 msgid "These credits need your manual input to be processed."
 msgstr ""
 
-#: templates/cashbook/new_credits.html:85
+#: templates/cashbook/new_credits.html:84
 msgid "These credits need further processing"
 msgstr ""
 
-#: templates/cashbook/new_credits.html:87
+#: templates/cashbook/new_credits.html:86
 msgid "The prisoner may be in transit, may have moved prisons or may have been released."
 msgstr ""
 
-#: templates/cashbook/new_credits.html:88
+#: templates/cashbook/new_credits.html:87
 msgid "Please enter these credits into NOMIS manually, then click ‘Done’."
 msgstr ""
 
-#: templates/cashbook/new_credits.html:100
+#: templates/cashbook/new_credits.html:99
 #, python-format
 msgid "%(owner)s started to process these credits but may not have finished"
 msgid_plural "Your colleagues started to process these credits but may not have finished"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/cashbook/new_credits.html:106
+#: templates/cashbook/new_credits.html:105
 #, python-format
 msgid "%(owner)s should be processing these credits into NOMIS manually"
 msgid_plural "Your colleagues should be processing these credits into NOMIS manually"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/cashbook/new_credits.html:116
+#: templates/cashbook/new_credits.html:115
 msgid "How to finish processing"
 msgstr ""
 
-#: templates/cashbook/new_credits.html:121
+#: templates/cashbook/new_credits.html:120
 #, python-format
 msgid "Your colleague, %(owner)s, started processing these credits yesterday."
 msgid_plural "Some of your colleagues started processing these credits yesterday."
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/cashbook/new_credits.html:126
+#: templates/cashbook/new_credits.html:125
 msgid "To make sure they were processed successfully, please check NOMIS."
 msgstr ""
 
-#: templates/cashbook/new_credits.html:129
+#: templates/cashbook/new_credits.html:128
 #, python-format
 msgid "If they have been entered correctly, just click ‘Done’ and tell %(owner)s you’ve finished processing the credits."
 msgid_plural "If they have been entered correctly, just click ‘Done’ and tell your colleagues you’ve finished processing the credits."
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/cashbook/new_credits.html:136
+#: templates/cashbook/new_credits.html:135
 #, python-format
 msgid "If they have not been entered, please manually enter these credits youself, click ‘Done’ and tell %(owner)s you’ve processed these credits for them."
 msgid_plural "If they have not been entered, please manually enter these credits youself, click ‘Done’ and tell your colleagues you’ve processed these credits for them."
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/cashbook/new_credits.html:165
+#: templates/cashbook/new_credits.html:164
 #, python-format
 msgid "<strong>%(new_credits)s</strong> new credit."
 msgid_plural "<strong>%(new_credits)s</strong> new credits."
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/cashbook/new_credits.html:170
+#: templates/cashbook/new_credits.html:169
 msgid "You haven’t selected any to process yet."
 msgstr ""
 
-#: templates/cashbook/new_credits.html:172
+#: templates/cashbook/new_credits.html:171
 msgid "credits selected for processing in NOMIS"
 msgstr ""
 
-#: templates/cashbook/new_credits.html:179
+#: templates/cashbook/new_credits.html:178
 msgid "Credit to NOMIS"
 msgstr ""
 
-#: templates/cashbook/new_credits.html:189
+#: templates/cashbook/new_credits.html:188
 msgid "You don’t have to manually enter credits into NOMIS any more"
 msgstr ""
 
-#: templates/cashbook/new_credits.html:192
+#: templates/cashbook/new_credits.html:191
 msgid "Now when you ‘confirm’ credits, they’ll be sent digitally to NOMIS"
 msgstr ""
 
-#: templates/cashbook/new_credits.html:197
-msgid "No new credits received"
-msgstr ""
-
-#: templates/cashbook/new_credits.html:210
-#: templates/cashbook/processed_credits.html:20
+#: templates/cashbook/new_credits.html:207
+#: templates/cashbook/processed_credits.html:19
 msgid "What do I do here?"
 msgstr ""
 
-#: templates/cashbook/new_credits.html:215
+#: templates/cashbook/new_credits.html:212
 #, python-format
 msgid "The credits on this page are from the <a href=\"%(start_page_url)s\">Send money to someone in prison</a> service."
 msgstr ""
 
-#: templates/cashbook/new_credits.html:219
+#: templates/cashbook/new_credits.html:216
 msgid "Use this page to credit to NOMIS automatically, you no longer need to manually enter these credits."
 msgstr ""
 
-#: templates/cashbook/new_credits.html:221
+#: templates/cashbook/new_credits.html:218
 msgid "All credits are from known senders and should be credited - if there is any concern or suspicion about a credit, it should be placed on hold after crediting and passed to security."
 msgstr ""
 
-#: templates/cashbook/new_credits.html:223
+#: templates/cashbook/new_credits.html:220
 msgid "How to credit"
 msgstr ""
 
-#: templates/cashbook/new_credits.html:225
+#: templates/cashbook/new_credits.html:222
 msgid "Review all credits for suspicious activity"
 msgstr ""
 
-#: templates/cashbook/new_credits.html:226
+#: templates/cashbook/new_credits.html:223
 msgid "Tick all credits"
 msgstr ""
 
-#: templates/cashbook/new_credits.html:227
+#: templates/cashbook/new_credits.html:224
 msgid "Click the green ‘Credit to NOMIS’ button"
 msgstr ""
 
-#: templates/cashbook/new_credits.html:228
+#: templates/cashbook/new_credits.html:225
 msgid "Place any suspicious credits on hold in NOMIS"
 msgstr ""
 
-#: templates/cashbook/new_credits.html:230
+#: templates/cashbook/new_credits.html:227
 msgid "There is no longer any need to print records."
 msgstr ""
 
-#: templates/cashbook/new_credits.html:235
-#: templates/cashbook/new_credits.html:343
+#: templates/cashbook/new_credits.html:232
+#: templates/cashbook/new_credits.html:340
 msgid "Select all"
 msgstr ""
 
-#: templates/cashbook/new_credits.html:269
+#: templates/cashbook/new_credits.html:266
 msgid "Select"
 msgstr ""
 
-#: templates/cashbook/new_credits.html:318
+#: templates/cashbook/new_credits.html:315
 #, python-format
 msgid "Credit £%(amount)s to %(prisoner_name)s"
 msgstr ""
 
-#: templates/cashbook/new_credits.html:353
+#: templates/cashbook/new_credits.html:350
 msgid "Thank you"
 msgstr ""
 
-#: templates/cashbook/new_credits.html:354
+#: templates/cashbook/new_credits.html:351
 msgid "All credits have been processed"
 msgstr ""
 
-#: templates/cashbook/new_credits.html:365
+#: templates/cashbook/new_credits.html:362
 msgid "Do you want to submit only the selected credits?"
 msgstr ""
 
-#: templates/cashbook/new_credits.html:372
+#: templates/cashbook/new_credits.html:369
 msgid "No, continue processing"
 msgstr ""
 
-#: templates/cashbook/processed_credits.html:18
+#: templates/cashbook/processed_credits.html:17
 msgid "A list of all processed credits you can filter."
 msgstr ""
 
-#: templates/cashbook/processed_credits.html:23
+#: templates/cashbook/processed_credits.html:22
 msgid "These credits have already been processed in NOMIS and batched accordingly."
 msgstr ""
 
-#: templates/cashbook/processed_credits.html:24
+#: templates/cashbook/processed_credits.html:23
 msgid "You can filter this list by date range."
 msgstr ""
 
-#: templates/cashbook/processed_credits.html:25
+#: templates/cashbook/processed_credits.html:24
 msgid "Just enter the date range of the credits you want to find."
 msgstr ""
 
-#: templates/cashbook/processed_credits.html:28
+#: templates/cashbook/processed_credits.html:27
 msgid "Filter by"
 msgstr ""
 
-#: templates/cashbook/processed_credits.html:42
-#: templates/cashbook/processed_credits_detail.html:45
-#: templates/cashbook/search.html:41
+#: templates/cashbook/processed_credits.html:41
+#: templates/cashbook/processed_credits_detail.html:44
+#: templates/cashbook/search.html:40
 msgid "Filter list"
 msgstr ""
 
-#: templates/cashbook/processed_credits.html:55
+#: templates/cashbook/processed_credits.html:54
 msgid "Date credited"
 msgstr ""
 
-#: templates/cashbook/processed_credits.html:56
+#: templates/cashbook/processed_credits.html:55
 msgid "Number of credits"
 msgstr ""
 
-#: templates/cashbook/processed_credits.html:57
+#: templates/cashbook/processed_credits.html:56
 msgid "Total"
 msgstr ""
 
-#: templates/cashbook/processed_credits.html:58
+#: templates/cashbook/processed_credits.html:57
 msgid "Credited by"
 msgstr ""
 
-#: templates/cashbook/processed_credits.html:60
+#: templates/cashbook/processed_credits.html:59
 msgid "Security notes"
 msgstr ""
 
-#: templates/cashbook/processed_credits.html:62
+#: templates/cashbook/processed_credits.html:61
 msgid "Options"
 msgstr ""
 
-#: templates/cashbook/processed_credits.html:99
+#: templates/cashbook/processed_credits.html:98
 #, python-format
 msgid "%(count)s note"
 msgid_plural "%(count)s notes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/cashbook/processed_credits.html:106
+#: templates/cashbook/processed_credits.html:105
 msgid "No"
 msgstr ""
 
-#: templates/cashbook/processed_credits.html:119
-#: templates/cashbook/processed_credits_detail.html:68
+#: templates/cashbook/processed_credits.html:108
+msgid "Print"
+msgstr ""
+
+#: templates/cashbook/processed_credits.html:118
+#: templates/cashbook/processed_credits_detail.html:67
 msgid "No credits"
 msgstr ""
 
-#: templates/cashbook/processed_credits_detail.html:16
+#: templates/cashbook/processed_credits_detail.html:15
 #, python-format
 msgid "%(count)s credit processed on %(date)s"
 msgid_plural "%(count)s credits processed on %(date)s"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/cashbook/processed_credits_detail.html:21
+#: templates/cashbook/processed_credits_detail.html:20
 msgid "Total:"
 msgstr ""
 
-#: templates/cashbook/processed_credits_detail.html:51
-#: templates/cashbook/processed_credits_detail.html:65
-#: templates/cashbook/search.html:49
+#: templates/cashbook/processed_credits_detail.html:50
+#: templates/cashbook/processed_credits_detail.html:64
+#: templates/cashbook/search.html:48
 msgid "Print this page of credits"
 msgstr ""
 
@@ -856,6 +782,6 @@ msgstr ""
 msgid "Continue"
 msgstr ""
 
-#: templates/cashbook/search.html:26
+#: templates/cashbook/search.html:25
 msgid "Filter these credits"
 msgstr ""
