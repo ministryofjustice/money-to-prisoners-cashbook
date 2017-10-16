@@ -7,10 +7,16 @@
 
 {% block inner_content %}
 
-  <header class="mtp-landing__header">
+  <div class="mtp-landing__header">
     <div class="mtp-landing__content">
       <div class="grid-row">
-        <div class="column-two-thirds">
+        <div class="column-full">
+          {% language_switch %}
+        </div>
+      </div>
+
+      <div class="grid-row">
+        <header class="column-two-thirds">
           <h1 class="heading-xlarge">{% trans 'Process money sent to your prison' %}</h1>
 
           <aside>
@@ -26,7 +32,7 @@
               <a href="{% url 'login' %}" class="button button-start">{% trans 'Sign into cashbook' %}</a>
             {% endif %}
           </div>
-        </div>
+        </header>
 
         <div class="column-one-third">
           <img alt="{% trans 'Digital cashbook' %}"
@@ -35,7 +41,7 @@
         </div>
       </div>
     </div>
-  </header>
+  </div>
 
   <div class="mtp-landing__content">
     <div class="grid-row">
