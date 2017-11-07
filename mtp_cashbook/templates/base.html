@@ -30,6 +30,8 @@
         {% if request.user.is_authenticated %}
           {% include 'cashbook/includes/proposition-tab.html' with view_name='new-credits' subview_names='new-credits' link_text=_('New credits') %}
           {% include 'cashbook/includes/proposition-tab.html' with view_name='processed-credits-list' subview_names='processed-credits-list processed-credits-detail' link_text=_('Processed credits') %}
+        {% else %}
+          {% include 'cashbook/includes/proposition-tab.html' with view_name='login' subview_names='login' link_text=_('Sign in') %}
         {% endif %}
         {% include 'cashbook/includes/proposition-tab.html' with view_name='submit_ticket' subview_names='submit_ticket feedback_success' link_text=_('Get help') %}
         {% if request.user.is_authenticated %}
