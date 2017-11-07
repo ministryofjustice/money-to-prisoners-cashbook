@@ -40,7 +40,7 @@ def credit_individual_credit_to_nomis(user, session, credit_id, credit):
             logger.error('Credit %s could not credited as NOMIS is unavailable' % credit_id)
             return
         else:
-            logger.error('Credit %s cannot be automatically credited to NOMIS' % credit_id)
+            logger.warning('Credit %s cannot be automatically credited to NOMIS' % credit_id)
             session.post(
                 'credits/actions/setmanual/',
                 json={'credit_ids': [int(credit_id)]}
