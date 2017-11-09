@@ -245,6 +245,11 @@ class ProcessedCreditsDetailView(ProcessedCreditsListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['total'] = sum(c['amount'] for c in context['object_list'])
+        back_url = self.request.build_absolute_uri(str(ProcessedCreditsListView.success_url))
+        referer_url = self.request.META.get('HTTP_REFERER') or ''
+        if referer_url.startswith(back_url + '?'):
+            back_url = referer_url
+        context['breadcrumbs_back'] = back_url
         return context
 
 
