@@ -34,9 +34,9 @@ class CashbookTestCase(FunctionalTestCase):
     def click_logout(self):
         """
         Finds and clicks the log-out link
-        NB: assumed to be last link; can't use click_on_text('Sign out [name]') due to whitespace
         """
-        self.driver.find_element_by_css_selector('#proposition-links li:last-child a').click()
+        self.driver.find_element_by_class_name('mtp-user-menu__toggle').click()
+        self.driver.find_element_by_link_text('Sign out').click()
 
     def login_and_go_to(self, link_text, substring=False):
         self.login(self.username, self.username)
