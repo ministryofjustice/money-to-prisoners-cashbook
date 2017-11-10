@@ -1,0 +1,116 @@
+{% extends 'disbursements/base.html' %}
+{% load i18n %}
+{% load mtp_common %}
+{% load disbursements %}
+
+{% block inner_content %}
+  <header>
+    <h1 class="heading-xlarge">
+      <span class="heading-secondary">
+        {% block auth_title %}{% trans 'Process a cash disbursement' %}{% endblock %}
+      </span>
+      {%trans 'Check details before sending' %}
+    </h1>
+  </header>
+
+  <div class="mtp-confirm">
+    <div class="mtp-checkgroup">
+      <div class="mtp-confirm-fieldset">
+        <table class="mtp-table">
+          <tr>
+            <th><h2 class="heading-large">{% trans 'Send' %}</h2></th>
+            <td>
+              <div class="mtp-confirm-change">
+                <a href="{% url 'disbursements:amount' %}">{% trans 'Change' %} <span class="visually-hidden">{% trans 'Amount' %}</span></a>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th>{% trans 'Account' %}:</th>
+            <td>{{ account|accountlabel }}</td>
+          </tr>
+          <tr>
+            <th>{% trans 'Amount' %}:</th>
+            <td>£{{ amount }}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="mtp-checkgroup">
+      <div class="mtp-confirm-fieldset">
+        <table class="mtp-table">
+          <tr>
+            <th><h2 class="heading-large">{% trans 'From' %}</h2></th>
+            <td>
+              <div class="mtp-confirm-change">
+                <a href="{% url 'disbursements:prisoner' %}">{% trans 'Change' %} <span class="visually-hidden">{% trans 'Prisoner details' %}</span></a>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th>{% trans 'Name' %}:</th>
+            <td>James Halls</td>
+          </tr>
+          <tr>
+            <th>{% trans 'Date of birth' %}:</th>
+            <td>21/01/1989</td>
+          </tr>
+          <tr>
+            <th>{% trans 'Prisoner number' %}:</th>
+            <td>{{ prisoner_number }}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="mtp-checkgroup">
+      <div class="mtp-confirm-fieldset">
+        <table class="mtp-table">
+          <tr>
+            <th><h2 class="heading-large">{% trans 'To' %}</h2></th>
+            <td>
+              <div class="mtp-confirm-change">
+                <a href="{% url 'disbursements:recipient_contact' %}">{% trans 'Change' %} <span class="visually-hidden">{% trans 'Recipient details' %}</span></a>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th>{% trans 'Name' %}:</th>
+            <td>{{ recipient_name }}</td>
+            <th>{% trans 'Address' %}:</th>
+            <td>{{ address_line1 }}</td>
+          </tr>
+          <tr>
+            <th>{% trans 'Sort code' %}:</th>
+            <td>{{ sort_code }}</td>
+            <th></th>
+            <td>{{ address_line2 }}</td>
+          </tr>
+          <tr>
+            <th>{% trans 'Account number' %}:</th>
+            <td>{{ account_number }}</td>
+            <th></th>
+            <td>{{ city }}</td>
+          </tr>
+          <tr>
+            <th>{% if email %}{% trans 'Email' %}:{% endif %}</th>
+            <td>{{ email }}</td>
+            <th>{% trans 'Postcode' %}:</th>
+            <td>{{ postcode }}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <br/>
+    <p>
+      When you click 'Confirm payment' below, the deduction will be made digitally by NOMIS and the payment sent.
+    </p>
+    <br/>
+
+    <div>
+      <a id="id_next_btn" class="button" href="{{ view.get_success_url }}">{% trans 'Confirm payment' %}</a>
+    </div>
+  </div>
+{% endblock %}

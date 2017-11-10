@@ -14,6 +14,7 @@ urlpatterns = i18n_patterns(
     url(r'^', include('cashbook.urls')),
     url(r'^', include('feedback.urls')),
     url(r'^', include('mtp_common.user_admin.urls')),
+    url(r'^disbursements/', include('disbursements.urls', namespace='disbursements')),
 
     url(r'^js-i18n.js$', cache_control(public=True, max_age=86400)(JavaScriptCatalog.as_view()), name='js-i18n'),
 

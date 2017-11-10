@@ -1,0 +1,294 @@
+.mtp-disbursements {
+  .mtp-back-link {
+    padding-top: 1em;
+    padding-bottom: 1em;
+  }
+
+  .mtp-next-button {
+    margin-top: 2em;
+  }
+
+  .mtp-disbursement-start {
+    max-width: 600px;
+    margin-bottom: 3em;
+  }
+
+  .mtp-prisoner-number {
+    width: 12em;
+  }
+
+  .mtp-amount {
+    margin-bottom: 2em;
+    margin-top: 2em;
+  }
+
+  .mtp-currency-sign {
+    background-color: $highlight-colour;
+    border-right: 0;
+    font-weight: 900;
+    line-height: 1.16;
+    min-width: 1.8em;
+    text-align: center;
+    width: 1.8em;
+  }
+
+  .mtp-charges-amount {
+    width: 5em;
+  }
+
+  .mtp-money-box {
+    * {
+      display: inline-block;
+      height: 34px;
+      vertical-align: bottom;
+    }
+  }
+
+  .mtp-table {
+    th, td {
+      border: none;
+      font-weight: normal;
+    }
+
+    th {
+      min-width: 8em;
+      padding: 0.4em 2em 0.4em 0;
+    }
+
+    td {
+      padding: 0.4em 5em 0.4em 0;
+    }
+  }
+
+  .mtp-confirm {
+    h2 {
+      font-size: 1.26316em;
+      margin: 0 0 .2em;
+    }
+
+    div div {
+      display: inline-block;
+      margin-top: 2em;
+
+      &.mtp-confirm-fieldset {
+        margin-right: 5%;
+
+        @include media(mobile) {
+          margin-right: 0;
+        }
+      }
+    }
+
+    .mtp-checkgroup {
+      border-top: 2px solid $border-colour;
+      margin-bottom: 1.5em;
+
+      legend {
+        margin-bottom: 0;
+      }
+
+      div {
+        margin-top: .7em;
+      }
+
+      .mtp-confirm-change {
+        vertical-align: top;
+        margin-top: 0;
+        width: 39%;
+
+        @include media(mobile) {
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  .mtp-recipient-name {
+    width: 16em;
+  }
+
+  .mtp-address {
+    .mtp-address-line {
+      width: 16em;
+      margin-bottom: 0.5em;
+    }
+  }
+
+  .mtp-postcode {
+    width: 10em;
+  }
+
+  .mtp-account-number, .mtp-sort-code {
+    width: 16em;
+  }
+
+  .mtp-reference-actions {
+    display: none;
+    margin-bottom: 1em;
+
+    .js-enabled & {
+      display: block;
+
+      @media print {
+        display: none;
+      }
+    }
+  }
+
+  .mtp-print-reference {
+    background: file-url('icon-file-download.png') no-repeat scroll 0 0;
+    display: inline-block;
+    line-height: 40px;
+    min-height: 2.5em;
+    padding-left: 2.5em;
+
+    @include device-pixel-ratio {
+      background-image: file-url('icon-file-download-2x.png');
+      background-size: 30px 39px;
+    }
+  }
+
+  #global-header-bar {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+  }
+
+  #global-header.with-proposition {
+    .header-wrapper {
+      padding: 0;
+      margin: 0;
+      width: 100%;
+      max-width: 100%;
+
+      .header-global {
+        float: none;
+        width: 100%;
+
+        .mtp-feedback-bar {
+          background-color: $page-colour;
+          color: $text-colour;
+          text-align: center;
+        }
+      }
+
+      .mtp-disbursements-header {
+        margin: 0 auto;
+        max-width: 990px;
+        padding-left: 15px;
+        padding-right: 15px;
+
+        .mtp-disbursements-header-logo {
+          display: block;
+          margin-left: 15px;
+
+          a.mtp-logo-title {
+            background: file-url('disbursements-logo.png') no-repeat 50% 50%;
+            display: block;
+            font-size: 1px;
+            height: 48px;
+            padding: 0 5px 5px 0;
+            text-indent: -500px;
+            width: 391px;
+
+            @include device-pixel-ratio {
+              background-image: file-url('disbursements-logo@2x.png');
+              background-size: 391px 48px;
+            }
+          }
+
+          .mtp-user-menu {
+            padding-right: 2em;
+            padding-top: 1em;
+            color: $page-colour;
+            text-align: right;
+
+            a {
+              &:link, &:link:focus, &:hover, &:focus, &:visited {
+                color: $page-colour;
+              }
+            }
+          }
+        }
+
+        .mtp-disbursements-header-proposition {
+          margin-bottom: -10px;
+          margin-top: 0.5em;
+
+          div {
+            display: inline-block;
+            padding-bottom: 1em;
+          }
+
+          nav.mtp-disbursements-proposition-menu {
+            a {
+              display: inline-block;
+              padding: 0.5em 1em 0 1em;
+              margin-left: 1em;
+              text-decoration: none;
+              background-color: $text-colour;
+
+              &:link, &:link:focus, &:hover, &:focus, &:visited {
+                color: $page-colour;
+              }
+            }
+
+            a.mtp-cashbook-navigation__active {
+              background-color: $page-colour;
+              padding-bottom: 1em;
+
+              &:link, &:link:focus, &:hover, &:focus, &:visited {
+                color: $text-colour;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  table.mtp-processed-disbursements {
+    width: 100%;
+    margin-bottom: 2em;
+
+    tbody {
+      border-bottom: 1px solid #bfc1c3;
+    }
+
+    td, th {
+      border-bottom: 0;
+      border-top: 1px solid #bfc1c3;
+
+      &.number {
+        text-align: right;
+      }
+    }
+
+    td {
+      vertical-align: top;
+    }
+
+    .mtp-disbursement-label {
+      color: $secondary-text-colour;
+      font-size: 16px;
+    }
+  }
+
+  .heading-large__chopped {
+    @extend .heading-large;
+
+    margin-bottom: 0.3em;
+    margin-top: 0.3em;
+  }
+
+  .heading-medium__chopped {
+    @extend .heading-medium;
+
+    margin-bottom: 0.1em;
+    margin-top: 0.1em;
+  }
+
+  .mtp-search-filter__submit {
+    clear: both;
+  }
+}

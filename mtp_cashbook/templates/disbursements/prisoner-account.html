@@ -1,0 +1,35 @@
+{% extends 'disbursements/base.html' %}
+{% load i18n %}
+{% load mtp_common %}
+
+{% block inner_content %}
+  <header>
+    <h1 class="heading-xlarge">
+      <span class="heading-secondary">
+        {% block auth_title %}{% trans 'Process a cash disbursement' %}{% endblock %}
+      </span>
+      {%trans 'Account to take money from' %}
+    </h1>
+  </header>
+
+  <form action="." method="post" id="prisoner">
+    {% csrf_token %}
+
+    <fieldset class="mtp-prisoner-account-choide">
+      <legend id="{{ form.account.id_for_label }}-label" class="visually-hidden">{% trans 'Account to take money from' %}</legend>
+
+      {% for account in form.account.field.choices %}
+        <div class="multiple-choice">
+          <input id="id_{{ account.0 }}" type="radio" name="{{ form.account.html_name }}" value="{{ account.0 }}"
+                 {% if form.account.field.disabled %}disabled{% endif %}
+                 {% if form.account.value == account.0 %}checked{% endif %}>
+          <label class="{% if form.account.field.disabled and form.account.value != account.0 %}mtp-grey-choice{% endif %}" for="id_{{ account.0 }}">
+            {{ account.1 }}
+          </label>
+        </div>
+      {% endfor %}
+    </fieldset>
+
+    <button type="submit" class="button mtp-next-button" name="create-disbursement">{% trans 'Amount' %}</button>
+  </form>
+{% endblock %}

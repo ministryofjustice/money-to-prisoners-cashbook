@@ -1,0 +1,99 @@
+{% extends 'disbursements/base.html' %}
+{% load i18n %}
+{% load mtp_common %}
+{% load disbursements %}
+
+{% block inner_content %}
+  <div class="govuk-box-highlight">
+    <h1 class="heading-large__chopped">Success</h1>
+    <h3 class="heading-medium__chopped">The deduction has now been automatically processed by NOMIS and the payment sent.</h3>
+    <h3 class="heading-medium__chopped">It should reach the recipient within 3 - 4 working days.</h3>
+  </div>
+
+  <div class="print-hidden mtp-reference-actions">
+    <a class="mtp-print-reference" href="#" onclick="window.print()">{% trans 'Print this page' %}</a>
+  </div>
+
+  <div class="mtp-confirm">
+    <div class="mtp-checkgroup">
+      <div class="mtp-confirm-fieldset">
+        <table class="mtp-table">
+          <tr>
+            <th><h2 class="heading-large">{% trans 'Amount sent' %}</h2></th>
+            <td></td>
+          </tr>
+          <tr>
+            <th>{% trans 'Account' %}:</th>
+            <td>{{ account|accountlabel }}</td>
+          </tr>
+          <tr>
+            <th>{% trans 'Amount' %}:</th>
+            <td>£{{ amount }}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="mtp-checkgroup">
+      <div class="mtp-confirm-fieldset">
+        <table class="mtp-table">
+          <tr>
+            <th><h2 class="heading-large">{% trans 'From' %}</h2></th>
+            <td></td>
+          </tr>
+          <tr>
+            <th>{% trans 'Name' %}:</th>
+            <td>James Halls</td>
+          </tr>
+          <tr>
+            <th>{% trans 'Date of birth' %}:</th>
+            <td>21/01/1989</td>
+          </tr>
+          <tr>
+            <th>{% trans 'Prisoner number' %}:</th>
+            <td>{{ prisoner_number }}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="mtp-checkgroup">
+      <div class="mtp-confirm-fieldset">
+        <table class="mtp-table">
+          <tr>
+            <th><h2 class="heading-large">{% trans 'To' %}</h2></th>
+            <td></td>
+          </tr>
+          <tr>
+            <th>{% trans 'Name' %}:</th>
+            <td>{{ recipient_name }}</td>
+            <th>{% trans 'Address' %}:</th>
+            <td>{{ address_line1 }}</td>
+          </tr>
+          <tr>
+            <th>{% trans 'Sort code' %}:</th>
+            <td>{{ sort_code }}</td>
+            <th></th>
+            <td>{{ address_line2 }}</td>
+          </tr>
+          <tr>
+            <th>{% trans 'Account number' %}:</th>
+            <td>{{ account_number }}</td>
+            <th></th>
+            <td>{{ city }}</td>
+          </tr>
+          <tr>
+            <th></th>
+            <td></td>
+            <th>{% trans 'Postcode' %}:</th>
+            <td>{{ postcode }}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="mtp-new-disbursement print-hidden">
+      <a href="{% url 'disbursements:clear_session' %}">{% trans 'Process another disbursement' %}</a>
+    </div>
+  </div>
+{% endblock %}

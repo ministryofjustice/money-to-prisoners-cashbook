@@ -1,0 +1,47 @@
+{% extends 'disbursements/base.html' %}
+{% load i18n %}
+{% load mtp_common %}
+
+{% block inner_content %}
+  <header>
+    <h1 class="heading-xlarge">
+      <span class="heading-secondary">
+        {% block auth_title %}{% trans 'Process a cash disbursement' %}{% endblock %}
+      </span>
+      {%trans 'Confirm the prisoner details' %}
+    </h1>
+  </header>
+
+  <div class="mtp-confirm">
+    <div class="mtp-checkgroup">
+      <div class="mtp-confirm-fieldset">
+        <table class="mtp-table">
+          <tr>
+            <th><h2 class="heading-large">{% trans 'Prisoner details' %}</h2></th>
+            <td>
+              <div class="mtp-confirm-change">
+                <a href="{% url 'disbursements:prisoner' %}">{% trans 'Change' %} <span class="visually-hidden">{% trans 'Name, date of birth or prisoner number' %}</span></a>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th>{% trans 'Name' %}:</th>
+            <td>James Halls</td>
+          </tr>
+          <tr>
+            <th>{% trans 'Date of birth' %}:</th>
+            <td>21/01/1989</td>
+          </tr>
+          <tr>
+            <th>{% trans 'Prisoner number' %}:</th>
+            <td>{{ prisoner_number }}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div>
+      <a id="id_next_btn" class="button mtp-next-button" href="{{ view.get_success_url }}">{% trans 'Confirm' %}</a>
+    </div>
+  </div>
+{% endblock %}

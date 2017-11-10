@@ -1,0 +1,27 @@
+{% extends 'disbursements/base.html' %}
+{% load i18n %}
+{% load mtp_common %}
+
+{% block inner_content %}
+  <header>
+    <h1 class="heading-xlarge">{% trans 'Process a cash disbursement' %}</h1>
+  </header>
+
+  <div class="mtp-disbursement-start">
+    <p>
+      Use this online tool to process disbursements requested from the "Send money online" form.
+    </p>
+
+    <p>
+      Follow the instructions here and the transfer will be made digitally by NOMIS.
+    </p>
+
+    <p>
+      Make sure you have the form with you before you start.
+    </p>
+  </div>
+
+  <p>
+    <a href="{{ view.get_success_url }}" class="button button-start" role="button">Start now</a>
+  </p>
+{% endblock %}
