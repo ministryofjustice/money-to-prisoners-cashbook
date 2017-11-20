@@ -1,0 +1,82 @@
+{% extends 'disbursements/base.html' %}
+{% load i18n %}
+{% load mtp_common %}
+
+{% block body_classes %}{{ block.super }} mtp-create-disbursement{% endblock %}
+
+{% block inner_content %}
+  <div class='mtp-back-link'>
+    <a href="{{ view.get_previous_url }}">{% trans 'Back' %}</a>
+  </div>
+
+  <header>
+    <h1 class="heading-xlarge mtp-heading--compact">
+      {%trans 'Enter amount' %}
+    </h1>
+  </header>
+
+  <p>
+    {% trans 'If there are insufficient funds in the Private account, please go to NOMIS to move the money first, then refresh balances below and complete the disbursement here.' %}
+  <p>
+
+  <form action="." method="post" id="prisoner">
+    {% csrf_token %}
+
+    {% include 'mtp_common/forms/error-summary.html' with form=form only %}
+
+    <table class="mtp-accounts-table">
+
+      <tr>
+        <th>{% trans 'Account' %}</th>
+        <th>{% trans 'Balance on NOMIS' %}</th>
+        <th>{% trans 'Amount to send' %}</th>
+      </tr>
+
+      <tr class="mtp-private-row">
+        <td>{% trans 'Private' %}</td>
+        <td>£{{ private_balance|default:'0.00' }}</td>
+        <td class="mtp-amount-column">
+          {% with field=form.amount %}
+          <fieldset>
+            <legend class="visually-hidden">{% trans 'Please enter the amount in pounds' %}</legend>
+            <div id="{{ field.id_for_label }}-wrapper" class="mtp-money-amount {% if field.errors %}form-group-error{% endif %}">
+              <div class="mtp-money-box">
+                <span class="form-control mtp-currency-sign">
+                  £
+                </span><input id="{{ field.id_for_label }}"
+                      class="form-control  {% if field.errors %}form-control-error{% endif %} mtp-charges-amount"
+                      maxlength="10"
+                      name="{{ field.html_name }}"
+                      value="{{ field.value|default:'' }}"
+                      type="text"
+                      autocomplete="off" />
+              </div>
+            </div>
+          </fieldset>
+          {% endwith %}
+        </td>
+      </tr>
+
+      <tr>
+        <td>{% trans 'Spends' %}</td>
+        <td>£{{ spends_balance|default:'0.00' }}</td>
+        <td>{% trans 'Can’t be used for sending money out' %}</td>
+      </tr>
+
+      <tr>
+        <td>{% trans 'Saving' %}</td>
+        <td>£{{ saving_balance|default:'0.00' }}</td>
+        <td>{% trans 'Can’t be used for sending money out' %}</td>
+      </tr>
+
+      <tr class="mtp-refresh-row">
+        <td></td>
+        <td><a href=".">{% trans 'Refresh balances' %}</a></td>
+        <td></td>
+      </tr>
+
+    </table>
+
+    <button type="submit" class="button mtp-next-button" name="create-disbursement">{% trans 'Next' %}</button>
+  </form>
+{% endblock %}

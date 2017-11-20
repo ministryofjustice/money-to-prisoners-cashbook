@@ -49,6 +49,7 @@ PROJECT_APPS = (
     'widget_tweaks',
     'cashbook',
     'zendesk_tickets',
+    'disbursements',
 )
 INSTALLED_APPS += PROJECT_APPS
 

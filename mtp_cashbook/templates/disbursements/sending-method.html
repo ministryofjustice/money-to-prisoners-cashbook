@@ -1,0 +1,43 @@
+{% extends 'disbursements/base.html' %}
+{% load i18n %}
+{% load mtp_common %}
+
+{% block body_classes %}{{ block.super }} mtp-create-disbursement{% endblock %}
+
+{% block inner_content %}
+  <div class='mtp-back-link'>
+    <a href="{{ view.get_previous_url }}">{% trans 'Back' %}</a>
+  </div>
+
+  <header>
+    <h1 class="heading-xlarge">
+      {%trans 'How the prisoner wants to send money' %}
+    </h1>
+  </header>
+
+  <form action="." method="post" id="prisoner">
+    {% csrf_token %}
+
+    <fieldset class="mtp-sending-method-choice">
+      <legend id="{{ form.sending_method.id_for_label }}-label" class="visually-hidden">{% trans 'Method by which to send money' %}</legend>
+
+      {% for sending_method in form.sending_method.field.choices %}
+        <div class="multiple-choice">
+          <input id="id_{{ sending_method.0 }}" type="radio" name="{{ form.sending_method.html_name }}" value="{{ sending_method.0 }}"
+                 {% if form.sending_method.field.disabled %}disabled{% endif %}
+                 {% if form.sending_method.value == sending_method.0 %}checked{% endif %}>
+          <label class="{% if form.sending_method.field.disabled and form.sending_method.value != sending_method.0 %}mtp-grey-choice{% endif %}" for="id_{{ sending_method.0 }}">
+            {{ sending_method.1 }}<br/>
+            {% for key, value in form.sending_method.field.help_text.items %}
+              {% if key == sending_method.0 %}
+                {{ value }}
+              {% endif %}
+            {% endfor %}
+          </label>
+        </div>
+      {% endfor %}
+    </fieldset>
+
+    <button type="submit" class="button mtp-next-button" name="create-disbursement">{% trans 'Next' %}</button>
+  </form>
+{% endblock %}

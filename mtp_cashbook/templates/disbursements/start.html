@@ -1,0 +1,31 @@
+{% extends 'disbursements/base.html' %}
+{% load i18n %}
+{% load mtp_common %}
+{% load staticfiles %}
+
+{% block body_classes %}{{ block.super }} mtp-create-disbursement{% endblock %}
+
+{% block inner_content %}
+  <div class="mtp-disbursement-start">
+    <div class="mtp-disbursement-start-text">
+      <header>
+        <h1 class="heading-xlarge">{% trans 'Send money out' %}</h1>
+      </header>
+
+      <p>
+        {% trans 'Use this tool to process money requests from prisoners who have used the “Send money by bank transfer or cheque” form.' %}
+      </p>
+
+      <p>
+        {% trans 'Make sure you have the filled form in front of you before you start.' %}
+      </p>
+
+      <p>
+        <a href="{{ view.get_success_url }}" class="button button-start" role="button">{% trans 'Start now' %}</a>
+      </p>
+    </div>
+    <div class="mtp-disbursement-start-form">
+      <img src="{% static 'images/disbursement_form.jpg' %}" alt-text={% trans '“Send money by bank transfer or cheque” form' %}/>
+    </div>
+  </div>
+{% endblock %}

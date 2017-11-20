@@ -1,0 +1,29 @@
+{% extends 'disbursements/base.html' %}
+{% load i18n %}
+{% load mtp_common %}
+
+{% block body_classes %}{{ block.super }} mtp-create-disbursement{% endblock %}
+
+{% block inner_content %}
+  <div class='mtp-back-link'>
+    <a href="{{ view.get_previous_url }}">{% trans 'Back' %}</a>
+  </div>
+
+  <header>
+    <h1 class="heading-xlarge mtp-heading--compact">
+      {%trans 'Recipient bank details' %}
+    </h1>
+  </header>
+
+  <form action="." method="post" id="prisoner">
+    {% csrf_token %}
+
+    {% include 'mtp_common/forms/error-summary.html' with form=form only %}
+
+    {% include 'mtp_common/forms/field.html' with field=form.account_number input_classes='mtp-account-number' value=form.account_number.value only %}
+
+    {% include 'mtp_common/forms/field.html' with field=form.sort_code input_classes='mtp-sort-code' value=form.sort_code.value only %}
+
+    <button type="submit" class="button mtp-next-button" name="create-disbursement">{% trans 'Next' %}</button>
+  </form>
+{% endblock %}
