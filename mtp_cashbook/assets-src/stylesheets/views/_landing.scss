@@ -19,6 +19,15 @@
   .mtp-language-switch__item {
     border-color: $white;
   }
+}
+
+.mtp-landing__content {
+  @extend %site-width-container;
+}
+
+.mtp-landing__header {
+  background: $govuk-blue;
+  color: $white;
 
   a {
     color: $white;
@@ -31,15 +40,6 @@
       color: $text-colour;
     }
   }
-}
-
-.mtp-landing__content {
-  @extend %site-width-container;
-}
-
-.mtp-landing__header {
-  background: $govuk-blue;
-  color: $white;
 
   .column-two-thirds {
     padding-right: 3 * $gutter;
