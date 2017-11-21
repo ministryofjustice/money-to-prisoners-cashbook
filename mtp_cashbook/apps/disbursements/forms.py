@@ -4,6 +4,9 @@ from django import forms
 from extended_choices import Choices
 from django.utils.encoding import force_text
 from django.utils.translation import gettext_lazy as _
+from mtp_common.auth.api_client import get_api_session
+from mtp_common.auth.exceptions import HttpNotFoundError, Forbidden
+from requests.exceptions import RequestException
 
 SENDING_METHOD = Choices(
     ('BANK_TRANSFER', 'bank_transfer', _('Bank transfer')),
@@ -51,12 +54,40 @@ class PrisonerForm(DisbursementForm):
         help_text='For example, A1234BC',
         max_length=7,
     )
+    error_messages = {
+        'connection': _('This service is currently unavailable'),
+        'not_found': _('No prisoner matches the details you’ve supplied.'),
+        'wrong_prison': _('This prisoner does not appear to be in a prison that you manage.'),
+    }
 
     def clean_prisoner_number(self):
-        prisoner_number = self.cleaned_data['prisoner_number']
-        if prisoner_number == 'A1001AE':
-            raise forms.ValidationError('A1001AE Gilly Hall has moved or been released')
+        prisoner_number = self.cleaned_data.get('prisoner_number')
+        if prisoner_number:
+            prisoner_number = prisoner_number.upper()
         return prisoner_number
+
+    def clean(self):
+        prisoner_number = self.cleaned_data.get('prisoner_number')
+        session = get_api_session(self.request)
+        try:
+            prisoner = session.get(
+                '/prisoner_locations/{prisoner_number}/'.format(
+                    prisoner_number=prisoner_number
+                )
+            ).json()
+
+            self.cleaned_data['prisoner_name'] = prisoner['prisoner_name']
+            self.cleaned_data['prisoner_dob'] = prisoner['prisoner_dob']
+            return self.cleaned_data
+        except HttpNotFoundError:
+            raise forms.ValidationError(
+                self.error_messages['not_found'], code='not_found')
+        except Forbidden:
+            raise forms.ValidationError(
+                self.error_messages['wrong_prison'], code='wrong_prison')
+        except RequestException:
+            raise forms.ValidationError(
+                self.error_messages['connection'], code='connection')
 
 
 def serialise_amount(amount):
@@ -75,8 +106,8 @@ class AmountForm(DisbursementForm):
         min_value=Decimal('0.01'),
         decimal_places=2,
         error_messages={
-            'invalid': 'Enter as a number',
-            'min_value': 'Amount should be 1p or more',
+            'invalid': _('Enter amount as a number'),
+            'min_value': _('Amount should be 1p or more'),
         }
     )
     serialise_amount = serialise_amount
