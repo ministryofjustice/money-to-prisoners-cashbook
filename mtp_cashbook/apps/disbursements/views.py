@@ -118,6 +118,13 @@ class AmountView(DisbursementFormView):
     template_name = 'disbursements/amount.html'
     form_class = disbursement_forms.AmountForm
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        prisoner_details = self.valid_form_data[PrisonerView.url_name]
+        kwargs['prison'] = prisoner_details['prison']
+        kwargs['prisoner_number'] = prisoner_details['prisoner_number']
+        return kwargs
+
     def get_success_url(self):
         return build_view_url(self.request, SendingMethodView.url_name)
 

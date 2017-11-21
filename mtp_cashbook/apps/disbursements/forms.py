@@ -1,9 +1,11 @@
+from math import floor
 from decimal import Decimal
 
 from django import forms
 from extended_choices import Choices
 from django.utils.encoding import force_text
 from django.utils.translation import gettext_lazy as _
+from mtp_common import nomis
 from mtp_common.auth.api_client import get_api_session
 from mtp_common.auth.exceptions import HttpNotFoundError, Forbidden
 from requests.exceptions import RequestException
@@ -56,8 +58,8 @@ class PrisonerForm(DisbursementForm):
     )
     error_messages = {
         'connection': _('This service is currently unavailable'),
-        'not_found': _('No prisoner matches the details you’ve supplied.'),
-        'wrong_prison': _('This prisoner does not appear to be in a prison that you manage.'),
+        'not_found': _('No prisoner matches the details you’ve supplied'),
+        'wrong_prison': _('This prisoner does not appear to be in a prison that you manage'),
     }
 
     def clean_prisoner_number(self):
@@ -78,6 +80,7 @@ class PrisonerForm(DisbursementForm):
 
             self.cleaned_data['prisoner_name'] = prisoner['prisoner_name']
             self.cleaned_data['prisoner_dob'] = prisoner['prisoner_dob']
+            self.cleaned_data['prison'] = prisoner['prison']
             return self.cleaned_data
         except HttpNotFoundError:
             raise forms.ValidationError(
@@ -105,20 +108,32 @@ class AmountForm(DisbursementForm):
         help_text='For example, 10.00',
         min_value=Decimal('0.01'),
         decimal_places=2,
-        error_messages={
-            'invalid': _('Enter amount as a number'),
-            'min_value': _('Amount should be 1p or more'),
-        }
     )
     serialise_amount = serialise_amount
     unserialise_amount = unserialise_amount
+    error_messages = {
+        'invalid': _('Enter amount as a number'),
+        'min_value': _('Amount should be 1p or more'),
+        'exceeds_funds': _(
+            'There is not enough money in the prisoner’s private account. '
+            'Use NOMIS to move money from other accounts into the private '
+            'account, then click ’Update balances’'),
+    }
+
+    def __init__(self, prison=None, prisoner_number=None, **kwargs):
+        super().__init__(**kwargs)
+        if prison and prisoner_number:
+            balances = nomis.get_account_balances(prison, prisoner_number)
+            self.spends_balance = balances['spends']
+            self.private_balance = balances['cash']
+            self.savings_balance = balances['savings']
 
     def clean_amount(self):
-        amount = self.cleaned_data['amount']
-        if amount >= 30:
-            raise forms.ValidationError(
-                'A1409AE James Halls has insufficient funds in their spends account'
-            )
+        amount = floor(Decimal(self.cleaned_data['amount'])*100)
+        if hasattr(self, 'private_balance'):
+            if amount > self.private_balance:
+                raise forms.ValidationError(
+                    self.error_messages['exceeds_funds'], code='exceeds_funds')
         return amount
 
 
