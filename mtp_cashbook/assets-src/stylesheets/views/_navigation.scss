@@ -94,6 +94,7 @@ $mtp-nav-breakpoint: 830px;
     text-indent: 300px;
     @include navigation-search-image;
     cursor: pointer;
+    border-radius: 0;
 
     @include ie-lte(8) {
       padding-bottom: 5px;
