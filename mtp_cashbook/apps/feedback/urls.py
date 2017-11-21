@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.conf.urls import url
-from django.core.urlresolvers import reverse_lazy
+from django.urls import reverse_lazy
 from zendesk_tickets import views
 
 from .forms import PrisonTicketForm

@@ -2,8 +2,8 @@ from unittest import mock
 from urllib.parse import urljoin
 
 from django.conf import settings
-from django.core.urlresolvers import reverse
 from django.test import SimpleTestCase
+from django.urls import reverse
 from django.utils.functional import cached_property
 from mtp_common.auth.test_utils import generate_tokens
 
