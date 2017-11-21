@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from django.core.urlresolvers import reverse_lazy
+from django.urls import reverse_lazy
 from mtp_common.auth import views
 
 urlpatterns = [

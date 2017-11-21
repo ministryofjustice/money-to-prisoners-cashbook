@@ -3,8 +3,8 @@ from datetime import datetime
 import logging
 
 from django.core import mail
-from django.core.urlresolvers import reverse
 from django.test import override_settings
+from django.urls import reverse
 from mtp_common.test_utils import silence_logger
 import responses
 
