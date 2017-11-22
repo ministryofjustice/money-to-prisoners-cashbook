@@ -18,7 +18,7 @@ SENDING_METHOD = Choices(
 
 class DisbursementForm(forms.Form):
     @classmethod
-    def unserialise_from_session(cls, request):
+    def unserialise_from_session(cls, request, previous_form_data):
         session = request.session
 
         def get_value(f):
@@ -34,11 +34,12 @@ class DisbursementForm(forms.Form):
             }
         except KeyError:
             data = None
-        return cls(request=request, data=data)
+        return cls(request=request, data=data, previous_form_data=previous_form_data)
 
-    def __init__(self, request=None, **kwargs):
+    def __init__(self, request=None, previous_form_data={}, **kwargs):
         super().__init__(**kwargs)
         self.request = request
+        self.previous_form_data = previous_form_data
 
     def serialise_to_session(self):
         cls = self.__class__
@@ -94,7 +95,7 @@ class PrisonerForm(DisbursementForm):
 
 
 def serialise_amount(amount):
-    return '{0:.2f}'.format(amount)
+    return '{0:.2f}'.format(amount/100)
 
 
 def unserialise_amount(amount_text):
@@ -120,13 +121,16 @@ class AmountForm(DisbursementForm):
             'account, then click ’Update balances’'),
     }
 
-    def __init__(self, prison=None, prisoner_number=None, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        if prison and prisoner_number:
-            balances = nomis.get_account_balances(prison, prisoner_number)
-            self.spends_balance = balances['spends']
-            self.private_balance = balances['cash']
-            self.savings_balance = balances['savings']
+        from .views import PrisonerView
+        balances = nomis.get_account_balances(
+            self.previous_form_data[PrisonerView.url_name]['prison'],
+            self.previous_form_data[PrisonerView.url_name]['prisoner_number']
+        )
+        self.spends_balance = balances['spends']
+        self.private_balance = balances['cash']
+        self.savings_balance = balances['savings']
 
     def clean_amount(self):
         amount = floor(Decimal(self.cleaned_data['amount'])*100)
@@ -173,24 +177,3 @@ class RecipientBankAccountForm(DisbursementForm):
         label='Sort code',
         help_text='For example, 02-02-80'
     )
-
-
-class FilterProcessedDisbursementsListForm(forms.Form):
-    start = forms.DateField(label='From',
-                            help_text='eg 1/6/2017',
-                            required=False)
-    end = forms.DateField(label='To',
-                          help_text='eg 5/6/2017',
-                          required=False)
-
-
-class FilterAllDisbursementsForm(forms.Form):
-    start = forms.DateField(label='From date',
-                            help_text='eg 1/6/2017',
-                            required=False)
-    end = forms.DateField(label='To date',
-                          help_text='eg 5/6/2017',
-                          required=False)
-    search = forms.CharField(label='Keywords',
-                             help_text='Search all by eg NOMIS ID',
-                             required=False)

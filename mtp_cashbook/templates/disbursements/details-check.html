@@ -2,12 +2,13 @@
 {% load i18n %}
 {% load mtp_common %}
 {% load disbursements %}
+{% load currency %}
 
 {% block body_classes %}{{ block.super }} mtp-create-disbursement{% endblock %}
 
 {% block inner_content %}
   <div class='mtp-back-link'>
-    <a href="{{ view.get_previous_url }}">{% trans 'Back' %}</a>
+    <a href="{% url 'disbursements:recipient_contact' %}">{% trans 'Back' %}</a>
   </div>
 
   <header>
@@ -34,7 +35,7 @@
       </tr>
       <tr>
         <th>{% trans 'Amount' %}:</th>
-        <td>£{{ amount }}</td>
+        <td>£{{ amount|currency }}</td>
         <td>
           <div class="mtp-confirm-change">
             <a href="{% url 'disbursements:amount' %}">{% trans 'Change' %} <span class="visually-hidden">{% trans 'Amount' %}</span></a>

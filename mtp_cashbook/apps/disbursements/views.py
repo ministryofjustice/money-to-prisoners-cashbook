@@ -41,9 +41,10 @@ class DisbursementView(View):
 
     def dispatch(self, request, *args, **kwargs):
         for view in self.get_previous_views(self):
-            if not hasattr(view, 'form_class') or not view.is_form_enabled():
+            if not hasattr(view, 'form_class') or not view.is_form_enabled(self.valid_form_data):
                 continue
-            form = view.form_class.unserialise_from_session(request)
+            form = view.form_class.unserialise_from_session(
+                request, self.valid_form_data)
             if form.is_valid():
                 self.valid_form_data[view.url_name] = form.cleaned_data
             else:
@@ -53,13 +54,14 @@ class DisbursementView(View):
 
 class DisbursementFormView(DisbursementView, FormView):
     @classmethod
-    def is_form_enabled(cls):
+    def is_form_enabled(cls, previous_form_data):
         return True
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         if self.request.method == 'GET':
-            form = self.form_class.unserialise_from_session(self.request)
+            form = self.form_class.unserialise_from_session(
+                self.request, self.valid_form_data)
             if form.is_valid():
                 # valid form found in session so restore it
                 context_data['form'] = form
@@ -68,6 +70,7 @@ class DisbursementFormView(DisbursementView, FormView):
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['request'] = self.request
+        kwargs['previous_form_data'] = self.valid_form_data
         return kwargs
 
     def form_valid(self, form):
@@ -118,13 +121,6 @@ class AmountView(DisbursementFormView):
     template_name = 'disbursements/amount.html'
     form_class = disbursement_forms.AmountForm
 
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        prisoner_details = self.valid_form_data[PrisonerView.url_name]
-        kwargs['prison'] = prisoner_details['prison']
-        kwargs['prisoner_number'] = prisoner_details['prisoner_number']
-        return kwargs
-
     def get_success_url(self):
         return build_view_url(self.request, SendingMethodView.url_name)
 
@@ -148,7 +144,11 @@ class RecipientContactView(DisbursementFormView):
     form_class = disbursement_forms.RecipientContactForm
 
     def get_success_url(self):
-        return build_view_url(self.request, RecipientBankAccountView.url_name)
+        sending_method = self.valid_form_data[SendingMethodView.url_name]
+        if sending_method['sending_method'] == disbursement_forms.SENDING_METHOD.CHEQUE:
+            return build_view_url(self.request, DetailsCheckView.url_name)
+        else:
+            return build_view_url(self.request, RecipientBankAccountView.url_name)
 
 
 @method_decorator(login_required, name='dispatch')
@@ -157,6 +157,14 @@ class RecipientBankAccountView(DisbursementFormView):
     previous_view = RecipientContactView
     template_name = 'disbursements/recipient-bank-account.html'
     form_class = disbursement_forms.RecipientBankAccountForm
+
+    @classmethod
+    def is_form_enabled(cls, previous_form_data):
+        sending_method = previous_form_data[SendingMethodView.url_name]
+        return (
+            sending_method['sending_method'] ==
+            disbursement_forms.SENDING_METHOD.BANK_TRANSFER
+        )
 
     def get_success_url(self):
         return build_view_url(self.request, DetailsCheckView.url_name)
@@ -171,9 +179,9 @@ class DetailsCheckView(DisbursementView, TemplateView):
     def get_context_data(self, **kwargs):
         prisoner_details = self.valid_form_data[PrisonerView.url_name]
         recipient_contact_details = self.valid_form_data[RecipientContactView.url_name]
-        recipient_bank_details = self.valid_form_data[RecipientBankAccountView.url_name]
         sending_method_details = self.valid_form_data[SendingMethodView.url_name]
         amount_details = self.valid_form_data[AmountView.url_name]
+        recipient_bank_details = self.valid_form_data.get(RecipientBankAccountView.url_name, {})
         kwargs.update(**prisoner_details)
         kwargs.update(**recipient_contact_details)
         kwargs.update(**recipient_bank_details)
@@ -195,9 +203,9 @@ class DisbursementCompleteView(DisbursementView, TemplateView):
     def get_context_data(self, **kwargs):
         prisoner_details = self.valid_form_data[PrisonerView.url_name]
         recipient_contact_details = self.valid_form_data[RecipientContactView.url_name]
-        recipient_bank_details = self.valid_form_data[RecipientBankAccountView.url_name]
         sending_method_details = self.valid_form_data[SendingMethodView.url_name]
         amount_details = self.valid_form_data[AmountView.url_name]
+        recipient_bank_details = self.valid_form_data.get(RecipientBankAccountView.url_name, {})
         kwargs.update(**prisoner_details)
         kwargs.update(**recipient_contact_details)
         kwargs.update(**recipient_bank_details)
