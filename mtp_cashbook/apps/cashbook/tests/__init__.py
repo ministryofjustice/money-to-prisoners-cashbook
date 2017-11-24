@@ -2,13 +2,16 @@ from unittest import mock
 from urllib.parse import urljoin
 
 from django.conf import settings
-from django.test import SimpleTestCase
+from django.test import SimpleTestCase, override_settings
 from django.urls import reverse
 from django.utils.functional import cached_property
 from mtp_common.auth.test_utils import generate_tokens
 
 
 class MTPBaseTestCase(SimpleTestCase):
+
+    def assertOnPage(self, response, url_name):  # noqa
+        self.assertContains(response, '<!--[%s]-->' % url_name)
 
     @property
     def login_url(self):
@@ -76,3 +79,23 @@ def api_url(path):
 
 def nomis_url(path):
     return urljoin(settings.NOMIS_API_BASE_URL, path)
+
+
+override_nomis_settings = override_settings(
+    NOMIS_API_BASE_URL='https://nomis.local/',
+    NOMIS_API_CLIENT_TOKEN='hello',
+    NOMIS_API_PRIVATE_KEY=(
+        '-----BEGIN EC PRIVATE KEY-----\n'
+        'MHcCAQEEIOhhs3RXk8dU/YQE3j2s6u97mNxAM9s+13S+cF9YVgluoAoGCCqGSM49\n'
+        'AwEHoUQDQgAE6l49nl7NN6k6lJBfGPf4QMeHNuER/o+fLlt8mCR5P7LXBfMG6Uj6\n'
+        'TUeoge9H2N/cCafyhCKdFRdQF9lYB2jB+A==\n'
+        '-----END EC PRIVATE KEY-----\n'
+    ),  # this key is just for tests, doesn't do anything
+)
+
+
+def wrap_response_data(*args):
+    return {
+        'count': len(args),
+        'results': args
+    }

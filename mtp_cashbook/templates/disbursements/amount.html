@@ -35,7 +35,7 @@
 
       <tr class="mtp-private-row">
         <td>{% trans 'Private' %}</td>
-        <td>£{{ form.private_balance|currency|default:'0.00' }}</td>
+        <td>{{ form.private_balance|currency:'£'|default:_('Unknown') }}</td>
         <td class="mtp-amount-column">
           {% with field=form.amount %}
           <fieldset>
@@ -60,13 +60,13 @@
 
       <tr>
         <td>{% trans 'Spends' %}</td>
-        <td>£{{ form.spends_balance|currency|default:'0.00' }}</td>
+        <td>{{ form.spends_balance|currency:'£'|default:_('Unknown') }}</td>
         <td>{% trans 'Can’t be used for sending money out' %}</td>
       </tr>
 
       <tr>
         <td>{% trans 'Saving' %}</td>
-        <td>£{{ form.savings_balance|currency|default:'0.00' }}</td>
+        <td>{{ form.savings_balance|currency:'£'|default:_('Unknown') }}</td>
         <td>{% trans 'Can’t be used for sending money out' %}</td>
       </tr>
 

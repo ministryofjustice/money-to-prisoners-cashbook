@@ -1,8 +1,11 @@
 from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse, reverse_lazy
 from django.shortcuts import redirect
+from django.urls import reverse
 from django.utils.decorators import method_decorator
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView, TemplateView, View
+from mtp_common.auth.api_client import get_api_session
+from requests.exceptions import RequestException
 
 from . import forms as disbursement_forms
 
@@ -48,7 +51,8 @@ class DisbursementView(View):
             if form.is_valid():
                 self.valid_form_data[view.url_name] = form.cleaned_data
             else:
-                return redirect(build_view_url(self.request, view.url_name))
+                redirect_url = getattr(view, 'redirect_url_name', None) or view.url_name
+                return redirect(build_view_url(self.request, redirect_url))
         return super().dispatch(request, *args, **kwargs)
 
 
@@ -91,6 +95,7 @@ class DisbursementStartView(DisbursementView, TemplateView):
 @method_decorator(login_required, name='dispatch')
 class PrisonerView(DisbursementFormView):
     url_name = 'prisoner'
+    redirect_url_name = DisbursementStartView.url_name
     previous_view = DisbursementStartView
     template_name = 'disbursements/prisoner.html'
     form_class = disbursement_forms.PrisonerForm
@@ -175,6 +180,9 @@ class DetailsCheckView(DisbursementView, TemplateView):
     url_name = 'details_check'
     previous_view = RecipientBankAccountView
     template_name = 'disbursements/details-check.html'
+    error_messages = {
+        'connection': _('This service is currently unavailable')
+    }
 
     def get_context_data(self, **kwargs):
         prisoner_details = self.valid_form_data[PrisonerView.url_name]
@@ -187,6 +195,9 @@ class DetailsCheckView(DisbursementView, TemplateView):
         kwargs.update(**recipient_bank_details)
         kwargs.update(**sending_method_details)
         kwargs.update(**amount_details)
+
+        if 'e' in self.request.GET:
+            kwargs['errors'] = [self.error_messages.get(self.request.GET['e'])]
         return super().get_context_data(**kwargs)
 
     def get_success_url(self):
@@ -200,15 +211,40 @@ class DisbursementCompleteView(DisbursementView, TemplateView):
     template_name = 'disbursements/complete.html'
     final_step = True
 
-    def get_context_data(self, **kwargs):
+    def get(self, request, *args, **kwargs):
         prisoner_details = self.valid_form_data[PrisonerView.url_name]
         recipient_contact_details = self.valid_form_data[RecipientContactView.url_name]
         sending_method_details = self.valid_form_data[SendingMethodView.url_name]
         amount_details = self.valid_form_data[AmountView.url_name]
         recipient_bank_details = self.valid_form_data.get(RecipientBankAccountView.url_name, {})
-        kwargs.update(**prisoner_details)
-        kwargs.update(**recipient_contact_details)
-        kwargs.update(**recipient_bank_details)
-        kwargs.update(**sending_method_details)
-        kwargs.update(**amount_details)
-        return super().get_context_data(**kwargs)
+
+        try:
+            api_session = get_api_session(request)
+            recipient_data = {
+                'name': recipient_contact_details['recipient_name'],
+                'line1': recipient_contact_details['address_line1'],
+                'line2': recipient_contact_details['address_line2'],
+                'city': recipient_contact_details['city'],
+                'email': recipient_contact_details['email'],
+            }
+            recipient_data.update(**recipient_bank_details)
+            recipient = api_session.post(
+                '/recipients/', json=recipient_data).json()
+
+            disbursement_data = {
+                'prisoner_number': prisoner_details['prisoner_number'],
+                'prison': prisoner_details['prison'],
+                'method': sending_method_details['sending_method'],
+                'amount': amount_details['amount'],
+                'recipient': recipient['id']
+            }
+            api_session.post('/disbursements/', json=disbursement_data)
+
+            response = super().get(request, *args, **kwargs)
+            request.session.flush()
+            return response
+        except RequestException as e:
+            return redirect(
+                '%s?e=connection' %
+                build_view_url(self.request, self.previous_view.url_name)
+            )

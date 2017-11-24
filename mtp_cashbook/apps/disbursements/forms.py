@@ -124,17 +124,21 @@ class AmountForm(DisbursementForm):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         from .views import PrisonerView
-        balances = nomis.get_account_balances(
-            self.previous_form_data[PrisonerView.url_name]['prison'],
-            self.previous_form_data[PrisonerView.url_name]['prisoner_number']
-        )
-        self.spends_balance = balances['spends']
-        self.private_balance = balances['cash']
-        self.savings_balance = balances['savings']
+        try:
+            balances = nomis.get_account_balances(
+                self.previous_form_data[PrisonerView.url_name]['prison'],
+                self.previous_form_data[PrisonerView.url_name]['prisoner_number']
+            )
+            self.spends_balance = balances['spends']
+            self.private_balance = balances['cash']
+            self.savings_balance = balances['savings']
+            self.balance_available = True
+        except RequestException:
+            self.balance_available = False
 
     def clean_amount(self):
         amount = floor(Decimal(self.cleaned_data['amount'])*100)
-        if hasattr(self, 'private_balance'):
+        if self.balance_available:
             if amount > self.private_balance:
                 raise forms.ValidationError(
                     self.error_messages['exceeds_funds'], code='exceeds_funds')
@@ -165,7 +169,7 @@ class RecipientContactForm(DisbursementForm):
     address_line2 = forms.CharField(required=False)
     city = forms.CharField(required=False)
     postcode = forms.CharField(label='Their postcode')
-    email = forms.CharField(label='Their email address (if provided)', required=False)
+    email = forms.EmailField(label='Their email address (if provided)', required=False)
 
 
 class RecipientBankAccountForm(DisbursementForm):
