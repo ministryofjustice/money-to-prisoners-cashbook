@@ -20,7 +20,7 @@ def clear_session_view(request):
     View that clears the session and restarts the user flow.
     @param request: the HTTP request
     """
-    request.session.flush()
+    DisbursementCompleteView.clear_session(request)
     return redirect(build_view_url(request, DisbursementStartView.url_name))
 
 
@@ -30,6 +30,12 @@ class DisbursementView(View):
     previous_view = None
     payment_method = None
     final_step = False
+
+    @classmethod
+    def clear_session(cls, request):
+        for view in cls.get_previous_views(cls):
+            if hasattr(view, 'form_class'):
+                view.form_class.delete_from_session(request)
 
     @classmethod
     def get_previous_views(cls, view):
@@ -234,7 +240,7 @@ class DisbursementCompleteView(DisbursementView, TemplateView):
             api_session.post('/disbursements/', json=disbursement_data)
 
             response = super().get(request, *args, **kwargs)
-            request.session.flush()
+            self.clear_session(request)
             return response
         except RequestException as e:
             return redirect(

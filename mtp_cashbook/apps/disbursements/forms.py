@@ -36,6 +36,11 @@ class DisbursementForm(forms.Form):
             data = None
         return cls(request=request, data=data, previous_form_data=previous_form_data)
 
+    @classmethod
+    def delete_from_session(cls, request):
+        for field in cls.base_fields:
+            request.session.pop(field, None)
+
     def __init__(self, request=None, previous_form_data={}, **kwargs):
         super().__init__(**kwargs)
         self.request = request
@@ -62,6 +67,13 @@ class PrisonerForm(DisbursementForm):
         'not_found': _('No prisoner matches the details you’ve supplied'),
         'wrong_prison': _('This prisoner does not appear to be in a prison that you manage'),
     }
+
+    @classmethod
+    def delete_from_session(cls, request):
+        super().delete_from_session(request)
+        request.session.pop('prisoner_name', None)
+        request.session.pop('prisoner_dob', None)
+        request.session.pop('prison', None)
 
     def clean_prisoner_number(self):
         prisoner_number = self.cleaned_data.get('prisoner_number')
