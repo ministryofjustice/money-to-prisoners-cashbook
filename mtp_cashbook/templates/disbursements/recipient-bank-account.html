@@ -20,9 +20,9 @@
 
     {% include 'mtp_common/forms/error-summary.html' with form=form only %}
 
-    {% include 'mtp_common/forms/field.html' with field=form.account_number input_classes='mtp-account-number' value=form.account_number.value only %}
-
     {% include 'mtp_common/forms/field.html' with field=form.sort_code input_classes='mtp-sort-code' value=form.sort_code.value only %}
+
+    {% include 'mtp_common/forms/field.html' with field=form.account_number input_classes='mtp-account-number' value=form.account_number.value only %}
 
     <button type="submit" class="button mtp-next-button" name="create-disbursement">{% trans 'Next' %}</button>
   </form>

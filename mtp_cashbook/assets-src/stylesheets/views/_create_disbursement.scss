@@ -32,6 +32,10 @@
     padding-top: 1em;
   }
 
+  .mtp-prisoner-number {
+    width: 12em;
+  }
+
   .mtp-accounts-table {
     th {
       font-weight: bold;
@@ -81,8 +85,24 @@
     }
   }
 
+  .mtp-recipient-name, .mtp-address-line, .mtp-address-city {
+    width: 20em;
+  }
+
   .mtp-address-line {
     margin-bottom: 0.5em;
+  }
+
+  .mtp-postcode {
+    width: 12em;
+  }
+
+  .mtp-email {
+    width: 24em;
+  }
+
+  .mtp-account-number, .mtp-sort-code {
+    width: 15em;
   }
 
   .mtp-confirm {
