@@ -256,6 +256,8 @@ MAILGUN_ACCESS_KEY = os.environ.get('MAILGUN_ACCESS_KEY', '')
 MAILGUN_SERVER_NAME = os.environ.get('MAILGUN_SERVER_NAME', '')
 MAILGUN_FROM_ADDRESS = os.environ.get('MAILGUN_FROM_ADDRESS', '')
 
+DISBURSEMENT_PRISONS = os.environ.get('DISBURSEMENT_PRISONS', '').split(',')
+
 try:
     from .local import *  # noqa
 except ImportError:

@@ -7,7 +7,7 @@ from django.views.generic import FormView, TemplateView, View
 from mtp_common.auth.api_client import get_api_session
 from requests.exceptions import RequestException
 
-from . import forms as disbursement_forms
+from . import disbursements_available_required, forms as disbursement_forms
 
 
 def build_view_url(request, url_name):
@@ -24,6 +24,8 @@ def clear_session_view(request):
     return redirect(build_view_url(request, DisbursementStartView.url_name))
 
 
+@method_decorator(login_required, name='dispatch')
+@method_decorator(disbursements_available_required, name='dispatch')
 class DisbursementView(View):
     previous_view = None
     payment_method = None
@@ -83,7 +85,6 @@ class DisbursementFormView(DisbursementView, FormView):
         return super().form_valid(form)
 
 
-@method_decorator(login_required, name='dispatch')
 class DisbursementStartView(DisbursementView, TemplateView):
     url_name = 'start'
     template_name = 'disbursements/start.html'
@@ -92,7 +93,6 @@ class DisbursementStartView(DisbursementView, TemplateView):
         return build_view_url(self.request, PrisonerView.url_name)
 
 
-@method_decorator(login_required, name='dispatch')
 class PrisonerView(DisbursementFormView):
     url_name = 'prisoner'
     redirect_url_name = DisbursementStartView.url_name
@@ -104,7 +104,6 @@ class PrisonerView(DisbursementFormView):
         return build_view_url(self.request, PrisonerCheckView.url_name)
 
 
-@method_decorator(login_required, name='dispatch')
 class PrisonerCheckView(DisbursementView, TemplateView):
     url_name = 'prisoner_check'
     previous_view = PrisonerView
@@ -119,7 +118,6 @@ class PrisonerCheckView(DisbursementView, TemplateView):
         return build_view_url(self.request, AmountView.url_name)
 
 
-@method_decorator(login_required, name='dispatch')
 class AmountView(DisbursementFormView):
     url_name = 'amount'
     previous_view = PrisonerCheckView
@@ -130,7 +128,6 @@ class AmountView(DisbursementFormView):
         return build_view_url(self.request, SendingMethodView.url_name)
 
 
-@method_decorator(login_required, name='dispatch')
 class SendingMethodView(DisbursementFormView):
     url_name = 'sending_method'
     previous_view = AmountView
@@ -141,7 +138,6 @@ class SendingMethodView(DisbursementFormView):
         return build_view_url(self.request, RecipientContactView.url_name)
 
 
-@method_decorator(login_required, name='dispatch')
 class RecipientContactView(DisbursementFormView):
     url_name = 'recipient_contact'
     previous_view = SendingMethodView
@@ -156,7 +152,6 @@ class RecipientContactView(DisbursementFormView):
             return build_view_url(self.request, RecipientBankAccountView.url_name)
 
 
-@method_decorator(login_required, name='dispatch')
 class RecipientBankAccountView(DisbursementFormView):
     url_name = 'recipient_bank_account'
     previous_view = RecipientContactView
@@ -175,7 +170,6 @@ class RecipientBankAccountView(DisbursementFormView):
         return build_view_url(self.request, DetailsCheckView.url_name)
 
 
-@method_decorator(login_required, name='dispatch')
 class DetailsCheckView(DisbursementView, TemplateView):
     url_name = 'details_check'
     previous_view = RecipientBankAccountView
@@ -204,7 +198,6 @@ class DetailsCheckView(DisbursementView, TemplateView):
         return build_view_url(self.request, DisbursementCompleteView.url_name)
 
 
-@method_decorator(login_required, name='dispatch')
 class DisbursementCompleteView(DisbursementView, TemplateView):
     url_name = 'complete'
     previous_view = DetailsCheckView

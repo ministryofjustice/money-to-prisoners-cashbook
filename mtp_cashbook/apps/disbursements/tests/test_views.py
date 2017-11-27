@@ -1,3 +1,4 @@
+from django.test import override_settings
 from django.urls import reverse
 import responses
 
@@ -94,12 +95,14 @@ class PrisonerTestCase(CreateDisbursementFlowTestCase):
         return reverse('disbursements:prisoner')
 
     @responses.activate
+    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_valid_prisoner_number(self):
         self.login()
         response = self.enter_prisoner_details()
         self.assertOnPage(response, 'prisoner_check')
 
     @responses.activate
+    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_invalid_prisoner_number(self):
         prisoner_number = 'A1404AE'
         responses.add(
@@ -121,6 +124,7 @@ class PrisonerTestCase(CreateDisbursementFlowTestCase):
         self.assertContains(response, PrisonerForm.error_messages['not_found'])
 
     @responses.activate
+    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_prisoner_in_different_prison(self):
         prisoner_number = 'A1404AE'
         responses.add(
@@ -150,6 +154,7 @@ class AmountTestCase(CreateDisbursementFlowTestCase):
 
     @responses.activate
     @override_nomis_settings
+    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_valid_amount(self):
         self.login()
         self.enter_prisoner_details()
@@ -159,6 +164,7 @@ class AmountTestCase(CreateDisbursementFlowTestCase):
 
     @responses.activate
     @override_nomis_settings
+    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_too_high_amount(self):
         self.login()
         self.enter_prisoner_details()
@@ -169,6 +175,7 @@ class AmountTestCase(CreateDisbursementFlowTestCase):
 
     @responses.activate
     @override_nomis_settings
+    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_nomis_unavailable(self):
         self.login()
         self.enter_prisoner_details()
@@ -182,6 +189,7 @@ class SendingMethodTestCase(CreateDisbursementFlowTestCase):
 
     @responses.activate
     @override_nomis_settings
+    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_cheque_sending_method_skips_bank_account(self):
         self.login()
         self.enter_prisoner_details()
@@ -193,6 +201,7 @@ class SendingMethodTestCase(CreateDisbursementFlowTestCase):
 
     @responses.activate
     @override_nomis_settings
+    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_cheque_sending_method_includes_bank_account(self):
         self.login()
         self.enter_prisoner_details()
@@ -211,6 +220,7 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
 
     @responses.activate
     @override_nomis_settings
+    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_create_valid_disbursement(self):
         responses.add(
             responses.POST,
@@ -237,6 +247,7 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
 
     @responses.activate
     @override_nomis_settings
+    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_create_disbursement_service_unavailable(self):
         self.login()
         self.enter_prisoner_details()
