@@ -1,5 +1,6 @@
 from math import floor
 from decimal import Decimal
+from urllib.parse import quote_plus
 
 from django import forms
 from extended_choices import Choices
@@ -87,7 +88,7 @@ class PrisonerForm(DisbursementForm):
         try:
             prisoner = session.get(
                 '/prisoner_locations/{prisoner_number}/'.format(
-                    prisoner_number=prisoner_number
+                    prisoner_number=quote_plus(prisoner_number)
                 )
             ).json()
 
