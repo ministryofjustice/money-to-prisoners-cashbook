@@ -1,0 +1,139 @@
+.mtp-create-disbursement {
+  .mtp-disbursement-start {
+    clear: all;
+
+    .mtp-disbursement-start-text {
+      max-width: 600px;
+      float: left;
+
+      .button-start {
+        margin-top: 3em;
+      }
+    }
+
+    .mtp-disbursement-start-form {
+      float: left;
+
+      img {
+        margin-top: 1.625em;
+        width: 250px;
+        border: 1px solid $grey-1;
+      }
+    }
+  }
+
+  .mtp-next-button {
+    margin-top: 1.5em;
+    min-width: 150px;
+    text-align: center;
+  }
+
+  .mtp-back-link {
+    padding-top: 1em;
+  }
+
+  .mtp-prisoner-number {
+    width: 12em;
+  }
+
+  .mtp-accounts-table {
+    th {
+      font-weight: bold;
+      border: none;
+    }
+
+    td {
+      text-align: center;
+    }
+
+    td.mtp-amount-column{
+      text-align: left;
+    }
+
+    tr.mtp-private-row {
+      td {
+        font-weight: bold;
+      }
+    }
+
+    tr.mtp-refresh-row {
+      td {
+        border: none;
+      }
+    }
+  }
+
+  .mtp-currency-sign {
+    background-color: $highlight-colour;
+    border-right: 0;
+    font-weight: 900;
+    line-height: 1.16;
+    min-width: 1.8em;
+    text-align: center;
+    width: 1.8em;
+  }
+
+  .mtp-charges-amount {
+    width: 5em;
+  }
+
+  .mtp-money-box {
+    * {
+      display: inline-block;
+      height: 34px;
+      vertical-align: bottom;
+    }
+  }
+
+  .mtp-recipient-name, .mtp-address-line, .mtp-address-city {
+    width: 20em;
+  }
+
+  .mtp-address-line {
+    margin-bottom: 0.5em;
+  }
+
+  .mtp-postcode {
+    width: 12em;
+  }
+
+  .mtp-email {
+    width: 24em;
+  }
+
+  .mtp-account-number, .mtp-sort-code {
+    width: 15em;
+  }
+
+  .mtp-confirm {
+    h2 {
+      font-size: 1.26316em;
+      margin: 0 0 .2em;
+    }
+
+    table {
+      min-width: 100%;
+
+      tr.mtp-section-header {
+        border-top: 2px solid $border-colour;
+
+        th, td {
+          padding-top: 1em;
+        }
+      }
+
+      th {
+        max-width: 30px;
+      }
+
+      th, td {
+        padding: 0.5em 2em 0.5em 0;
+        border: none;
+      }
+    }
+
+    .mtp-confirm-change {
+      text-align: right;
+    }
+  }
+}

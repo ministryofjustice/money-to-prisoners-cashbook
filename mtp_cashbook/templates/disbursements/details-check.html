@@ -1,0 +1,147 @@
+{% extends 'disbursements/base.html' %}
+{% load i18n %}
+{% load mtp_common %}
+{% load disbursements %}
+{% load currency %}
+
+{% block body_classes %}{{ block.super }} mtp-create-disbursement{% endblock %}
+
+{% block inner_content %}
+  <div class='mtp-back-link'>
+    <a href="{% url 'disbursements:recipient_contact' %}">{% trans 'Back' %}</a>
+  </div>
+
+  <header>
+    <h1 class="heading-xlarge mtp-heading--compact">
+      {%trans 'Check details before sending' %}
+    </h1>
+  </header>
+
+  {% if errors %}
+  <div class="error-summary" aria-labelledby="error-summary-heading" tabindex="-1" role="alert">
+    <h2 class="heading-medium error-summary-heading" id="error-summary-heading">
+      {% trans 'There was a problem' %}
+    </h2>
+    <ul class="error-summary-list">
+      {% for error in errors %}
+        <li class="non-field-error">{{ error }}<span class="visually-hidden">.</span></li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  <div class="mtp-confirm">
+    <table class="mtp-table">
+      <tr class="mtp-section-header">
+        <th><h2 class="heading-large">{% trans 'Send' %}</h2></th>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <th>{% trans 'Send by' %}:</th>
+        <td>{{ sending_method|sendingmethod }}</td>
+        <td>
+          <div class="mtp-confirm-change">
+            <a href="{% url 'disbursements:sending_method' %}">{% trans 'Change' %} <span class="visually-hidden">{% trans 'Sending method' %}</span></a>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <th>{% trans 'Amount' %}:</th>
+        <td>£{{ amount|currency }}</td>
+        <td>
+          <div class="mtp-confirm-change">
+            <a href="{% url 'disbursements:amount' %}">{% trans 'Change' %} <span class="visually-hidden">{% trans 'Amount' %}</span></a>
+          </div>
+        </td>
+      </tr>
+      <tr class="mtp-section-header">
+        <th><h2 class="heading-large">{% trans 'From' %}</h2></th>
+        <td></td>
+        <td>
+          <div class="mtp-confirm-change">
+            <a href="{% url 'disbursements:prisoner' %}">{% trans 'Change' %} <span class="visually-hidden">{% trans 'Prisoner details' %}</span></a>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <th>{% trans 'Name' %}:</th>
+        <td>{{ prisoner_name }}</td>
+        <td></td>
+      </tr>
+      <tr>
+        <th>{% trans 'Date of birth' %}:</th>
+        <td>{{ prisoner_dob }}</td>
+        <td></td>
+      </tr>
+      <tr>
+        <th>{% trans 'Prisoner number' %}:</th>
+        <td>{{ prisoner_number }}</td>
+        <td></td>
+      </tr>
+      <tr class="mtp-section-header">
+        <th><h2 class="heading-large">{% trans 'To' %}</h2></th>
+        <td></td>
+        <td>
+          <div class="mtp-confirm-change">
+            <a href="{% url 'disbursements:recipient_contact' %}">{% trans 'Change' %} <span class="visually-hidden">{% trans 'Recipient details' %}</span></a>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <th>{% trans 'Name' %}:</th>
+        <td>{{ name }}</td>
+        <td></td>
+      </tr>
+      <tr>
+        <th>{% trans 'Address' %}:</th>
+        <td>{{ address_line1 }}</td>
+        <td></td>
+      <tr>
+        <th></th>
+        <td>{{ address_line2 }}</td>
+        <td></td>
+      </tr>
+      <tr>
+        <th></th>
+        <td>{{ city }}</td>
+        <td></td>
+      </tr>
+      <tr>
+        <th>{% trans 'Postcode' %}:</th>
+        <td>{{ postcode }}</td>
+        <td></td>
+      </tr>
+      </tr>
+      <tr>
+        <th>{% if email %}{% trans 'Email' %}:{% endif %}</th>
+        <td>{{ email }}</td>
+        <td></td>
+      </tr>
+      {% if sending_method == 'bank_transfer' %}
+        <tr>
+          <th>{% trans 'Sort code' %}:</th>
+          <td>{{ sort_code }}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <th>{% trans 'Account number' %}:</th>
+          <td>{{ account_number }}</td>
+          <td></td>
+        </tr>
+      {% endif %}
+      <tr class="mtp-section-header">
+        <td colspan="3"></td>
+      </tr>
+    </table>
+
+    <br/>
+    <p>
+      <strong>{% trans 'Remember:' %}</strong> {% trans 'This request needs to be reviewed by another member of staff so they can check the above details match the details on the paper form.' %}
+    </p>
+
+    <div>
+      <a id="id_next_btn" class="button mtp-next-button" href="{{ view.get_success_url }}">{% trans 'Submit for review' %}</a>
+    </div>
+  </div>
+{% endblock %}

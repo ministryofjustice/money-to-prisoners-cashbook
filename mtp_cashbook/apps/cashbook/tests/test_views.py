@@ -8,7 +8,10 @@ from django.urls import reverse
 from mtp_common.test_utils import silence_logger
 import responses
 
-from cashbook.tests import MTPBaseTestCase, api_url, nomis_url
+from cashbook.tests import (
+    MTPBaseTestCase, api_url, nomis_url, override_nomis_settings,
+    wrap_response_data
+)
 
 CREDIT_1 = {
     'id': 1,
@@ -52,26 +55,6 @@ EXPIRED_PROCESSING_BATCH = {
     'created': datetime.now().isoformat(),
     'expired': True
 }
-
-
-override_nomis_settings = override_settings(
-    NOMIS_API_BASE_URL='https://nomis.local/',
-    NOMIS_API_CLIENT_TOKEN='hello',
-    NOMIS_API_PRIVATE_KEY=(
-        '-----BEGIN EC PRIVATE KEY-----\n'
-        'MHcCAQEEIOhhs3RXk8dU/YQE3j2s6u97mNxAM9s+13S+cF9YVgluoAoGCCqGSM49\n'
-        'AwEHoUQDQgAE6l49nl7NN6k6lJBfGPf4QMeHNuER/o+fLlt8mCR5P7LXBfMG6Uj6\n'
-        'TUeoge9H2N/cCafyhCKdFRdQF9lYB2jB+A==\n'
-        '-----END EC PRIVATE KEY-----\n'
-    ),  # this key is just for tests, doesn't do anything
-)
-
-
-def wrap_response_data(*args):
-    return {
-        'count': len(args),
-        'results': args
-    }
 
 
 class NewCreditsViewTestCase(MTPBaseTestCase):

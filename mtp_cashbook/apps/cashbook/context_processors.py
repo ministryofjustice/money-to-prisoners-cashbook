@@ -9,7 +9,7 @@ def govuk_localisation(request):
     data.update(
         homepage_url=data['home_url'],
         logo_link_title=gettext('Go to the homepage'),
-        global_header_text=gettext('Digital cashbook'),
+        global_header_text=gettext('Prisoner money'),
     )
     return data
 
