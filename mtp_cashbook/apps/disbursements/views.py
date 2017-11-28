@@ -70,6 +70,8 @@ class DisbursementFormView(DisbursementView, FormView):
         return True
 
     def get_context_data(self, **kwargs):
+        if self.previous_view:
+            kwargs['breadcrumbs_back'] = self.get_previous_url()
         context_data = super().get_context_data(**kwargs)
         if self.request.method == 'GET':
             form = self.form_class.unserialise_from_session(
@@ -117,6 +119,7 @@ class PrisonerCheckView(DisbursementView, TemplateView):
 
     def get_context_data(self, **kwargs):
         prisoner_details = self.valid_form_data[PrisonerView.url_name]
+        kwargs['breadcrumbs_back'] = reverse('disbursements:prisoner')
         kwargs.update(**prisoner_details)
         return super().get_context_data(**kwargs)
 
@@ -190,6 +193,7 @@ class DetailsCheckView(DisbursementView, TemplateView):
         sending_method_details = self.valid_form_data[SendingMethodView.url_name]
         amount_details = self.valid_form_data[AmountView.url_name]
         recipient_bank_details = self.valid_form_data.get(RecipientBankAccountView.url_name, {})
+        kwargs['breadcrumbs_back'] = reverse('disbursements:recipient_contact')
         kwargs.update(**prisoner_details)
         kwargs.update(**recipient_contact_details)
         kwargs.update(**recipient_bank_details)
