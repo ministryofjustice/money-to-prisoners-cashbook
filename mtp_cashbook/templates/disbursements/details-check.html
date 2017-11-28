@@ -4,6 +4,7 @@
 {% load disbursements %}
 {% load currency %}
 
+{% block page_title %}{% trans 'Check details before sending' %} – {{ block.super }}{% endblock %}
 {% block body_classes %}{{ block.super }} mtp-create-disbursement{% endblock %}
 
 {% block inner_content %}
@@ -13,7 +14,7 @@
 
   <header>
     <h1 class="heading-xlarge mtp-heading--compact">
-      {%trans 'Check details before sending' %}
+      {% trans 'Check details before sending' %}
     </h1>
   </header>
 

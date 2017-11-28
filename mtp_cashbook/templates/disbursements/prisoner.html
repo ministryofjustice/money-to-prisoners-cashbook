@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load mtp_common %}
 
+{% block page_title %}{% trans 'Send money on this prisoner’s behalf' %} – {{ block.super }}{% endblock %}
 {% block body_classes %}{{ block.super }} mtp-create-disbursement{% endblock %}
 
 {% block inner_content %}
@@ -11,7 +12,7 @@
 
   <header>
     <h1 class="heading-xlarge mtp-heading--compact">
-      {%trans 'Send money on this prisoner’s behalf' %}
+      {% trans 'Send money on this prisoner’s behalf' %}
     </h1>
   </header>
 
