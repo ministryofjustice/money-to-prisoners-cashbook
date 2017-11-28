@@ -1,5 +1,4 @@
-{% extends 'mtp_common/auth/login.html' %}{% load i18n %}
+{% extends 'mtp_common/auth/login.html' %}
+{% load i18n %}
 
-{% block auth_title %}
-  {% trans 'Digital cashbook' %}
-{% endblock %}
+{% block auth_title %}{{ global_header_text }}{% endblock %}
