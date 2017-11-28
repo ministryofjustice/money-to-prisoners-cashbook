@@ -1,3 +1,4 @@
+import logging
 from math import floor
 from decimal import Decimal
 from urllib.parse import quote_plus
@@ -10,6 +11,8 @@ from mtp_common import nomis
 from mtp_common.auth.api_client import get_api_session
 from mtp_common.auth.exceptions import HttpNotFoundError, Forbidden
 from requests.exceptions import RequestException
+
+logger = logging.getLogger('mtp')
 
 SENDING_METHOD = Choices(
     ('BANK_TRANSFER', 'bank_transfer', _('Bank transfer')),
@@ -80,31 +83,28 @@ class PrisonerForm(DisbursementForm):
         prisoner_number = self.cleaned_data.get('prisoner_number')
         if prisoner_number:
             prisoner_number = prisoner_number.upper()
+            session = get_api_session(self.request)
+            try:
+                prisoner = session.get(
+                    '/prisoner_locations/{prisoner_number}/'.format(
+                        prisoner_number=quote_plus(prisoner_number)
+                    )
+                ).json()
+
+                self.cleaned_data['prisoner_name'] = prisoner['prisoner_name']
+                self.cleaned_data['prisoner_dob'] = prisoner['prisoner_dob']
+                self.cleaned_data['prison'] = prisoner['prison']
+            except HttpNotFoundError:
+                raise forms.ValidationError(
+                    self.error_messages['not_found'], code='not_found')
+            except Forbidden:
+                raise forms.ValidationError(
+                    self.error_messages['wrong_prison'], code='wrong_prison')
+            except (RequestException, ValueError):
+                logger.exception('Could not look up prisoner location')
+                raise forms.ValidationError(
+                    self.error_messages['connection'], code='connection')
         return prisoner_number
-
-    def clean(self):
-        prisoner_number = self.cleaned_data.get('prisoner_number')
-        session = get_api_session(self.request)
-        try:
-            prisoner = session.get(
-                '/prisoner_locations/{prisoner_number}/'.format(
-                    prisoner_number=quote_plus(prisoner_number)
-                )
-            ).json()
-
-            self.cleaned_data['prisoner_name'] = prisoner['prisoner_name']
-            self.cleaned_data['prisoner_dob'] = prisoner['prisoner_dob']
-            self.cleaned_data['prison'] = prisoner['prison']
-            return self.cleaned_data
-        except HttpNotFoundError:
-            raise forms.ValidationError(
-                self.error_messages['not_found'], code='not_found')
-        except Forbidden:
-            raise forms.ValidationError(
-                self.error_messages['wrong_prison'], code='wrong_prison')
-        except RequestException:
-            raise forms.ValidationError(
-                self.error_messages['connection'], code='connection')
 
 
 def serialise_amount(amount):
