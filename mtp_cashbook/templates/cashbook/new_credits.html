@@ -89,7 +89,7 @@
           <button type="button" class="button {{ dialogue_close_class }}">{% trans 'OK' %}</button>
         {% enddialoguebox %}
 
-        {% include 'cashbook/includes/manual_credit_table.html' with manual_object_list=owned_manual_object_list owned=True only %}
+        {% include 'cashbook/includes/manual_credit_table.html' with manual_object_list=owned_manual_object_list owned=True pre_approval_required=request.pre_approval_required only %}
       {% endif %}
 
 
@@ -140,7 +140,7 @@
           </p>
         </div>
 
-        {% include 'cashbook/includes/manual_credit_table.html' with manual_object_list=unowned_manual_object_list owned=False only %}
+        {% include 'cashbook/includes/manual_credit_table.html' with manual_object_list=unowned_manual_object_list owned=False pre_approval_required=request.pre_approval_required only %}
       {% endif %}
     </form>
   {% endif %}
@@ -201,7 +201,7 @@
         <thead>
           {% if new_object_list %}
             <tr class="print-hidden">
-              <td colspan="{% if pre_approval_required %}5{% else %}4{% endif %}" class="cell--compact">
+              <td colspan="{% if request.pre_approval_required %}5{% else %}4{% endif %}" class="cell--compact">
                 <p>
                   <a class="mtp-disclosure" href="#" aria-controls="mtp-help-box" aria-expanded="false" role="button" data-analytics="pageview,/-help_open/{{ request.resolver_match.url_name }}/">
                     <span></span>{% trans 'What do I do here?' %}
@@ -260,7 +260,7 @@
               </a>
             </th>
             <th>{% trans 'Sender' %}</th>
-            {% if pre_approval_required %}
+            {% if request.pre_approval_required %}
               <th>{% trans 'Security' %}</th>
             {% endif %}
             <th class="check print-hidden"><span id="id_credits-label">{% trans 'Select' %}</span></th>
@@ -293,7 +293,7 @@
                 </td>
                 <td class="number">£{{ credit.amount|currency }}</td>
                 <td>{{ credit.sender_name }}</td>
-                {% if pre_approval_required %}
+                {% if request.pre_approval_required %}
                   <td>
                     {% if credit.reviewed %}
                       {% trans 'Checked' %}
@@ -320,7 +320,7 @@
               </tr>
               {% if credit.comments %}
                 <tr>
-                  <td class="mtp-security" colspan="{% if pre_approval_required%}6{% else %}5{% endif %}">
+                  <td class="mtp-security" colspan="{% if request.pre_approval_required %}6{% else %}5{% endif %}">
                     {% for comment in credit.comments %}
                       <div class="mtp-security__comment">
                         {{ comment.comment|linebreaks }}
@@ -334,7 +334,7 @@
 
           <tfoot>
             <tr class="print-hidden">
-              <td colspan="{% if pre_approval_required%}5{% else %}4{% endif %}" class="cell--compact"></td>
+              <td colspan="{% if request.pre_approval_required %}5{% else %}4{% endif %}" class="cell--compact"></td>
               <td class="mtp-all">
                 <input type="checkbox" id="select-all-footer" class="Checkbox Checkbox--left js-SelectAll" data-name="{{ form.new.credits.html_name }}">
                 <label data-analytics="event,select-all,footer" for="select-all-footer">{% trans 'Select all' %}</label>
@@ -346,7 +346,7 @@
 
           <tbody>
             <tr>
-              <td class="mtp-no-credits" colspan="{% if pre_approval_required%}6{% else %}5{% endif %}">
+              <td class="mtp-no-credits" colspan="{% if request.pre_approval_required %}6{% else %}5{% endif %}">
                 <p class="heading-large">{% trans 'Thank you' %}</p>
                 <p>{% trans 'All credits have been processed' %}</p>
               </td>

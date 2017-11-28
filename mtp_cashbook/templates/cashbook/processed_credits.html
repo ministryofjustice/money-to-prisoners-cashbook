@@ -55,7 +55,7 @@
             <th>{% trans 'Number of credits' %}</th>
             <th class="number">{% trans 'Total' %}</th>
             <th>{% trans 'Credited by' %}</th>
-            {% if pre_approval_required %}
+            {% if request.pre_approval_required %}
               <th>{% trans 'Security notes' %}</th>
             {% endif %}
             <th class="print-hidden">{% trans 'Options' %}</th>
@@ -92,7 +92,7 @@
               </td>
               <td class="number">£{{ batch.total|currency }}</td>
               <td>{{ batch.owner_name }}</td>
-              {% if pre_approval_required %}
+              {% if request.pre_approval_required %}
                 {% if batch.comment_count %}
                   <td>
                     {% blocktrans trimmed count count=batch.comment_count %}
