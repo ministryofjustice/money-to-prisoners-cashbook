@@ -8,12 +8,8 @@
   <nav id="mtp-proposition-extra" class="column-full print-hidden">
     {% spaceless %}
       <ul id="mtp-proposition-tabs">
-        {% if request.user.is_authenticated %}
-          {% include 'cashbook/includes/proposition-tab.html' with view_name='disbursements:start' subview_names='disbursements:start disbursements:prisoner' link_text=_('Send payment') %}
-        {% else %}
-          {% include 'cashbook/includes/proposition-tab.html' with view_name='login' subview_names='login' link_text=_('Sign in') %}
-        {% endif %}
-        {% include 'cashbook/includes/proposition-tab.html' with view_name='submit_ticket' subview_names='submit_ticket feedback_success' link_text=_('Get help') %}
+        {% include 'proposition-tab.html' with view_name='disbursements:start' subview_names='disbursements:start disbursements:prisoner' link_text=_('Send payment') %}
+        {% include 'proposition-tab.html' with view_name='submit_ticket' subview_names='submit_ticket feedback_success' link_text=_('Get help') %}
       </ul>
     {% endspaceless %}
   </nav>
