@@ -58,12 +58,12 @@
           <caption class="visually-hidden">{% trans 'New credits' %}</caption>
 
           <thead>
-            {% include 'cashbook/includes/credits-header-row.html' with form=form include_status=False only %}
+            {% include 'cashbook/includes/credits-header-row.html' with form=form include_status=False pre_approval_required=request.pre_approval_required only %}
           </thead>
 
           <tbody>
             {% for credit in new_credit_list %}
-              {% include 'cashbook/includes/credit-row.html' with credit=credit include_status=False only %}
+              {% include 'cashbook/includes/credit-row.html' with credit=credit include_status=False pre_approval_required=request.pre_approval_required only %}
             {% endfor %}
           </tbody>
         </table>
@@ -75,12 +75,12 @@
           <caption class="visually-hidden">{% trans 'Processed credits' %}</caption>
 
           <thead>
-            {% include 'cashbook/includes/credits-header-row.html' with form=form include_status=True pre_approval_required=pre_approval_required only %}
+            {% include 'cashbook/includes/credits-header-row.html' with form=form include_status=True pre_approval_required=request.pre_approval_required only %}
           </thead>
 
           <tbody>
             {% for credit in old_credit_list %}
-              {% include 'cashbook/includes/credit-row.html' with credit=credit include_status=True pre_approval_required=pre_approval_required only %}
+              {% include 'cashbook/includes/credit-row.html' with credit=credit include_status=True pre_approval_required=request.pre_approval_required only %}
             {% endfor %}
           </tbody>
         </table>

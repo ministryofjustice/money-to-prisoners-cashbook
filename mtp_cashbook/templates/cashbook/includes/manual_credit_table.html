@@ -15,7 +15,7 @@
 
     <thead>
       <tr class="print-hidden">
-        <td colspan="{% if pre_approval_required%}6{% else %}5{% endif %}" class="cell--compact">
+        <td colspan="{% if pre_approval_required %}6{% else %}5{% endif %}" class="cell--compact">
           <a href="#" class="js-print-trigger" data-do-not-print=".mtp-new-credits-batch">{% trans 'Print these credits' %}</a>
         </td>
       </tr>
@@ -69,7 +69,7 @@
         </tr>
         {% if credit.comments %}
           <tr>
-            <td class="mtp-security" colspan="{% if pre_approval_required%}6{% else %}5{% endif %}">
+            <td class="mtp-security" colspan="{% if pre_approval_required %}6{% else %}5{% endif %}">
               {% for comment in credit.comments %}
                 <div class="mtp-security__comment">
                   {{ comment.comment|linebreaks }}

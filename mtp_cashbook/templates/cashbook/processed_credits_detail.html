@@ -52,11 +52,11 @@
       <table>
         <caption class="visually-hidden">{{ view.title }}</caption>
         <thead>
-          {% include 'cashbook/includes/credits-header-row.html' with form=form include_status=True pre_approval_required=pre_approval_required only %}
+          {% include 'cashbook/includes/credits-header-row.html' with form=form include_status=True pre_approval_required=request.pre_approval_required only %}
         </thead>
         <tbody>
           {% for credit in object_list %}
-            {% include 'cashbook/includes/credit-row.html' with credit=credit include_status=True pre_approval_required=pre_approval_required only %}
+            {% include 'cashbook/includes/credit-row.html' with credit=credit include_status=True pre_approval_required=request.pre_approval_required only %}
           {% endfor %}
         </tbody>
       </table>

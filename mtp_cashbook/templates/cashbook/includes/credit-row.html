@@ -36,16 +36,16 @@
       {{ credit.sender_name }}
     {% endif %}
   </td>
+  {% if pre_approval_required %}
+    <td>
+      {% if credit.reviewed %}
+        {% trans 'Checked' %}
+      {% else %}
+        {% trans 'Not checked' %}
+      {% endif %}
+    </td>
+  {% endif %}
   {% if include_status %}
-    {% if pre_approval_required %}
-      <td>
-        {% if credit.reviewed %}
-          {% trans 'Checked' %}
-        {% else %}
-          {% trans 'Not checked' %}
-        {% endif %}
-      </td>
-    {% endif %}
     <td>{{ credit.nomis_transaction_id|default:'—' }}</td>
     <td>
       {% if credit.resolution == 'credited' %}

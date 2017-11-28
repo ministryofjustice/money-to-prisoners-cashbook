@@ -27,10 +27,10 @@
     </a>
   </th>
   <th>{% trans 'Sender' %}</th>
+  {% if pre_approval_required %}
+    <th>{% trans 'Security check' %}</th>
+  {% endif %}
   {% if include_status %}
-    {% if pre_approval_required %}
-      <th>{% trans 'Security check' %}</th>
-    {% endif %}
     <th>{% trans 'NOMIS reference' %}</th>
     <th>{% trans 'Status' %}</th>
   {% endif %}

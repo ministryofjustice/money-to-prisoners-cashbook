@@ -43,6 +43,29 @@
 {% endblock %}
 
 
+{% block footer_top %}
+  {% if request.user.is_authenticated %}
+    <div class="footer-categories grid-row">
+      <div class="column-third">
+        <h2>{{ global_header_text }}</h2>
+        <ul>
+          <li><a href="{% url 'new-credits' %}">{% trans 'Digital cashbook' %}</a></li>
+          {% if request.disbursements_available %}
+            <li><a href="{% url 'disbursements:start' %}">{% trans 'Send money out' %} ({% trans 'Disbursements' %})</a></li>
+          {% endif %}
+        </ul>
+      </div>
+      <div class="column-third">
+        <h2>{% trans 'Other related tools' %}</h2>
+        <ul>
+          <li><a href="{{ noms_ops_url }}" title="{% trans 'For security staff' %}">{% trans 'Prisoner money intelligence' %}</a></li>
+        </ul>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}
+
+
 {% block footer_support_links %}
   <ul>
     <li><a href="{% url 'submit_ticket' %}">{% trans 'Get help' %}</a></li>

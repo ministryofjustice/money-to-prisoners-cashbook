@@ -35,6 +35,7 @@ CITIZEN_CONTACT_PAGE_URL = os.environ.get(
 )
 START_PAGE_URL = os.environ.get('START_PAGE_URL', 'https://www.gov.uk/send-prisoner-money')
 SITE_URL = os.environ.get('SITE_URL', 'http://localhost:8001')
+NOMS_OPS_URL = os.environ.get('NOMS_OPS_URL', 'http://localhost:8003/')
 
 # Application definition
 INSTALLED_APPS = (
@@ -65,6 +66,7 @@ MIDDLEWARE = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'cashbook.utils.CashbookMiddleware',
 )
 
 HEALTHCHECKS = []
@@ -122,7 +124,7 @@ TEMPLATES = [
                 'mtp_common.context_processors.analytics',
                 'mtp_common.context_processors.app_environment',
                 'cashbook.context_processors.govuk_localisation',
-                'cashbook.context_processors.pre_approval_required',
+                'cashbook.context_processors.cashbook_settings',
             ],
         },
     },
