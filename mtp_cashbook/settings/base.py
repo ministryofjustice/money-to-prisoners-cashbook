@@ -226,7 +226,7 @@ API_CLIENT_SECRET = os.environ.get('API_CLIENT_SECRET', 'cashbook')
 API_URL = os.environ.get('API_URL', find_api_url())
 
 LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = 'new-credits'
+LOGIN_REDIRECT_URL = 'home'
 LOGOUT_URL = 'logout'
 
 OAUTHLIB_INSECURE_TRANSPORT = True

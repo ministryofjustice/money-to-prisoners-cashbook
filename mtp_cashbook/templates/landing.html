@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block inner_content %}
+  <header>
+    <h1 class="heading-xlarge mtp-heading--compact">
+      {% blocktrans trimmed with name=request.user.get_full_name|default:request.user.username %}
+        Welcome {{ name }}
+      {% endblocktrans %}
+    </h1>
+  </header>
+  <p class="lede">
+    {% trans 'Use the prisoner money tools below.' %}
+  </p>
+
+  <div class="grid-row">
+    <div class="column-third">
+      <div class="mtp-box">
+        <a href="{% url 'new-credits' %}" aria-labelledby="tool-1">{% trans 'Digital cashbook' %}</a>
+        <p id="tool-1">
+          {% trans 'Credit money into prisoners’ accounts' %}
+        </p>
+      </div>
+    </div>
+
+    <div class="column-third">
+      <div class="mtp-box">
+        <a href="{% url 'disbursements:start' %}">{% trans 'Send money out' %}</a>
+        <p id="tool-2">
+          {% trans 'Send money out of a prisoner’s account' %}
+          ({% trans 'disbursements' %})
+        </p>
+      </div>
+    </div>
+  </div>
+{% endblock %}

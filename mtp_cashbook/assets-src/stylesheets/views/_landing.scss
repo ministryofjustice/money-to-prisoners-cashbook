@@ -1,91 +1,24 @@
 // Application specific
 
-.mtp-landing {
-  #content {
-    width: auto;
-    max-width: 100%;
-    margin: 0;
-  }
-
-  #global-header-bar, .mtp-sub-nav {
-    display: none;
-  }
-
-  .mtp-language-switch {
-    padding-left: 0;
-    padding-right: 0;
-  }
-
-  .mtp-language-switch__item {
-    border-color: $white;
-  }
-}
-
-.mtp-landing__content {
-  @extend %site-width-container;
-}
-
-.mtp-landing__header {
-  background: $govuk-blue;
-  color: $white;
+.mtp-box {
+  padding-bottom: $gutter;
 
   a {
-    color: $white;
-
-    &:visited {
-      color: $white;
-    }
-
-    &:focus {
-      color: $text-colour;
-    }
-  }
-
-  .column-two-thirds {
-    padding-right: 3 * $gutter;
+    display: block;
+    background: $govuk-blue;
+    color: $page-colour;
+    text-decoration: none;
+    padding: 0.8em;
+    height: 6em;
+    font-size: 1.2em;
 
     @include media(mobile) {
-      padding-right: $gutter-half;
-    }
-  }
-
-  .column-one-third {
-    overflow: hidden;
-
-    img {
-      display: block;
-      margin: 100px auto;
-      text-align: center;
-
-      @include media(mobile) {
-        display: none;
-      }
-      @include media(tablet) {
-        max-width: 80%;
-      }
-    }
-  }
-}
-
-.mtp-landing__start {
-  margin: 2em 0;
-
-  .button-start {
-    @include button($white);
-    padding: em(7) em(41) em(4) em(16);
-    background-image: file-url('icon-pointer-blue.png');
-
-    @include device-pixel-ratio {
-      background-image: file-url('icon-pointer-blue@2x.png');
-      background-size: 30px 19px;
+      height: 4em;
     }
 
-    &:link, &:link:focus, &:hover, &:focus, &:visited {
-      color: $govuk-blue;
-    }
-
-    &:focus {
-      outline: 3px solid $focus-colour;
+    &:hover, &:active, &:focus {
+      color: $page-colour;
+      text-decoration: underline;
     }
   }
 }
