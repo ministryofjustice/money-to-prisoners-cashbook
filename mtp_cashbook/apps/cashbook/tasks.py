@@ -1,4 +1,5 @@
 import logging
+from threading import local
 
 from django.conf import settings
 from django.utils.translation import gettext as _
@@ -6,23 +7,28 @@ from mtp_common.auth.api_client import get_api_session_with_session
 from mtp_common import nomis
 from mtp_common.spooling import spoolable
 from mtp_common.tasks import send_email
-from requests.exceptions import HTTPError
+import requests
+from requests.exceptions import HTTPError, RequestException
 
 logger = logging.getLogger('mtp')
 
+thread_local = local()
+thread_local.nomis_session = requests.Session()
 
-@spoolable(body_params=('user', 'session', 'selected_credit_ids', 'credits',))
-def credit_selected_credits_to_nomis(*, user, session, selected_credit_ids, credits):
+
+@spoolable(body_params=('user', 'user_session', 'selected_credit_ids', 'credits',))
+def credit_selected_credits_to_nomis(*, user, user_session, selected_credit_ids, credits):
     for credit_id in selected_credit_ids:
         if credit_id in credits:
-            credit_individual_credit_to_nomis(user, session, credit_id, credits[credit_id])
+            credit_individual_credit_to_nomis(
+                user, user_session, credit_id, credits[credit_id])
         else:
             logger.warning('Credit %s is no longer available' % credit_id)
 
 
 @spoolable()
-def credit_individual_credit_to_nomis(user, session, credit_id, credit):
-    session = get_api_session_with_session(user, session)
+def credit_individual_credit_to_nomis(user, user_session, credit_id, credit):
+    session = get_api_session_with_session(user, user_session)
     nomis_response = None
     try:
         nomis_response = nomis.credit_prisoner(
@@ -31,7 +37,8 @@ def credit_individual_credit_to_nomis(user, session, credit_id, credit):
             credit['amount'],
             str(credit_id),
             'Sent by {sender}'.format(sender=credit['sender_name']),
-            retries=1
+            retries=1,
+            session=thread_local.nomis_session
         )
     except HTTPError as e:
         if e.response.status_code == 409:
@@ -46,6 +53,9 @@ def credit_individual_credit_to_nomis(user, session, credit_id, credit):
                 json={'credit_ids': [int(credit_id)]}
             )
             return
+    except RequestException:
+        logger.exception('Credit %s could not credited as NOMIS is unavailable' % credit_id)
+        return
 
     credit_update = {'id': credit_id, 'credited': True}
     if nomis_response and 'id' in nomis_response:

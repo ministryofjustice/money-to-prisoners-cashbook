@@ -62,7 +62,7 @@ class ProcessNewCreditsForm(GARequestErrorReportingMixin, forms.Form):
 
         self.session.post('credits/batches/', json={'credits': credit_ids})
         credit_selected_credits_to_nomis(
-            user=self.request.user, session=self.request.session,
+            user=self.request.user, user_session=self.request.session,
             selected_credit_ids=credit_ids, credits=credits
         )
 
