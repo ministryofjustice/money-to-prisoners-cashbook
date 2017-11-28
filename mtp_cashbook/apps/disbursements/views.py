@@ -51,6 +51,10 @@ class DisbursementView(View):
         self.valid_form_data = {}
 
     def dispatch(self, request, *args, **kwargs):
+        request.proposition_app = {
+            'name': _('Send money out'),
+            'url': build_view_url(self.request, DisbursementStartView.url_name),
+        }
         for view in self.get_previous_views(self):
             if not hasattr(view, 'form_class') or not view.is_form_enabled(self.valid_form_data):
                 continue

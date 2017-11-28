@@ -5,10 +5,10 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import redirect
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import FormView, TemplateView
+from django.views.generic import FormView, TemplateView, View
 from mtp_common.auth import api_client
 from mtp_common import nomis
 from requests.exceptions import RequestException
@@ -22,8 +22,17 @@ from .forms import (
 logger = logging.getLogger('mtp')
 
 
-@method_decorator(login_required, name='dispatch')
-class NewCreditsView(FormView):
+class CashbookView(View):
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        request.proposition_app = {
+            'name': _('Digital cashbook'),
+            'url': reverse('new-credits'),
+        }
+        return super().dispatch(request, *args, **kwargs)
+
+
+class NewCreditsView(CashbookView, FormView):
     title = _('New credits')
     form_class = {
         'new': ProcessNewCreditsForm,
@@ -160,8 +169,7 @@ class NewCreditsView(FormView):
         return self.render_to_response(self.get_context_data())
 
 
-@method_decorator(login_required, name='dispatch')
-class ProcessingCreditsView(TemplateView):
+class ProcessingCreditsView(CashbookView, TemplateView):
     title = _('Digital cashbook')
     template_name = 'cashbook/processing_credits.html'
 
@@ -182,8 +190,7 @@ class ProcessingCreditsView(TemplateView):
         return self.render_to_response(context)
 
 
-@method_decorator(login_required, name='dispatch')
-class ProcessedCreditsListView(FormView):
+class ProcessedCreditsListView(CashbookView, FormView):
     title = _('Processed credits')
     form_class = FilterProcessedCreditsListForm
     template_name = 'cashbook/processed_credits.html'
@@ -228,7 +235,6 @@ class ProcessedCreditsListView(FormView):
         return self.render_to_response(self.get_context_data(form=form))
 
 
-@method_decorator(login_required, name='dispatch')
 class ProcessedCreditsDetailView(ProcessedCreditsListView):
     title = _('Processed credits')
     form_class = FilterProcessedCreditsDetailForm
@@ -253,8 +259,7 @@ class ProcessedCreditsDetailView(ProcessedCreditsListView):
         return context
 
 
-@method_decorator(login_required, name='dispatch')
-class SearchView(FormView):
+class SearchView(CashbookView, FormView):
     title = _('Search all credits')
     form_class = SearchForm
     template_name = 'cashbook/search.html'
