@@ -28,7 +28,10 @@ def credit_selected_credits_to_nomis(*, user, user_session, selected_credit_ids,
 
 @spoolable()
 def credit_individual_credit_to_nomis(user, user_session, credit_id, credit):
-    session = get_api_session_with_session(user, user_session)
+    api_session = get_api_session_with_session(user, user_session)
+    if not hasattr(thread_local, 'nomis_session'):
+        thread_local.nomis_session = requests.Session()
+
     nomis_response = None
     try:
         nomis_response = nomis.credit_prisoner(
@@ -48,7 +51,7 @@ def credit_individual_credit_to_nomis(user, user_session, credit_id, credit):
             return
         else:
             logger.warning('Credit %s cannot be automatically credited to NOMIS' % credit_id)
-            session.post(
+            api_session.post(
                 'credits/actions/setmanual/',
                 json={'credit_ids': [int(credit_id)]}
             )
@@ -60,7 +63,7 @@ def credit_individual_credit_to_nomis(user, user_session, credit_id, credit):
     credit_update = {'id': credit_id, 'credited': True}
     if nomis_response and 'id' in nomis_response:
         credit_update['nomis_transaction_id'] = nomis_response['id']
-    session.post('credits/actions/credit/', json=[credit_update])
+    api_session.post('credits/actions/credit/', json=[credit_update])
 
     if credit.get('sender_email'):
         send_email(
