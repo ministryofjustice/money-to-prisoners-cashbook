@@ -27,7 +27,6 @@ class CashbookTestCase(FunctionalTestCase):
         Fill in login form
         """
         self.driver.get(url or self.live_server_url + '/en-gb/')
-        self.click_on_text('Sign into cashbook')
         self.type_in(username_field, username)
         self.type_in(password_field, password, send_return=True)
 
