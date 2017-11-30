@@ -8,6 +8,7 @@
   require('proposition-user-menu').PropositionUserMenu.init();
   require('dialogue-box').DialogueBox.init();
   require('messages').Messages.init();
+  require('notifications').Notifications.init();
   require('print').Print.init();
   require('select-all').SelectAll.init();
   require('unload').Unload.init();

@@ -1,7 +1,10 @@
 {% extends 'base.html' %}
 {% load i18n %}
+{% load mtp_common %}
 
 {% block inner_content %}
+  {% notifications_box request 'cashbook_all' %}
+
   <header>
     <h1 class="heading-xlarge mtp-heading--compact">
       {% blocktrans trimmed with name=request.user.get_full_name|default:request.user.username %}

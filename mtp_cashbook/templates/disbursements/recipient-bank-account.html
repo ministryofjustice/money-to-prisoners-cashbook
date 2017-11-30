@@ -6,6 +6,8 @@
 {% block body_classes %}{{ block.super }} mtp-create-disbursement{% endblock %}
 
 {% block inner_content %}
+  {{ block.super }}
+
   <header>
     <h1 class="heading-xlarge mtp-heading--compact">
       {% trans 'Recipient bank details' %}

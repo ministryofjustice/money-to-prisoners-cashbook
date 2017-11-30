@@ -1,11 +1,13 @@
 {% extends 'disbursements/base.html' %}
 {% load i18n %}
 {% load mtp_common %}
-{% load staticfiles %}
+{% load static %}
 
 {% block body_classes %}{{ block.super }} mtp-create-disbursement{% endblock %}
 
 {% block inner_content %}
+  {{ block.super }}
+
   <div class="mtp-disbursement-start">
     <div class="mtp-disbursement-start-text">
       <header>
