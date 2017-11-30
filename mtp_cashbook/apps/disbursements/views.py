@@ -52,7 +52,7 @@ class DisbursementView(View):
 
     def dispatch(self, request, *args, **kwargs):
         request.proposition_app = {
-            'name': _('Disbursments'),
+            'name': _('Digital disbursements'),
             'url': build_view_url(self.request, DisbursementStartView.url_name),
         }
         for view in self.get_previous_views(self):
