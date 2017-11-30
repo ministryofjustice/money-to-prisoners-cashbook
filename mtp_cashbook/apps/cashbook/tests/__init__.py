@@ -9,6 +9,15 @@ from mtp_common.auth.test_utils import generate_tokens
 
 
 class MTPBaseTestCase(SimpleTestCase):
+    def setUp(self):
+        super().setUp()
+        self.notifications_mock = mock.patch('mtp_common.templatetags.mtp_common.notifications_for_request',
+                                             return_value=[])
+        self.notifications_mock.start()
+
+    def tearDown(self):
+        self.notifications_mock.stop()
+        super().tearDown()
 
     def assertOnPage(self, response, url_name):  # noqa
         self.assertContains(response, '<!--[%s]-->' % url_name)

@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
+{% load mtp_common %}
 
 {% block page_title %}{% trans 'Digital disbursements' %}{% endblock %}
 {% block proposition %}{% trans 'Digital disbursements' %}{% endblock %}
@@ -13,4 +14,8 @@
       </ul>
     {% endspaceless %}
   </nav>
+{% endblock %}
+
+{% block inner_content %}
+  {% notifications_box request 'cashbook_disbursements' 'cashbook_all' %}
 {% endblock %}

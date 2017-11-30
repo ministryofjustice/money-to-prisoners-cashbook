@@ -6,6 +6,8 @@
 {% block body_classes %}{{ block.super }} mtp-create-disbursement{% endblock %}
 
 {% block inner_content %}
+  {{ block.super }}
+
   <div class="govuk-box-highlight">
     <h3 class="heading-small">{% trans 'This request is now available to another member of staff to review and confirm' %}</h3>
   </div>
