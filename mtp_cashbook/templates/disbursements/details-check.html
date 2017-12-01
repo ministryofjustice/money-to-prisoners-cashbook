@@ -87,7 +87,7 @@
       </tr>
       <tr>
         <th>{% trans 'Name' %}:</th>
-        <td>{{ recipient_name }}</td>
+        <td>{{ recipient_name |add:" " |add:recipient_last_name}}</td>
         <td></td>
       </tr>
       <tr>
