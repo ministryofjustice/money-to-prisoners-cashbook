@@ -41,7 +41,7 @@
       </div>
     </fieldset>
 
-    {% include 'mtp_common/forms/field.html' with field=form.city input_classes='mtp-postcode' value=form.city.value only %}
+    {% include 'mtp_common/forms/field.html' with field=form.city input_classes='mtp-address-city' value=form.city.value only %}
 
     {% include 'mtp_common/forms/field.html' with field=form.postcode input_classes='mtp-postcode' value=form.postcode.value only %}
 
