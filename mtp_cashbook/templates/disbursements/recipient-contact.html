@@ -8,7 +8,7 @@
 {% block inner_content %}
   <header>
     <h1 class="heading-xlarge mtp-heading--compact">
-      {% trans 'Recipient details' %}
+      {% trans 'Enter recipient details' %}
     </h1>
   </header>
 
@@ -18,6 +18,8 @@
     {% include 'mtp_common/forms/error-summary.html' with form=form only %}
 
     {% include 'mtp_common/forms/field.html' with field=form.recipient_name input_classes='mtp-recipient-name' value=form.recipient_name.value only %}
+
+    {% include 'mtp_common/forms/field.html' with field=form.recipient_last_name input_classes='mtp-recipient-name' value=form.recipient_last_name.value only %}
 
     <fieldset>
       <div class="form-group {% if field.errors %}form-group-error{% endif %} mtp-address">
@@ -36,15 +38,10 @@
             <input id="{{ field.id_for_label }}" class="form-control {% if field.errors %}form-control-error{% endif %} mtp-address-line" name="{{ field.html_name }}" value="{{ field.value|default:'' }}" type="{{ field.field.widget.input_type|default:'text' }}" />
           </div>
         {% endwith %}
-
-        {% with field=form.city %}
-          {% include 'mtp_common/forms/field-errors.html' with field=field only %}
-          <div>
-            <input id="{{ field.id_for_label }}" class="form-control {% if field.errors %}form-control-error{% endif %} mtp-address-city" name="{{ field.html_name }}" value="{{ field.value|default:'' }}" type="{{ field.field.widget.input_type|default:'text' }}" />
-          </div>
-        {% endwith %}
       </div>
     </fieldset>
+
+    {% include 'mtp_common/forms/field.html' with field=form.city input_classes='mtp-postcode' value=form.city.value only %}
 
     {% include 'mtp_common/forms/field.html' with field=form.postcode input_classes='mtp-postcode' value=form.postcode.value only %}
 

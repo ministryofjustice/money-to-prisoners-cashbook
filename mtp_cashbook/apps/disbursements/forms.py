@@ -177,12 +177,13 @@ class SendingMethodForm(DisbursementForm):
 
 
 class RecipientContactForm(DisbursementForm):
-    recipient_name = forms.CharField(label='Their name')
+    recipient_name = forms.CharField(label='Their first name')
+    recipient_last_name = forms.CharField(label='Last name')
     address_line1 = forms.CharField(label='Their address')
     address_line2 = forms.CharField(required=False)
-    city = forms.CharField(required=False)
-    postcode = forms.CharField(label='Their postcode')
-    email = forms.EmailField(label='Their email address (if provided)', required=False)
+    city = forms.CharField(label='Town or city', required=False)
+    postcode = forms.CharField(label='Postcode')
+    email = forms.EmailField(label='Their email address(optional)', required=False)
 
 
 class RecipientBankAccountForm(DisbursementForm):
