@@ -183,7 +183,7 @@ class RecipientContactForm(DisbursementForm):
     address_line2 = forms.CharField(required=False)
     city = forms.CharField(label='Town or city', required=False)
     postcode = forms.CharField(label='Postcode')
-    email = forms.EmailField(label='Their email address (optional)', required=False)
+    email = forms.EmailField(label='Their email address (optional)', help_text='This is to confirm the payment request has been sent', required=False)
 
 
 class RecipientBankAccountForm(DisbursementForm):
