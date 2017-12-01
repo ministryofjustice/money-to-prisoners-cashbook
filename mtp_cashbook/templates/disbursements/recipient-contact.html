@@ -46,6 +46,8 @@
     {% include 'mtp_common/forms/field.html' with field=form.postcode input_classes='mtp-postcode' value=form.postcode.value only %}
 
     {% include 'mtp_common/forms/field.html' with field=form.email input_classes='mtp-email' value=form.email.value only %}
+    <p>{% trans 'This is to confirm the payment request has been sent' %}</p>
+
 
     <button type="submit" class="button mtp-next-button" name="create-disbursement">{% trans 'Next' %}</button>
   </form>
