@@ -21,7 +21,7 @@
         <ul>
           <li><a href="{% url 'new-credits' %}">{% trans 'Digital cashbook' %}</a></li>
           {% if request.disbursements_available %}
-            <li><a href="{% url 'disbursements:start' %}">{% trans 'Send money out' %} ({% trans 'disbursements' %})</a></li>
+            <li><a href="{% url 'disbursements:start' %}">{% trans 'Digital disbursements' %}</a></li>
           {% endif %}
         </ul>
       </div>

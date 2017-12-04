@@ -52,7 +52,7 @@ class DisbursementView(View):
 
     def dispatch(self, request, *args, **kwargs):
         request.proposition_app = {
-            'name': _('Send money out'),
+            'name': _('Digital disbursements'),
             'url': build_view_url(self.request, DisbursementStartView.url_name),
         }
         for view in self.get_previous_views(self):
@@ -229,6 +229,7 @@ class DisbursementCompleteView(DisbursementView, TemplateView):
             api_session = get_api_session(request)
             recipient_data = {
                 'name': recipient_contact_details['recipient_name'],
+                'last_name': recipient_contact_details['recipient_last_name'],
                 'line1': recipient_contact_details['address_line1'],
                 'line2': recipient_contact_details['address_line2'],
                 'city': recipient_contact_details['city'],

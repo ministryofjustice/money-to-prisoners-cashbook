@@ -10,8 +10,9 @@
 {% block inner_content %}
   <header>
     <h1 class="heading-xlarge mtp-heading--compact">
-      {% trans 'Check details before sending' %}
+      {% trans 'Check payment details' %}
     </h1>
+    <p>Check if details below match the details on the paper form filled in by the prisoner. If they do not match, change details to correctly match the paper form.</p>
   </header>
 
   {% if errors %}
@@ -53,30 +54,6 @@
         </td>
       </tr>
       <tr class="mtp-section-header">
-        <th><h2 class="heading-large">{% trans 'From' %}</h2></th>
-        <td></td>
-        <td>
-          <div class="mtp-confirm-change">
-            <a href="{% url 'disbursements:prisoner' %}">{% trans 'Change' %} <span class="visually-hidden">{% trans 'Prisoner details' %}</span></a>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <th>{% trans 'Name' %}:</th>
-        <td>{{ prisoner_name }}</td>
-        <td></td>
-      </tr>
-      <tr>
-        <th>{% trans 'Date of birth' %}:</th>
-        <td>{{ prisoner_dob }}</td>
-        <td></td>
-      </tr>
-      <tr>
-        <th>{% trans 'Prisoner number' %}:</th>
-        <td>{{ prisoner_number }}</td>
-        <td></td>
-      </tr>
-      <tr class="mtp-section-header">
         <th><h2 class="heading-large">{% trans 'To' %}</h2></th>
         <td></td>
         <td>
@@ -87,7 +64,7 @@
       </tr>
       <tr>
         <th>{% trans 'Name' %}:</th>
-        <td>{{ recipient_name }}</td>
+        <td>{{ recipient_name}} {{recipient_last_name}}</td>
         <td></td>
       </tr>
       <tr>
@@ -125,6 +102,30 @@
           <td>{{ account_number }}</td>
           <td></td>
         </tr>
+        <tr class="mtp-section-header">
+        <th><h2 class="heading-large">{% trans 'From' %}</h2></th>
+        <td></td>
+        <td>
+          <div class="mtp-confirm-change">
+            <a href="{% url 'disbursements:prisoner' %}">{% trans 'Change' %} <span class="visually-hidden">{% trans 'Prisoner details' %}</span></a>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <th>{% trans 'Name' %}:</th>
+        <td>{{ prisoner_name }}</td>
+        <td></td>
+      </tr>
+      <tr>
+        <th>{% trans 'Date of birth' %}:</th>
+        <td>{{ prisoner_dob }}</td>
+        <td></td>
+      </tr>
+      <tr>
+        <th>{% trans 'Prisoner number' %}:</th>
+        <td>{{ prisoner_number }}</td>
+        <td></td>
+      </tr>
       {% endif %}
       <tr class="mtp-section-header">
         <td colspan="3"></td>
@@ -133,7 +134,7 @@
 
     <br/>
     <p>
-      <strong>{% trans 'Remember:' %}</strong> {% trans 'This request needs to be reviewed by another member of staff so they can check the above details match the details on the paper form.' %}
+      <strong>{% trans 'You can’t confirm this payment because you have not made this payment request.' %}</strong>
     </p>
 
     <div>
