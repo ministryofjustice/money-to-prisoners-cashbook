@@ -160,7 +160,7 @@ class AmountForm(DisbursementForm):
 
 class SendingMethodForm(DisbursementForm):
     sending_method = forms.ChoiceField(
-        label='Sending method',
+        label=_('Sending method'),
         initial=SENDING_METHOD.BANK_TRANSFER,
         choices=SENDING_METHOD,
         widget=forms.RadioSelect(),
@@ -177,24 +177,25 @@ class SendingMethodForm(DisbursementForm):
 
 
 class RecipientContactForm(DisbursementForm):
-    recipient_first_name = forms.CharField(label='Their first name')
-    recipient_last_name = forms.CharField(label='Their last name')
-    address_line1 = forms.CharField(label='Their address')
-    address_line2 = forms.CharField(required=False)
-    city = forms.CharField(label='Their town or city', required=True)
-    postcode = forms.CharField(label='Their postcode', required=True)
+    recipient_first_name = forms.CharField(label=_('Their first name'))
+    recipient_last_name = forms.CharField(label=_('Their last name'))
+    address_line1 = forms.CharField(label=_('Their address'))
+    address_line2 = forms.CharField(label=_('Their address line 2'), required=False)
+    city = forms.CharField(label=_('Their town or city'))
+    postcode = forms.CharField(label=_('Their postcode'))
     email = forms.EmailField(
-        label='Their email address (optional)',
-        help_text='This is to confirm the payment request has been sent',
-        required=False)
+        label=_('Their email address (optional)'),
+        help_text=_('This is to confirm the payment request has been sent'),
+        required=False,
+    )
 
 
 class RecipientBankAccountForm(DisbursementForm):
     account_number = forms.CharField(
-        label='Bank account number',
-        help_text='For example, 09098765'
+        label=_('Bank account number'),
+        help_text=_('For example, 09098765'),
     )
     sort_code = forms.CharField(
-        label='Sort code',
-        help_text='For example, 02-02-80'
+        label=_('Sort code'),
+        help_text=_('For example, 02-02-80'),
     )
