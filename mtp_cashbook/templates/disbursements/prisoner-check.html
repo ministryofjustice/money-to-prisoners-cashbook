@@ -19,9 +19,10 @@
       <tr>
         <th><h2 class="heading-large">{% trans 'Prisoner details' %}</h2></th>
         <td>
-          <div>
-            <a href="{% url 'disbursements:prisoner' %}">{% trans 'Change' %} <span class="visually-hidden">{% trans 'Name, date of birth or prisoner number' %}</span></a>
-          </div>
+          <a href="{% url 'disbursements:prisoner' %}" class="print-hidden">
+            {% trans 'Change' %}
+            <span class="visually-hidden">{% trans 'Name, date of birth or prisoner number' %}</span>
+          </a>
         </td>
       </tr>
       <tr>
