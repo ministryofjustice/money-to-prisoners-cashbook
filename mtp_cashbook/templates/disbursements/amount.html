@@ -19,7 +19,7 @@
     {% trans 'If there are insufficient funds in the Private account, please go to NOMIS to move the money first, then refresh balances below and complete the disbursement here.' %}
   <p>
 
-  <form action="." method="post" id="prisoner">
+  <form action="." method="post">
     {% csrf_token %}
 
     {% include 'mtp_common/forms/error-summary.html' with form=form only %}

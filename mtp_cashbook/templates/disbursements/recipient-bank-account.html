@@ -14,7 +14,7 @@
     </h1>
   </header>
 
-  <form action="." method="post" id="prisoner">
+  <form action="." method="post">
     {% csrf_token %}
 
     {% include 'mtp_common/forms/error-summary.html' with form=form only %}
