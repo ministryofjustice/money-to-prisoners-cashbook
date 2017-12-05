@@ -19,7 +19,7 @@
 
     {% include 'mtp_common/forms/error-summary.html' with form=form only %}
 
-    {% include 'mtp_common/forms/field.html' with field=form.recipient_name input_classes='mtp-recipient-name' value=form.recipient_name.value only %}
+    {% include 'mtp_common/forms/field.html' with field=form.recipient_first_name input_classes='mtp-recipient-name' value=form.recipient_first_name.value only %}
 
     {% include 'mtp_common/forms/field.html' with field=form.recipient_last_name input_classes='mtp-recipient-name' value=form.recipient_last_name.value only %}
 
