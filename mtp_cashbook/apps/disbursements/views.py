@@ -228,11 +228,12 @@ class DisbursementCompleteView(DisbursementView, TemplateView):
         try:
             api_session = get_api_session(request)
             recipient_data = {
-                'name': recipient_contact_details['recipient_name'],
+                'first_name': recipient_contact_details['recipient_first_name'],
                 'last_name': recipient_contact_details['recipient_last_name'],
                 'line1': recipient_contact_details['address_line1'],
                 'line2': recipient_contact_details['address_line2'],
                 'city': recipient_contact_details['city'],
+                'postcode': recipient_contact_details['postcode'],
                 'email': recipient_contact_details['email'],
             }
             recipient_data.update(**recipient_bank_details)

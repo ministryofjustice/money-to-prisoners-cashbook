@@ -67,7 +67,7 @@ class CreateDisbursementFlowTestCase(MTPBaseTestCase):
         return self.client.post(
             reverse('disbursements:recipient_contact'),
             data={
-                'recipient_name': 'John',
+                'recipient_first_name': 'John',
                 'recipient_last_name': 'Smith',
                 'address_line1': '54 Fake Road',
                 'address_line2': '',

@@ -177,7 +177,7 @@ class SendingMethodForm(DisbursementForm):
 
 
 class RecipientContactForm(DisbursementForm):
-    recipient_name = forms.CharField(label='Their first name')
+    recipient_first_name = forms.CharField(label='Their first name')
     recipient_last_name = forms.CharField(label='Their last name')
     address_line1 = forms.CharField(label='Their address')
     address_line2 = forms.CharField(required=False)
