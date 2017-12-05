@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.urls import reverse
@@ -8,6 +10,8 @@ from mtp_common.auth.api_client import get_api_session
 from requests.exceptions import RequestException
 
 from . import disbursements_available_required, forms as disbursement_forms
+
+logger = logging.getLogger('mtp')
 
 
 def build_view_url(request, url_name):
@@ -252,7 +256,8 @@ class DisbursementCompleteView(DisbursementView, TemplateView):
             response = super().get(request, *args, **kwargs)
             self.clear_session(request)
             return response
-        except RequestException as e:
+        except RequestException:
+            logger.exception('Failed to create disbursement')
             return redirect(
                 '%s?e=connection' %
                 build_view_url(self.request, self.previous_view.url_name)

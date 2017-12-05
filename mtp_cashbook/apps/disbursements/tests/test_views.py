@@ -1,6 +1,7 @@
 from django.test import override_settings
 from django.urls import reverse
 import responses
+from mtp_common.test_utils import silence_logger
 
 from cashbook.tests import (
     MTPBaseTestCase, api_url, nomis_url, override_nomis_settings
@@ -256,7 +257,8 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
         self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
         self.enter_recipient_details()
         self.enter_recipient_bank_account()
-        response = self.client.get(reverse('disbursements:complete'), follow=True)
+        with silence_logger():
+            response = self.client.get(reverse('disbursements:complete'), follow=True)
 
         self.assertOnPage(response, 'details_check')
         self.assertContains(response, DetailsCheckView.error_messages['connection'])
