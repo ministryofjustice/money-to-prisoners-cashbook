@@ -14,15 +14,19 @@
     </h1>
   </header>
 
-  <form action="." method="post">
-    {% csrf_token %}
+  <div class="grid-row">
+    <div class="column-two-thirds">
+      <form action="." method="post">
+        {% csrf_token %}
 
-    {% include 'mtp_common/forms/error-summary.html' with form=form only %}
+        {% include 'mtp_common/forms/error-summary.html' with form=form only %}
 
-    {% include 'mtp_common/forms/field.html' with field=form.sort_code input_classes='mtp-sort-code' value=form.sort_code.value only %}
+        {% include 'mtp_common/forms/field.html' with field=form.sort_code input_classes='form-control-1-4' value=form.sort_code.value only %}
 
-    {% include 'mtp_common/forms/field.html' with field=form.account_number input_classes='mtp-account-number' value=form.account_number.value only %}
+        {% include 'mtp_common/forms/field.html' with field=form.account_number input_classes='form-control-1-3' value=form.account_number.value only %}
 
-    <button type="submit" class="button mtp-next-button" name="create-disbursement">{% trans 'Next' %}</button>
-  </form>
+        <button type="submit" class="button mtp-next-button" name="create-disbursement">{% trans 'Next' %}</button>
+      </form>
+    </div>
+  </div>
 {% endblock %}

@@ -26,7 +26,8 @@
                  {% if form.sending_method.field.disabled %}disabled{% endif %}
                  {% if form.sending_method.value == sending_method.0 %}checked{% endif %}>
           <label class="{% if form.sending_method.field.disabled and form.sending_method.value != sending_method.0 %}mtp-grey-choice{% endif %}" for="id_{{ sending_method.0 }}">
-            {{ sending_method.1 }}<br/>
+            <strong>{{ sending_method.1 }}</strong>
+            <br/>
             {% for key, value in form.sending_method.field.help_text.items %}
               {% if key == sending_method.0 %}
                 {{ value }}
