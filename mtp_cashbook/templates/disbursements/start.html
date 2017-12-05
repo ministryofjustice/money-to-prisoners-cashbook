@@ -8,8 +8,8 @@
 {% block inner_content %}
   {{ block.super }}
 
-  <div class="mtp-disbursement-start">
-    <div class="mtp-disbursement-start-text">
+  <div class="mtp-disbursement-start grid-row">
+    <div class="column-two-thirds">
       <header>
         <h1 class="heading-xlarge">{% trans 'Digital disbursements' %}</h1>
       </header>
@@ -26,7 +26,7 @@
         <a href="{{ view.get_success_url }}" class="button button-start" role="button">{% trans 'Start now' %}</a>
       </p>
     </div>
-    <div class="mtp-disbursement-start-form">
+    <div class="column-one-third">
       <img src="{% static 'images/disbursement_form.jpg' %}" alt={% trans '“Send money by bank transfer or cheque” form' %}/>
     </div>
   </div>

@@ -1,24 +1,13 @@
 .mtp-create-disbursement {
   .mtp-disbursement-start {
-    clear: both;
-
-    .mtp-disbursement-start-text {
-      max-width: 600px;
-      float: left;
-
-      .button-start {
-        margin-top: 3em;
-      }
+    .button-start {
+      margin-top: 3em;
     }
 
-    .mtp-disbursement-start-form {
-      float: left;
-
-      img {
-        margin-top: 1.625em;
-        width: 250px;
-        border: 1px solid $grey-1;
-      }
+    img {
+      width: 95%;
+      margin-top: 1.625em;
+      border: 1px solid $border-colour;
     }
   }
 
