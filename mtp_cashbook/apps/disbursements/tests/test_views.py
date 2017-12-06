@@ -226,12 +226,6 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
     def test_create_valid_disbursement(self):
         responses.add(
             responses.POST,
-            api_url('/recipients/'),
-            json={'id': 1},
-            status=200,
-        )
-        responses.add(
-            responses.POST,
             api_url('/disbursements/'),
             json={'id': 1},
             status=200,
