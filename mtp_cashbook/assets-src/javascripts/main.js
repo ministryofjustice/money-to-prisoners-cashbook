@@ -26,4 +26,5 @@
   require('confirm-manual').ConfirmManual.init();
   require('print-batch').PrintBatch.init();
   require('navigation').Navigation.init();
+  require('sort-code').SortCode.init();
 }());
