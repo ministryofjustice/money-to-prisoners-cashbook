@@ -4,9 +4,10 @@ from decimal import Decimal
 from urllib.parse import quote_plus
 
 from django import forms
-from extended_choices import Choices
+from django.core.validators import RegexValidator
 from django.utils.encoding import force_text
 from django.utils.translation import gettext_lazy as _
+from extended_choices import Choices
 from mtp_common import nomis
 from mtp_common.auth.api_client import get_api_session
 from mtp_common.auth.exceptions import HttpNotFoundError, Forbidden
@@ -189,13 +190,25 @@ class RecipientContactForm(DisbursementForm):
         required=False,
     )
 
+    def clean_postcode(self):
+        postcode = self.cleaned_data.get('postcode')
+        if postcode:
+            postcode = postcode.upper()
+        return postcode
+
+
+validate_account_number = RegexValidator(r'^\d{8}$', message=_('The account number should be 8 digits long'))
+validate_sort_code = RegexValidator(r'^\d\d-?\d\d-?\d\d$', message=_('The sort code should be 6 digits long'))
+
 
 class RecipientBankAccountForm(DisbursementForm):
     account_number = forms.CharField(
         label=_('Bank account number'),
         help_text=_('For example, 09098765'),
+        validators=[validate_account_number],
     )
     sort_code = forms.CharField(
         label=_('Sort code'),
         help_text=_('For example, 02-02-80'),
+        validators=[validate_sort_code],
     )

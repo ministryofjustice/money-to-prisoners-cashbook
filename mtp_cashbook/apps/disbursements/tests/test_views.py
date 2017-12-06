@@ -64,29 +64,29 @@ class CreateDisbursementFlowTestCase(MTPBaseTestCase):
             follow=True
         )
 
-    def enter_recipient_details(self, include_email=True):
+    def enter_recipient_details(self, data=None):
+        data = data or {
+            'recipient_first_name': 'John',
+            'recipient_last_name': 'Smith',
+            'address_line1': '54 Fake Road',
+            'address_line2': '',
+            'city': 'London',
+            'postcode': 'n17 9bj',
+            'email': 'recipient@mtp.local',
+        }
         return self.client.post(
             reverse('disbursements:recipient_contact'),
-            data={
-                'recipient_first_name': 'John',
-                'recipient_last_name': 'Smith',
-                'address_line1': '54 Fake Road',
-                'address_line2': '',
-                'city': 'London',
-                'postcode': 'N17 9BJ',
-                'email': 'recipient@mtp.local' if include_email else ''
-            },
-            follow=True
+            data=data, follow=True,
         )
 
-    def enter_recipient_bank_account(self, sort_code='605789', account_number='90908787'):
+    def enter_recipient_bank_account(self, data=None):
+        data = data or {
+            'sort_code': '60-57-89',
+            'account_number': '90908787',
+        }
         return self.client.post(
             reverse('disbursements:recipient_bank_account'),
-            data={
-                'sort_code': sort_code,
-                'account_number': account_number
-            },
-            follow=True
+            data=data, follow=True,
         )
 
 
@@ -200,6 +200,13 @@ class SendingMethodTestCase(CreateDisbursementFlowTestCase):
         response = self.enter_recipient_details()
 
         self.assertOnPage(response, 'details_check')
+        content = response.content.decode(response.charset)
+        self.assertIn('John', content)
+        self.assertIn('Smith', content)
+        self.assertIn('Fake', content)
+        self.assertIn('London', content)
+        self.assertIn('N17 9BJ', content)
+        self.assertIn('JILLY', content)
 
     @responses.activate
     @override_nomis_settings
@@ -214,6 +221,66 @@ class SendingMethodTestCase(CreateDisbursementFlowTestCase):
         self.assertOnPage(response, 'recipient_bank_account')
 
 
+class RecipientContactTestCase(CreateDisbursementFlowTestCase):
+    @property
+    def url(self):
+        return reverse('disbursements:recipient_contact')
+
+    @responses.activate
+    @override_nomis_settings
+    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
+    def test_contact_details_required(self):
+        self.login()
+        self.enter_prisoner_details()
+        self.enter_amount()
+        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
+        response = self.enter_recipient_details({
+            'recipient_first_name': 'John',
+            'recipient_last_name': 'Smith',
+            'city': 'London',
+            'postcode': 'n17 9bj',
+        })
+        self.assertOnPage(response, 'recipient_contact')
+        self.assertFormError(response, 'form', 'address_line1', 'This field is required')
+
+
+class RecipientBankAccountTestCase(CreateDisbursementFlowTestCase):
+    @property
+    def url(self):
+        return reverse('disbursements:recipient_bank_account')
+
+    @responses.activate
+    @override_nomis_settings
+    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
+    def test_account_details_required(self):
+        self.login()
+        self.enter_prisoner_details()
+        self.enter_amount()
+        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
+        self.enter_recipient_details()
+        response = self.enter_recipient_bank_account({'sort_code': ''})
+        self.assertOnPage(response, 'recipient_bank_account')
+        self.assertFormError(response, 'form', 'sort_code', 'This field is required')
+        self.assertFormError(response, 'form', 'account_number', 'This field is required')
+
+    @responses.activate
+    @override_nomis_settings
+    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
+    def test_account_details_validity(self):
+        self.login()
+        self.enter_prisoner_details()
+        self.enter_amount()
+        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
+        self.enter_recipient_details()
+        response = self.enter_recipient_bank_account({
+            'sort_code': '60-57-89a',
+            'account_number': '9090878',
+        })
+        self.assertOnPage(response, 'recipient_bank_account')
+        self.assertFormError(response, 'form', 'sort_code', 'The sort code should be 6 digits long')
+        self.assertFormError(response, 'form', 'account_number', 'The account number should be 8 digits long')
+
+
 class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
 
     @property
@@ -223,7 +290,7 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
     @responses.activate
     @override_nomis_settings
     @override_settings(DISBURSEMENT_PRISONS=['BXI'])
-    def test_create_valid_disbursement(self):
+    def test_create_valid_bank_transfer_disbursement(self):
         responses.add(
             responses.POST,
             api_url('/disbursements/'),
@@ -237,6 +304,26 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
         self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
         self.enter_recipient_details()
         self.enter_recipient_bank_account()
+        response = self.client.get(reverse('disbursements:complete'), follow=True)
+
+        self.assertOnPage(response, 'complete')
+
+    @responses.activate
+    @override_nomis_settings
+    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
+    def test_create_valid_cheque_disbursement(self):
+        responses.add(
+            responses.POST,
+            api_url('/disbursements/'),
+            json={'id': 1},
+            status=200,
+        )
+
+        self.login()
+        self.enter_prisoner_details()
+        self.enter_amount()
+        self.choose_sending_method(method=SENDING_METHOD.CHEQUE)
+        self.enter_recipient_details()
         response = self.client.get(reverse('disbursements:complete'), follow=True)
 
         self.assertOnPage(response, 'complete')
