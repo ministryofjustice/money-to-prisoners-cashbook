@@ -21,9 +21,9 @@
 
         {% include 'mtp_common/forms/error-summary.html' with form=form only %}
 
-        {% include 'mtp_common/forms/field.html' with field=form.recipient_first_name input_classes='form-control-1-2' value=form.recipient_first_name.value only %}
+        {% include 'mtp_common/forms/field.html' with field=form.recipient_first_name input_classes='form-control-1-2' only %}
 
-        {% include 'mtp_common/forms/field.html' with field=form.recipient_last_name input_classes='form-control-1-2' value=form.recipient_last_name.value only %}
+        {% include 'mtp_common/forms/field.html' with field=form.recipient_last_name input_classes='form-control-1-2' only %}
 
         <fieldset>
           <div class="form-group {% if field.errors %}form-group-error{% endif %}">
@@ -42,11 +42,11 @@
           </div>
         </fieldset>
 
-        {% include 'mtp_common/forms/field.html' with field=form.city input_classes='form-control-1-2' value=form.city.value only %}
+        {% include 'mtp_common/forms/field.html' with field=form.city input_classes='form-control-1-2' only %}
 
-        {% include 'mtp_common/forms/field.html' with field=form.postcode input_classes='form-control-1-4' value=form.postcode.value only %}
+        {% include 'mtp_common/forms/field.html' with field=form.postcode input_classes='form-control-1-4' only %}
 
-        {% include 'mtp_common/forms/field.html' with field=form.email input_classes='form-control-3-4' value=form.email.value only %}
+        {% include 'mtp_common/forms/field.html' with field=form.email input_classes='form-control-3-4' only %}
 
         <button type="submit" class="button mtp-next-button" name="create-disbursement">{% trans 'Next' %}</button>
       </form>
