@@ -83,8 +83,14 @@ CSRF_COOKIE_SECURE = False
 CSRF_FAILURE_VIEW = 'mtp_common.auth.csrf.csrf_failure'
 
 
-# Database
+# Data stores
 DATABASES = {}
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'mtp',
+    }
+}
 
 
 # Internationalization
