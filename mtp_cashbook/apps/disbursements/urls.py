@@ -32,4 +32,8 @@ urlpatterns = [
         views.DisbursementCompleteView.as_view(),
         name=views.DisbursementCompleteView.url_name),
     url(r'^clear-session/$', views.clear_session_view, name='clear_session'),
+
+    url(r'^paper-forms/$',
+        views.DisbursementTemplateView.as_view(template_name='disbursements/paper-forms.html'),
+        name='paper-forms'),
 ]

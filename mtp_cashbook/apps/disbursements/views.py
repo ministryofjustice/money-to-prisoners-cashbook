@@ -72,6 +72,10 @@ class DisbursementView(View):
         return super().dispatch(request, *args, **kwargs)
 
 
+class DisbursementTemplateView(DisbursementView, TemplateView):
+    pass
+
+
 class DisbursementFormView(DisbursementView, FormView):
     @classmethod
     def is_form_enabled(cls, previous_form_data):
@@ -101,7 +105,7 @@ class DisbursementFormView(DisbursementView, FormView):
         return super().form_valid(form)
 
 
-class DisbursementStartView(DisbursementView, TemplateView):
+class DisbursementStartView(DisbursementTemplateView):
     url_name = 'start'
     template_name = 'disbursements/start.html'
 
@@ -120,7 +124,7 @@ class PrisonerView(DisbursementFormView):
         return build_view_url(self.request, PrisonerCheckView.url_name)
 
 
-class PrisonerCheckView(DisbursementView, TemplateView):
+class PrisonerCheckView(DisbursementTemplateView):
     url_name = 'prisoner_check'
     previous_view = PrisonerView
     template_name = 'disbursements/prisoner-check.html'
@@ -187,7 +191,7 @@ class RecipientBankAccountView(DisbursementFormView):
         return build_view_url(self.request, DetailsCheckView.url_name)
 
 
-class DetailsCheckView(DisbursementView, TemplateView):
+class DetailsCheckView(DisbursementTemplateView):
     url_name = 'details_check'
     previous_view = RecipientBankAccountView
     template_name = 'disbursements/details-check.html'
@@ -216,7 +220,7 @@ class DetailsCheckView(DisbursementView, TemplateView):
         return build_view_url(self.request, DisbursementCompleteView.url_name)
 
 
-class DisbursementCompleteView(DisbursementView, TemplateView):
+class DisbursementCompleteView(DisbursementTemplateView):
     url_name = 'complete'
     previous_view = DetailsCheckView
     template_name = 'disbursements/complete.html'
