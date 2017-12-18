@@ -167,11 +167,10 @@ class SendingMethodForm(DisbursementForm):
         widget=forms.RadioSelect(),
         help_text={
             SENDING_METHOD.BANK_TRANSFER: _(
-                'The money will credited directly to the recipient’s bank account.'
+                'The recipient\'s bank account is directly credited in 5-7 working days'
             ),
             SENDING_METHOD.CHEQUE: _(
-                'The cheque will be issued by SSCL and sent by post to the recipient. '
-                'The prisoner doesn’t need to pay for postage.'
+                'The recipient gets a cheque in the post from SSCL in up to 14 working days '
             )
         }
     )
