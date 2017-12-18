@@ -11,23 +11,36 @@
   <div class="mtp-disbursement-form-preview grid-row">
     <div class="column-two-thirds">
       <header>
-        <h1 class="heading-xlarge">{% trans 'Digital disbursements' %}</h1>
+        <h1 class="heading-xlarge">{% trans 'Digital disbursements tool' %}</h1>
       </header>
+      <h3><strong>{% trans 'How does it work' %}</strong></h3>
+      {% blocktrans trimmed %}
+        <ol class="list list-number">
+          <li><strong>The prisoner </strong> fills in the payment request paper form</li>
+          <li><strong>You</strong> enter the payment request details from the form into this tool</li>
+          <li><strong>A business hub colleague</strong> checks the details match</li>
+          <li><strong>SSCL</strong> sends the confirmed payment to the recipient by bank transfer or check</li>
+        </ol>
+       {% endblocktrans %}
 
-      <p>
-        {% trans 'Use this tool to process money requests from prisoners who have used the “Send money by bank transfer or cheque” form.' %}
+       <p>
+        <a href="#">{% trans 'Read more about the process' %}</a>
       </p>
 
-      <p>
-        {% trans 'Make sure you have the filled form in front of you before you start.' %}
-      </p>
+       <h3><strong>{% trans 'Enter a payment request' %}</strong></h3>
 
       <p>
-        <a href="{{ view.get_success_url }}" class="button button-start" role="button">{% trans 'Start now' %}</a>
+        {% trans 'Use this tool to process a payment request from prisoners.' %}
+        {% trans 'Before you start, have the completed form in front of you.' %}
       </p>
-    </div>
-    <div class="column-one-third">
-      <img src="{% static 'images/disbursement-by-bank-transfer-or-cheque.jpg' %}" alt={% trans '“Send money by bank transfer or cheque” form' %}/>
+
+      <div class="column-two-thirds">
+        <img src="{% static 'images/disbursement-by-bank-transfer-or-cheque.jpg' %}" alt={% trans '“Send money by bank transfer or cheque” form' %}/>
+      <div>
+        <p>
+          <a href="{{ view.get_success_url }}" class="button button-start" role="button">{% trans 'Start now' %}</a>
+        </p>
+      </div>
     </div>
   </div>
 {% endblock %}
