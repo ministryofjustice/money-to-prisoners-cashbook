@@ -112,6 +112,7 @@ class DisbursementStartView(DisbursementTemplateView):
     def get_success_url(self):
         return build_view_url(self.request, SendingMethodView.url_name)
 
+
 class SendingMethodView(DisbursementFormView):
     url_name = 'sending_method'
     previous_view = DisbursementStartView
