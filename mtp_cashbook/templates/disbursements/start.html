@@ -13,31 +13,31 @@
       <header>
         <h1 class="heading-xlarge">{% trans 'Digital disbursements tool' %}</h1>
       </header>
-        <h1 class="heading-small">
-          <strong>{% trans 'How does it work' %}</strong>
-        </h1>
-        <ol class="list list-number">
-          <li>{% blocktrans trimmed %}<strong>The prisoner </strong> fills in the payment request paper form {% endblocktrans %}</li>
-          <li>{% blocktrans trimmed %}<strong>You</strong> enter the payment request details from the form into this tool{% endblocktrans %}</li>
-          <li>{% blocktrans trimmed %}<strong>A business hub colleague</strong> checks the details match{% endblocktrans %}</li>
-          <li>{% blocktrans trimmed %}<strong>SSCL</strong> sends the confirmed payment to the recipient by bank transfer or cheque{% endblocktrans %}</li>
-        </ol>
+      <h2 class="heading-small">{% trans 'How does it work' %}</h2>
+      <ol class="list list-number">
+        <li>{% blocktrans trimmed %}<strong>The prisoner</strong> fills in the payment request paper form{% endblocktrans %}</li>
+        <li>{% blocktrans trimmed %}<strong>You</strong> enter the payment request details from the form into this tool{% endblocktrans %}</li>
+        <li>{% blocktrans trimmed %}<strong>A business hub colleague</strong> checks the details match{% endblocktrans %}</li>
+        <li>{% blocktrans trimmed %}<strong>SSCL</strong> sends the confirmed payment to the recipient by bank transfer or cheque{% endblocktrans %}</li>
+      </ol>
 
-        <p><a href="{% url 'submit_ticket' %}">{% trans 'Read more about the process' %}</a> </p>
+      <p><a href="{% url 'submit_ticket' %}">{% trans 'Read more about the process' %}</a> </p>
 
-       <h3><strong>{% trans 'Enter a payment request' %}</strong></h3><br>
+      <br>
 
-       <p>{% trans 'Use this tool to process a payment request from prisoners.' %}</p>
+      <h2 class="heading-small">{% trans 'Enter a payment request' %}</h2>
+      <p>{% trans 'Use this tool to process a payment request from prisoners.' %}</p>
 
-       <p>{% trans 'Before you start, have the completed form in front of you.' %}</p>
+      <p>{% trans 'Before you start, have the completed form in front of you.' %}</p>
 
-    <div class="grid-row">
-      <div class="column-one-third">
-        <img align="left" src="{% static 'images/disbursement-by-bank-transfer-or-cheque.jpg' %}" alt={% trans '“Send money by bank transfer or cheque” form' %}/>
+      <div class="grid-row">
+        <div class="column-one-third">
+          <img align="left" src="{% static 'images/disbursement-by-bank-transfer-or-cheque.jpg' %}" alt={% trans '“Send money by bank transfer or cheque” form' %}/>
+        </div>
       </div>
+      <p>
+        <a href="{{ view.get_success_url }}" class="button button-start" role="button">{% trans 'Start now' %}</a>
+      </p>
     </div>
-    <p>
-      <a href="{{ view.get_success_url }}" class="button button-start" role="button">{% trans 'Start now' %}</a>
-    </p>
   </div>
 {% endblock %}
