@@ -110,13 +110,23 @@ class DisbursementStartView(DisbursementTemplateView):
     template_name = 'disbursements/start.html'
 
     def get_success_url(self):
+        return build_view_url(self.request, SendingMethodView.url_name)
+
+
+class SendingMethodView(DisbursementFormView):
+    url_name = 'sending_method'
+    previous_view = DisbursementStartView
+    template_name = 'disbursements/sending-method.html'
+    form_class = disbursement_forms.SendingMethodForm
+
+    def get_success_url(self):
         return build_view_url(self.request, PrisonerView.url_name)
 
 
 class PrisonerView(DisbursementFormView):
     url_name = 'prisoner'
     redirect_url_name = DisbursementStartView.url_name
-    previous_view = DisbursementStartView
+    previous_view = SendingMethodView
     template_name = 'disbursements/prisoner.html'
     form_class = disbursement_forms.PrisonerForm
 
@@ -146,22 +156,12 @@ class AmountView(DisbursementFormView):
     form_class = disbursement_forms.AmountForm
 
     def get_success_url(self):
-        return build_view_url(self.request, SendingMethodView.url_name)
-
-
-class SendingMethodView(DisbursementFormView):
-    url_name = 'sending_method'
-    previous_view = AmountView
-    template_name = 'disbursements/sending-method.html'
-    form_class = disbursement_forms.SendingMethodForm
-
-    def get_success_url(self):
         return build_view_url(self.request, RecipientContactView.url_name)
 
 
 class RecipientContactView(DisbursementFormView):
     url_name = 'recipient_contact'
-    previous_view = SendingMethodView
+    previous_view = AmountView
     template_name = 'disbursements/recipient-contact.html'
     form_class = disbursement_forms.RecipientContactForm
 

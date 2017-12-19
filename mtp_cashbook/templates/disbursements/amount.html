@@ -16,7 +16,7 @@
   </header>
 
   <p>
-    {% trans 'If there are insufficient funds in the Private account, please go to NOMIS to move the money first, then refresh balances below and complete the disbursement here.' %}
+    {% trans "If there isn’t enough money in the prisoner’s private account, use NOMIS to move money across then 'Update balances' before you continue" %}
   <p>
 
   <form action="." method="post">
@@ -33,8 +33,8 @@
       </tr>
 
       <tr class="mtp-private-row">
-        <td>{% trans 'Private' %}</td>
-        <td>{{ form.private_balance|currency:'£'|default:_('Unknown') }}</td>
+        <td class="mtp-account-column">{% trans 'Private' %}</td>
+        <td class="mtp-balance-column">{{ form.private_balance|currency:'£'|default:_('Unknown') }}</td>
         <td class="mtp-amount-column">
           {% with field=form.amount %}
           <fieldset>
@@ -58,25 +58,25 @@
       </tr>
 
       <tr>
-        <td>{% trans 'Spends' %}</td>
-        <td>{{ form.spends_balance|currency:'£'|default:_('Unknown') }}</td>
+        <td class="mtp-account-column">{% trans 'Spends' %}</td>
+        <td class="mtp-balance-column">{{ form.spends_balance|currency:'£'|default:_('Unknown') }}</td>
         <td>{% trans 'Can’t be used for sending money out' %}</td>
       </tr>
 
       <tr>
-        <td>{% trans 'Saving' %}</td>
-        <td>{{ form.savings_balance|currency:'£'|default:_('Unknown') }}</td>
+        <td class="mtp-account-column">{% trans 'Saving' %}</td>
+        <td class="mtp-balance-column">{{ form.savings_balance|currency:'£'|default:_('Unknown') }}</td>
         <td>{% trans 'Can’t be used for sending money out' %}</td>
       </tr>
 
       <tr class="mtp-refresh-row">
         <td></td>
-        <td><a href=".">{% trans 'Update balances' %}</a></td>
+        <td class="mtp-balance-column"><a href=".">{% trans 'Update balances' %}</a></td>
         <td></td>
       </tr>
 
     </table>
 
-    <button type="submit" class="button mtp-next-button" name="create-disbursement">{% trans 'Next' %}</button>
+    <button type="submit" class="button mtp-next-button" name="create-disbursement">{% trans 'Confirm' %}</button>
   </form>
 {% endblock %}

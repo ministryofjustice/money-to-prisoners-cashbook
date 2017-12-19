@@ -100,6 +100,7 @@ class PrisonerTestCase(CreateDisbursementFlowTestCase):
     @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_valid_prisoner_number(self):
         self.login()
+        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
         response = self.enter_prisoner_details()
         self.assertOnPage(response, 'prisoner_check')
 
@@ -116,6 +117,7 @@ class PrisonerTestCase(CreateDisbursementFlowTestCase):
         )
 
         self.login()
+        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
         response = self.client.post(
             self.url,
             data={'prisoner_number': prisoner_number},
@@ -138,6 +140,7 @@ class PrisonerTestCase(CreateDisbursementFlowTestCase):
         )
 
         self.login()
+        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
         response = self.client.post(
             self.url,
             data={'prisoner_number': prisoner_number},
@@ -159,16 +162,18 @@ class AmountTestCase(CreateDisbursementFlowTestCase):
     @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_valid_amount(self):
         self.login()
+        self.choose_sending_method(method=SENDING_METHOD.CHEQUE)
         self.enter_prisoner_details()
         response = self.enter_amount(amount=10, cash=5000)
 
-        self.assertOnPage(response, 'sending_method')
+        self.assertOnPage(response, 'recipient_contact')
 
     @responses.activate
     @override_nomis_settings
     @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_too_high_amount(self):
         self.login()
+        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
         self.enter_prisoner_details()
         response = self.enter_amount(amount=60, cash=5000)
 
@@ -180,6 +185,7 @@ class AmountTestCase(CreateDisbursementFlowTestCase):
     @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_nomis_unavailable(self):
         self.login()
+        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
         self.enter_prisoner_details()
         response = self.client.get(self.url)
 
@@ -194,9 +200,10 @@ class SendingMethodTestCase(CreateDisbursementFlowTestCase):
     @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_cheque_sending_method_skips_bank_account(self):
         self.login()
+        self.choose_sending_method(method=SENDING_METHOD.CHEQUE)
         self.enter_prisoner_details()
         self.enter_amount()
-        self.choose_sending_method(method=SENDING_METHOD.CHEQUE)
+
         response = self.enter_recipient_details()
 
         self.assertOnPage(response, 'details_check')
@@ -213,9 +220,10 @@ class SendingMethodTestCase(CreateDisbursementFlowTestCase):
     @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_cheque_sending_method_includes_bank_account(self):
         self.login()
+        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
         self.enter_prisoner_details()
         self.enter_amount()
-        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
+
         response = self.enter_recipient_details()
 
         self.assertOnPage(response, 'recipient_bank_account')
@@ -231,9 +239,10 @@ class RecipientContactTestCase(CreateDisbursementFlowTestCase):
     @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_contact_details_required(self):
         self.login()
+        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
         self.enter_prisoner_details()
         self.enter_amount()
-        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
+
         response = self.enter_recipient_details({
             'recipient_first_name': 'John',
             'recipient_last_name': 'Smith',
@@ -254,9 +263,9 @@ class RecipientBankAccountTestCase(CreateDisbursementFlowTestCase):
     @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_account_details_required(self):
         self.login()
+        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
         self.enter_prisoner_details()
         self.enter_amount()
-        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
         self.enter_recipient_details()
         response = self.enter_recipient_bank_account({'sort_code': ''})
         self.assertOnPage(response, 'recipient_bank_account')
@@ -268,9 +277,9 @@ class RecipientBankAccountTestCase(CreateDisbursementFlowTestCase):
     @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_account_details_validity(self):
         self.login()
+        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
         self.enter_prisoner_details()
         self.enter_amount()
-        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
         self.enter_recipient_details()
         response = self.enter_recipient_bank_account({
             'sort_code': '60-57-89a',
@@ -299,9 +308,9 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
         )
 
         self.login()
+        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
         self.enter_prisoner_details()
         self.enter_amount()
-        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
         self.enter_recipient_details()
         self.enter_recipient_bank_account()
         response = self.client.get(reverse('disbursements:complete'), follow=True)
@@ -320,9 +329,9 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
         )
 
         self.login()
+        self.choose_sending_method(method=SENDING_METHOD.CHEQUE)
         self.enter_prisoner_details()
         self.enter_amount()
-        self.choose_sending_method(method=SENDING_METHOD.CHEQUE)
         self.enter_recipient_details()
         response = self.client.get(reverse('disbursements:complete'), follow=True)
 
@@ -333,9 +342,9 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
     @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_create_disbursement_service_unavailable(self):
         self.login()
+        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
         self.enter_prisoner_details()
         self.enter_amount()
-        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
         self.enter_recipient_details()
         self.enter_recipient_bank_account()
         with silence_logger():

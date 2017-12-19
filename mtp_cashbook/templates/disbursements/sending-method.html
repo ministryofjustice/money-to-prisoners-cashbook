@@ -37,6 +37,9 @@
         </div>
       {% endfor %}
     </fieldset>
+    <br>
+    <p>{% trans 'Both methods are free to the prisoner and recipient' %}</p>
+    <p><a href="{% url 'submit_ticket' %}">{% trans 'Read more about the process' %}</a></p>
 
     <button type="submit" class="button mtp-next-button" name="create-disbursement">{% trans 'Next' %}</button>
   </form>
