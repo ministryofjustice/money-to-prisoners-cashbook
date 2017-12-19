@@ -27,8 +27,8 @@
     <table class="mtp-accounts-table">
 
       <tr>
-        <th class="mtp-account-column">{% trans 'Account' %}</th>
-        <th class="mtp-balance-column">{% trans 'Balance on NOMIS' %}</th>
+        <th>{% trans 'Account' %}</th>
+        <th>{% trans 'Balance on NOMIS' %}</th>
         <th>{% trans 'Amount to send' %}</th>
       </tr>
 
@@ -63,7 +63,7 @@
         <td>{% trans 'Can’t be used for sending money out' %}</td>
       </tr>
 
-      <tr class="mtp-balance-column">
+      <tr>
         <td class="mtp-account-column">{% trans 'Saving' %}</td>
         <td class="mtp-balance-column">{{ form.savings_balance|currency:'£'|default:_('Unknown') }}</td>
         <td>{% trans 'Can’t be used for sending money out' %}</td>
