@@ -178,14 +178,14 @@ class SendingMethodForm(DisbursementForm):
 
 class RecipientContactForm(DisbursementForm):
     recipient_first_name = forms.CharField(label=_('Their first name'))
-    recipient_last_name = forms.CharField(label=_('Their last name'))
+    recipient_last_name = forms.CharField(label=_('Last name'))
     address_line1 = forms.CharField(label=_('Their address'))
     address_line2 = forms.CharField(label=_('Their address line 2'), required=False)
-    city = forms.CharField(label=_('Their town or city'))
-    postcode = forms.CharField(label=_('Their postcode'))
+    city = forms.CharField(label=_('Town or city'))
+    postcode = forms.CharField(label=_('Postcode'))
     email = forms.EmailField(
-        label=_('Their email address (optional)'),
-        help_text=_('This is to confirm the payment request has been sent'),
+        label=_('Their email address'),
+        help_text=_('The recipient will be notified about this request by email if given or by letter if not.'),
         required=False,
     )
 
