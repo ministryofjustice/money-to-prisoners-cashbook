@@ -21,7 +21,7 @@
         <li>{% blocktrans trimmed %}<strong>SSCL</strong> sends the confirmed payment to the recipient by bank transfer or cheque{% endblocktrans %}</li>
       </ol>
 
-      <p><a href="{% url 'submit_ticket' %}">{% trans 'Read more about the process' %}</a></p>
+      <p><a href="{% url 'disbursements:process-overview' %}">{% trans 'Read more about the process' %}</a></p>
 
       <h2 class="heading-medium">{% trans 'Enter a payment request' %}</h2>
       <p>{% trans 'Use this tool to process a payment request from prisoners.' %}</p>
