@@ -1,0 +1,47 @@
+.mtp-page-contents {
+  &--floated {
+    position: fixed;
+    max-width: 300px;
+    top: 0;
+    padding-top: 1em;
+  }
+
+  &__shim {
+    height: em(5, 19);
+  }
+
+  &__title {
+    @include bold-16;
+    margin-bottom: 5px;
+  }
+
+  &__list {
+    li {
+      @include core-16;
+      list-style: none;
+      margin-left: $gutter-half;
+      margin-bottom: $gutter-half;
+      padding-right: $gutter-half;
+
+      &:before {
+        content: '–';
+        float: left;
+        display: block;
+        width: $gutter-half;
+        margin-left: -$gutter-half;
+      }
+    }
+
+    a {
+      text-decoration: none;
+
+      &:hover, &:focus, &:active {
+        text-decoration: underline;
+      }
+    }
+
+    .active {
+      font-weight: bold;
+    }
+  }
+}

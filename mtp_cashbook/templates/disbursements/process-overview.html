@@ -1,0 +1,139 @@
+{% extends 'disbursements/base.html' %}
+{% load i18n %}
+{% load mtp_common %}
+{% load static %}
+
+{% block body_classes %}{{ block.super }} mtp-process-overview{% endblock %}
+
+{% block inner_content %}
+  {{ block.super }}
+
+  <header>
+    <h1 class="heading-xlarge">
+      <span class="heading-secondary">
+        {% trans 'Digital disbursements' %}
+      </span>
+      {% trans 'How it works' %}
+    </h1>
+  </header>
+
+  <div class="grid-row">
+    <div class="column-one-third">
+      <div class="mtp-page-contents__shim"></div>
+      <nav class="mtp-page-contents">
+        <h2 class="mtp-page-contents__title">{% trans 'Page contents:' %}</h2>
+        <ul class="mtp-page-contents__list">
+          <li><a href="#section-form">1. {% trans 'Prisoner fills in the disbursements form for bank transfer or cheque' %}</a></li>
+          <li><a href="#section-create">2. {% trans 'Enter details from the form into this online tool' %}</a></li>
+          <li><a href="#section-confirm">3. {% trans 'Another colleague double-checks and confirms' %}</a></li>
+          <li><a href="#section-sent">4. {% trans 'SSCL sends confirmed payment to the recipient by bank transfer or cheque' %}</a></li>
+          <li><a href="#section-notify">{% trans 'How to notify the prisoner' %}</a></li>
+          <li><a href="#section-track">{% trans 'How to trace a payment request' %}</a></li>
+          <li><a href="#section-help">{% trans 'Further help' %}</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="column-two-thirds">
+      <p>
+        {% trans 'When a prisoner wants to send money out of prison (eg to relatives or charities), use this disbursements tool to digitally process the payment request.' %}
+      </p>
+      <p>
+        {% trans 'This is how it works:' %}
+      </p>
+
+      <h2 class="heading-medium" id="section-form">1. {% trans 'Prisoner fills in the disbursements form for bank transfer or cheque' %}</h2>
+      <p>
+        {% url 'disbursements:paper-forms' as link %}
+        {% blocktrans trimmed %}
+          The wing officer gives the correct <a href="{{ link }}">‘disbursements form’</a> to the prisoner to fill in.
+        {% endblocktrans %}
+        {% trans 'To protect their privacy, they should also give them an envelope and sign the form to confirm their identity.' %}
+      </p>
+
+      <h2 class="heading-medium" id="section-create">2. {% trans 'Enter details from the form into this online tool' %}</h2>
+      <p>
+        {% url 'disbursements:start' as link %}
+        {% blocktrans trimmed %}
+          A business hub staff member enters the details into the <a href="{{ link }}">‘Send payment’</a> section of this tool.
+        {% endblocktrans %}
+        {% trans 'You’ll be guided through each stage as you copy the payment request details from the paper form into each screen.' %}
+      </p>
+      <p>
+        {% trans 'This tool is connected to NOMIS so it shows a prisoner’s up-to-date account information.' %}
+      </p>
+
+      <h2 class="heading-medium" id="section-confirm">3. {% trans 'Another colleague double-checks and confirms' %}</h2>
+      <p>
+        {% trans 'When the payment request has been entered, it’s handed over to a colleague with access to the tool.' %}
+      </p>
+      <p>
+        {% trans 'They need to log onto the tool to double-check the details entered match the paper form details.' %}
+        {# {% url 'disbursements:??????????' as link %} #}
+        {% blocktrans trimmed %}
+          If they do, they <a href="{{ link }}">‘Confirm payment’</a> and sign the paper form.
+        {% endblocktrans %}
+      </p>
+      <p>
+        {% trans 'The confirmed requests automatically go to SSCL for processing.' %}
+      </p>
+      <div class="panel panel-border-wide">
+        <h3 class="heading-small">
+          {% trans 'A payment can’t be confirmed by the person who:' %}
+        </h3>
+        <ul class="list list-bullet">
+          <li>{% trans '‘entered’ the payment request - the process still needs two different members of staff to check the details' %}</li>
+          <li>{% trans 'made a ‘change’ or ‘edit’ to the request' %}</li>
+        </ul>
+      </div>
+
+      <h2 class="heading-medium" id="section-sent">4. {% trans 'SSCL sends confirmed payment to the recipient by bank transfer or cheque' %}</h2>
+      <p>
+        {% trans 'SSCL will notify the recipient by email or letter about the coming payment from HMPPS.' %}
+      </p>
+      <p>
+        {% trans 'In 5-7 working days, the payment is put directly into the recipient’s account by bank transfer or a cheque is posted out.' %}
+        {% trans 'Both are free.' %}
+      </p>
+      <p>
+        {% trans 'The business hub no longer needs to send out cheques.' %}
+      </p>
+      <p>
+        {% trans 'If the prisoner gets the recipient’s bank details wrong, SSCL will send a cheque instead.' %}
+      </p>
+
+      <h2 class="heading-medium">{% trans 'Please note:' %}</h2>
+
+      <h3 class="heading-small" id="section-notify">{% trans 'How to notify the prisoner' %}</h3>
+      <p>
+        {% trans 'Once the payment request has been made, the Prisoner Money team can email prison staff to let them know.' %}
+        {% trans 'Prison staff print it out and deliver it to the prisoner.' %}
+      </p>
+      {% url 'submit_ticket' as link %}
+      {% blocktrans trimmed %}
+        <a href="{{ link }}">Contact us</a> to get these notifications.
+      {% endblocktrans %}
+
+      <h3 class="heading-small" id="section-track">{% trans 'How to trace a payment request' %}</h3>
+      <p>
+        {% trans 'Once the payment has been sent, log into SOP to find out:' %}
+      </p>
+      <ul class="list list-bullet">
+        <li>{% trans 'the payment date' %}</li>
+        <li>{% trans 'if a cheque has been cashed' %}</li>
+        <li>{% trans 'if a bank transfer went through' %}</li>
+        <li>{% trans 'which bank account the transfer went into' %}</li>
+      </ul>
+
+      <h2 class="heading-medium" id="section-help">{% trans 'Further help' %}</h2>
+      <p>
+        {% url 'submit_ticket' as link %}
+        {% blocktrans trimmed %}
+          If a problem is not resolved or if the recipient can’t cash the cheque and it needs to be re-issued, please <a href="{{ link }}">contact us</a>.
+        {% endblocktrans %}
+        {% trans 'Include the prisoner’s name, prisoner number and NOMIS reference number for the transaction.' %}
+      </p>
+    </div>
+  </div>
+
+{% endblock %}
