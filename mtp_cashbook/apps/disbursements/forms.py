@@ -202,12 +202,12 @@ validate_sort_code = RegexValidator(r'^\d\d-?\d\d-?\d\d$', message=_('The sort c
 
 class RecipientBankAccountForm(DisbursementForm):
     account_number = forms.CharField(
-        label=_('Bank account number'),
-        help_text=_('For example, 09098765'),
+        label=_('Account number'),
+        help_text=_('eg 12345678'),
         validators=[validate_account_number],
     )
     sort_code = forms.CharField(
         label=_('Sort code'),
-        help_text=_('For example, 02-02-80'),
+        help_text=_('eg 10-20-30'),
         validators=[validate_sort_code],
     )

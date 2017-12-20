@@ -179,6 +179,11 @@ class RecipientBankAccountView(DisbursementFormView):
     template_name = 'disbursements/recipient-bank-account.html'
     form_class = disbursement_forms.RecipientBankAccountForm
 
+    def get_context_data(self, **kwargs):
+        recipient_details = self.valid_form_data[RecipientContactView.url_name]
+        kwargs.update(**recipient_details)
+        return super().get_context_data(**kwargs)
+
     @classmethod
     def is_form_enabled(cls, previous_form_data):
         sending_method = previous_form_data[SendingMethodView.url_name]
