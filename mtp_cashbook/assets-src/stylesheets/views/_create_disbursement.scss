@@ -15,15 +15,15 @@
       text-align: center;
     }
 
-    td.mtp-balance-column{
+    td.mtp-balance-column {
       text-align: right;
     }
 
-    td.mtp-amount-column{
+    td.mtp-amount-column {
       text-align: left;
     }
 
-    td.mtp-account-column{
+    td.mtp-account-column {
       text-align: left;
     }
 
@@ -73,23 +73,22 @@
       margin: 0 0 .2em;
     }
       table {
-        min-width: 100%;
-
-         td:nth-child(1) {
+          min-width: 100%;
+          td:nth-child(1) {
           width: 20%;
         }
 
-         td:nth-child(2) {
+        td:nth-child(2) {
           width: 25%;
         }
 
-        td:nth-child(3) {
+          td:nth-child(3) {
           width: 70%;
         }
 
         th, td {
-        padding: 10px 5px 5px 15px;
-        border: none;
+          padding: 10px 5px 5px 15px;
+          border: none;
         }
       }
 
@@ -132,4 +131,3 @@
   .mtp-confirm-change {
     text-align: right;
   }
-}
