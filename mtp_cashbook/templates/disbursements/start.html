@@ -13,19 +13,17 @@
       <header>
         <h1 class="heading-xlarge">{% trans 'Digital disbursements tool' %}</h1>
       </header>
-      <h2 class="heading-small">{% trans 'How does it work' %}</h2>
+      <h2 class="heading-medium">{% trans 'How does it work' %}</h2>
       <ol class="list list-number">
-        <li>{% blocktrans trimmed %}<strong>The prisoner</strong> fills in the payment request paper form{% endblocktrans %}</li>
-        <li>{% blocktrans trimmed %}<strong>You</strong> enter the payment request details from the form into this tool{% endblocktrans %}</li>
+        <li>{% blocktrans trimmed %}<strong>The prisoner</strong> fills in the payment request form{% endblocktrans %}</li>
+        <li>{% blocktrans trimmed %}<strong>You</strong> enter the details from the form into this tool{% endblocktrans %}</li>
         <li>{% blocktrans trimmed %}<strong>A business hub colleague</strong> checks the details match{% endblocktrans %}</li>
         <li>{% blocktrans trimmed %}<strong>SSCL</strong> sends the confirmed payment to the recipient by bank transfer or cheque{% endblocktrans %}</li>
       </ol>
 
-      <p><a href="{% url 'submit_ticket' %}">{% trans 'Read more about the process' %}</a> </p>
-
       <br>
 
-      <h2 class="heading-small">{% trans 'Enter a payment request' %}</h2>
+      <h2 class="heading-medium">{% trans 'Enter a payment request' %}</h2>
       <p>{% trans 'Use this tool to process a payment request from prisoners.' %}</p>
 
       <p>{% trans 'Before you start, have the completed form in front of you.' %}</p>

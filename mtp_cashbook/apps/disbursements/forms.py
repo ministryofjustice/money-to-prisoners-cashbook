@@ -64,7 +64,7 @@ class DisbursementForm(forms.Form):
 class PrisonerForm(DisbursementForm):
     prisoner_number = forms.CharField(
         label='Prisoner number',
-        help_text='For example, A1234BC',
+        help_text='eg A1234BC',
         max_length=7,
     )
     error_messages = {
@@ -170,7 +170,7 @@ class SendingMethodForm(DisbursementForm):
                 'The recipient’s bank account is directly credited in 5-7 working days'
             ),
             SENDING_METHOD.CHEQUE: _(
-                'The recipient gets a cheque in the post from SSCL in up to 14 working days'
+                'The recipient gets a cheque in the post from SSCL in 5-7 working days'
             )
         }
     )
@@ -202,12 +202,12 @@ validate_sort_code = RegexValidator(r'^\d\d-?\d\d-?\d\d$', message=_('The sort c
 
 class RecipientBankAccountForm(DisbursementForm):
     account_number = forms.CharField(
-        label=_('Bank account number'),
-        help_text=_('For example, 09098765'),
+        label=_('Account number'),
+        help_text=_('eg 12345678'),
         validators=[validate_account_number],
     )
     sort_code = forms.CharField(
         label=_('Sort code'),
-        help_text=_('For example, 02-02-80'),
+        help_text=_('eg 10-20-30'),
         validators=[validate_sort_code],
     )
