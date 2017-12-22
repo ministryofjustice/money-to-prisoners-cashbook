@@ -147,8 +147,14 @@
   }
 
 
-.mtp-confirm-payments-link {
-  a:link, a:visited  {
-    color: white;
+  .mtp-confirm-payments-link {
+    a:link, a:visited  {
+      color: white;
+    }
   }
-}
+
+
+  .mtp-hand-over-link {
+     padding-right: 60px;
+     padding-left: 60px;
+  }

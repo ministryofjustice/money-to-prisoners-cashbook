@@ -1,0 +1,43 @@
+{% extends 'disbursements/base.html' %}
+{% load i18n %}
+{% load mtp_common %}
+{% load disbursements %}
+{% load static %}
+
+{% block page_title %}{% trans 'Hand over the paper form for confirmation' %} – {{ block.super }}{% endblock %}
+{% block body_classes %}{{ block.super }} mtp-create-disbursement{% endblock %}
+
+
+{% block inner_content %}
+  {{ block.super }}
+
+ <header>
+    <h1 class="heading-xlarge mtp-heading--compact">
+      {% trans 'Hand over the paper form for confirmation' %}
+    </h1>
+  </header>
+  <div class="grid-row">
+    <div class="column-two-thirds">
+       <p>{% trans 'Ask a colleague to double-check the online details match those on the paper form.' %}</p>
+       <p>{% trans "To do this, hand your colleague the paper form. Then ask them to go to 'Confirm payments' in the digital disbursements tool." %}</p>
+       <p>{% trans "Anyone in your team who has an account on 'Manage prisoner money' can confirm the payment." %}</p>
+
+      <details>
+        <summary><span class="summary">What if my colleague doesn't have an account?</span></summary>
+
+        <div class="panel panel-border-narrow">
+          <p>{% trans 'As your business hub manager to set one up. Boom!' %}</p>
+        </div>
+
+      </details>
+
+    </div>
+  </div>
+
+
+
+  <p>
+    <a href="{{ view.get_success_url }}" class="mtp-hand-over-link button mtp-next-button" role="button">{% trans 'I will hand over the paper form' %}</a>
+  </p>
+
+{% endblock %}

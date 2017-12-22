@@ -222,12 +222,20 @@ class DetailsCheckView(DisbursementTemplateView):
         return super().get_context_data(**kwargs)
 
     def get_success_url(self):
+        return build_view_url(self.request, FormHandOverView.url_name)
+
+class FormHandOverView(DisbursementTemplateView):
+    url_name = 'form_hand_over'
+    previous_view = DetailsCheckView
+    template_name = 'disbursements/form_hand_over.html'
+
+    def get_success_url(self):
         return build_view_url(self.request, DisbursementCompleteView.url_name)
 
 
 class DisbursementCompleteView(DisbursementTemplateView):
     url_name = 'complete'
-    previous_view = DetailsCheckView
+    previous_view = FormHandOverView
     template_name = 'disbursements/complete.html'
     final_step = True
 
