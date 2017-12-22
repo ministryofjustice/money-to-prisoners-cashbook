@@ -64,7 +64,7 @@ class DisbursementForm(forms.Form):
 class PrisonerForm(DisbursementForm):
     prisoner_number = forms.CharField(
         label='Prisoner number',
-        help_text='For example, A1234BC',
+        help_text='eg A1234BC',
         max_length=7,
     )
     error_messages = {
