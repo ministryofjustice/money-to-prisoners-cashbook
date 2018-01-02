@@ -8,7 +8,6 @@ from feedback.forms import PrisonTicketForm
 class GetHelpView(BaseGetHelpView):
     form_class = PrisonTicketForm
     success_url = reverse_lazy('feedback_success')
-    template_name = 'mtp_common/feedback/submit_feedback.html'
     ticket_subject = 'MTP Cashbook Feedback'
     ticket_tags = ['feedback', 'mtp', 'cashbook', settings.ENVIRONMENT]
 

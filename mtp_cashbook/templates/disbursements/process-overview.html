@@ -109,7 +109,7 @@
         {% trans 'Once the payment request has been made, the Prisoner Money team can email prison staff to let them know.' %}
         {% trans 'Prison staff print it out and deliver it to the prisoner.' %}
       </p>
-      {% url 'submit_ticket' as link %}
+      {% url 'disbursements:submit_ticket' as link %}
       {% blocktrans trimmed %}
         <a href="{{ link }}">Contact us</a> to get these notifications.
       {% endblocktrans %}
@@ -127,7 +127,7 @@
 
       <h2 class="heading-medium" id="section-help">{% trans 'Further help' %}</h2>
       <p>
-        {% url 'submit_ticket' as link %}
+        {% url 'disbursements:submit_ticket' as link %}
         {% blocktrans trimmed %}
           If a problem is not resolved or if the recipient can’t cash the cheque and it needs to be re-issued, please <a href="{{ link }}">contact us</a>.
         {% endblocktrans %}

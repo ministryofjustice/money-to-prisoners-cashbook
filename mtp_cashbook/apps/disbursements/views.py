@@ -2,14 +2,15 @@ import logging
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView, TemplateView, View
 from mtp_common.auth.api_client import get_api_session
 from requests.exceptions import RequestException
 
-from . import disbursements_available_required, forms as disbursement_forms
+from disbursements import disbursements_available_required, forms as disbursement_forms
+from feedback.views import GetHelpView, GetHelpSuccessView
 
 logger = logging.getLogger('mtp')
 
@@ -28,11 +29,8 @@ def clear_session_view(request):
     return redirect(build_view_url(request, DisbursementStartView.url_name))
 
 
-@method_decorator(login_required, name='dispatch')
-@method_decorator(disbursements_available_required, name='dispatch')
 class DisbursementView(View):
     previous_view = None
-    payment_method = None
     final_step = False
 
     @classmethod
@@ -54,10 +52,13 @@ class DisbursementView(View):
         super().__init__(**kwargs)
         self.valid_form_data = {}
 
+    @method_decorator(login_required)
+    @method_decorator(disbursements_available_required)
     def dispatch(self, request, *args, **kwargs):
         request.proposition_app = {
             'name': _('Digital disbursements'),
             'url': build_view_url(self.request, DisbursementStartView.url_name),
+            'help_url': reverse('disbursements:submit_ticket'),
         }
         for view in self.get_previous_views(self):
             if not hasattr(view, 'form_class') or not view.is_form_enabled(self.valid_form_data):
@@ -70,6 +71,15 @@ class DisbursementView(View):
                 redirect_url = getattr(view, 'redirect_url_name', None) or view.url_name
                 return redirect(build_view_url(self.request, redirect_url))
         return super().dispatch(request, *args, **kwargs)
+
+
+class DisbursementGetHelpView(DisbursementView, GetHelpView):
+    base_template_name = 'disbursements/base.html'
+    success_url = reverse_lazy('disbursements:feedback_success')
+
+
+class DisbursementGetHelpSuccessView(DisbursementView, GetHelpSuccessView):
+    base_template_name = 'disbursements/base.html'
 
 
 class DisbursementTemplateView(DisbursementView, TemplateView):

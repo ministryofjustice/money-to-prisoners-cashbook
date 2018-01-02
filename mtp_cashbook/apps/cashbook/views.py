@@ -13,11 +13,12 @@ from mtp_common.auth import api_client
 from mtp_common import nomis
 from requests.exceptions import RequestException
 
-from .forms import (
+from cashbook.forms import (
     ProcessNewCreditsForm, ProcessManualCreditsForm,
     FilterProcessedCreditsListForm, FilterProcessedCreditsDetailForm,
     SearchForm, MANUALLY_CREDITED_LOG_LEVEL,
 )
+from feedback.views import GetHelpView, GetHelpSuccessView
 
 logger = logging.getLogger('mtp')
 
@@ -28,8 +29,18 @@ class CashbookView(View):
         request.proposition_app = {
             'name': _('Digital cashbook'),
             'url': reverse('new-credits'),
+            'help_url': reverse('cashbook_submit_ticket'),
         }
         return super().dispatch(request, *args, **kwargs)
+
+
+class CashbookGetHelpView(CashbookView, GetHelpView):
+    base_template_name = 'cashbook/base.html'
+    success_url = reverse_lazy('cashbook_feedback_success')
+
+
+class CashbookGetHelpSuccessView(CashbookView, GetHelpSuccessView):
+    base_template_name = 'cashbook/base.html'
 
 
 class NewCreditsView(CashbookView, FormView):
