@@ -38,7 +38,12 @@
 
 {% block footer_support_links %}
   <ul>
-    <li><a href="{% url 'submit_ticket' %}">{% trans 'Get help' %}</a></li>
+    <li>
+      {% url 'submit_ticket' as submit_ticket_fallback %}
+      <a href="{{ request.proposition_app.help_url|default:submit_ticket_fallback }}">
+        {% trans 'Get help' %}
+      </a>
+    </li>
     <li>
       {% trans 'Built by' %}
       <a href="https://mojdigital.blog.gov.uk/">

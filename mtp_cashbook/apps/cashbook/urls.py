@@ -5,6 +5,7 @@ from .views import (
     NewCreditsView, ProcessingCreditsView,
     ProcessedCreditsListView, ProcessedCreditsDetailView,
     SearchView,
+    CashbookGetHelpView, CashbookGetHelpSuccessView,
 )
 
 urlpatterns = [
@@ -17,4 +18,7 @@ urlpatterns = [
 
     url(r'^search/$', SearchView.as_view(), name='search'),
     url(r'^all/$', RedirectView.as_view(pattern_name='search', permanent=True)),
+
+    url(r'^cashbook/feedback/$', CashbookGetHelpView.as_view(), name='cashbook_submit_ticket'),
+    url(r'^cashbook/feedback/success/$', CashbookGetHelpSuccessView.as_view(), name='cashbook_feedback_success'),
 ]

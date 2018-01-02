@@ -36,6 +36,8 @@ urlpatterns = [
         views.DisbursementTemplateView.as_view(template_name='disbursements/paper-forms.html'),
         name='paper-forms'),
 
+    url(r'^feedback/$', views.DisbursementGetHelpView.as_view(), name='submit_ticket'),
+    url(r'^feedback/success/$', views.DisbursementGetHelpSuccessView.as_view(), name='feedback_success'),
     url(r'^process-overview/$',
         views.DisbursementTemplateView.as_view(template_name='disbursements/process-overview.html'),
         name='process-overview'),

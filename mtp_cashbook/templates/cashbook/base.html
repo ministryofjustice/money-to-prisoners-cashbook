@@ -19,7 +19,7 @@
       <ul id="mtp-proposition-tabs" class="mtp-proposition-tab-column">
         {% include 'proposition-tab.html' with view_name='new-credits' subview_names='new-credits' link_text=_('New credits') %}
         {% include 'proposition-tab.html' with view_name='processed-credits-list' subview_names='processed-credits-list processed-credits-detail' link_text=_('Processed credits') %}
-        {% include 'proposition-tab.html' with view_name='submit_ticket' subview_names='submit_ticket feedback_success' link_text=_('Get help') %}
+        {% include 'proposition-tab.html' with view_name='cashbook_submit_ticket' subview_names='cashbook_submit_ticket cashbook_feedback_success' link_text=_('Get help') %}
         <li class="mtp-nav-search__trigger"><a href="#"><span class="visually-hidden">{% trans 'Search all credits' %}</span></a></li>
       </ul>
     {% endspaceless %}
