@@ -1,15 +1,35 @@
 from django.conf import settings
 from django.conf.urls import include, url
 from django.conf.urls.i18n import i18n_patterns
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
+from django.shortcuts import redirect
 from django.template.response import TemplateResponse
 from django.views.decorators.cache import cache_control
-from django.views.generic.base import RedirectView
+from django.views.generic.base import RedirectView, TemplateView
 from django.views.i18n import JavaScriptCatalog
 
 from moj_irat.views import HealthcheckView, PingJsonView
 
+
+class LandingView(TemplateView):
+    template_name = 'landing.html'
+
+    def get(self, request, *args, **kwargs):
+        if not request.disbursements_available:
+            return redirect('new-credits')
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(
+            start_page_url=settings.START_PAGE_URL,
+            **kwargs
+        )
+
+
 urlpatterns = i18n_patterns(
+    url(r'^$', login_required(LandingView.as_view()), name='home'),
+
     url(r'^', include('mtp_auth.urls')),
     url(r'^', include('cashbook.urls')),
     url(r'^', include('feedback.urls')),
