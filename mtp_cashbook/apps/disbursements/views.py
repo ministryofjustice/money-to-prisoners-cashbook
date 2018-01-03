@@ -75,11 +75,13 @@ class DisbursementView(View):
 
 class DisbursementGetHelpView(DisbursementView, GetHelpView):
     base_template_name = 'disbursements/base.html'
+    template_name = 'disbursements/feedback/submit_feedback.html'
     success_url = reverse_lazy('disbursements:feedback_success')
 
 
 class DisbursementGetHelpSuccessView(DisbursementView, GetHelpSuccessView):
     base_template_name = 'disbursements/base.html'
+    template_name = 'disbursements/feedback/success.html'
 
 
 class DisbursementTemplateView(DisbursementView, TemplateView):
