@@ -6,6 +6,8 @@
 {% block body_classes %}{{ block.super }} mtp-process-overview{% endblock %}
 
 {% block inner_content %}
+  {% include 'disbursements/get-help-tabs.html' with page=2 only %}
+
   {{ block.super }}
 
   <header>

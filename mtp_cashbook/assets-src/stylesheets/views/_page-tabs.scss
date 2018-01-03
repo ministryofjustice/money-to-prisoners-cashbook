@@ -1,0 +1,22 @@
+.mtp-page-tabs {
+  margin-bottom: 2em;
+  border-bottom: 1px solid $border-colour;
+
+  li {
+    display: inline-block;
+    margin-right: 1em;
+    list-style: none;
+  }
+
+  a {
+    display: block;
+    padding: 3px;
+    border-bottom: 3px solid transparent;
+    text-decoration: none;
+    font-size: 19px;
+
+    &.active {
+      border-color: $text-colour;
+    }
+  }
+}
