@@ -2,6 +2,7 @@ from datetime import date
 import logging
 import os
 
+from django.test import override_settings
 from mtp_common.test_utils import silence_logger
 from mtp_common.test_utils.functional_tests import FunctionalTestCase
 
@@ -9,6 +10,7 @@ from mtp_common.test_utils.functional_tests import FunctionalTestCase
 logger = logging.getLogger('mtp')
 
 
+@override_settings(DISBURSEMENT_PRISONS=[])
 class CashbookTestCase(FunctionalTestCase):
     """
     Base class to define common methods to test subclasses below
