@@ -3,37 +3,59 @@
 {% load mtp_common %}
 {% load static %}
 
-{% block body_classes %}{{ block.super }} mtp-paper-forms{% endblock %}
-
 {% block inner_content %}
   {{ block.super }}
 
-  <div class="mtp-disbursement-form-preview grid-row">
+  <div class="grid-row">
     <div class="column-two-thirds">
       <header>
-        <h1 class="heading-xlarge">{% trans 'Disbursement paper forms' %}</h1>
+        <h1 class="heading-xlarge">{% trans 'Paper forms' %}</h1>
       </header>
 
       <p>
-        {% trans 'Download the “Send money by bank transfer or cheque” form for prisoner to fill in.' %}
-        {% trans 'Make sure they have an envelope to put it in.' %}
+        {% trans 'Prisoners can send money out to people by bank transfer, cheque, cash or postal order.' %}
+      </p>
+      <p>
+        {% trans 'Download and print the correct form to let the prisoner fill it in.' %}
       </p>
 
-      <p>
-        {% url 'disbursements:start' as create_disbursement_url %}
-        {% blocktrans trimmed %}
-          When the prisoner has filled in the form, enter the request into <a href="{{ create_disbursement_url }}">Send payment</a>.
-        {% endblocktrans %}
-      </p>
-
-      <p>
-        <a href="{% static 'forms/disbursement-by-bank-transfer-or-cheque.pdf' %}" class="button" role="button">
-          {% trans 'Download form' %}
-        </a>
-      </p>
-    </div>
-    <div class="column-one-third">
-      <img src="{% static 'images/disbursement-by-bank-transfer-or-cheque.jpg' %}" alt={% trans '“Send money by bank transfer or cheque” form' %}/>
     </div>
   </div>
+
+  <div class="mtp-paper-form-download grid-row">
+    {% trans 'Download for bank transfer or cheque (PDF)' as link_title %}
+    {% static 'disbursements/disbursement-by-bank-transfer-or-cheque-V1.pdf' as pdf_link %}
+    <div class="column-one-third">
+      <a href="{{ pdf_link }}">
+        <img src="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-V1.jpg' %}" srcset="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-V1@2x.jpg' %} 2x" alt="{{ link_title }}" />
+      </a>
+    </div>
+    <div class="column-two-thirds">
+      <a href="{{ pdf_link }}">{{ link_title }}</a>
+      {% trans 'If the prisoner uses this form:' %}
+      <ul class="list list-bullet">
+        <li>{% trans 'Give them an envelope to protect their privacy' %}</li>
+        <li>{% trans 'Process the request online in ‘Send payment’' %}</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="mtp-paper-form-download grid-row">
+    {% trans 'Download for cash or postal order (PDF)' as link_title %}
+    {% static 'disbursements/disbursement-by-cash-or-postal-order-V1.pdf' as pdf_link %}
+    <div class="column-one-third">
+      <a href="{{ pdf_link }}">
+        <img src="{% static 'disbursements/disbursement-by-cash-or-postal-order-V1.jpg' %}" srcset="{% static 'disbursements/disbursement-by-cash-or-postal-order-V1@2x.jpg' %} 2x" alt="{{ link_title }}" />
+      </a>
+    </div>
+    <div class="column-two-thirds">
+      <a href="{{ pdf_link }}">{{ link_title }}</a>
+      {% trans 'If the prisoner uses this form:' %}
+      <ul class="list list-bullet">
+        <li>{% trans 'Give them an envelope to protect their privacy' %}</li>
+        <li>{% trans 'Process the request in the usual way' %}</li>
+      </ul>
+    </div>
+  </div>
+
 {% endblock %}
