@@ -8,12 +8,12 @@
 {% block inner_content %}
   {{ block.super }}
 
-  <div class="mtp-disbursement-form-preview grid-row">
+  <div class="grid-row">
     <div class="column-two-thirds">
       <header>
         <h1 class="heading-xlarge">{% trans 'Digital disbursements tool' %}</h1>
       </header>
-      <h2 class="heading-small">{% trans 'How does it work' %}</h2>
+      <h2 class="heading-medium">{% trans 'How does it work' %}</h2>
       <ol class="list list-number">
         <li>{% blocktrans trimmed %}<strong>The prisoner</strong> fills in the payment request paper form{% endblocktrans %}</li>
         <li>{% blocktrans trimmed %}<strong>You</strong> enter the payment request details from the form into this tool{% endblocktrans %}</li>
@@ -21,20 +21,19 @@
         <li>{% blocktrans trimmed %}<strong>SSCL</strong> sends the confirmed payment to the recipient by bank transfer or cheque{% endblocktrans %}</li>
       </ol>
 
-      <p><a href="{% url 'submit_ticket' %}">{% trans 'Read more about the process' %}</a> </p>
+      <p><a href="{% url 'submit_ticket' %}">{% trans 'Read more about the process' %}</a></p>
 
-      <br>
-
-      <h2 class="heading-small">{% trans 'Enter a payment request' %}</h2>
+      <h2 class="heading-medium">{% trans 'Enter a payment request' %}</h2>
       <p>{% trans 'Use this tool to process a payment request from prisoners.' %}</p>
 
-      <p>{% trans 'Before you start, have the completed form in front of you.' %}</p>
+      <p>
+        {% blocktrans trimmed %}
+          Before you start, have the completed <strong>bank transfer or cheque</strong> form in front of you.
+        {% endblocktrans %}
+      </p>
 
-      <div class="grid-row">
-        <div class="column-one-third">
-          <img align="left" src="{% static 'images/disbursement-by-bank-transfer-or-cheque.jpg' %}" alt={% trans '“Send money by bank transfer or cheque” form' %}/>
-        </div>
-      </div>
+      <img class="mtp-filled-form-sample" src="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-V1-filled.jpg' %}" srcset="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-V1-filled@2x.jpg' %} 2x" alt={% trans '“Send money by bank transfer or cheque” form' %}/>
+
       <p>
         <a href="{{ view.get_success_url }}" class="button button-start" role="button">{% trans 'Start now' %}</a>
       </p>
