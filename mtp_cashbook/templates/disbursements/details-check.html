@@ -150,8 +150,6 @@
       <strong>{% trans 'You can’t confirm this payment because you have not made this payment request.' %}</strong>
     </p>
 
-    <div>
-      <a id="id_next_btn" class="button mtp-next-button" href="{{ view.get_success_url }}">{% trans 'Submit for review' %}</a>
-    </div>
+      <a class="button mtp-next-button" href="{{ view.get_success_url }}">{% trans 'Submit for review' %}</a>
   </div>
 {% endblock %}

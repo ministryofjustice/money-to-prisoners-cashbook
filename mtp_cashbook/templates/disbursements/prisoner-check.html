@@ -27,8 +27,6 @@
     {% trans 'Does the name above match that on the paper form?' %}
   </p>
 
-  <div>
-    <a id="id_next_btn" class="button mtp-next-button" href="{{ view.get_success_url }}">{% trans 'Next' %}</a>
-  </div>
+  <a class="button mtp-next-button" href="{{ view.get_success_url }}">{% trans 'Next' %}</a>
 
 {% endblock %}
