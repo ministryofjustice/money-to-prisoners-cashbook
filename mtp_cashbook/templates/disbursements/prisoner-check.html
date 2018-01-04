@@ -13,23 +13,22 @@
       {% trans 'Confirm prisoner details' %}
     </h1>
   </header>
+
   <p>
-     {% blocktrans trimmed %}
-     On NOMIS, prisoner number <strong>{{prisoner_number}}</strong> refers to:
-      {% endblocktrans %}
+    {% blocktrans trimmed with prisoner_number=prisoner_number|wrapwithtag:'strong' %}
+      On NOMIS, prisoner number {{ prisoner_number }} refers to:
+    {% endblocktrans %}
   </p>
-  <div class="mtp-confirm">
-    <table>
-          <a href="{% url 'disbursements:prisoner' %}" class="print-hidden">
-            <span class="visually-hidden">{% trans 'Name, date of birth or prisoner number' %}</span>
-          </a>
-    </table>
-    <p> {% trans 'Name' %}: <strong> {{prisoner_name}}</strong></p>
+  <p>
+    {% trans 'Name' %}: <strong>{{ prisoner_name }}</strong>
+  </p>
 
-    <p>{% trans 'Does the name above match that on the paper form?' %}</p>
+  <p>
+    {% trans 'Does the name above match that on the paper form?' %}
+  </p>
 
-    <div>
-      <a id="id_next_btn" class="button mtp-next-button" href="{{ view.get_success_url }}">{% trans 'Next' %}</a>
-    </div>
+  <div>
+    <a id="id_next_btn" class="button mtp-next-button" href="{{ view.get_success_url }}">{% trans 'Next' %}</a>
+  </div>
 
 {% endblock %}
