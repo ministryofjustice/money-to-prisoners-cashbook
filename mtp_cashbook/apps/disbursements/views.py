@@ -6,10 +6,14 @@ from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView, TemplateView, View
+from mtp_common.api import retrieve_all_pages_for_path
 from mtp_common.auth.api_client import get_api_session
+from mtp_common import nomis
+import requests
 from requests.exceptions import RequestException
 
 from disbursements import disbursements_available_required, forms as disbursement_forms
+from disbursements.utils import get_disbursement_viability
 from feedback.views import GetHelpView, GetHelpSuccessView
 
 logger = logging.getLogger('mtp')
@@ -30,6 +34,20 @@ def clear_session_view(request):
 
 
 class DisbursementView(View):
+    def dispatch(self, request, *args, **kwargs):
+        request.proposition_app = {
+            'name': _('Digital disbursements'),
+            'url': build_view_url(self.request, DisbursementStartView.url_name),
+            'help_url': reverse('disbursements:submit_ticket'),
+        }
+        return super().dispatch(request, *args, **kwargs)
+
+
+class DisbursementTemplateView(DisbursementView, TemplateView):
+    pass
+
+
+class CreateDisbursementView(DisbursementView):
     previous_view = None
     final_step = False
 
@@ -55,11 +73,6 @@ class DisbursementView(View):
     @method_decorator(login_required)
     @method_decorator(disbursements_available_required)
     def dispatch(self, request, *args, **kwargs):
-        request.proposition_app = {
-            'name': _('Digital disbursements'),
-            'url': build_view_url(self.request, DisbursementStartView.url_name),
-            'help_url': reverse('disbursements:submit_ticket'),
-        }
         for view in self.get_previous_views(self):
             if not hasattr(view, 'form_class') or not view.is_form_enabled(self.valid_form_data):
                 continue
@@ -82,10 +95,6 @@ class DisbursementGetHelpView(DisbursementView, GetHelpView):
 class DisbursementGetHelpSuccessView(DisbursementView, GetHelpSuccessView):
     base_template_name = 'disbursements/base.html'
     template_name = 'disbursements/feedback/success.html'
-
-
-class DisbursementTemplateView(DisbursementView, TemplateView):
-    pass
 
 
 class ProcessOverview(TemplateView):
@@ -113,7 +122,7 @@ class ProcessOverview(TemplateView):
         return ['disbursements/process-overview.html']
 
 
-class DisbursementFormView(DisbursementView, FormView):
+class CreateDisbursementFormView(CreateDisbursementView, FormView):
     @classmethod
     def is_form_enabled(cls, previous_form_data):
         return True
@@ -142,7 +151,7 @@ class DisbursementFormView(DisbursementView, FormView):
         return super().form_valid(form)
 
 
-class DisbursementStartView(DisbursementTemplateView):
+class DisbursementStartView(CreateDisbursementView, TemplateView):
     url_name = 'start'
     template_name = 'disbursements/start.html'
 
@@ -150,7 +159,7 @@ class DisbursementStartView(DisbursementTemplateView):
         return build_view_url(self.request, SendingMethodView.url_name)
 
 
-class SendingMethodView(DisbursementFormView):
+class SendingMethodView(CreateDisbursementFormView):
     url_name = 'sending_method'
     previous_view = DisbursementStartView
     template_name = 'disbursements/sending-method.html'
@@ -160,7 +169,7 @@ class SendingMethodView(DisbursementFormView):
         return build_view_url(self.request, PrisonerView.url_name)
 
 
-class PrisonerView(DisbursementFormView):
+class PrisonerView(CreateDisbursementFormView):
     url_name = 'prisoner'
     redirect_url_name = DisbursementStartView.url_name
     previous_view = SendingMethodView
@@ -171,7 +180,7 @@ class PrisonerView(DisbursementFormView):
         return build_view_url(self.request, PrisonerCheckView.url_name)
 
 
-class PrisonerCheckView(DisbursementTemplateView):
+class PrisonerCheckView(CreateDisbursementView, TemplateView):
     url_name = 'prisoner_check'
     previous_view = PrisonerView
     template_name = 'disbursements/prisoner-check.html'
@@ -186,7 +195,7 @@ class PrisonerCheckView(DisbursementTemplateView):
         return build_view_url(self.request, AmountView.url_name)
 
 
-class AmountView(DisbursementFormView):
+class AmountView(CreateDisbursementFormView):
     url_name = 'amount'
     previous_view = PrisonerCheckView
     template_name = 'disbursements/amount.html'
@@ -196,7 +205,7 @@ class AmountView(DisbursementFormView):
         return build_view_url(self.request, RecipientContactView.url_name)
 
 
-class RecipientContactView(DisbursementFormView):
+class RecipientContactView(CreateDisbursementFormView):
     url_name = 'recipient_contact'
     previous_view = AmountView
     template_name = 'disbursements/recipient-contact.html'
@@ -210,7 +219,7 @@ class RecipientContactView(DisbursementFormView):
             return build_view_url(self.request, RecipientBankAccountView.url_name)
 
 
-class RecipientBankAccountView(DisbursementFormView):
+class RecipientBankAccountView(CreateDisbursementFormView):
     url_name = 'recipient_bank_account'
     previous_view = RecipientContactView
     template_name = 'disbursements/recipient-bank-account.html'
@@ -233,7 +242,7 @@ class RecipientBankAccountView(DisbursementFormView):
         return build_view_url(self.request, DetailsCheckView.url_name)
 
 
-class DetailsCheckView(DisbursementTemplateView):
+class DetailsCheckView(CreateDisbursementView, TemplateView):
     url_name = 'details_check'
     previous_view = RecipientBankAccountView
     template_name = 'disbursements/details-check.html'
@@ -274,7 +283,7 @@ class DisbursementHandoverView(DisbursementTemplateView):
         return build_view_url(self.request, DisbursementCompleteView.url_name)
 
 
-class DisbursementCompleteView(DisbursementTemplateView):
+class DisbursementCompleteView(CreateDisbursementView, TemplateView):
     url_name = 'complete'
     previous_view = DisbursementHandoverView
     template_name = 'disbursements/complete.html'
@@ -329,3 +338,44 @@ class SearchView(DisbursementView, FormView):
         return self.render_to_response(context)
 
     get = FormView.post
+
+
+class ConfirmDisbursementsListView(DisbursementView, TemplateView):
+    title = _('Confirm payments')
+    url_name = 'confirm_list'
+    template_name = 'disbursements/confirm-list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        api_session = get_api_session(self.request)
+
+        context['disbursements'] = retrieve_all_pages_for_path(
+            api_session, 'disbursements/', resolution='pending'
+        )
+        context['pending_count'] = len(context['disbursements'])
+
+        nomis_session = requests.Session()
+        for disbursement in context['disbursements']:
+            disbursement.update(
+                **get_disbursement_viability(self.request, disbursement)
+            )
+
+        return context
+
+
+class ConfirmDisbursementsDetailView(DisbursementView, TemplateView):
+    title = _('Check payment details')
+    url_name = 'confirm_detail'
+    template_name = 'disbursements/confirm-detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        api_session = get_api_session(self.request)
+
+        context['disbursement'] = api_session.get(
+            'disbursements/{pk}/'.format(pk=kwargs['pk'])
+        ).json()
+        context.update(
+            **get_disbursement_viability(self.request, context['disbursement'])
+        )
+        return context

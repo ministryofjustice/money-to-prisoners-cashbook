@@ -1,0 +1,64 @@
+{% extends 'disbursements/base.html' %}
+{% load i18n %}
+{% load currency %}
+
+{% block page_title %}{{ view.title }} – {{ block.super }}{% endblock %}
+
+{% block body_classes %}{{ block.super }} mtp-confirm-disbursements{% endblock %}
+
+{% block inner_content %}
+  {{ block.super }}
+
+  <header>
+    <h1 class="heading-xlarge mtp-heading--compact">{{ view.title }} ({{ pending_count }})</h1>
+  </header>
+
+  {% if disbursements %}
+  <div class="mtp-confirm-disbursements-list">
+    <table>
+      <tr>
+        <th>{% trans 'Sender' %}</th>
+        <th>{% trans 'Amount' %}</th>
+        <th>{% trans 'Recipient' %}</th>
+        <th>{% trans 'Status' %}</th>
+        <th></th>
+      </tr>
+      {% for disbursement in disbursements %}
+        <tr>
+          <td>
+            {{ disbursement.prisoner_name|lower|title }}<br/>
+            {{ disbursement.prisoner_number }}
+          </td>
+          <td>
+            £{{ disbursement.amount|currency }}<br/>
+            {% if disbursement.method == 'cheque' %}
+              {% trans 'Cheque' %}
+            {% elif disbursement.method == 'bank_transfer' %}
+              {% trans 'Bank transfer' %}
+            {% endif %}
+          </td>
+          <td>{{ disbursement.recipient_first_name }} {{ disbursement.recipient_last_name }}</td>
+          <td>
+            {% if disbursement.prisoner_moved %}
+              {% trans 'Prisoner no longer in  this prison' %}
+            {% elif disbursement.insufficient_funds %}
+              {% trans 'Insufficient funds' %}
+            {% elif disbursement.self_own %}
+              {% trans 'Another colleague needs to confirm this payment' %}
+            {% else %}
+              {% trans 'Confirmation required' %}
+            {% endif %}
+          </td>
+          <td class="mtp-button-column">
+            {% if disbursement.viable %}
+              <a id="id_next_btn" class="button mtp-next-button" href="{% url 'disbursements:confirm_detail' pk=disbursement.id %}">{% trans 'Check details' %}</a>
+            {% else %}
+              <a class="button mtp-edit-button" href="{% url 'disbursements:confirm_detail' pk=disbursement.id %}">{% trans 'Edit' %}</a>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+  {% endif %}
+{% endblock %}

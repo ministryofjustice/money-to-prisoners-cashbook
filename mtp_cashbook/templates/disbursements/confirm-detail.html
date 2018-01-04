@@ -1,0 +1,169 @@
+{% extends 'disbursements/base.html' %}
+{% load i18n %}
+{% load disbursements %}
+{% load currency %}
+{% load mtp_common %}
+{% load credits %}
+
+{% block page_title %}{{ view.title }} – {{ block.super }}{% endblock %}
+
+{% block body_classes %}{{ block.super }} mtp-confirm-disbursements{% endblock %}
+
+{% block inner_content %}
+  {{ block.super }}
+
+  <header>
+    <h1 class="heading-xlarge mtp-heading--compact">{{ view.title }}</h1>
+  </header>
+
+  {% if insufficient_funds %}
+    <div class="mtp-message mtp-message--warning">
+      {% trans 'There is not enough money in the prisoner’s private account.' %}
+      <br/>
+      <a href="#">{% trans 'View NOMIS balances' %}</a>
+    </div>
+    <br/>
+  {% endif %}
+
+  {% if prisoner_moved %}
+    <div class="mtp-message mtp-message--warning">
+      {% trans 'The prisoner has moved or been released, please check NOMIS.' %}
+    </div>
+    <br/>
+  {% endif %}
+
+  <table class="mtp-confirm-table">
+    <tbody class="mtp-confirm-table__details">
+      <tr class="mtp-confirm-table__section">
+        <th rowspan="2"><h2 class="heading-small">{% trans 'Send' %}</h2></th>
+        <th>{% trans 'Send by' %}:</th>
+        <td>{{ disbursement.method|sendingmethod }}</td>
+        <td>
+          <a href="#" class="print-hidden">
+            {% trans 'Change' %}
+            <span class="visually-hidden">{% trans 'Sending method' %}</span>
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <th>{% trans 'Amount' %}:</th>
+        <td>£{{ disbursement.amount|currency }}</td>
+        <td>
+          <a href="#" class="print-hidden">
+            {% trans 'Change' %}
+            <span class="visually-hidden">{% trans 'Amount' %}</span>
+          </a>
+        </td>
+      </tr>
+
+      <tr class="mtp-confirm-table__section">
+        <th><h2 class="heading-small">{% trans 'To' %}</h2></th>
+        <th>{% trans 'Name' %}:</th>
+        <td>{{ disbursement.recipient_first_name}} {{ disbursement.recipient_last_name }}</td>
+        <td>
+          <a href="#" class="print-hidden">
+            {% trans 'Change' %}
+            <span class="visually-hidden">{% trans 'Recipient details' %}</span>
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <th>{% trans 'Address' %}:</th>
+        <td>
+          {{ disbursement.address_line1 }}<br>
+          {% if disbursement.address_line2 %}{{ disbursement.address_line2 }}<br>{% endif %}
+          {{ disbursement.city }}
+        </td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <th>{% trans 'Postcode' %}:</th>
+        <td>{{ disbursement.postcode }}</td>
+        <td></td>
+      </tr>
+      {% if email %}
+        <tr>
+        <td></td>
+          <th>{% trans 'Email' %}:</th>
+          <td>{{ disbursement.recipient_email }}</td>
+          <td></td>
+        </tr>
+      {% endif %}
+      {% if disbursement.method == 'bank_transfer' %}
+        <tr>
+          <td></td>
+          <th>{% trans 'Sort code' %}:</th>
+          <td>{{ disbursement.sort_code }}</td>
+          <td>
+            <a href="#" class="print-hidden">
+              {% trans 'Change' %}
+              <span class="visually-hidden">{% trans 'Recipient bank account details' %}</span>
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+          <th>{% trans 'Account number' %}:</th>
+          <td>{{ disbursement.account_number }}</td>
+          <td></td>
+        </tr>
+      {% endif %}
+
+      <tr class="mtp-confirm-table__section">
+        <th rowspan="2"><h2 class="heading-small">{% trans 'From' %}</h2></th>
+        <th>{% trans 'Name' %}:</th>
+        <td>{{ disbursement.prisoner_name }}</td>
+        <td>
+          <a href="{% url 'disbursements:prisoner' %}" class="print-hidden">
+            {% trans 'Change' %}
+            <span class="visually-hidden">{% trans 'Prisoner details' %}</span>
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <th>{% trans 'Prisoner number' %}:</th>
+        <td>{{ disbursement.prisoner_number }}</td>
+        <td></td>
+      </tr>
+    </tbody>
+
+    <tbody class="mtp-confirm-table__history">
+      <tr>
+        <th><h2 class="heading-small">{% trans 'History' %}</h2></th>
+        <th colspan="2">
+          {% for log in disbursement.log_set|parse_date_fields %}
+            {{ log.created|date:'d/m/Y H:m' }} - {{ log.action }} by {{ log.user.first_name }} {{ log.user.last_name }}<br/>
+          {% endfor %}
+        </th>
+        <th></th>
+      </tr>
+      {% if self_own %}
+      <tr>
+        <td colspan="4">
+          <strong>
+          {% trans 'You can’t confirm this payment because you created it.' %}<br/>
+          {% trans 'Ask another colleague to check and confirm it.' %}
+          {% trans 'Make sure they have the paper form of this request.' %}
+          </strong>
+        </td>
+      </tr>
+      {% endif %}
+    </tbody>
+  </table>
+
+  <br/>
+  {% if disbursement.viable %}
+    <a id="id_next_btn" class="button mtp-next-button" href="#">{% trans 'Confirm payment' %}</a>
+  {% else %}
+    <div>
+      {% blocktrans %}
+        <a href="#">Cancel this request</a> if you no longer need to send it.
+      {% endblocktrans %}
+    </div>
+    <div>
+      {% trans 'Cancelled requests are in ‘Payments made’.' %}
+    </div>
+  {% endif %}
+{% endblock %}
