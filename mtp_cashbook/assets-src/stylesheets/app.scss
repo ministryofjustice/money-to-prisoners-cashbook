@@ -13,8 +13,9 @@
 @import 'views/filter-box';
 @import 'views/page-tabs';
 @import 'views/page-contents';
-@import 'views/disbursements';
-@import 'views/create_disbursement';
+@import 'views/confirmation-table';
+@import 'views/create-disbursement';
+@import 'views/disbursements-misc';
 
 // mtp-common overrides
 .without-footer-padding #footer .footer-wrapper {
