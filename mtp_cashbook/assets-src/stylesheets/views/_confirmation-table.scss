@@ -1,31 +1,23 @@
-.mtp-confirm {
+.mtp-confirm-table {
+  width: 100%;
+  max-width: 850px;
+  border: 3px solid $text-colour;
+
+  & td:last-child {
+    padding-right: 1em;
+    text-align: right;
+  }
+
+  th, td {
+    vertical-align: top;
+    border: 0;
+  }
+
+  .mtp-confirm-table__section {
+    border-top: 2px solid $border-colour;
+  }
+
   h2 {
-    font-size: 1.26316em;
-    margin: 0 0 .2em;
+    margin: 0;
   }
-
-  table {
-    min-width: 100%;
-
-    tr.mtp-section-header {
-      border-top: 2px solid $border-colour;
-
-      th, td {
-        padding-top: 1em;
-      }
-    }
-
-    th {
-      max-width: 30px;
-    }
-
-    th, td {
-      padding: 0.5em 2em 0.5em 0;
-      border: none;
-    }
-  }
-}
-
-.mtp-confirm-change {
-  text-align: right;
 }
