@@ -14,33 +14,37 @@
     </h1>
   </header>
 
-  <form action="." method="post">
-    {% csrf_token %}
+  <div class="grid-row">
+    <div class="column-two-thirds">
 
-    <fieldset class="mtp-sending-method-choice">
-      <legend id="{{ form.sending_method.id_for_label }}-label" class="visually-hidden">{% trans 'Method by which to send money' %}</legend>
+      <form action="." method="post">
+        {% csrf_token %}
 
-      {% for sending_method in form.sending_method.field.choices %}
-        <div class="multiple-choice">
-          <input id="id_{{ sending_method.0 }}" type="radio" name="{{ form.sending_method.html_name }}" value="{{ sending_method.0 }}"
-                 {% if form.sending_method.field.disabled %}disabled{% endif %}
-                 {% if form.sending_method.value == sending_method.0 %}checked{% endif %}>
-          <label class="{% if form.sending_method.field.disabled and form.sending_method.value != sending_method.0 %}mtp-grey-choice{% endif %}" for="id_{{ sending_method.0 }}">
-            <strong>{{ sending_method.1 }}</strong>
-            <br/>
-            {% for key, value in form.sending_method.field.help_text.items %}
-              {% if key == sending_method.0 %}
-                {{ value }}
-              {% endif %}
-            {% endfor %}
-          </label>
-        </div>
-      {% endfor %}
-    </fieldset>
-    <br>
-    <p>{% trans 'Both methods are free to the prisoner and recipient' %}</p>
-    <p><a href="{% url 'disbursements:process-overview' %}">{% trans 'Read more about the process' %}</a></p>
+        <fieldset class="mtp-sending-method-choice">
+          <legend id="{{ form.sending_method.id_for_label }}-label" class="visually-hidden">{% trans 'Method by which to send money' %}</legend>
 
-    <button type="submit" class="button mtp-next-button">{% trans 'Next' %}</button>
-  </form>
+          {% for sending_method in form.sending_method.field.choices %}
+            <div class="multiple-choice">
+              <input id="id_{{ sending_method.0 }}" type="radio" name="{{ form.sending_method.html_name }}" value="{{ sending_method.0 }}"
+                     {% if form.sending_method.value == sending_method.0 %}checked{% endif %}>
+              <label for="id_{{ sending_method.0 }}">
+                <strong>{{ sending_method.1 }}</strong>
+                <br/>
+                {% for key, value in form.sending_method.field.help_text.items %}
+                  {% if key == sending_method.0 %}
+                    {{ value }}
+                  {% endif %}
+                {% endfor %}
+              </label>
+            </div>
+          {% endfor %}
+        </fieldset>
+        <br>
+        <p>{% trans 'Both methods are free to the prisoner and recipient' %}</p>
+
+        <button type="submit" class="button mtp-next-button">{% trans 'Next' %}</button>
+      </form>
+
+    </div>
+  </div>
 {% endblock %}

@@ -9,20 +9,24 @@
   {{ block.super }}
 
   <div class="govuk-box-highlight">
-    <h3 class="heading-small">{% trans 'This request is now available to another member of staff to review and confirm' %}</h3>
+    <h1 class="bold-medium">{% trans 'This request is ready for your colleague to check in ‘Confirm payments’' %}</h1>
   </div>
 
-  <div>
-    <h3 class="heading-small">{% trans 'What to do next' %}</h3>
-    <p>1. {% trans 'Sign on the bottom of the paper form.' %}</p>
-    <p>2. {% trans 'Hand this form to your witnessing officer who will check and confirm payment.' %}</p>
-    <p><strong>{% trans 'Remember:' %}</strong>
-      {% trans 'Payment is sent after another member of staff has checked and confirmed it.' %}
-      {% trans 'No more action from you is necessary.' %}
-    </p>
-  </div>
+  <div class="grid-row">
+    <div class="column-two-thirds">
+      <h2 class="heading-medium">{% trans 'What to do next' %}</h2>
+      <p>
+        {% trans 'Remind your colleague who has the paper form to check the payment.' %}
+        {% trans 'The payment is only sent after they have both checked and confirmed it.' %}
+      </p>
+      <p>
+        {% trans 'No more action from you is necessary.' %}
+      </p>
+      <br>
 
-  <div class="print-hidden">
-    <a href="{% url 'disbursements:clear_session' %}">{% trans 'Process another disbursement' %}</a>
+      <p class="print-hidden">
+        <a href="{% url 'disbursements:clear_session' %}" class="button button-secondary">{% trans 'Process another request' %}</a>
+      </p>
+    </div>
   </div>
 {% endblock %}

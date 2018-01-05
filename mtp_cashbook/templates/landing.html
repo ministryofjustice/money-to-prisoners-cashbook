@@ -21,16 +21,16 @@
       <div class="mtp-box">
         <a href="{% url 'new-credits' %}" aria-labelledby="tool-1">{% trans 'Digital cashbook' %}</a>
         <p id="tool-1">
-          {% trans 'Credit money into prisoners’ accounts' %}
+          {% trans 'Credit money into a prisoner’s account' %}
         </p>
       </div>
     </div>
 
     <div class="column-third">
       <div class="mtp-box">
-        <a href="{% if request.disbursements_preview %}{% url 'disbursements:process-overview' %}{% else %}{% url 'disbursements:start' %}{% endif %}">{% trans 'Digital disbursements' %}</a>
+        <a href="{% if request.disbursements_preview %}{% url 'disbursements:process-overview' %}{% else %}{% url 'disbursements:start' %}{% endif %}" aria-labelledby="tool-2">{% trans 'Digital disbursements' %}</a>
         <p id="tool-2">
-          {% trans 'Send money out of a prisoner’s account' %}
+          {% trans 'Send money out of a prisoner’s account by bank transfer or cheque' %}
         </p>
       </div>
     </div>
