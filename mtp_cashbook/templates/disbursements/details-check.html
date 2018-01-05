@@ -1,5 +1,6 @@
 {% extends 'disbursements/base.html' %}
 {% load i18n %}
+{% load static %}
 {% load mtp_common %}
 {% load disbursements %}
 {% load currency %}
@@ -112,6 +113,33 @@
       <td></td>
     </tr>
   </table>
+  <br>
 
-  <a class="button mtp-next-button" href="{{ view.get_success_url }}">{% trans 'Next' %}</a>
+  <p><strong>{% trans 'Do the details above match those on the paper form?' %}</strong></p>
+
+  <div class="form-group">
+    <div class="multiple-choice">
+      {% random_string as choice_id %}
+      <input id="mtp-choice-{{ choice_id }}" type="radio" name="mtp-choice" value="{% trans 'Yes' %}" data-reveal=".js-choice-yes">
+      <label for="mtp-choice-{{ choice_id }}">{% trans 'Yes' %}</label>
+    </div>
+    <div class="panel panel-border-narrow hidden js-choice-yes">
+      {% trans 'Sign the bottom of the paper form under ‘Staff’.' %}
+      <br>
+      <img class="mtp-filled-form-sample" src="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-V1-signed-1.jpg' %}" srcset="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-V1-signed-1@2x.jpg' %} 2x" alt="{% trans 'Sign the bottom of the paper form under ‘Staff’.' %}" />
+    </div>
+
+    <div class="multiple-choice">
+      {% random_string as choice_id %}
+      <input id="mtp-choice-{{ choice_id }}" type="radio" name="mtp-choice" value="{% trans 'No' %}" data-reveal=".js-choice-no">
+      <label for="mtp-choice-{{ choice_id }}">{% trans 'No' %}</label>
+    </div>
+    <div class="panel panel-border-narrow hidden js-choice-no">
+      {% blocktrans trimmed with button_name=_('Change')|wrapwithtag:'strong' %}
+        Use ‘{{ button_name }}’ buttons above to make sure the details match those on the paper form.
+      {% endblocktrans %}
+    </div>
+  </div>
+
+  <a class="button mtp-next-button js-hidden js-choice-yes" href="{{ view.get_success_url }}">{% trans 'Next' %}</a>
 {% endblock %}
