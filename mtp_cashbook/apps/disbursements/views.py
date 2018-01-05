@@ -88,6 +88,31 @@ class DisbursementTemplateView(DisbursementView, TemplateView):
     pass
 
 
+class ProcessOverview(TemplateView):
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        if request.disbursements_preview:
+            request.proposition_app = {
+                'name': _('Digital disbursements'),
+                'url': reverse('disbursements:process-overview'),
+                'help_url': reverse('submit_ticket'),
+            }
+        elif request.disbursements_available:
+            request.proposition_app = {
+                'name': _('Digital disbursements'),
+                'url': build_view_url(self.request, DisbursementStartView.url_name),
+                'help_url': reverse('disbursements:submit_ticket'),
+            }
+        else:
+            return redirect(reverse('home'))
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_template_names(self):
+        if self.request.disbursements_preview:
+            return ['disbursements/process-overview-preview.html']
+        return ['disbursements/process-overview.html']
+
+
 class DisbursementFormView(DisbursementView, FormView):
     @classmethod
     def is_form_enabled(cls, previous_form_data):

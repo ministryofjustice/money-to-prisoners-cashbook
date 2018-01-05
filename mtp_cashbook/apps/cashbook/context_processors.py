@@ -6,7 +6,7 @@ from mtp_common.context_processors import govuk_localisation as inherited_locali
 
 def govuk_localisation(request):
     global_header_text = gettext('Manage prisoner money')
-    if request.disbursements_available and hasattr(request, 'proposition_app'):
+    if (request.disbursements_available or request.disbursements_preview) and hasattr(request, 'proposition_app'):
         # NB: ensure proposition_app variables are html-safe
         global_header_text += '</a> ' \
                               '<span class="mtp-header-app">' \
