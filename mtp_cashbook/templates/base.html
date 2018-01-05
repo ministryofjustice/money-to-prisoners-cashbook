@@ -9,15 +9,15 @@
   {% sentry_js %}
 {% endblock %}
 
-{% block page_title %}{% trans 'Manage prisoners’ money' %}{% endblock %}
-{% block proposition %}{% trans 'Manage prisoners’ money' %}{% endblock %}
+{% block page_title %}{% trans 'Manage prisoner money' %}{% endblock %}
+{% block proposition %}{% trans 'Manage prisoner money' %}{% endblock %}
 
 
 {% block footer_top %}
   {% if request.user.is_authenticated %}
     <div class="footer-categories grid-row">
       <div class="column-third">
-        <h2>{% trans 'Manage prisoners’ money' %}</h2>
+        <h2>{% trans 'Manage prisoner money' %}</h2>
         <ul>
           <li><a href="{% url 'new-credits' %}">{% trans 'Digital cashbook' %}</a></li>
           {% if request.disbursements_available %}
