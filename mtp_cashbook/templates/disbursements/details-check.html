@@ -109,7 +109,7 @@
     {% endif %}
 
     <tr class="mtp-confirm-table__section">
-      <th rowspan="3"><h2 class="heading-small">{% trans 'From' %}</h2></th>
+      <th rowspan="2"><h2 class="heading-small">{% trans 'From' %}</h2></th>
       <th>{% trans 'Name' %}:</th>
       <td>{{ prisoner_name }}</td>
       <td>
@@ -118,11 +118,6 @@
           <span class="visually-hidden">{% trans 'Prisoner details' %}</span>
         </a>
       </td>
-    </tr>
-    <tr>
-      <th>{% trans 'Date of birth' %}:</th>
-      <td>{{ prisoner_dob }}</td>
-      <td></td>
     </tr>
     <tr>
       <th>{% trans 'Prisoner number' %}:</th>
