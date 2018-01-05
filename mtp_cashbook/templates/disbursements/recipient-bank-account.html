@@ -10,9 +10,14 @@
 
   <header>
     <h1 class="heading-xlarge mtp-heading--compact">
-      {% trans 'Recipient bank details' %}
+      {% trans 'Enter recipient bank details' %}
     </h1>
+    <h2 class="heading-small">
+      {% trans 'Recipient' %}: {{ recipient_first_name }} {{ recipient_last_name }}
+    </h2>
   </header>
+
+  <br/>
 
   <div class="grid-row">
     <div class="column-two-thirds">
