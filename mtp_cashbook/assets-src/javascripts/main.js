@@ -28,4 +28,5 @@
   require('navigation').Navigation.init();
   require('sort-code').SortCode.init();
   require('page-contents').PageContents.init();
+  require('conditionally-revealed').ConditionallyRevealed.init();
 }());
