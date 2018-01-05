@@ -3,9 +3,12 @@
 {% load mtp_common %}
 {% load static %}
 
-{% block inner_content %}
+{% block sub_nav %}
   {% include 'disbursements/get-help-tabs.html' with page=2 only %}
+  {{ block.super }}
+{% endblock %}
 
+{% block inner_content %}
   {{ block.super }}
 
   <header>
