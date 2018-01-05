@@ -224,6 +224,11 @@ class RecipientBankAccountView(DisbursementFormView):
             disbursement_forms.SENDING_METHOD.BANK_TRANSFER
         )
 
+    def get_context_data(self, **kwargs):
+        recipient_details = self.valid_form_data[RecipientContactView.url_name]
+        kwargs.update(**recipient_details)
+        return super().get_context_data(**kwargs)
+
     def get_success_url(self):
         return build_view_url(self.request, DetailsCheckView.url_name)
 
