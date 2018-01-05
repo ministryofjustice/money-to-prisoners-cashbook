@@ -178,7 +178,7 @@ class PrisonerCheckView(DisbursementTemplateView):
 
     def get_context_data(self, **kwargs):
         prisoner_details = self.valid_form_data[PrisonerView.url_name]
-        kwargs['breadcrumbs_back'] = reverse('disbursements:prisoner')
+        kwargs['breadcrumbs_back'] = self.get_previous_url()
         kwargs.update(**prisoner_details)
         return super().get_context_data(**kwargs)
 
@@ -232,9 +232,6 @@ class DetailsCheckView(DisbursementTemplateView):
     url_name = 'details_check'
     previous_view = RecipientBankAccountView
     template_name = 'disbursements/details-check.html'
-    error_messages = {
-        'connection': _('This service is currently unavailable')
-    }
 
     def get_context_data(self, **kwargs):
         prisoner_details = self.valid_form_data[PrisonerView.url_name]
@@ -242,13 +239,28 @@ class DetailsCheckView(DisbursementTemplateView):
         sending_method_details = self.valid_form_data[SendingMethodView.url_name]
         amount_details = self.valid_form_data[AmountView.url_name]
         recipient_bank_details = self.valid_form_data.get(RecipientBankAccountView.url_name, {})
-        kwargs['breadcrumbs_back'] = reverse('disbursements:recipient_contact')
+        kwargs['breadcrumbs_back'] = self.get_previous_url()
         kwargs.update(**prisoner_details)
         kwargs.update(**recipient_contact_details)
         kwargs.update(**recipient_bank_details)
         kwargs.update(**sending_method_details)
         kwargs.update(**amount_details)
+        return super().get_context_data(**kwargs)
 
+    def get_success_url(self):
+        return build_view_url(self.request, DisbursementHandoverView.url_name)
+
+
+class DisbursementHandoverView(DisbursementTemplateView):
+    url_name = 'hand-over'
+    previous_view = DetailsCheckView
+    template_name = 'disbursements/hand-over.html'
+    error_messages = {
+        'connection': _('This service is currently unavailable')
+    }
+
+    def get_context_data(self, **kwargs):
+        kwargs['breadcrumbs_back'] = self.get_previous_url()
         if 'e' in self.request.GET:
             kwargs['errors'] = [self.error_messages.get(self.request.GET['e'])]
         return super().get_context_data(**kwargs)
@@ -259,7 +271,7 @@ class DetailsCheckView(DisbursementTemplateView):
 
 class DisbursementCompleteView(DisbursementTemplateView):
     url_name = 'complete'
-    previous_view = DetailsCheckView
+    previous_view = DisbursementHandoverView
     template_name = 'disbursements/complete.html'
     final_step = True
 
