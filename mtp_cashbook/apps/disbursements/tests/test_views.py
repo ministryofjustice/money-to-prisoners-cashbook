@@ -7,7 +7,7 @@ from cashbook.tests import (
     MTPBaseTestCase, api_url, nomis_url, override_nomis_settings
 )
 from ..forms import PrisonerForm, AmountForm, SENDING_METHOD
-from ..views import DetailsCheckView
+from ..views import DisbursementHandoverView
 
 
 class CreateDisbursementFlowTestCase(MTPBaseTestCase):
@@ -350,5 +350,5 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
         with silence_logger():
             response = self.client.get(reverse('disbursements:complete'), follow=True)
 
-        self.assertOnPage(response, 'details_check')
-        self.assertContains(response, DetailsCheckView.error_messages['connection'])
+        self.assertOnPage(response, 'hand-over')
+        self.assertContains(response, DisbursementHandoverView.error_messages['connection'])

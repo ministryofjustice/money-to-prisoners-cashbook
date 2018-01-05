@@ -17,19 +17,6 @@
     <p>Check if details below match the details on the paper form filled in by the prisoner. If they do not match, change details to correctly match the paper form.</p>
   </header>
 
-  {% if errors %}
-    <div class="error-summary" aria-labelledby="error-summary-heading" tabindex="-1" role="alert">
-      <h2 class="heading-small error-summary-heading" id="error-summary-heading">
-        {% trans 'There was a problem' %}
-      </h2>
-      <ul class="error-summary-list">
-        {% for error in errors %}
-          <li class="non-field-error">{{ error }}<span class="visually-hidden">.</span></li>
-        {% endfor %}
-      </ul>
-    </div>
-  {% endif %}
-
   <table class="mtp-confirm-table">
     <tr class="mtp-confirm-table__section">
       <th rowspan="2"><h2 class="heading-small">{% trans 'Send' %}</h2></th>
@@ -126,5 +113,5 @@
     </tr>
   </table>
 
-  <a class="button mtp-next-button" href="{{ view.get_success_url }}">{% trans 'Submit for review' %}</a>
+  <a class="button mtp-next-button" href="{{ view.get_success_url }}">{% trans 'Next' %}</a>
 {% endblock %}
