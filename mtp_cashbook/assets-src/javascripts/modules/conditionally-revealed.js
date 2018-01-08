@@ -20,7 +20,7 @@ exports.ConditionallyRevealed = {
       }
     }
 
-    $('input[data-reveal]').each(function () {
+    $('.mtp-radio-reveal').each(function () {
       var $input = $(this);
       var name = $input.attr('name');
       var $target = $($input.data('reveal'));
