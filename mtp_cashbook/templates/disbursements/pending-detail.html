@@ -16,6 +16,13 @@
     <h1 class="heading-xlarge mtp-heading--compact">{{ view.title }}</h1>
   </header>
 
+  {% for error in errors %}
+    <div class="mtp-message mtp-message--error">
+      {{ error }}
+    </div>
+    <br/>
+  {% endfor %}
+
   {% if insufficient_funds %}
     <div class="mtp-message mtp-message--warning">
       {% trans 'There is not enough money in the prisoner’s private account.' %}
@@ -155,7 +162,10 @@
 
   <br/>
   {% if disbursement.viable %}
-    <a id="id_next_btn" class="button mtp-next-button" href="#">{% trans 'Confirm payment' %}</a>
+    <form action="{{ view.get_success_url }}" method="post">
+      {% csrf_token %}
+      <input type="submit" class="button mtp-next-button" value="{% trans 'Confirm payment' %}" />
+    </form>
   {% else %}
     <div>
       {% blocktrans %}

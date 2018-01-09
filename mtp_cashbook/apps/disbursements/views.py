@@ -35,6 +35,8 @@ def clear_session_view(request):
 
 
 class DisbursementView(View):
+    @method_decorator(login_required)
+    @method_decorator(disbursements_available_required)
     def dispatch(self, request, *args, **kwargs):
         request.proposition_app = {
             'name': _('Digital disbursements'),
@@ -53,9 +55,9 @@ class CreateDisbursementView(DisbursementView):
     final_step = False
 
     def get_context_data(self, **kwargs):
-        if self.previous_view:
+        if self.previous_view and not self.final_step:
             kwargs['breadcrumbs_back'] = self.get_previous_url()
-        context_data = super().get_context_data(**kwargs)
+        return super().get_context_data(**kwargs)
 
     @classmethod
     def clear_session(cls, request):
@@ -76,8 +78,6 @@ class CreateDisbursementView(DisbursementView):
         super().__init__(**kwargs)
         self.valid_form_data = {}
 
-    @method_decorator(login_required)
-    @method_decorator(disbursements_available_required)
     def dispatch(self, request, *args, **kwargs):
         for view in self.get_previous_views(self):
             if not hasattr(view, 'form_class') or not view.is_form_enabled(self.valid_form_data):
@@ -191,7 +191,6 @@ class PrisonerCheckView(CreateDisbursementView, TemplateView):
 
     def get_context_data(self, **kwargs):
         prisoner_details = self.valid_form_data[PrisonerView.url_name]
-        kwargs['breadcrumbs_back'] = self.get_previous_url()
         kwargs.update(**prisoner_details)
         return super().get_context_data(**kwargs)
 
@@ -257,7 +256,6 @@ class DetailsCheckView(CreateDisbursementView, TemplateView):
         sending_method_details = self.valid_form_data[SendingMethodView.url_name]
         amount_details = self.valid_form_data[AmountView.url_name]
         recipient_bank_details = self.valid_form_data.get(RecipientBankAccountView.url_name, {})
-        kwargs['breadcrumbs_back'] = self.get_previous_url()
         kwargs.update(**prisoner_details)
         kwargs.update(**recipient_contact_details)
         kwargs.update(**recipient_bank_details)
@@ -274,11 +272,10 @@ class DisbursementHandoverView(CreateDisbursementView, TemplateView):
     previous_view = DetailsCheckView
     template_name = 'disbursements/hand-over.html'
     error_messages = {
-        'connection': _('This service is currently unavailable')
+        'connection': _('Payment not created due to technical error, try again soon')
     }
 
     def get_context_data(self, **kwargs):
-        kwargs['breadcrumbs_back'] = self.get_previous_url()
         if 'e' in self.request.GET:
             kwargs['errors'] = [self.error_messages.get(self.request.GET['e'])]
         return super().get_context_data(**kwargs)
@@ -291,9 +288,10 @@ class DisbursementCompleteView(CreateDisbursementView, TemplateView):
     url_name = 'complete'
     previous_view = DisbursementHandoverView
     template_name = 'disbursements/complete.html'
+    http_method_names = ['post']
     final_step = True
 
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         prisoner_details = self.valid_form_data[PrisonerView.url_name]
         recipient_contact_details = self.valid_form_data[RecipientContactView.url_name]
         sending_method_details = self.valid_form_data[SendingMethodView.url_name]
@@ -372,9 +370,20 @@ class PendingDisbursementDetailView(DisbursementView, TemplateView):
     url_name = 'pending_detail'
     template_name = 'disbursements/pending-detail.html'
 
+    error_messages = {
+        'connection': _('Payment not confirmed due to technical error, try again soon'),
+        'invalid': _(
+            'There was a problem with some of the payment details, please '
+            'check them again and fix if necessary'
+        )
+    }
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         api_session = get_api_session(self.request)
+
+        if 'e' in self.request.GET:
+            kwargs['errors'] = [self.error_messages.get(self.request.GET['e'])]
 
         context['disbursement'] = api_session.get(
             'disbursements/{pk}/'.format(pk=kwargs['pk'])
@@ -384,15 +393,18 @@ class PendingDisbursementDetailView(DisbursementView, TemplateView):
         )
         return context
 
+    def get_success_url(self):
+        return build_view_url(self.request, PendingDisbursementConfirmView.url_name)
+
 
 class PendingDisbursementConfirmView(DisbursementView, TemplateView):
     title = _('Payment confirmation')
     url_name = 'pending_confirm'
     template_name = 'disbursements/confirmed.html'
+    http_method_names = ['post']
 
     def create_nomis_transaction(self, context):
         disbursement = context['disbursement']
-        context['success'] = False
         try:
             nomis_response = nomis.create_transaction(
                 prison_id=disbursement['prison'],
@@ -422,6 +434,7 @@ class PendingDisbursementConfirmView(DisbursementView, TemplateView):
                 context['unavailable'] = True
             else:
                 logger.warning('Disbursement %s is invalid' % disbursement['id'])
+                context['invalid'] = True
         except RequestException:
             logger.exception(
                 'Disbursement %s could not be made as NOMIS is unavailable'
@@ -431,7 +444,7 @@ class PendingDisbursementConfirmView(DisbursementView, TemplateView):
 
         return context
 
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
         api_session = get_api_session(self.request)
 
@@ -443,27 +456,45 @@ class PendingDisbursementConfirmView(DisbursementView, TemplateView):
         except HttpNotFoundError:
             raise Http404
 
-        if disbursement['resolution'] == 'pending':
+        try:
             api_session.post(
                 'disbursements/actions/preconfirm/',
                 json={'disbursement_ids': [disbursement['id']]}
             )
 
             context = self.create_nomis_transaction(context)
+        except HTTPError as e:
+            if e.response.status_code == 409:
+                context['invalid'] = True
+            else:
+                raise e
 
-            if context['success']:
-                update = {'id': disbursement['id']}
-                if 'nomis_transaction_id' in context['disbursement']:
-                    update['nomis_transaction_id'] = (
-                        context['disbursement']['nomis_transaction_id']
-                    )
+        if context.get('success', False):
+            update = {'id': disbursement['id']}
+            if 'nomis_transaction_id' in context['disbursement']:
+                update['nomis_transaction_id'] = (
+                    context['disbursement']['nomis_transaction_id']
+                )
+
+            try:
                 api_session.post(
                     'disbursements/actions/confirm/',
                     json=update
                 )
-            else:
-                redirect('%s?e=connection' % build_view_url(
-                    request, PendingDisbursementDetailView.url_name, args=[disbursement['id']]
-                ))
+            except HTTPError as e:
+                if e.response.status_code == 409:
+                    pass
+                else:
+                    raise e
+        elif context.get('unavailable', False):
+            redirect('%s?e=connection' % build_view_url(
+                request, PendingDisbursementDetailView.url_name,
+                args=[disbursement['id']]
+            ))
+        elif context.get('invalid', False):
+            redirect('%s?e=invalid' % build_view_url(
+                request, PendingDisbursementDetailView.url_name,
+                args=[disbursement['id']]
+            ))
 
         return self.render_to_response(context)
