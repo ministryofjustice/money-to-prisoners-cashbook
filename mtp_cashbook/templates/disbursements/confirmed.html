@@ -1,0 +1,19 @@
+{% extends 'disbursements/base.html' %}
+{% load i18n %}
+{% load disbursements %}
+{% load currency %}
+{% load mtp_common %}
+{% load credits %}
+
+{% block page_title %}{{ view.title }} – {{ block.super }}{% endblock %}
+
+{% block body_classes %}{{ block.super }} mtp-confirm-disbursements{% endblock %}
+
+{% block inner_content %}
+  {{ block.super }}
+
+  <header>
+    <h1 class="heading-xlarge mtp-heading--compact">{{ view.title }}</h1>
+  </header>
+
+{% endblock %}

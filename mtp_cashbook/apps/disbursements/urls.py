@@ -37,12 +37,15 @@ urlpatterns = [
 
     url(r'^search/$', views.SearchView.as_view(), name=views.SearchView.url_name),
 
-    url(r'^confirm/$',
-        views.ConfirmDisbursementsListView.as_view(),
-        name=views.ConfirmDisbursementsListView.url_name),
-    url(r'^confirm/(?P<pk>[0-9]+)/$',
-        views.ConfirmDisbursementsDetailView.as_view(),
-        name=views.ConfirmDisbursementsDetailView.url_name),
+    url(r'^pending/$',
+        views.PendingDisbursementListView.as_view(),
+        name=views.PendingDisbursementListView.url_name),
+    url(r'^pending/(?P<pk>[0-9]+)/$',
+        views.PendingDisbursementDetailView.as_view(),
+        name=views.PendingDisbursementDetailView.url_name),
+    url(r'^pending/(?P<pk>[0-9]+)/confirm/$',
+        views.PendingDisbursementConfirmView.as_view(),
+        name=views.PendingDisbursementConfirmView.url_name),
 
     url(r'^paper-forms/$',
         views.DisbursementTemplateView.as_view(template_name='disbursements/paper-forms.html'),

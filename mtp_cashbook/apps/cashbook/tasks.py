@@ -38,7 +38,7 @@ def credit_individual_credit_to_nomis(user, user_session, credit_id, credit):
             prison_id=credit['prison'],
             prisoner_number=credit['prisoner_number'],
             amount=credit['amount'],
-            record_id=str(credit_id),
+            record_id='c%s' % credit_id,
             description='Sent by {sender}'.format(sender=credit['sender_name']),
             transaction_type='MRPR',  # switching to MTDS soon?
             retries=1,
