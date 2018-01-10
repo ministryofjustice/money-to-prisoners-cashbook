@@ -380,6 +380,7 @@ class PendingDisbursementDetailView(DisbursementView, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        self.pk = kwargs['pk']
         api_session = get_api_session(self.request)
 
         if 'e' in self.request.GET:
@@ -394,7 +395,9 @@ class PendingDisbursementDetailView(DisbursementView, TemplateView):
         return context
 
     def get_success_url(self):
-        return build_view_url(self.request, PendingDisbursementConfirmView.url_name)
+        return build_view_url(
+            self.request, PendingDisbursementConfirmView.url_name, args=[self.pk]
+        )
 
 
 class PendingDisbursementConfirmView(DisbursementView, TemplateView):
