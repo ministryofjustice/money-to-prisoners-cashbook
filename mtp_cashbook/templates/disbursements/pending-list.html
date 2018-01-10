@@ -13,6 +13,15 @@
     <h1 class="heading-xlarge mtp-heading--compact">{{ view.title }} ({{ pending_count }})</h1>
   </header>
 
+  {% for message in messages %}
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+      <div class="mtp-message mtp-message--info">
+        {{ message }}
+      </div>
+      <br/>
+    {% endif %}
+  {% endfor %}
+
   {% if disbursements %}
   <div class="mtp-confirm-disbursements-list">
     <table>

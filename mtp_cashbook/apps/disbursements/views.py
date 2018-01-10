@@ -1,5 +1,6 @@
 import logging
 
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.shortcuts import redirect
@@ -393,10 +394,29 @@ class PendingDisbursementDetailView(DisbursementView, TemplateView):
         )
         return context
 
-    def get_success_url(self):
+    def get_confirm_url(self):
         return build_view_url(
             self.request, PendingDisbursementConfirmView.url_name, args=[self.pk]
         )
+
+    def get_reject_url(self):
+        return build_view_url(
+            self.request, PendingDisbursementRejectView.url_name, args=[self.pk]
+        )
+
+
+class PendingDisbursementRejectView(View):
+    url_name = 'pending_delete'
+    http_method_names = ['post']
+
+    def post(self, request, *args, **kwargs):
+        api_session = get_api_session(request)
+        api_session.post(
+            'disbursements/actions/reject/',
+            json={'disbursement_ids': [kwargs['pk']]}
+        )
+        messages.info(request, _('Payment request cancelled.'))
+        return redirect(build_view_url(request, PendingDisbursementListView.url_name))
 
 
 class PendingDisbursementConfirmView(DisbursementView, TemplateView):

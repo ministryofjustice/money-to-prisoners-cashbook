@@ -46,6 +46,9 @@ urlpatterns = [
     url(r'^pending/(?P<pk>[0-9]+)/confirm/$',
         views.PendingDisbursementConfirmView.as_view(),
         name=views.PendingDisbursementConfirmView.url_name),
+    url(r'^pending/(?P<pk>[0-9]+)/reject/$',
+        views.PendingDisbursementRejectView.as_view(),
+        name=views.PendingDisbursementRejectView.url_name),
 
     url(r'^paper-forms/$',
         views.DisbursementTemplateView.as_view(template_name='disbursements/paper-forms.html'),

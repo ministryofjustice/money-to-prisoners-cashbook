@@ -224,7 +224,7 @@
     </div>
 
     <div class="js-hidden js-choice-yes">
-      <form action="{{ view.get_success_url }}" method="post">
+      <form action="{{ view.get_confirm_url }}" method="post">
         {% csrf_token %}
         <input type="submit" class="button mtp-next-button" value="{% trans 'Confirm payment' %}" />
       </form>
@@ -234,12 +234,20 @@
   {% if editable %}
     <div>
       {% blocktrans %}
-        <a href="#">Cancel this request</a> if you no longer need to send it.
+        <a href="#cancel-disbursement-dialog" class="js-dialogue-open">Cancel this request</a> if you no longer need to send it.
       {% endblocktrans %}
     </div>
     <div>
       {% trans 'Cancelled requests are in ‘Payments made’.' %}
     </div>
+
+    {% dialoguebox html_id='cancel-disbursement-dialog' title=_('Are you sure you want to cancel this payment request?') %}
+      <form action="{{ view.get_reject_url }}" method="post">
+        {% csrf_token %}
+        <input type="submit" class="button" value="{% trans 'Yes' %}" />
+        <button type="button" class="button button-secondary {{ dialogue_close_class }}">{% trans 'No' %}</button>
+      </form>
+    {% enddialoguebox %}
   {% endif %}
 
 
