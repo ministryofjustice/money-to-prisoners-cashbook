@@ -120,8 +120,8 @@
   <div class="form-group">
     <div class="multiple-choice">
       {% random_string as choice_id %}
-      <input id="mtp-choice-{{ choice_id }}" class="mtp-radio-reveal" type="radio" name="mtp-choice" value="{% trans 'Yes' %}" data-reveal=".js-choice-yes">
-      <label for="mtp-choice-{{ choice_id }}">{% trans 'Yes' %}</label>
+      <input id="js-choice-{{ choice_id }}" class="mtp-radio-reveal" type="radio" name="form-check" value="{% trans 'Yes' %}" data-reveal=".js-choice-yes">
+      <label for="js-choice-{{ choice_id }}">{% trans 'Yes' %}</label>
     </div>
     <div class="panel panel-border-narrow hidden js-choice-yes">
       {% trans 'Sign the bottom of the paper form under ‘Staff’.' %}
@@ -131,8 +131,8 @@
 
     <div class="multiple-choice">
       {% random_string as choice_id %}
-      <input id="mtp-choice-{{ choice_id }}" class="mtp-radio-reveal" type="radio" name="mtp-choice" value="{% trans 'No' %}" data-reveal=".js-choice-no">
-      <label for="mtp-choice-{{ choice_id }}">{% trans 'No' %}</label>
+      <input id="js-choice-{{ choice_id }}" class="mtp-radio-reveal" type="radio" name="form-check" value="{% trans 'No' %}" data-reveal=".js-choice-no">
+      <label for="js-choice-{{ choice_id }}">{% trans 'No' %}</label>
     </div>
     <div class="panel panel-border-narrow hidden js-choice-no">
       {% blocktrans trimmed with button_name=_('Change')|wrapwithtag:'strong' %}
