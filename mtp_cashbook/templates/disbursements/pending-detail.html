@@ -24,20 +24,45 @@
     <br/>
   {% endfor %}
 
-  {% if insufficient_funds %}
-    <div class="mtp-message mtp-message--warning">
-      {% trans 'There is not enough money in the prisoner’s private account.' %}
+  {% if disbursement.resolution == 'rejected' %}
+    <div class="mtp-message mtp-message--info">
+      {% trans 'This payment request has been cancelled.' %}
       <br/>
-      <a href="#">{% trans 'View NOMIS balances' %}</a>
+      {% trans 'All cancelled payments can be found in ‘Payments made’.' %}
     </div>
     <br/>
-  {% endif %}
+  {% elif disbursement.resolution == 'confirmed' or disbursement.resolution == 'sent' %}
+    <div class="mtp-message mtp-message--info">
+      {% trans 'This payment request has already been confirmed.' %}
+      <br/>
+      {% trans 'All confirmed payments can be found in ‘Payments made’.' %}
+    </div>
+    <br/>
+  {% else %}
+    {% if not editable %}
+      <div class="mtp-message mtp-message--info">
+        {% trans 'This payment request cannot be changed or deleted as it is in the process of being confirmed.' %}
+        <br/>
+        {% trans 'If there is a problem, use ‘Get help’ to contact us.' %}
+      </div>
+      <br/>
+    {% endif %}
 
-  {% if prisoner_moved %}
-    <div class="mtp-message mtp-message--warning">
-      {% trans 'The prisoner has moved or been released, please check NOMIS.' %}
-    </div>
-    <br/>
+    {% if insufficient_funds %}
+      <div class="mtp-message mtp-message--warning">
+        {% trans 'There is not enough money in the prisoner’s private account.' %}
+        <br/>
+        <a href="#">{% trans 'View NOMIS balances' %}</a>
+      </div>
+      <br/>
+    {% endif %}
+
+    {% if prisoner_moved %}
+      <div class="mtp-message mtp-message--warning">
+        {% trans 'The prisoner has moved or been released, please check NOMIS.' %}
+      </div>
+      <br/>
+    {% endif %}
   {% endif %}
 
   <table class="mtp-confirm-table">
@@ -47,20 +72,24 @@
         <th>{% trans 'Send by' %}:</th>
         <td>{{ disbursement.method|sendingmethod }}</td>
         <td>
-          <a href="#" class="print-hidden">
-            {% trans 'Change' %}
-            <span class="visually-hidden">{% trans 'Sending method' %}</span>
-          </a>
+          {% if editable %}
+            <a href="#" class="print-hidden">
+              {% trans 'Change' %}
+              <span class="visually-hidden">{% trans 'Sending method' %}</span>
+            </a>
+          {% endif %}
         </td>
       </tr>
       <tr>
         <th>{% trans 'Amount' %}:</th>
         <td>£{{ disbursement.amount|currency }}</td>
         <td>
-          <a href="#" class="print-hidden">
-            {% trans 'Change' %}
-            <span class="visually-hidden">{% trans 'Amount' %}</span>
-          </a>
+          {% if editable %}
+            <a href="#" class="print-hidden">
+              {% trans 'Change' %}
+              <span class="visually-hidden">{% trans 'Amount' %}</span>
+            </a>
+          {% endif %}
         </td>
       </tr>
 
@@ -69,10 +98,12 @@
         <th>{% trans 'Name' %}:</th>
         <td>{{ disbursement.recipient_first_name}} {{ disbursement.recipient_last_name }}</td>
         <td>
-          <a href="#" class="print-hidden">
-            {% trans 'Change' %}
-            <span class="visually-hidden">{% trans 'Recipient details' %}</span>
-          </a>
+          {% if editable %}
+            <a href="#" class="print-hidden">
+              {% trans 'Change' %}
+              <span class="visually-hidden">{% trans 'Recipient details' %}</span>
+            </a>
+          {% endif %}
         </td>
       </tr>
       <tr>
@@ -105,10 +136,12 @@
           <th>{% trans 'Sort code' %}:</th>
           <td>{{ disbursement.sort_code }}</td>
           <td>
-            <a href="#" class="print-hidden">
-              {% trans 'Change' %}
-              <span class="visually-hidden">{% trans 'Recipient bank account details' %}</span>
-            </a>
+            {% if editable %}
+              <a href="#" class="print-hidden">
+                {% trans 'Change' %}
+                <span class="visually-hidden">{% trans 'Recipient bank account details' %}</span>
+              </a>
+            {% endif %}
           </td>
         </tr>
         <tr>
@@ -124,10 +157,12 @@
         <th>{% trans 'Name' %}:</th>
         <td>{{ disbursement.prisoner_name }}</td>
         <td>
-          <a href="{% url 'disbursements:prisoner' %}" class="print-hidden">
-            {% trans 'Change' %}
-            <span class="visually-hidden">{% trans 'Prisoner details' %}</span>
-          </a>
+          {% if editable %}
+            <a href="#" class="print-hidden">
+              {% trans 'Change' %}
+              <span class="visually-hidden">{% trans 'Prisoner details' %}</span>
+            </a>
+          {% endif %}
         </td>
       </tr>
       <tr>
@@ -187,7 +222,16 @@
         {% trans 'Someone else will need to confirm this payment later.' %}
       </div>
     </div>
-  {% else %}
+
+    <div class="js-hidden js-choice-yes">
+      <form action="{{ view.get_success_url }}" method="post">
+        {% csrf_token %}
+        <input type="submit" class="button mtp-next-button" value="{% trans 'Confirm payment' %}" />
+      </form>
+    </div>
+    <br/>
+  {% endif %}
+  {% if editable %}
     <div>
       {% blocktrans %}
         <a href="#">Cancel this request</a> if you no longer need to send it.
@@ -197,13 +241,6 @@
       {% trans 'Cancelled requests are in ‘Payments made’.' %}
     </div>
   {% endif %}
-
-  <div class="js-hidden js-choice-yes">
-    <form action="{{ view.get_success_url }}" method="post">
-      {% csrf_token %}
-      <input type="submit" class="button mtp-next-button" value="{% trans 'Confirm payment' %}" />
-    </form>
-  </div>
 
 
 {% endblock %}

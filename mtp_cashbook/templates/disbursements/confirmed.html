@@ -12,8 +12,33 @@
 {% block inner_content %}
   {{ block.super }}
 
-  <header>
-    <h1 class="heading-xlarge mtp-heading--compact">{{ view.title }}</h1>
-  </header>
+  <div class="mtp-message mtp-message--success">
+    {% trans 'Payment request sent to SSCL' %}
+    {% if disbursement.nomis_transaction_id %}
+      <br/>
+      {% blocktrans trimmed with nomis_ref=disbursement.nomis_transaction_id %}
+        The NOMIS reference is {{ nomis_ref }}
+      {% endblocktrans %}
+    {% endif %}
+  </div>
+  <br/>
+
+  <p>
+    {% trans 'No more action from you is necessary.' %}
+  </p>
+
+  <h2 class="heading-medium">{% trans 'What happens next' %}</h2>
+
+  <p>
+    {% trans 'SSCL will process the payment request the next working day and notify the recipient. The payment will arrive in 5-7 working days.' %}
+  </p>
+
+  <p>
+    <a class="button mtp-grey-button" href="{% url 'disbursements:pending_list' %}">{% trans 'Confirm another payment' %}</a>
+  </p>
+
+  <p>
+    <a class="button mtp-grey-button" href="#">{% trans 'View payments made' %}</a>
+  </p>
 
 {% endblock %}

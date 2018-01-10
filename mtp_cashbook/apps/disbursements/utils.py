@@ -31,10 +31,13 @@ def get_disbursement_viability(request, disbursement):
     viability['self_own'] = (
         disbursement['log_set'][0]['user']['username'] == request.user.username
     )
+    viability['editable'] = disbursement['resolution'] == 'pending'
+    viability['confirmable'] = disbursement['resolution'] in ('pending', 'preconfirmed')
+
     viability['viable'] = not (
         viability.get('insufficient_funds', False) or
         viability.get('prisoner_moved', False) or
         viability['self_own']
-    )
+    ) and viability['confirmable']
 
     return viability

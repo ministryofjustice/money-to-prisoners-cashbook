@@ -9,9 +9,9 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView, TemplateView, View
 from mtp_common.api import retrieve_all_pages_for_path
 from mtp_common.auth.api_client import get_api_session
+from mtp_common.auth.exceptions import HttpNotFoundError
 from mtp_common import nomis
-import requests
-from requests.exceptions import RequestException
+from requests.exceptions import HTTPError, RequestException
 
 from disbursements import disbursements_available_required, forms as disbursement_forms
 from disbursements.utils import get_disbursement_viability
@@ -356,7 +356,6 @@ class PendingDisbursementListView(DisbursementView, TemplateView):
         )
         context['pending_count'] = len(context['disbursements'])
 
-        nomis_session = requests.Session()
         for disbursement in context['disbursements']:
             disbursement.update(
                 **get_disbursement_viability(self.request, disbursement)
@@ -384,7 +383,7 @@ class PendingDisbursementDetailView(DisbursementView, TemplateView):
         api_session = get_api_session(self.request)
 
         if 'e' in self.request.GET:
-            kwargs['errors'] = [self.error_messages.get(self.request.GET['e'])]
+            context['errors'] = [self.error_messages.get(self.request.GET['e'])]
 
         context['disbursement'] = api_session.get(
             'disbursements/{pk}/'.format(pk=kwargs['pk'])
@@ -418,12 +417,13 @@ class PendingDisbursementConfirmView(DisbursementView, TemplateView):
                     recipient_first_name=disbursement['recipient_first_name'],
                     recipient_last_name=disbursement['recipient_last_name']
                 ),
-                transaction_type='TBD',
+                transaction_type='RELA',
                 retries=1
             )
             context['success'] = True
             context['disbursement']['nomis_transaction_id'] = nomis_response['id']
         except HTTPError as e:
+            print(e.response.content)
             if e.response.status_code == 409:
                 logger.warning(
                     'Disbursement %s was already present in NOMIS' % disbursement['id']
@@ -460,10 +460,11 @@ class PendingDisbursementConfirmView(DisbursementView, TemplateView):
             raise Http404
 
         try:
-            api_session.post(
-                'disbursements/actions/preconfirm/',
-                json={'disbursement_ids': [disbursement['id']]}
-            )
+            if disbursement['resolution'] != 'preconfirmed':
+                api_session.post(
+                    'disbursements/actions/preconfirm/',
+                    json={'disbursement_ids': [disbursement['id']]}
+                )
 
             context = self.create_nomis_transaction(context)
         except HTTPError as e:
@@ -478,26 +479,24 @@ class PendingDisbursementConfirmView(DisbursementView, TemplateView):
                 update['nomis_transaction_id'] = (
                     context['disbursement']['nomis_transaction_id']
                 )
+            api_session.post(
+                'disbursements/actions/confirm/',
+                json=[update]
+            )
+            return self.render_to_response(context)
+        else:
+            api_session.post(
+                'disbursements/actions/reset/',
+                json={'disbursement_ids': [disbursement['id']]}
+            )
 
-            try:
-                api_session.post(
-                    'disbursements/actions/confirm/',
-                    json=update
-                )
-            except HTTPError as e:
-                if e.response.status_code == 409:
-                    pass
-                else:
-                    raise e
-        elif context.get('unavailable', False):
-            redirect('%s?e=connection' % build_view_url(
-                request, PendingDisbursementDetailView.url_name,
-                args=[disbursement['id']]
-            ))
-        elif context.get('invalid', False):
-            redirect('%s?e=invalid' % build_view_url(
-                request, PendingDisbursementDetailView.url_name,
-                args=[disbursement['id']]
-            ))
-
-        return self.render_to_response(context)
+            if context.get('invalid', False):
+                return redirect('%s?e=invalid' % build_view_url(
+                    request, PendingDisbursementDetailView.url_name,
+                    args=[disbursement['id']]
+                ))
+            else:
+                return redirect('%s?e=connection' % build_view_url(
+                    request, PendingDisbursementDetailView.url_name,
+                    args=[disbursement['id']]
+                ))
