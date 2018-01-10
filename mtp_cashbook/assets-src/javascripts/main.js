@@ -15,6 +15,7 @@
   require('disclosure').Disclosure.init();
   require('analytics').Analytics.init();
   require('track-printing').TrackPrinting.init();
+  require('tabbed-panel').TabbedPanel.init();
 
   // cashbook
   require('sticky-header').StickyHeader.init();
