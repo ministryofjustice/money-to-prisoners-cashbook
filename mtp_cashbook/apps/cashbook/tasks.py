@@ -34,11 +34,11 @@ def credit_individual_credit_to_nomis(user, user_session, credit_id, credit):
 
     nomis_response = None
     try:
-        nomis_response = nomis.credit_prisoner(
+        nomis_response = nomis.create_transaction(
             prison_id=credit['prison'],
             prisoner_number=credit['prisoner_number'],
             amount=credit['amount'],
-            credit_id=str(credit_id),
+            record_id=str(credit_id),
             description='Sent by {sender}'.format(sender=credit['sender_name']),
             transaction_type='MRPR',  # switching to MTDS soon?
             retries=1,
