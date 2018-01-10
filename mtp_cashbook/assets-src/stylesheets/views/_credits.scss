@@ -1,144 +1,4 @@
 .mtp-credits {
-  .mtp-batch {
-    margin: 0;
-
-    th {
-      padding: .8em;
-    }
-    th, td {
-      vertical-align: top;
-    }
-
-    .mtp-results-ordering {
-      height: 100%;
-      padding: 0;
-
-      a {
-        display: inline-block;
-        width: 100%;
-        height: 100%;
-        color: $text-colour;
-        text-decoration: none;
-
-        &:hover, &:focus {
-          background: $focus-colour;
-          outline: 0;
-        }
-
-        span {
-          display: block;
-          margin: .8em 0 .8em .8em;
-          padding-right: 1.2em;
-        }
-      }
-
-      &.mtp-results-ordering--asc, &.mtp-results-ordering--desc {
-        border-left: 1px solid $grey-2;
-        border-right: 1px solid $grey-2;
-
-        span {
-          background: transparent file-url('ordering-asc.png') no-repeat 92% 50%;
-
-          @include device-pixel-ratio {
-            background-image: file-url('ordering-asc@2x.png');
-            background-size: 9px 9px;
-          }
-        }
-      }
-
-      &.mtp-results-ordering--desc span {
-        background-image: file-url('ordering-desc.png');
-
-        @include device-pixel-ratio {
-          background-image: file-url('ordering-desc@2x.png');
-        }
-      }
-    }
-
-    table {
-      width: 100%;
-      margin-bottom: 2em;
-
-      tbody {
-        border-bottom: 1px solid $grey-2;
-      }
-
-      td, th {
-        border-bottom: 0;
-        border-top: 1px solid $grey-2;
-
-        .sub {
-          font-size: 16px;
-          color: $grey-1;
-        }
-
-        .old {
-          color: $red;
-        }
-      }
-
-      .print-hidden {
-        td {
-          border-top: 0;
-        }
-      }
-
-      .number {
-        text-align: right;
-      }
-
-      th.check {
-        text-align: right;
-        padding-right: 4.6em;
-      }
-
-      td.check {
-        text-align: right;
-        padding-right: 4.8em;
-      }
-
-      .mtp-all {
-        vertical-align: bottom;
-        padding-bottom: 1.5em;
-        text-align: center;
-        padding-left: 80px;
-        white-space: nowrap;
-      }
-
-      .mtp-security, .mtp-manual-action {
-        border-top: 0;
-
-        .mtp-manual-action__details {
-          color: $orange;
-          font-weight: bold;
-        }
-      }
-
-      .mtp-manual-credit-complete {
-        background-color: #cce9ff;  // would $light-blue-25 work?
-      }
-
-      .mtp-no-credits {
-        text-align: center;
-        height: 240px;
-      }
-    }
-
-    .mtp-dialog-info-table {
-      margin: 0 3em 1em;
-
-      tbody {
-        border-bottom: none;
-      }
-
-      th, td {
-        border: none;
-        padding: 0.35em;
-        font-weight: bold;
-      }
-    }
-  }
-
   .print-only {
     display: none;
   }
@@ -209,14 +69,165 @@
       display: none;
     }
 
-    .mtp-batch {
-      width: 100%;
-      margin-bottom: 2em;
-    }
-
     .button {
       display: none;
     }
+  }
+}
+
+
+.mtp-batch {
+  margin: 0;
+
+  th {
+    padding: .8em;
+  }
+  th, td {
+    vertical-align: top;
+  }
+
+  .mtp-results-ordering {
+    height: 100%;
+    padding: 0;
+
+    a {
+      display: inline-block;
+      width: 100%;
+      height: 100%;
+      color: $text-colour;
+      text-decoration: none;
+
+      &:hover, &:focus {
+        background: $focus-colour;
+        outline: 0;
+      }
+
+      span {
+        display: block;
+        margin: .8em 0 .8em .8em;
+        padding-right: 1.2em;
+      }
+    }
+
+    &.mtp-results-ordering--asc, &.mtp-results-ordering--desc {
+      border-left: 1px solid $grey-2;
+      border-right: 1px solid $grey-2;
+
+      span {
+        background: transparent file-url('ordering-asc.png') no-repeat 92% 50%;
+
+        @include device-pixel-ratio {
+          background-image: file-url('ordering-asc@2x.png');
+          background-size: 9px 9px;
+        }
+      }
+    }
+
+    &.mtp-results-ordering--desc span {
+      background-image: file-url('ordering-desc.png');
+
+      @include device-pixel-ratio {
+        background-image: file-url('ordering-desc@2x.png');
+      }
+    }
+  }
+
+  table {
+    width: 100%;
+    margin-bottom: 2em;
+
+    tbody {
+      border-bottom: 1px solid $grey-2;
+    }
+
+    td, th {
+      border-bottom: 0;
+      border-top: 1px solid $grey-2;
+
+      .sub {
+        font-size: 16px;
+        color: $grey-1;
+      }
+
+      .old {
+        color: $red;
+      }
+    }
+
+    .print-hidden {
+      td {
+        border-top: 0;
+      }
+    }
+
+    .number {
+      text-align: right;
+    }
+
+    th.check {
+      text-align: right;
+      padding-right: 4.6em;
+    }
+
+    td.check {
+      text-align: right;
+      padding-right: 4.8em;
+    }
+
+    .mtp-all {
+      vertical-align: bottom;
+      padding-bottom: 1.5em;
+      text-align: center;
+      padding-left: 80px;
+      white-space: nowrap;
+    }
+
+    .mtp-security, .mtp-manual-action {
+      border-top: 0;
+
+      .mtp-manual-action__details {
+        color: $orange;
+        font-weight: bold;
+      }
+    }
+
+    .mtp-manual-credit-complete {
+      background-color: #cce9ff;  // would $light-blue-25 work?
+    }
+
+    .mtp-no-credits {
+      text-align: center;
+      height: 240px;
+    }
+
+    hr {
+      width: 20px;
+      height: 2px;
+      margin: 0.5em 0 1em;
+      padding: 0;
+      border: 0;
+      background: $border-colour;
+      text-align: left;
+    }
+  }
+
+  .mtp-dialog-info-table {
+    margin: 0 3em 1em;
+
+    tbody {
+      border-bottom: none;
+    }
+
+    th, td {
+      border: none;
+      padding: 0.35em;
+      font-weight: bold;
+    }
+  }
+
+  @media print {
+    width: 100%;
+    margin-bottom: 2em;
   }
 }
 

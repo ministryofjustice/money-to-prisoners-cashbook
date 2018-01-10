@@ -3,9 +3,10 @@
 
 exports.ConditionallyRevealed = {
   init: function () {
+    var $inputs = $('.mtp-radio-reveal');
     var revealSets = {};
 
-    function changed(e) {
+    function changed (e) {
       var name = e.target.name;
       var revealSet = revealSets[name];
       for (var i in revealSet) {
@@ -20,7 +21,7 @@ exports.ConditionallyRevealed = {
       }
     }
 
-    $('.mtp-radio-reveal').each(function () {
+    $inputs.each(function () {
       var $input = $(this);
       var name = $input.attr('name');
       var $target = $($input.data('reveal'));
@@ -31,6 +32,9 @@ exports.ConditionallyRevealed = {
         $target: $target
       });
       $input.click(changed);
+      if ($input.is(':checked')) {
+        $input.click();
+      }
     });
   }
 };

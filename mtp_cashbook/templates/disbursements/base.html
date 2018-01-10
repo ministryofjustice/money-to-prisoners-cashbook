@@ -13,6 +13,7 @@
           {% include 'proposition-tab.html' with view_name='disbursements:process-overview' subview_names='disbursements:process-overview' link_text=_('Get help') %}
         {% else %}
           {% include 'proposition-tab.html' with view_name='disbursements:start' subview_names='disbursements:start disbursements:prisoner disbursements:prisoner_check disbursements:amount disbursements:sending_method disbursements:recipient_contact disbursements:recipient_bank_account disbursements:details_check disbursements:complete' link_text=_('Send payment') %}
+          {% include 'proposition-tab.html' with view_name='disbursements:search' subview_names='disbursements:search' link_text=_('Payments made') %}
           {% include 'proposition-tab.html' with view_name='disbursements:paper-forms' subview_names='disbursements:paper-forms' link_text=_('Paper forms') %}
           {% include 'proposition-tab.html' with view_name='disbursements:submit_ticket' subview_names='disbursements:submit_ticket disbursements:feedback_success disbursements:process-overview' link_text=_('Get help') %}
         {% endif %}

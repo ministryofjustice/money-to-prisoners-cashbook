@@ -1,5 +1,7 @@
 @import 'mtp-internal';
 
+@import 'elements/tabbed-panel';
+
 // Page specific styles
 @import 'views/login';
 @import 'views/landing';
@@ -15,6 +17,7 @@
 @import 'views/page-contents';
 @import 'views/confirmation-table';
 @import 'views/create-disbursement';
+@import 'views/disbursement-search';
 @import 'views/disbursements-misc';
 
 // mtp-common overrides

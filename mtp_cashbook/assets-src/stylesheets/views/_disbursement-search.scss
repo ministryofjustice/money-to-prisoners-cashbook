@@ -1,0 +1,34 @@
+.mtp-tab-container__footer {
+  margin-top: $gutter;
+
+  button {
+    margin-right: 1em;
+  }
+
+  .mtp-tab-container--collapsed & {
+    margin-top: 0;
+
+    button {
+      display: none;
+    }
+  }
+
+  a {
+    display: inline-block;
+    margin: .526315em 0 .263157em;
+
+    @include media(mobile) {
+      margin: 1em 0 0;
+    }
+  }
+}
+
+.mtp-disbursement-search {
+  #id_resolution {
+    width: 100%;
+  }
+
+  .mtp-batch small {
+    font-size: 16px;
+  }
+}

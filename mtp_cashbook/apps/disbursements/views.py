@@ -308,3 +308,24 @@ class DisbursementCompleteView(DisbursementTemplateView):
                 '%s?e=connection' %
                 build_view_url(self.request, self.previous_view.url_name)
             )
+
+
+class SearchView(DisbursementView, FormView):
+    url_name = 'search'
+    template_name = 'disbursements/search.html'
+    form_class = disbursement_forms.SearchForm
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        request_data = self.get_initial()
+        request_data.update(self.request.GET.dict())
+        kwargs['data'] = request_data
+        return kwargs
+
+    def form_valid(self, form):
+        context = self.get_context_data(form=form)
+        context['disbursements'] = form.get_object_list()
+        return self.render_to_response(context)
+
+    get = FormView.post
