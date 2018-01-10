@@ -17,10 +17,3 @@
     font-size: 24px;
   }
 }
-
-.mtp-grey-button {
-  &:link, &:visited, &:focus, &:hover, &:active {
-    background-color: $grey-2;
-    color: $text-colour;
-  }
-}
