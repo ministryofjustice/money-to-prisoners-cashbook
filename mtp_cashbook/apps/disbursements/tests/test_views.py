@@ -59,7 +59,7 @@ class CreateDisbursementFlowTestCase(MTPBaseTestCase):
         return self.client.post(
             reverse('disbursements:sending_method'),
             data={
-                'sending_method': method
+                'method': method
             },
             follow=True
         )
@@ -72,7 +72,7 @@ class CreateDisbursementFlowTestCase(MTPBaseTestCase):
             'address_line2': '',
             'city': 'London',
             'postcode': 'n17 9bj',
-            'email': 'recipient@mtp.local',
+            'recipient_email': 'recipient@mtp.local',
         }
         return self.client.post(
             reverse('disbursements:recipient_contact'),

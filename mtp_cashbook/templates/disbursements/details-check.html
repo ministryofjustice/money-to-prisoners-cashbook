@@ -23,7 +23,7 @@
       <tr class="mtp-confirm-table__section">
         <th rowspan="2"><h2 class="heading-small">{% trans 'Send' %}</h2></th>
         <th>{% trans 'Send by' %}:</th>
-        <td>{{ sending_method|sendingmethod }}</td>
+        <td>{{ method|sendingmethod }}</td>
         <td>
           <a href="{% url 'disbursements:sending_method' %}" class="print-hidden">
             {% trans 'Change' %}
@@ -69,15 +69,15 @@
         <td>{{ postcode }}</td>
         <td></td>
       </tr>
-      {% if email %}
+      {% if recipient_email %}
         <tr>
         <td></td>
           <th>{% trans 'Email' %}:</th>
-          <td>{{ email }}</td>
+          <td>{{ recipient_email }}</td>
           <td></td>
         </tr>
       {% endif %}
-      {% if sending_method == 'bank_transfer' %}
+      {% if method == 'bank_transfer' %}
         <tr>
           <td></td>
           <th>{% trans 'Sort code' %}:</th>

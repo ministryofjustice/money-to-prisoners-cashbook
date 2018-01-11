@@ -29,7 +29,7 @@ def get_disbursement_viability(request, disbursement):
         pass
 
     viability['self_own'] = (
-        disbursement['log_set'][0]['user']['username'] == request.user.username
+        disbursement['log_set'][-1]['user']['username'] == request.user.username
     )
     viability['editable'] = disbursement['resolution'] == 'pending'
     viability['confirmable'] = disbursement['resolution'] in ('pending', 'preconfirmed')

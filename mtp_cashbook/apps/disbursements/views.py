@@ -86,7 +86,7 @@ class CreateDisbursementView(DisbursementView):
             form = view.form_class.unserialise_from_session(
                 request, self.valid_form_data)
             if form.is_valid():
-                self.valid_form_data[view.url_name] = form.cleaned_data
+                self.valid_form_data[view.form_name()] = form.cleaned_data
             else:
                 redirect_url = getattr(view, 'redirect_url_name', None) or view.url_name
                 return redirect(build_view_url(self.request, redirect_url))
@@ -133,6 +133,10 @@ class CreateDisbursementFormView(CreateDisbursementView, FormView):
     @classmethod
     def is_form_enabled(cls, previous_form_data):
         return True
+
+    @classmethod
+    def form_name(cls):
+        return cls.form_class.__name__
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
@@ -191,7 +195,7 @@ class PrisonerCheckView(CreateDisbursementView, TemplateView):
     template_name = 'disbursements/prisoner-check.html'
 
     def get_context_data(self, **kwargs):
-        prisoner_details = self.valid_form_data[PrisonerView.url_name]
+        prisoner_details = self.valid_form_data[PrisonerView.form_name()]
         kwargs.update(**prisoner_details)
         return super().get_context_data(**kwargs)
 
@@ -216,8 +220,8 @@ class RecipientContactView(CreateDisbursementFormView):
     form_class = disbursement_forms.RecipientContactForm
 
     def get_success_url(self):
-        sending_method = self.valid_form_data[SendingMethodView.url_name]
-        if sending_method['sending_method'] == disbursement_forms.SENDING_METHOD.CHEQUE:
+        sending_method = self.valid_form_data[SendingMethodView.form_name()]
+        if sending_method['method'] == disbursement_forms.SENDING_METHOD.CHEQUE:
             return build_view_url(self.request, DetailsCheckView.url_name)
         else:
             return build_view_url(self.request, RecipientBankAccountView.url_name)
@@ -231,14 +235,13 @@ class RecipientBankAccountView(CreateDisbursementFormView):
 
     @classmethod
     def is_form_enabled(cls, previous_form_data):
-        sending_method = previous_form_data[SendingMethodView.url_name]
         return (
-            sending_method['sending_method'] ==
+            previous_form_data[SendingMethodView.form_name()]['method'] ==
             disbursement_forms.SENDING_METHOD.BANK_TRANSFER
         )
 
     def get_context_data(self, **kwargs):
-        recipient_details = self.valid_form_data[RecipientContactView.url_name]
+        recipient_details = self.valid_form_data[RecipientContactView.form_name()]
         kwargs.update(**recipient_details)
         return super().get_context_data(**kwargs)
 
@@ -252,11 +255,11 @@ class DetailsCheckView(CreateDisbursementView, TemplateView):
     template_name = 'disbursements/details-check.html'
 
     def get_context_data(self, **kwargs):
-        prisoner_details = self.valid_form_data[PrisonerView.url_name]
-        recipient_contact_details = self.valid_form_data[RecipientContactView.url_name]
-        sending_method_details = self.valid_form_data[SendingMethodView.url_name]
-        amount_details = self.valid_form_data[AmountView.url_name]
-        recipient_bank_details = self.valid_form_data.get(RecipientBankAccountView.url_name, {})
+        prisoner_details = self.valid_form_data[PrisonerView.form_name()]
+        recipient_contact_details = self.valid_form_data[RecipientContactView.form_name()]
+        sending_method_details = self.valid_form_data[SendingMethodView.form_name()]
+        amount_details = self.valid_form_data[AmountView.form_name()]
+        recipient_bank_details = self.valid_form_data.get(RecipientBankAccountView.form_name(), {})
         kwargs.update(**prisoner_details)
         kwargs.update(**recipient_contact_details)
         kwargs.update(**recipient_bank_details)
@@ -293,20 +296,21 @@ class DisbursementCompleteView(CreateDisbursementView, TemplateView):
     final_step = True
 
     def post(self, request, *args, **kwargs):
-        prisoner_details = self.valid_form_data[PrisonerView.url_name]
-        recipient_contact_details = self.valid_form_data[RecipientContactView.url_name]
-        sending_method_details = self.valid_form_data[SendingMethodView.url_name]
-        amount_details = self.valid_form_data[AmountView.url_name]
-        recipient_bank_details = self.valid_form_data.get(RecipientBankAccountView.url_name, {})
+        prisoner_details = self.valid_form_data[PrisonerView.form_name()]
+        recipient_contact_details = self.valid_form_data[RecipientContactView.form_name()]
+        sending_method_details = self.valid_form_data[SendingMethodView.form_name()]
+        amount_details = self.valid_form_data[AmountView.form_name()]
+        recipient_bank_details = self.valid_form_data.get(RecipientBankAccountView.form_name(), {})
 
         try:
             api_session = get_api_session(request)
             disbursement_data = {
                 'prisoner_number': prisoner_details['prisoner_number'],
                 'prison': prisoner_details['prison'],
-                'method': sending_method_details['sending_method'],
-                'amount': amount_details['amount']
             }
+            disbursement_data.update(**prisoner_details)
+            disbursement_data.update(**sending_method_details)
+            disbursement_data.update(**amount_details)
             disbursement_data.update(**recipient_contact_details)
             disbursement_data.update(**recipient_bank_details)
             api_session.post('/disbursements/', json=disbursement_data)
@@ -520,3 +524,143 @@ class PendingDisbursementConfirmView(DisbursementView, TemplateView):
                     request, PendingDisbursementDetailView.url_name,
                     args=[disbursement['id']]
                 ))
+
+
+class UpdateDisbursementFormView(DisbursementView, FormView):
+    previous_view = None
+
+    @classmethod
+    def clear_session(cls, request):
+        for view in cls.get_previous_views(cls):
+            if hasattr(view, 'form_class'):
+                view.form_class.delete_from_session(request)
+
+    @classmethod
+    def get_previous_views(cls, view):
+        if view.previous_view:
+            yield from cls.get_previous_views(view.previous_view)
+            yield view.previous_view
+
+    @classmethod
+    def is_form_enabled(cls, previous_form_data):
+        return True
+
+    @classmethod
+    def form_name(cls):
+        return cls.form_class.__name__
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.valid_form_data = {}
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        if self.request.method == 'GET':
+            self.form_class.serialise_data(self.request.session, self.disbursement)
+            form = self.form_class.unserialise_from_session(
+                self.request, self.valid_form_data)
+            context_data['form'] = form
+        return context_data
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        kwargs['previous_form_data'] = self.valid_form_data
+        return kwargs
+
+    def dispatch(self, request, *args, **kwargs):
+        self.pk = kwargs['pk']
+        self.api_session = get_api_session(request)
+
+        try:
+            self.disbursement = self.api_session.get(
+                'disbursements/{pk}/'.format(pk=kwargs['pk'])
+            ).json()
+        except HttpNotFoundError:
+            raise Http404
+
+        for view in self.get_previous_views(self):
+            if not hasattr(view, 'form_class') or not view.is_form_enabled(self.valid_form_data):
+                continue
+            view.form_class.serialise_data(request.session, self.disbursement)
+            form = view.form_class.unserialise_from_session(
+                request, self.valid_form_data)
+            if form.is_valid():
+                self.valid_form_data[view.form_name()] = form.cleaned_data
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        self.api_session.patch(
+            'disbursements/{pk}/'.format(pk=self.pk),
+            json=self.get_update_payload(form)
+        )
+        return super().form_valid(form)
+
+    def get_update_payload(self, form):
+        return form.get_update_payload()
+
+    def get_success_url(self):
+        self.clear_session(self.request)
+        return build_view_url(
+            self.request, PendingDisbursementDetailView.url_name, args=[self.pk]
+        )
+
+
+class UpdateSendingMethodView(UpdateDisbursementFormView):
+    url_name = 'update_sending_method'
+    template_name = 'disbursements/sending-method.html'
+    form_class = disbursement_forms.SendingMethodForm
+
+    def form_valid(self, form):
+        if form.cleaned_data['method'] == disbursement_forms.SENDING_METHOD.CHEQUE:
+            self.require_bank_account = False
+            return super().form_valid(form)
+        else:
+            self.require_bank_account = True
+            return super(UpdateDisbursementFormView, self).form_valid(form)
+
+    def get_update_payload(self, form):
+        payload = form.get_update_payload()
+        payload.update(account_number='', sort_code='', roll_number='')
+        return payload
+
+    def get_success_url(self):
+        if not self.require_bank_account:
+            return super().get_success_url()
+        else:
+            return build_view_url(
+                self.request, UpdateRecipientBankAccountView.url_name, args=[self.pk]
+            )
+
+
+class UpdatePrisonerView(UpdateDisbursementFormView):
+    url_name = 'update_prisoner'
+    template_name = 'disbursements/prisoner.html'
+    form_class = disbursement_forms.PrisonerForm
+    previous_view = UpdateSendingMethodView
+
+
+class UpdateAmountView(UpdateDisbursementFormView):
+    url_name = 'update_amount'
+    template_name = 'disbursements/amount.html'
+    form_class = disbursement_forms.AmountForm
+    previous_view = UpdatePrisonerView
+
+
+class UpdateRecipientContactView(UpdateDisbursementFormView):
+    url_name = 'update_recipient_contact'
+    template_name = 'disbursements/recipient-contact.html'
+    form_class = disbursement_forms.RecipientContactForm
+    previous_view = UpdateAmountView
+
+
+class UpdateRecipientBankAccountView(UpdateDisbursementFormView):
+    url_name = 'update_recipient_bank_account'
+    template_name = 'disbursements/recipient-bank-account.html'
+    form_class = disbursement_forms.RecipientBankAccountForm
+    previous_view = UpdateRecipientContactView
+
+    def get_update_payload(self, form):
+        payload = form.get_update_payload()
+        payload.update(method=disbursement_forms.SENDING_METHOD.BANK_TRANSFER)
+        return payload
