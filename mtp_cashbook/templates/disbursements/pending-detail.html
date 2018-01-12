@@ -233,8 +233,8 @@
   {% endif %}
   {% if editable %}
     <div>
-      {% blocktrans %}
-        <a href="#cancel-disbursement-dialog" class="js-dialogue-open">Cancel this request</a> if you no longer need to send it.
+      {% blocktrans with linkstart='<a href="#cancel-disbursement-dialog" class="js-dialogue-open">' linkend='</a>' %}
+        {{ linkstart }}Cancel this request{{ linkend }} if you no longer need to send it.
       {% endblocktrans %}
     </div>
     <div>
