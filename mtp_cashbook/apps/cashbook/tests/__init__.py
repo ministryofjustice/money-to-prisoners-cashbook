@@ -19,8 +19,8 @@ class MTPBaseTestCase(SimpleTestCase):
         self.notifications_mock.stop()
         super().tearDown()
 
-    def assertOnPage(self, response, url_name):  # noqa
-        self.assertContains(response, '<!--[%s]-->' % url_name)
+    def assertOnPage(self, response, view_name):  # noqa
+        self.assertContains(response, '<!--[%s]-->' % view_name)
 
     @property
     def login_url(self):

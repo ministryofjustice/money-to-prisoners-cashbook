@@ -102,7 +102,7 @@ class PrisonerTestCase(CreateDisbursementFlowTestCase):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
         response = self.enter_prisoner_details()
-        self.assertOnPage(response, 'prisoner_check')
+        self.assertOnPage(response, 'disbursements:prisoner_check')
 
     @responses.activate
     @override_settings(DISBURSEMENT_PRISONS=['BXI'])
@@ -124,7 +124,7 @@ class PrisonerTestCase(CreateDisbursementFlowTestCase):
             follow=True
         )
 
-        self.assertOnPage(response, 'prisoner')
+        self.assertOnPage(response, 'disbursements:prisoner')
         self.assertContains(response, PrisonerForm.error_messages['not_found'])
 
     @responses.activate
@@ -147,7 +147,7 @@ class PrisonerTestCase(CreateDisbursementFlowTestCase):
             follow=True
         )
 
-        self.assertOnPage(response, 'prisoner')
+        self.assertOnPage(response, 'disbursements:prisoner')
         self.assertContains(response, PrisonerForm.error_messages['wrong_prison'])
 
 
@@ -166,7 +166,7 @@ class AmountTestCase(CreateDisbursementFlowTestCase):
         self.enter_prisoner_details()
         response = self.enter_amount(amount=10, cash=5000)
 
-        self.assertOnPage(response, 'recipient_contact')
+        self.assertOnPage(response, 'disbursements:recipient_contact')
 
     @responses.activate
     @override_nomis_settings
@@ -177,7 +177,7 @@ class AmountTestCase(CreateDisbursementFlowTestCase):
         self.enter_prisoner_details()
         response = self.enter_amount(amount=60, cash=5000)
 
-        self.assertOnPage(response, 'amount')
+        self.assertOnPage(response, 'disbursements:amount')
         self.assertContains(response, AmountForm.error_messages['exceeds_funds'])
 
     @responses.activate
@@ -189,7 +189,7 @@ class AmountTestCase(CreateDisbursementFlowTestCase):
         self.enter_prisoner_details()
         response = self.client.get(self.url)
 
-        self.assertOnPage(response, 'amount')
+        self.assertOnPage(response, 'disbursements:amount')
         self.assertContains(response, 'Unknown')
 
 
@@ -206,7 +206,7 @@ class SendingMethodTestCase(CreateDisbursementFlowTestCase):
 
         response = self.enter_recipient_details()
 
-        self.assertOnPage(response, 'details_check')
+        self.assertOnPage(response, 'disbursements:details_check')
         content = response.content.decode(response.charset)
         self.assertIn('John', content)
         self.assertIn('Smith', content)
@@ -226,7 +226,7 @@ class SendingMethodTestCase(CreateDisbursementFlowTestCase):
 
         response = self.enter_recipient_details()
 
-        self.assertOnPage(response, 'recipient_bank_account')
+        self.assertOnPage(response, 'disbursements:recipient_bank_account')
 
 
 class RecipientContactTestCase(CreateDisbursementFlowTestCase):
@@ -249,7 +249,7 @@ class RecipientContactTestCase(CreateDisbursementFlowTestCase):
             'city': 'London',
             'postcode': 'n17 9bj',
         })
-        self.assertOnPage(response, 'recipient_contact')
+        self.assertOnPage(response, 'disbursements:recipient_contact')
         self.assertFormError(response, 'form', 'address_line1', 'This field is required')
 
 
@@ -268,7 +268,7 @@ class RecipientBankAccountTestCase(CreateDisbursementFlowTestCase):
         self.enter_amount()
         self.enter_recipient_details()
         response = self.enter_recipient_bank_account({'sort_code': ''})
-        self.assertOnPage(response, 'recipient_bank_account')
+        self.assertOnPage(response, 'disbursements:recipient_bank_account')
         self.assertFormError(response, 'form', 'sort_code', 'This field is required')
         self.assertFormError(response, 'form', 'account_number', 'This field is required')
 
@@ -285,7 +285,7 @@ class RecipientBankAccountTestCase(CreateDisbursementFlowTestCase):
             'sort_code': '60-57-89a',
             'account_number': '9090878',
         })
-        self.assertOnPage(response, 'recipient_bank_account')
+        self.assertOnPage(response, 'disbursements:recipient_bank_account')
         self.assertFormError(response, 'form', 'sort_code', 'The sort code should be 6 digits long')
         self.assertFormError(response, 'form', 'account_number', 'The account number should be 8 digits long')
 
@@ -315,7 +315,7 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
         self.enter_recipient_bank_account()
         response = self.client.get(reverse('disbursements:complete'), follow=True)
 
-        self.assertOnPage(response, 'complete')
+        self.assertOnPage(response, 'disbursements:complete')
 
     @responses.activate
     @override_nomis_settings
@@ -335,7 +335,7 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
         self.enter_recipient_details()
         response = self.client.get(reverse('disbursements:complete'), follow=True)
 
-        self.assertOnPage(response, 'complete')
+        self.assertOnPage(response, 'disbursements:complete')
 
     @responses.activate
     @override_nomis_settings
@@ -350,5 +350,5 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
         with silence_logger():
             response = self.client.get(reverse('disbursements:complete'), follow=True)
 
-        self.assertOnPage(response, 'hand-over')
+        self.assertOnPage(response, 'disbursements:hand-over')
         self.assertContains(response, DisbursementHandoverView.error_messages['connection'])
