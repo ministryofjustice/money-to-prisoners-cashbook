@@ -10,7 +10,6 @@ from mtp_common.test_utils.functional_tests import FunctionalTestCase
 logger = logging.getLogger('mtp')
 
 
-@override_settings(DISBURSEMENT_PRISONS=[])
 class CashbookTestCase(FunctionalTestCase):
     """
     Base class to define common methods to test subclasses below
@@ -61,6 +60,7 @@ class CashbookTestCase(FunctionalTestCase):
         self.driver.find_element_by_link_text(text).click()
 
 
+@override_settings(DISBURSEMENT_PRISONS=['LEI'])
 class LoginTests(CashbookTestCase):
     """
     Tests for Login page
@@ -78,13 +78,13 @@ class LoginTests(CashbookTestCase):
 
     def test_good_login(self):
         self.login('test-hmp-leeds', 'test-hmp-leeds')
-        self.assertCurrentUrl('/en-gb/new/')
-        self.assertShowingView('new-credits')
+        self.assertCurrentUrl('/en-gb/')
+        self.assertShowingView('home')
 
     def test_good_login_without_case_sensitivity(self):
         self.login('test-HMP-leeds', 'test-hmp-leeds')
-        self.assertCurrentUrl('/en-gb/new/')
-        self.assertShowingView('new-credits')
+        self.assertCurrentUrl('/en-gb/')
+        self.assertShowingView('home')
 
     def test_logout(self):
         self.login('test-hmp-leeds', 'test-hmp-leeds')
@@ -93,6 +93,7 @@ class LoginTests(CashbookTestCase):
         self.assertShowingView('login')
 
 
+@override_settings(DISBURSEMENT_PRISONS=[])
 class NewCreditsPageTests(CashbookTestCase):
     """
     Tests for new credits page
@@ -147,6 +148,7 @@ class NewCreditsPageTests(CashbookTestCase):
         self.assertInSource('credits sent to NOMIS')
 
 
+@override_settings(DISBURSEMENT_PRISONS=[])
 class ProcessedCreditsPageTests(CashbookTestCase):
     """
     Tests for processed credits page
@@ -176,6 +178,7 @@ class ProcessedCreditsPageTests(CashbookTestCase):
         self.assertNotInSource('There was a problem')
 
 
+@override_settings(DISBURSEMENT_PRISONS=[])
 class SearchCreditsTests(CashbookTestCase):
     """
     Tests for search credits
