@@ -28,8 +28,12 @@ def get_disbursement_viability(request, disbursement):
     except RequestException:
         pass
 
+    change_logs = sorted(
+        filter(lambda l: l['action'] in ('created', 'edited'), disbursement['log_set']),
+        key=lambda l: l['created']
+    )
     viability['self_own'] = (
-        disbursement['log_set'][-1]['user']['username'] == request.user.username
+        change_logs and change_logs[-1]['user']['username'] == request.user.username
     )
     viability['editable'] = disbursement['resolution'] == 'pending'
     viability['confirmable'] = disbursement['resolution'] in ('pending', 'preconfirmed')
