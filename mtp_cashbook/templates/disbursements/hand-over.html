@@ -40,7 +40,7 @@
 
       {% random_string as note_id %}
       <p>
-        <a class="mtp-disclosure" href="#" aria-controls="mtp-{{ note_id }}" aria-expanded="false" role="button" data-analytics="pageview,/-help_open/{{ request.resolver_match.url_name }}/">
+        <a class="mtp-disclosure" href="#" aria-controls="mtp-{{ note_id }}" aria-expanded="false" role="button" data-analytics="pageview,/-help_open/{{ request.resolver_match.view_name }}/">
           <span></span>{% trans 'What if my colleague doesn’t have an account?' %}
         </a>
       </p>
