@@ -222,6 +222,12 @@ class RecipientBankAccountForm(DisbursementForm):
         validators=[validate_sort_code],
     )
 
+    def clean_sort_code(self):
+        sort_code = self.cleaned_data.get('sort_code')
+        if sort_code:
+            sort_code = sort_code.replace('-', '')
+        return sort_code
+
 
 def insert_blank_option(choices, title=_('Select an option')):
     new_choices = [('', title)]

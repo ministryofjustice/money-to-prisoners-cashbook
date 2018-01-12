@@ -80,7 +80,7 @@
       <tr>
         <td></td>
         <th>{% trans 'Sort code' %}:</th>
-        <td>{{ sort_code }}</td>
+        <td>{{ sort_code|format_sortcode }}</td>
         <td>
           <a href="{% url 'disbursements:recipient_bank_account' %}" class="print-hidden">
             {% trans 'Change' %}
