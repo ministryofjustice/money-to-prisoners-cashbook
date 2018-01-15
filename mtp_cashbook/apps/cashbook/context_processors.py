@@ -9,9 +9,8 @@ def govuk_localisation(request):
     if (request.disbursements_available or request.disbursements_preview) and hasattr(request, 'proposition_app'):
         # NB: ensure proposition_app variables are html-safe
         global_header_text += '</a> ' \
-                              '<span class="mtp-header-app">' \
-                              '<a href="%(url)s">%(name)s</a>' \
-                              '</span>' % request.proposition_app
+                              '<a class="mtp-header-app" href="%(url)s">' \
+                              '%(name)s' % request.proposition_app
         global_header_text = mark_safe(global_header_text)
     data = inherited_localisation(request)
     data.update(
