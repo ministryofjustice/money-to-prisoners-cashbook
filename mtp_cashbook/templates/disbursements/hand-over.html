@@ -50,7 +50,10 @@
         </p>
       </div>
 
-      <a class="button mtp-next-button" href="{{ view.get_success_url }}">{% trans 'I will hand over the paper form' %}</a>
+      <form action="{{ view.get_success_url }}" method="post">
+        {% csrf_token %}
+        <input type="submit" class="button mtp-next-button" value="{% trans 'I will hand over the paper form' %}" />
+      </form>
 
     </div>
   </div>

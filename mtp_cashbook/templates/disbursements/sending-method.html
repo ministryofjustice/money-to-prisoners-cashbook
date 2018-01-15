@@ -21,17 +21,17 @@
         {% csrf_token %}
 
         <fieldset class="mtp-sending-method-choice">
-          <legend id="{{ form.sending_method.id_for_label }}-label" class="visually-hidden">{% trans 'Method by which to send money' %}</legend>
+          <legend id="{{ form.method.id_for_label }}-label" class="visually-hidden">{% trans 'Method by which to send money' %}</legend>
 
-          {% for sending_method in form.sending_method.field.choices %}
+          {% for method in form.method.field.choices %}
             <div class="multiple-choice">
-              <input id="id_{{ sending_method.0 }}" type="radio" name="{{ form.sending_method.html_name }}" value="{{ sending_method.0 }}"
-                     {% if form.sending_method.value == sending_method.0 %}checked{% endif %}>
-              <label for="id_{{ sending_method.0 }}">
-                <strong>{{ sending_method.1 }}</strong>
+              <input id="id_{{ method.0 }}" type="radio" name="{{ form.method.html_name }}" value="{{ method.0 }}"
+                     {% if form.method.value == method.0 %}checked{% endif %}>
+              <label for="id_{{ method.0 }}">
+                <strong>{{ method.1 }}</strong>
                 <br/>
-                {% for key, value in form.sending_method.field.help_text.items %}
-                  {% if key == sending_method.0 %}
+                {% for key, value in form.method.field.help_text.items %}
+                  {% if key == method.0 %}
                     {{ value }}
                   {% endif %}
                 {% endfor %}

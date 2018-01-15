@@ -15,7 +15,10 @@ def parse_date_fields(credits):
     MTP API responds with string date/time fields,
     this filter converts them to python objects
     """
-    fields = ['received_at', 'credited_at', 'refunded_at', 'logged_at', 'set_manual_at']
+    fields = [
+        'received_at', 'credited_at', 'refunded_at', 'logged_at',
+        'set_manual_at', 'created'
+    ]
     parsers = [parse_datetime, parse_date]
 
     def convert(credit):

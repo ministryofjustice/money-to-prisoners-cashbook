@@ -1,0 +1,45 @@
+{% extends 'disbursements/base.html' %}
+{% load i18n %}
+{% load disbursements %}
+{% load currency %}
+{% load mtp_common %}
+{% load credits %}
+
+{% block page_title %}{{ view.title }} – {{ block.super }}{% endblock %}
+
+{% block body_classes %}{{ block.super }} mtp-confirm-disbursements{% endblock %}
+
+{% block inner_content %}
+  {{ block.super }}
+
+  <div class="mtp-message mtp-message--success">
+    {% trans 'Payment request sent to SSCL' %}
+    {% if disbursement.nomis_transaction_id %}
+      <br/>
+      {% blocktrans trimmed with nomis_ref=disbursement.nomis_transaction_id %}
+        The NOMIS reference is {{ nomis_ref }}
+      {% endblocktrans %}
+    {% endif %}
+  </div>
+  <br/>
+
+  <p>
+    {% trans 'No more action from you is necessary.' %}
+  </p>
+
+  <h2 class="heading-medium">{% trans 'What happens next' %}</h2>
+
+  <p>
+    {% trans 'SSCL will process the payment request the next working day and notify the recipient.' %}
+    {% trans 'The payment will arrive in 5-7 working days.' %}
+  </p>
+
+  <p>
+    <a class="button button-secondary" href="{% url 'disbursements:pending_list' %}">{% trans 'Confirm another payment' %}</a>
+  </p>
+
+  <p>
+    <a class="button button-secondary" href="#">{% trans 'View payments made' %}</a>
+  </p>
+
+{% endblock %}

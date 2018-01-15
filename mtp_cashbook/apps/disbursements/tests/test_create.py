@@ -59,7 +59,7 @@ class CreateDisbursementFlowTestCase(MTPBaseTestCase):
         return self.client.post(
             reverse('disbursements:sending_method'),
             data={
-                'sending_method': method
+                'method': method
             },
             follow=True
         )
@@ -72,7 +72,7 @@ class CreateDisbursementFlowTestCase(MTPBaseTestCase):
             'address_line2': '',
             'city': 'London',
             'postcode': 'n17 9bj',
-            'email': 'recipient@mtp.local',
+            'recipient_email': 'recipient@mtp.local',
         }
         return self.client.post(
             reverse('disbursements:recipient_contact'),
@@ -313,7 +313,7 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
         self.enter_amount()
         self.enter_recipient_details()
         self.enter_recipient_bank_account()
-        response = self.client.get(reverse('disbursements:complete'), follow=True)
+        response = self.client.post(reverse('disbursements:complete'), follow=True)
 
         self.assertOnPage(response, 'disbursements:complete')
 
@@ -333,7 +333,7 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
         self.enter_prisoner_details()
         self.enter_amount()
         self.enter_recipient_details()
-        response = self.client.get(reverse('disbursements:complete'), follow=True)
+        response = self.client.post(reverse('disbursements:complete'), follow=True)
 
         self.assertOnPage(response, 'disbursements:complete')
 
@@ -348,7 +348,7 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
         self.enter_recipient_details()
         self.enter_recipient_bank_account()
         with silence_logger():
-            response = self.client.get(reverse('disbursements:complete'), follow=True)
+            response = self.client.post(reverse('disbursements:complete'), follow=True)
 
         self.assertOnPage(response, 'disbursements:hand-over')
         self.assertContains(response, DisbursementHandoverView.error_messages['connection'])

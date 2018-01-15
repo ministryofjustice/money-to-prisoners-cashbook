@@ -56,19 +56,27 @@ class DisbursementForm(GARequestErrorReportingMixin, forms.Form):
         for field in cls.base_fields:
             request.session.pop(field, None)
 
+    @classmethod
+    def serialise_data(cls, session, data):
+        for field in cls.base_fields:
+            value = data[field]
+            if hasattr(cls, 'serialise_%s' % field):
+                value = getattr(cls, 'serialise_%s' % field)(value)
+            session[field] = value
+
     def __init__(self, request=None, previous_form_data={}, **kwargs):
         super().__init__(**kwargs)
         self.request = request
         self.previous_form_data = previous_form_data
 
     def serialise_to_session(self):
-        cls = self.__class__
-        session = self.request.session
-        for field in cls.base_fields:
-            value = self.cleaned_data[field]
-            if hasattr(cls, 'serialise_%s' % field):
-                value = getattr(cls, 'serialise_%s' % field)(value)
-            session[field] = value
+        self.__class__.serialise_data(self.request.session, self.cleaned_data)
+
+    def get_update_payload(self):
+        update = {}
+        for field in self.base_fields:
+            update[field] = self.cleaned_data[field]
+        return update
 
 
 class PrisonerForm(DisbursementForm):
@@ -117,6 +125,13 @@ class PrisonerForm(DisbursementForm):
                     self.error_messages['connection'], code='connection')
         return prisoner_number
 
+    def get_update_payload(self):
+        update = {
+            'prisoner_number': self.cleaned_data['prisoner_number'],
+            'prison': self.cleaned_data['prison']
+        }
+        return update
+
 
 def serialise_amount(amount):
     return '{0:.2f}'.format(amount/100)
@@ -147,11 +162,10 @@ class AmountForm(DisbursementForm):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        from .views import PrisonerView
         try:
             balances = nomis.get_account_balances(
-                self.previous_form_data[PrisonerView.url_name]['prison'],
-                self.previous_form_data[PrisonerView.url_name]['prisoner_number']
+                self.previous_form_data[PrisonerForm.__name__]['prison'],
+                self.previous_form_data[PrisonerForm.__name__]['prisoner_number']
             )
             self.spends_balance = balances['spends']
             self.private_balance = balances['cash']
@@ -170,7 +184,7 @@ class AmountForm(DisbursementForm):
 
 
 class SendingMethodForm(DisbursementForm):
-    sending_method = forms.ChoiceField(
+    method = forms.ChoiceField(
         label=_('Sending method'),
         initial=SENDING_METHOD.BANK_TRANSFER,
         choices=SENDING_METHOD,
@@ -193,7 +207,7 @@ class RecipientContactForm(DisbursementForm):
     address_line2 = forms.CharField(label=_('Their address line 2'), required=False)
     city = forms.CharField(label=_('Town or city'))
     postcode = forms.CharField(label=_('Postcode'))
-    email = forms.EmailField(
+    recipient_email = forms.EmailField(
         label=_('Their email address'),
         help_text=_('The recipient will be notified about this request by email if given or by letter if not.'),
         required=False,

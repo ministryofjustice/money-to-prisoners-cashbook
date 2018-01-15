@@ -19,99 +19,101 @@
   </header>
 
   <table class="mtp-confirm-table">
-    <tr class="mtp-confirm-table__section">
-      <th rowspan="2"><h2 class="heading-small">{% trans 'Send' %}</h2></th>
-      <th>{% trans 'Send by' %}:</th>
-      <td>{{ sending_method|sendingmethod }}</td>
-      <td>
-        <a href="{% url 'disbursements:sending_method' %}" class="print-hidden">
-          {% trans 'Change' %}
-          <span class="visually-hidden">{% trans 'Sending method' %}</span>
-        </a>
-      </td>
-    </tr>
-    <tr>
-      <th>{% trans 'Amount' %}:</th>
-      <td>£{{ amount|currency }}</td>
-      <td>
-        <a href="{% url 'disbursements:amount' %}" class="print-hidden">
-          {% trans 'Change' %}
-          <span class="visually-hidden">{% trans 'Amount' %}</span>
-        </a>
-      </td>
-    </tr>
-
-    <tr class="mtp-confirm-table__section">
-      <th><h2 class="heading-small">{% trans 'To' %}</h2></th>
-      <th>{% trans 'Name' %}:</th>
-      <td>{{ recipient_first_name}} {{recipient_last_name}}</td>
-      <td>
-        <a href="{% url 'disbursements:recipient_contact' %}" class="print-hidden">
-          {% trans 'Change' %}
-          <span class="visually-hidden">{% trans 'Recipient details' %}</span>
-        </a>
-      </td>
-    </tr>
-    <tr>
-      <td></td>
-      <th>{% trans 'Address' %}:</th>
-      <td>
-        {{ address_line1 }}<br>
-        {% if address_line2 %}{{ address_line2 }}<br>{% endif %}
-        {{ city }}
-      </td>
-      <td></td>
-    </tr>
-    <tr>
-      <td></td>
-      <th>{% trans 'Postcode' %}:</th>
-      <td>{{ postcode }}</td>
-      <td></td>
-    </tr>
-    {% if email %}
-      <tr>
-      <td></td>
-        <th>{% trans 'Email' %}:</th>
-        <td>{{ email }}</td>
-        <td></td>
-      </tr>
-    {% endif %}
-    {% if sending_method == 'bank_transfer' %}
-      <tr>
-        <td></td>
-        <th>{% trans 'Sort code' %}:</th>
-        <td>{{ sort_code|format_sortcode }}</td>
+    <tbody class="mtp-confirm-table__details">
+      <tr class="mtp-confirm-table__section">
+        <th rowspan="2"><h2 class="heading-small">{% trans 'Send' %}</h2></th>
+        <th>{% trans 'Send by' %}:</th>
+        <td>{{ method|sendingmethod }}</td>
         <td>
-          <a href="{% url 'disbursements:recipient_bank_account' %}" class="print-hidden">
+          <a href="{% url 'disbursements:sending_method' %}" class="print-hidden">
             {% trans 'Change' %}
-            <span class="visually-hidden">{% trans 'Recipient bank account details' %}</span>
+            <span class="visually-hidden">{% trans 'Sending method' %}</span>
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <th>{% trans 'Amount' %}:</th>
+        <td>£{{ amount|currency }}</td>
+        <td>
+          <a href="{% url 'disbursements:amount' %}" class="print-hidden">
+            {% trans 'Change' %}
+            <span class="visually-hidden">{% trans 'Amount' %}</span>
+          </a>
+        </td>
+      </tr>
+
+      <tr class="mtp-confirm-table__section">
+        <th><h2 class="heading-small">{% trans 'To' %}</h2></th>
+        <th>{% trans 'Name' %}:</th>
+        <td>{{ recipient_first_name}} {{recipient_last_name}}</td>
+        <td>
+          <a href="{% url 'disbursements:recipient_contact' %}" class="print-hidden">
+            {% trans 'Change' %}
+            <span class="visually-hidden">{% trans 'Recipient details' %}</span>
           </a>
         </td>
       </tr>
       <tr>
         <td></td>
-        <th>{% trans 'Account number' %}:</th>
-        <td>{{ account_number }}</td>
+        <th>{% trans 'Address' %}:</th>
+        <td>
+          {{ address_line1 }}<br>
+          {% if address_line2 %}{{ address_line2 }}<br>{% endif %}
+          {{ city }}
+        </td>
         <td></td>
       </tr>
-    {% endif %}
+      <tr>
+        <td></td>
+        <th>{% trans 'Postcode' %}:</th>
+        <td>{{ postcode }}</td>
+        <td></td>
+      </tr>
+      {% if recipient_email %}
+        <tr>
+        <td></td>
+          <th>{% trans 'Email' %}:</th>
+          <td>{{ recipient_email }}</td>
+          <td></td>
+        </tr>
+      {% endif %}
+      {% if method == 'bank_transfer' %}
+        <tr>
+          <td></td>
+          <th>{% trans 'Sort code' %}:</th>
+          <td>{{ sort_code|format_sortcode }}</td>
+          <td>
+            <a href="{% url 'disbursements:recipient_bank_account' %}" class="print-hidden">
+              {% trans 'Change' %}
+              <span class="visually-hidden">{% trans 'Recipient bank account details' %}</span>
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+          <th>{% trans 'Account number' %}:</th>
+          <td>{{ account_number }}</td>
+          <td></td>
+        </tr>
+      {% endif %}
 
-    <tr class="mtp-confirm-table__section">
-      <th rowspan="2"><h2 class="heading-small">{% trans 'From' %}</h2></th>
-      <th>{% trans 'Name' %}:</th>
-      <td>{{ prisoner_name }}</td>
-      <td>
-        <a href="{% url 'disbursements:prisoner' %}" class="print-hidden">
-          {% trans 'Change' %}
-          <span class="visually-hidden">{% trans 'Prisoner details' %}</span>
-        </a>
-      </td>
-    </tr>
-    <tr>
-      <th>{% trans 'Prisoner number' %}:</th>
-      <td>{{ prisoner_number }}</td>
-      <td></td>
-    </tr>
+      <tr class="mtp-confirm-table__section">
+        <th rowspan="2"><h2 class="heading-small">{% trans 'From' %}</h2></th>
+        <th>{% trans 'Name' %}:</th>
+        <td>{{ prisoner_name }}</td>
+        <td>
+          <a href="{% url 'disbursements:prisoner' %}" class="print-hidden">
+            {% trans 'Change' %}
+            <span class="visually-hidden">{% trans 'Prisoner details' %}</span>
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <th>{% trans 'Prisoner number' %}:</th>
+        <td>{{ prisoner_number }}</td>
+        <td></td>
+      </tr>
+    </tbody>
   </table>
   <br>
 

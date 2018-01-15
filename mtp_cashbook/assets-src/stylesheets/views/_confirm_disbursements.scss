@@ -1,0 +1,23 @@
+.mtp-confirm-disbursements {
+  .mtp-confirm-disbursements-list {
+    table {
+      width: 100%;
+
+      tr {
+        th {
+          border-top: 1px solid $border-colour;
+          font-weight: bold;
+        }
+
+        td {
+          vertical-align: top;
+        }
+
+        td.mtp-button-column {
+          width: 10em;
+          text-align: center;
+        }
+      }
+    }
+  }
+}
