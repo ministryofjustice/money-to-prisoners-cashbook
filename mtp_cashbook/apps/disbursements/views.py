@@ -410,7 +410,7 @@ class PendingDisbursementDetailView(DisbursementView, TemplateView):
 
 
 class PendingDisbursementRejectView(View):
-    url_name = 'pending_delete'
+    url_name = 'pending_reject'
     http_method_names = ['post']
 
     def post(self, request, *args, **kwargs):
@@ -447,7 +447,6 @@ class PendingDisbursementConfirmView(DisbursementView, TemplateView):
             context['success'] = True
             context['disbursement']['nomis_transaction_id'] = nomis_response['id']
         except HTTPError as e:
-            print(e.response.content)
             if e.response.status_code == 409:
                 logger.warning(
                     'Disbursement %s was already present in NOMIS' % disbursement['id']

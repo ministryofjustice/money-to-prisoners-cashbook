@@ -61,9 +61,13 @@ class MTPBaseTestCase(SimpleTestCase):
         }
 
     @mock.patch('mtp_common.auth.backends.api_client')
-    def login(self, mocked_auth_client, login_data=None):
+    def login(self, mocked_auth_client, login_data=None, credentials=None):
         if not login_data:
             login_data = self._default_login_data
+
+        if credentials:
+            login_data['credentials'] = credentials
+            login_data['user_data']['username'] = credentials['username']
 
         mocked_auth_client.authenticate.return_value = {
             'pk': login_data['user_pk'],
@@ -72,7 +76,9 @@ class MTPBaseTestCase(SimpleTestCase):
         }
 
         response = self.client.post(
-            self.login_url, data=login_data['credentials'], follow=False
+            self.login_url,
+            data=login_data['credentials'],
+            follow=False
         )
 
         self.assertEqual(response.status_code, 302)

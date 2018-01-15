@@ -134,7 +134,7 @@
         <tr>
           <td></td>
           <th>{% trans 'Sort code' %}:</th>
-          <td>{{ disbursement.sort_code }}</td>
+          <td>{{ disbursement.sort_code|format_sortcode }}</td>
           <td>
             {% if editable %}
               <a href="{% url 'disbursements:update_recipient_bank_account' disbursement.id %}" class="print-hidden">
