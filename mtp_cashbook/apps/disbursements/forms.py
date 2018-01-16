@@ -157,7 +157,7 @@ class AmountForm(DisbursementForm):
         'exceeds_funds': _(
             'There is not enough money in the prisoner’s private account. '
             'Use NOMIS to move money from other accounts into the private '
-            'account, then click ’Update balances’'),
+            'account, then click ‘Update balances’'),
     }
 
     def __init__(self, **kwargs):
