@@ -396,6 +396,10 @@ class PendingDisbursementDetailView(DisbursementView, TemplateView):
         context.update(
             **get_disbursement_viability(self.request, context['disbursement'])
         )
+
+        form = disbursement_forms.RejectDisbursementForm()
+        context['reject_form'] = form
+
         return context
 
     def get_confirm_url(self):
@@ -414,12 +418,12 @@ class PendingDisbursementRejectView(View):
     http_method_names = ['post']
 
     def post(self, request, *args, **kwargs):
-        api_session = get_api_session(request)
-        api_session.post(
-            'disbursements/actions/reject/',
-            json={'disbursement_ids': [kwargs['pk']]}
-        )
-        messages.info(request, _('Payment request cancelled.'))
+        form = disbursement_forms.RejectDisbursementForm(request.POST)
+        if form.is_valid():
+            form.reject(request, kwargs['pk'])
+            messages.info(request, _('Payment request cancelled.'))
+        else:
+            messages.error(request, _('Unable to cancel payment request.'))
         return redirect(build_view_url(request, PendingDisbursementListView.url_name))
 
 

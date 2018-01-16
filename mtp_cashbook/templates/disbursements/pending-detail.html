@@ -244,8 +244,12 @@
     {% dialoguebox html_id='cancel-disbursement-dialog' title=_('Are you sure you want to cancel this payment request?') %}
       <form action="{{ view.get_reject_url }}" method="post">
         {% csrf_token %}
-        <input type="submit" class="button" value="{% trans 'Yes' %}" />
-        <button type="button" class="button button-secondary {{ dialogue_close_class }}">{% trans 'No' %}</button>
+        <label class="mtp-reject-reason__label" for="{{ reject_form.reason.id_for_label }}">
+          {% trans 'Why do you want to cancel?' %}
+        </label>
+        <textarea id="{{ reject_form.reason.id_for_label }}" class="form-control mtp-reject-reason__input" rows="4" name="{{ reject_form.reason.html_name }}"></textarea>
+        <input type="submit" class="button" value="{% trans 'Cancel payment' %}" />
+        <button type="button" class="button button-secondary {{ dialogue_close_class }}">{% trans 'Go back' %}</button>
       </form>
     {% enddialoguebox %}
   {% endif %}
