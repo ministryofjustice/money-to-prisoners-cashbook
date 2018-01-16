@@ -209,7 +209,7 @@ class RecipientContactForm(DisbursementForm):
     postcode = forms.CharField(label=_('Postcode'))
     recipient_email = forms.EmailField(
         label=_('Their email address'),
-        help_text=_('The recipient will be notified about this request by email if given or by letter if not.'),
+        help_text=_('The recipient will be notified about this request by email if given here and otherwise by letter'),
         required=False,
     )
 
