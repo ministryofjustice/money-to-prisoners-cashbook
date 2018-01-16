@@ -186,7 +186,6 @@ class AmountForm(DisbursementForm):
 class SendingMethodForm(DisbursementForm):
     method = forms.ChoiceField(
         label=_('Sending method'),
-        initial=SENDING_METHOD.BANK_TRANSFER,
         choices=SENDING_METHOD,
         widget=forms.RadioSelect(),
         help_text={
