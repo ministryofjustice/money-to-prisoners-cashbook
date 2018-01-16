@@ -9,7 +9,12 @@
   {{ block.super }}
 
   <div class="govuk-box-highlight">
-    <h1 class="bold-medium">{% trans 'This request is ready for your colleague to check in ‘Confirm payments’' %}</h1>
+    <h1 class="bold-medium">
+      {% url 'disbursements:pending_list' as link %}
+      {% blocktrans trimmed %}
+        This request is ready for your colleague to check in <a href="{{ link }}">‘Confirm payments’</a>
+      {% endblocktrans %}
+    </h1>
   </div>
 
   <div class="grid-row">
