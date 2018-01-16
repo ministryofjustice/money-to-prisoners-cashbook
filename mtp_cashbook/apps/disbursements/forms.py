@@ -142,18 +142,28 @@ def unserialise_amount(amount_text):
     return Decimal(amount_text)
 
 
+class AmountField(forms.DecimalField):
+    def to_python(self, value):
+        if isinstance(value, str):
+            value = value.lstrip('£').replace(',', '')
+        return super().to_python(value)
+
+
 class AmountForm(DisbursementForm):
-    amount = forms.DecimalField(
+    amount = AmountField(
         label='Amount to send',
         help_text='For example, 10.00',
         min_value=Decimal('0.01'),
         decimal_places=2,
+        error_messages={
+            'invalid': _('Enter amount as a number'),
+            'min_value': _('Amount should be 1p or more'),
+            'max_decimal_places': _('Only use 2 decimal places'),
+        }
     )
     serialise_amount = serialise_amount
     unserialise_amount = unserialise_amount
     error_messages = {
-        'invalid': _('Enter amount as a number'),
-        'min_value': _('Amount should be 1p or more'),
         'exceeds_funds': _(
             'There is not enough money in the prisoner’s private account. '
             'Use NOMIS to move money from other accounts into the private '
