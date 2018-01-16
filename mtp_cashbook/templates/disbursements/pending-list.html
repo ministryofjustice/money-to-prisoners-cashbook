@@ -14,12 +14,10 @@
   </header>
 
   {% for message in messages %}
-    {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
-      <div class="mtp-message mtp-message--info">
+      <div class="mtp-message mtp-message--{{ message.level }}">
         {{ message }}
       </div>
       <br/>
-    {% endif %}
   {% endfor %}
 
   {% if disbursements %}

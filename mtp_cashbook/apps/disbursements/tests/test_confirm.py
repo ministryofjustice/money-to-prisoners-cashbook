@@ -566,10 +566,15 @@ class RejectPendingDisbursementTestCase(PendingDisbursementTestCase):
     @responses.activate
     @override_nomis_settings
     @override_settings(DISBURSEMENT_PRISONS=['BXI'])
-    def test_confirm_disbursement(self):
+    def test_reject_disbursement(self):
         self.login(credentials={'username': 'test-hmp-brixton-a', 'password': 'pass'})
 
         disbursement = SAMPLE_DISBURSEMENTS[4]
+        responses.add(
+            responses.POST,
+            api_url('/disbursements/comments/'),
+            status=201
+        )
         responses.add(
             responses.POST,
             api_url('/disbursements/actions/reject/'),
@@ -577,6 +582,8 @@ class RejectPendingDisbursementTestCase(PendingDisbursementTestCase):
         )
         self.pending_list(disbursements=SAMPLE_DISBURSEMENTS[:3])
 
-        response = self.client.post(self.url(disbursement['id']), follow=True)
+        response = self.client.post(
+            self.url(disbursement['id']), data={'reason': 'bad one'}, follow=True
+        )
         self.assertOnPage(response, 'disbursements:pending_list')
         self.assertContains(response, 'Payment request cancelled.')

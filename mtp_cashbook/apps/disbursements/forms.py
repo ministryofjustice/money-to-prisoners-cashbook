@@ -243,6 +243,24 @@ class RecipientBankAccountForm(DisbursementForm):
         return sort_code
 
 
+class RejectDisbursementForm(GARequestErrorReportingMixin, forms.Form):
+    reason = forms.CharField(required=False)
+
+    def reject(self, request, disbursement_id):
+        api_session = get_api_session(request)
+        reason = self.cleaned_data['reason']
+        if reason:
+            reasons = [{
+                'disbursement': disbursement_id,
+                'comment': reason
+            }]
+            api_session.post('/disbursements/comments/', json=reasons)
+        api_session.post(
+            'disbursements/actions/reject/',
+            json={'disbursement_ids': [disbursement_id]}
+        )
+
+
 def insert_blank_option(choices, title=_('Select an option')):
     new_choices = [('', title)]
     new_choices.extend(choices)
