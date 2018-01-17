@@ -14,10 +14,10 @@
   </header>
 
   {% for message in messages %}
-      <div class="mtp-message mtp-message--{{ message.level }}">
-        {{ message }}
-      </div>
-      <br/>
+    <div class="mtp-message mtp-message--{{ message.level }}">
+      {{ message }}
+    </div>
+    <br/>
   {% endfor %}
 
   {% if disbursements %}
@@ -99,5 +99,12 @@
       {% endfor %}
     </table>
   </div>
+
+  {% else %}
+
+    <p>
+      {% trans 'There are no disbursements waiting to be confirmed.' %}
+    </p>
+
   {% endif %}
 {% endblock %}
