@@ -25,12 +25,12 @@
 
   <div class="mtp-confirm-disbursements-list">
     <table>
+      <caption class="visually-hidden">{% trans 'List of disbursements to confirm' %}</caption>
       <tr>
         <th>{% trans 'Sender' %}</th>
         <th>{% trans 'Amount' %}</th>
         <th>{% trans 'Recipient' %}</th>
-        <th>{% trans 'Status' %}</th>
-        <th></th>
+        <th colspan="2">{% trans 'Status' %}</th>
       </tr>
       {% for disbursement in disbursements %}
         <tr>

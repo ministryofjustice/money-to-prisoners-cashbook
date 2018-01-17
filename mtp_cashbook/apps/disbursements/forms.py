@@ -431,7 +431,7 @@ class BaseSearchForm(GARequestErrorReportingMixin, forms.Form):
             return str(v)
         return v or None
 
-    @property
+    @cached_property
     def search_description(self):
         with override_locale(settings.LANGUAGE_CODE):
             description_kwargs = {

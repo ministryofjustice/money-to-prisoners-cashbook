@@ -95,7 +95,7 @@
   {% if form.is_valid %}
     <div class="mtp-batch">
       <table>
-        <caption class="visually-hidden">{% trans 'Disbursements' %}</caption>
+        <caption class="visually-hidden">{{ form.search_description.description }}</caption>
         <thead>
           <tr>
             <th class="{{ form.cleaned_data|ordering_classes:'prisoner_name' }}">
