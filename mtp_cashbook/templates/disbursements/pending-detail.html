@@ -202,7 +202,7 @@
   {% if viable %}
     <p><strong>{% trans 'Do the details above match those on the paper form?' %}</strong></p>
 
-    <div class="form-group">
+    <div class="form-group mtp-yesno">
       <div class="multiple-choice">
         {% random_string as choice_id %}
         <input id="mtp-choice-{{ choice_id }}" class="mtp-radio-reveal" type="radio" name="mtp-choice" value="{% trans 'Yes' %}" data-reveal=".js-choice-yes">
@@ -225,13 +225,12 @@
       </div>
     </div>
 
-    <div class="js-choice-yes">
+    <div class="js-choice-yes mtp-confirm-action">
       <form action="{{ view.get_confirm_url }}" method="post">
         {% csrf_token %}
         <input type="submit" class="button mtp-next-button" value="{% trans 'Confirm payment' %}" />
       </form>
     </div>
-    <br/>
   {% endif %}
   {% if editable %}
     <div>
