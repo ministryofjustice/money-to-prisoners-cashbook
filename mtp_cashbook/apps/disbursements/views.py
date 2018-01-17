@@ -551,7 +551,7 @@ class UpdateDisbursementFormView(DisbursementView, FormView):
 
     @classmethod
     def clear_session(cls, request):
-        for view in cls.get_previous_views(cls):
+        for view in [cls, *cls.get_previous_views(cls)]:
             if hasattr(view, 'form_class'):
                 view.form_class.delete_from_session(request)
 
@@ -609,10 +609,16 @@ class UpdateDisbursementFormView(DisbursementView, FormView):
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
-        self.api_session.patch(
-            'disbursements/{pk}/'.format(pk=self.pk),
-            json=self.get_update_payload(form)
-        )
+        update = self.get_update_payload(form)
+        changes = {}
+        for field in update:
+            if update[field] != self.disbursement[field]:
+                changes[field] = update[field]
+        if changes:
+            self.api_session.patch(
+                'disbursements/{pk}/'.format(pk=self.pk),
+                json=changes
+            )
         return super().form_valid(form)
 
     def get_update_payload(self, form):
