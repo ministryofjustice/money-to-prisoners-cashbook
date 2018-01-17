@@ -375,6 +375,9 @@ class PendingDisbursementListView(DisbursementView, TemplateView):
         context['disbursements'] = retrieve_all_pages_for_path(
             self.api_session, 'disbursements/', resolution='pending'
         )
+        context['disbursements'] += retrieve_all_pages_for_path(
+            self.api_session, 'disbursements/', resolution='preconfirmed'
+        )
         context['pending_count'] = len(context['disbursements'])
 
         for disbursement in context['disbursements']:

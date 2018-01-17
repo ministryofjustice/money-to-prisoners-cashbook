@@ -41,7 +41,9 @@
   {% else %}
     {% if not editable %}
       <div class="mtp-message mtp-message--info">
-        {% trans 'This payment request cannot be changed or deleted as it is in the process of being confirmed.' %}
+        {% trans 'Someone has already attempted to confirm this payment request.' %}
+        {% trans 'It can no longer be changed or deleted, but you can attempt to confirm it again.' %}
+        {% trans 'This will not result in a duplication of the payment.' %}
         <br/>
         {% trans 'If there is a problem, use ‘Get help’ to contact us.' %}
       </div>
