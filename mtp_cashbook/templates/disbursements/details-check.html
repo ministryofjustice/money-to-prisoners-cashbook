@@ -61,9 +61,11 @@
         <td></td>
         <th>{% trans 'Address' %}:</th>
         <td>
-          {{ address_line1 }}<br>
-          {% if address_line2 %}{{ address_line2 }}<br>{% endif %}
-          {{ city }}
+          <address>
+            {{ address_line1 }}<br>
+            {% if address_line2 %}{{ address_line2 }}<br>{% endif %}
+            {{ city }}
+          </address>
         </td>
         <td></td>
       </tr>

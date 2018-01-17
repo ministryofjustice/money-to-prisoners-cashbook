@@ -114,9 +114,11 @@
         <td></td>
         <th>{% trans 'Address' %}:</th>
         <td>
-          {{ disbursement.address_line1 }}<br>
-          {% if disbursement.address_line2 %}{{ disbursement.address_line2 }}<br>{% endif %}
-          {{ disbursement.city }}
+          <address>
+            {{ disbursement.address_line1 }}<br>
+            {% if disbursement.address_line2 %}{{ disbursement.address_line2 }}<br>{% endif %}
+            {{ disbursement.city }}
+          </address>
         </td>
         <td></td>
       </tr>
