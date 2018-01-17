@@ -41,7 +41,9 @@
   {% else %}
     {% if not editable %}
       <div class="mtp-message mtp-message--info">
-        {% trans 'This payment request cannot be changed or deleted as it is in the process of being confirmed.' %}
+        {% trans 'Someone has already attempted to confirm this payment request.' %}
+        {% trans 'It can no longer be changed or deleted, but you can attempt to confirm it again.' %}
+        {% trans 'This will not result in a duplication of the payment.' %}
         <br/>
         {% trans 'If there is a problem, use ‘Get help’ to contact us.' %}
       </div>
@@ -63,6 +65,8 @@
       </div>
       <br/>
     {% endif %}
+
+    <p>{% trans 'Double-check these payment details match those on the paper form.' %}</p>
   {% endif %}
 
   <table class="mtp-confirm-table">
@@ -206,10 +210,17 @@
         <input id="mtp-choice-{{ choice_id }}" class="mtp-radio-reveal" type="radio" name="mtp-choice" value="{% trans 'Yes' %}" data-reveal=".js-choice-yes">
         <label for="mtp-choice-{{ choice_id }}">{% trans 'Yes' %}</label>
       </div>
-      <div class="panel panel-border-narrow hidden js-choice-yes">
-        {% trans 'Sign the bottom of the paper form under ‘Staff’.' %}
-        <br>
-        <img class="mtp-filled-form-sample" src="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-V1-signed-2.jpg' %}" srcset="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-V1-signed-2@2x.jpg' %} 2x" alt="{% trans 'Sign the bottom of the paper form under ‘Staff’.' %}" />
+      <div class="panel panel-border-narrow mtp-button-panel js-hidden js-choice-yes">
+        <div>{% trans 'Sign the bottom of the paper form under ‘Staff’.' %}</div>
+        <div>
+          <img class="mtp-filled-form-sample" src="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-V1-signed-2.jpg' %}" srcset="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-V1-signed-2@2x.jpg' %} 2x" alt="{% trans 'Sign the bottom of the paper form under ‘Staff’.' %}" />
+        </div>
+        <div>
+          <form action="{{ view.get_confirm_url }}" method="post">
+            {% csrf_token %}
+            <input type="submit" class="button mtp-next-button" value="{% trans 'Confirm payment' %}" />
+          </form>
+        </div>
       </div>
 
       <div class="multiple-choice">
@@ -217,19 +228,12 @@
         <input id="mtp-choice-{{ choice_id }}" class="mtp-radio-reveal" type="radio" name="mtp-choice" value="{% trans 'No' %}" data-reveal=".js-choice-no">
         <label for="mtp-choice-{{ choice_id }}">{% trans 'No' %}</label>
       </div>
-      <div class="panel panel-border-narrow hidden js-choice-no">
+      <div class="panel panel-border-narrow js-hidden js-choice-no">
         {% trans 'Use ‘Change’ above to make sure the details match those on the paper form.' %}
         {% trans 'Someone else will need to confirm this payment later.' %}
       </div>
     </div>
 
-    <div class="js-hidden js-choice-yes">
-      <form action="{{ view.get_confirm_url }}" method="post">
-        {% csrf_token %}
-        <input type="submit" class="button mtp-next-button" value="{% trans 'Confirm payment' %}" />
-      </form>
-    </div>
-    <br/>
   {% endif %}
   {% if editable %}
     <div>

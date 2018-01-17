@@ -21,7 +21,7 @@
   {% endfor %}
 
   {% if disbursements %}
-  <p>{% trans 'Before you start, have the completed forms in front of you.' %}</p>
+  <p>{% trans 'Have the completed form in front of you and choose the payment details you want to check.' %}</p>
 
   <div class="mtp-confirm-disbursements-list">
     <table>
@@ -60,7 +60,7 @@
           </td>
           <td class="mtp-button-column">
             {% if disbursement.viable %}
-              <a id="id_next_btn" class="button mtp-next-button" href="{% url 'disbursements:pending_detail' pk=disbursement.id %}">{% trans 'Check details' %}</a>
+              <a id="id_next_btn" class="button" href="{% url 'disbursements:pending_detail' pk=disbursement.id %}">{% trans 'Check details' %}</a>
             {% else %}
               <a class="button button-secondary" href="{% url 'disbursements:pending_detail' pk=disbursement.id %}">{% trans 'Edit' %}</a>
             {% endif %}

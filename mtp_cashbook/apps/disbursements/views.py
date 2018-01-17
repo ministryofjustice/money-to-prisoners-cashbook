@@ -6,6 +6,7 @@ from django.http import Http404
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
+from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView, TemplateView, View
 from mtp_common.api import retrieve_all_pages_for_path
@@ -36,6 +37,23 @@ def clear_session_view(request):
 
 
 class DisbursementView(View):
+
+    @cached_property
+    def api_session(self):
+        return get_api_session(self.request)
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        try:
+            response = self.api_session.get(
+                'disbursements/', params={'resolution': 'pending'}
+            ).json()
+
+            context_data['confirm_tab_suffix'] = ' (%s)' % response['count']
+        except RequestException:
+            pass
+        return context_data
+
     @method_decorator(login_required)
     @method_decorator(disbursements_available_required)
     def dispatch(self, request, *args, **kwargs):
@@ -303,7 +321,6 @@ class DisbursementCompleteView(CreateDisbursementView, TemplateView):
         recipient_bank_details = self.valid_form_data.get(RecipientBankAccountView.form_name(), {})
 
         try:
-            api_session = get_api_session(request)
             disbursement_data = {
                 'prisoner_number': prisoner_details['prisoner_number'],
                 'prison': prisoner_details['prison'],
@@ -313,7 +330,7 @@ class DisbursementCompleteView(CreateDisbursementView, TemplateView):
             disbursement_data.update(**amount_details)
             disbursement_data.update(**recipient_contact_details)
             disbursement_data.update(**recipient_bank_details)
-            api_session.post('/disbursements/', json=disbursement_data)
+            self.api_session.post('/disbursements/', json=disbursement_data)
 
             response = super().get(request, *args, **kwargs)
             self.clear_session(request)
@@ -354,10 +371,12 @@ class PendingDisbursementListView(DisbursementView, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        api_session = get_api_session(self.request)
 
         context['disbursements'] = retrieve_all_pages_for_path(
-            api_session, 'disbursements/', resolution='pending'
+            self.api_session, 'disbursements/', resolution='pending'
+        )
+        context['disbursements'] += retrieve_all_pages_for_path(
+            self.api_session, 'disbursements/', resolution='preconfirmed'
         )
         context['pending_count'] = len(context['disbursements'])
 
@@ -385,12 +404,11 @@ class PendingDisbursementDetailView(DisbursementView, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         self.pk = kwargs['pk']
-        api_session = get_api_session(self.request)
 
         if 'e' in self.request.GET:
             context['errors'] = [self.error_messages.get(self.request.GET['e'])]
 
-        context['disbursement'] = api_session.get(
+        context['disbursement'] = self.api_session.get(
             'disbursements/{pk}/'.format(pk=kwargs['pk'])
         ).json()
         context.update(
@@ -476,10 +494,9 @@ class PendingDisbursementConfirmView(DisbursementView, TemplateView):
 
     def post(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
-        api_session = get_api_session(self.request)
 
         try:
-            disbursement = api_session.get(
+            disbursement = self.api_session.get(
                 'disbursements/{pk}/'.format(pk=kwargs['pk'])
             ).json()
             context['disbursement'] = disbursement
@@ -488,7 +505,7 @@ class PendingDisbursementConfirmView(DisbursementView, TemplateView):
 
         try:
             if disbursement['resolution'] != 'preconfirmed':
-                api_session.post(
+                self.api_session.post(
                     'disbursements/actions/preconfirm/',
                     json={'disbursement_ids': [disbursement['id']]}
                 )
@@ -506,13 +523,13 @@ class PendingDisbursementConfirmView(DisbursementView, TemplateView):
                 update['nomis_transaction_id'] = (
                     context['disbursement']['nomis_transaction_id']
                 )
-            api_session.post(
+            self.api_session.post(
                 'disbursements/actions/confirm/',
                 json=[update]
             )
             return self.render_to_response(context)
         else:
-            api_session.post(
+            self.api_session.post(
                 'disbursements/actions/reset/',
                 json={'disbursement_ids': [disbursement['id']]}
             )
@@ -534,7 +551,7 @@ class UpdateDisbursementFormView(DisbursementView, FormView):
 
     @classmethod
     def clear_session(cls, request):
-        for view in cls.get_previous_views(cls):
+        for view in [cls, *cls.get_previous_views(cls)]:
             if hasattr(view, 'form_class'):
                 view.form_class.delete_from_session(request)
 
@@ -573,7 +590,6 @@ class UpdateDisbursementFormView(DisbursementView, FormView):
 
     def dispatch(self, request, *args, **kwargs):
         self.pk = kwargs['pk']
-        self.api_session = get_api_session(request)
 
         try:
             self.disbursement = self.api_session.get(
@@ -593,10 +609,16 @@ class UpdateDisbursementFormView(DisbursementView, FormView):
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
-        self.api_session.patch(
-            'disbursements/{pk}/'.format(pk=self.pk),
-            json=self.get_update_payload(form)
-        )
+        update = self.get_update_payload(form)
+        changes = {}
+        for field in update:
+            if update[field] != self.disbursement[field]:
+                changes[field] = update[field]
+        if changes:
+            self.api_session.patch(
+                'disbursements/{pk}/'.format(pk=self.pk),
+                json=changes
+            )
         return super().form_valid(form)
 
     def get_update_payload(self, form):

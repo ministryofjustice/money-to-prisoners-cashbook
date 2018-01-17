@@ -35,21 +35,23 @@
           <input id="js-choice-{{ choice_id }}" class="mtp-radio-reveal" type="radio" name="form-check" value="{% trans 'Yes' %}" data-reveal=".js-choice-yes">
           <label for="js-choice-{{ choice_id }}">{% trans 'Yes' %}</label>
         </div>
+        <div class="panel panel-border-narrow mtp-button-panel js-hidden js-choice-yes">
+          <a class="button mtp-next-button" href="{{ view.get_success_url }}">{% trans 'Next' %}</a>
+        </div>
 
         <div class="multiple-choice">
           {% random_string as choice_id %}
           <input id="js-choice-{{ choice_id }}" class="mtp-radio-reveal" type="radio" name="form-check" value="{% trans 'No' %}" data-reveal=".js-choice-no">
           <label for="js-choice-{{ choice_id }}">{% trans 'No' %}</label>
         </div>
-        <div class="panel panel-border-narrow hidden js-choice-no">
-          {% trans 'Check with the prisoner they have entered their correct details on the paper form, then process it as a new request.' %}
+        <div class="panel panel-border-narrow js-hidden js-choice-no">
+          <p>
+            {% trans 'Check with the prisoner they have entered their correct details on the paper form, then process it as a new request.' %}
+          </p>
+          <a href="{% url 'disbursements:clear_session' %}" class="button button-secondary">{% trans 'Process another request' %}</a>
         </div>
       </div>
     </div>
   </div>
-
-  <a class="button mtp-next-button js-hidden js-choice-yes" href="{{ view.get_success_url }}">{% trans 'Next' %}</a>
-  <br/>
-  <a href="{% url 'disbursements:clear_session' %}" class="button button-secondary hidden js-choice-no">{% trans 'Process another request' %}</a>
 
 {% endblock %}

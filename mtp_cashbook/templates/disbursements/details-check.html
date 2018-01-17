@@ -129,10 +129,14 @@
       <input id="js-choice-{{ choice_id }}" class="mtp-radio-reveal" type="radio" name="form-check" value="{% trans 'Yes' %}" data-reveal=".js-choice-yes">
       <label for="js-choice-{{ choice_id }}">{% trans 'Yes' %}</label>
     </div>
-    <div class="panel panel-border-narrow hidden js-choice-yes">
-      {% trans 'Sign the bottom of the paper form under ‘Staff’.' %}
-      <br>
-      <img class="mtp-filled-form-sample" src="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-V1-signed-1.jpg' %}" srcset="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-V1-signed-1@2x.jpg' %} 2x" alt="{% trans 'Sign the bottom of the paper form under ‘Staff’.' %}" />
+    <div class="panel panel-border-narrow mtp-button-panel js-hidden js-choice-yes">
+      <div>{% trans 'Sign the bottom of the paper form under ‘Staff’.' %}</div>
+      <div>
+        <img class="mtp-filled-form-sample" src="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-V1-signed-1.jpg' %}" srcset="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-V1-signed-1@2x.jpg' %} 2x" alt="{% trans 'Sign the bottom of the paper form under ‘Staff’.' %}" />
+      </div>
+      <div>
+        <a class="button mtp-next-button js-choice-yes" href="{{ view.get_success_url }}">{% trans 'Next' %}</a>
+      </div>
     </div>
 
     <div class="multiple-choice">
@@ -140,12 +144,10 @@
       <input id="js-choice-{{ choice_id }}" class="mtp-radio-reveal" type="radio" name="form-check" value="{% trans 'No' %}" data-reveal=".js-choice-no">
       <label for="js-choice-{{ choice_id }}">{% trans 'No' %}</label>
     </div>
-    <div class="panel panel-border-narrow hidden js-choice-no">
+    <div class="panel panel-border-narrow js-hidden js-choice-no">
       {% blocktrans trimmed with button_name=_('Change')|wrapwithtag:'strong' %}
         Use ‘{{ button_name }}’ buttons above to make sure the details match those on the paper form.
       {% endblocktrans %}
     </div>
   </div>
-
-  <a class="button mtp-next-button js-hidden js-choice-yes" href="{{ view.get_success_url }}">{% trans 'Next' %}</a>
 {% endblock %}

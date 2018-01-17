@@ -236,7 +236,7 @@ class PendingDisbursementTestCase(MTPBaseTestCase):
             status=200
         )
 
-    def pending_list(self, disbursements=SAMPLE_DISBURSEMENTS):
+    def pending_list(self, disbursements=SAMPLE_DISBURSEMENTS, preconfirmed=[]):
         responses.add(
             responses.GET,
             api_url('/disbursements/?resolution=pending&offset=0&limit=100'),
@@ -248,7 +248,18 @@ class PendingDisbursementTestCase(MTPBaseTestCase):
             status=200
         )
 
-        for disbursement in disbursements:
+        responses.add(
+            responses.GET,
+            api_url('/disbursements/?resolution=preconfirmed&offset=0&limit=100'),
+            match_querystring=True,
+            json={
+                'count': len(preconfirmed),
+                'results': preconfirmed
+            },
+            status=200
+        )
+
+        for disbursement in (disbursements + preconfirmed):
             self.add_nomis_responses_for_disbursement(disbursement)
 
     def pending_detail(self, disbursement):
