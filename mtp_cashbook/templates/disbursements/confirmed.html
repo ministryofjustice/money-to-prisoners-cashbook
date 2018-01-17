@@ -12,8 +12,10 @@
 {% block inner_content %}
   {{ block.super }}
 
-  <div class="mtp-message mtp-message--success">
-    {% trans 'Payment request sent to SSCL' %}
+  <div class="govuk-box-highlight">
+    <h1 class="bold-medium">
+      {% trans 'Payment request sent to SSCL' %}
+    </h1>
     {% if disbursement.nomis_transaction_id %}
       <br/>
       {% blocktrans trimmed with nomis_ref=disbursement.nomis_transaction_id %}
@@ -21,7 +23,6 @@
       {% endblocktrans %}
     {% endif %}
   </div>
-  <br/>
 
   <p>
     {% trans 'No more action from you is necessary.' %}
