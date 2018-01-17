@@ -3,6 +3,7 @@
 {% load mtp_common %}
 {% load disbursements %}
 
+{% block page_title %}{% trans 'Disbursement saved' %} – {{ block.super }}{% endblock %}
 {% block body_classes %}{{ block.super }} mtp-create-disbursement{% endblock %}
 
 {% block inner_content %}
