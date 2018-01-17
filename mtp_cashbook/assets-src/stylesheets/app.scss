@@ -48,3 +48,20 @@
 address {
   font-style: normal;
 }
+
+.mtp-question-button {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  margin: 3px 0 0 6px;
+  vertical-align: top;
+  background: file-url('question-icon.png');
+  text-decoration: none;
+  text-indent: -1000px;
+  font-size: 1px;
+
+  @include device-pixel-ratio {
+    background: file-url('question-icon@2x.png');
+    background-size: 15px 15px;
+  }
+}
