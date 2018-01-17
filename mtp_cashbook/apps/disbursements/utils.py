@@ -44,4 +44,8 @@ def get_disbursement_viability(request, disbursement):
         viability['self_own']
     ) and viability['confirmable']
 
+    viability['confirmable_by_other'] = viability['confirmable'] and viability['self_own'] and not any(
+        [viability.get('insufficient_funds', False), viability.get('prisoner_moved', False)]
+    )
+
     return viability

@@ -52,20 +52,50 @@
               {% trans 'Prisoner no longer in  this prison' %}
             {% elif disbursement.insufficient_funds %}
               {% trans 'Insufficient funds' %}
-            {% elif disbursement.self_own %}
-              {% trans 'Another colleague needs to confirm this payment' %}
             {% else %}
               {% trans 'Confirmation required' %}
+              {% if disbursement.self_own %}
+                <br>
+                {% trans 'Another colleague needs to confirm this payment' %}
+                <a href="#" class="mtp-question-button">
+                  {% trans 'Why can’t I confirm this payment?' %}
+                </a>
+              {% endif %}
             {% endif %}
           </td>
           <td class="mtp-button-column">
             {% if disbursement.viable %}
-              <a id="id_next_btn" class="button" href="{% url 'disbursements:pending_detail' pk=disbursement.id %}">{% trans 'Check details' %}</a>
+              <a class="button" href="{% url 'disbursements:pending_detail' pk=disbursement.id %}">{% trans 'Check details' %}</a>
             {% else %}
               <a class="button button-secondary" href="{% url 'disbursements:pending_detail' pk=disbursement.id %}">{% trans 'Edit' %}</a>
             {% endif %}
           </td>
         </tr>
+        {% if disbursement.confirmable_by_other %}
+          <tr class="js-hidden">
+            <td colspan="3"></td>
+            <td colspan="2">
+              <div class="panel panel-border-narrow">
+                <strong>
+                  {% trans 'A payment can’t be confirmed by the person who' %}:
+                </strong>
+                <ul class="list list-bullet">
+                  <li>
+                    {% trans '‘entered’ the payment request' %}
+                    –
+                    {% trans 'the process still needs two different members of staff to check the details' %}
+                  </li>
+                  <li>
+                    {% trans 'made a ‘change’ or ‘edit’ to the request' %}
+                  </li>
+                </ul>
+                <a href="{% url 'disbursements:process-overview' %}">
+                  {% trans 'Read more about how the disbursement process works' %}
+                </a>
+              </div>
+            </td>
+          </tr>
+        {% endif %}
       {% endfor %}
     </table>
   </div>

@@ -30,4 +30,5 @@
   require('sort-code').SortCode.init();
   require('page-contents').PageContents.init();
   require('conditionally-revealed').ConditionallyRevealed.init();
+  require('disbursements').Disbursements.init();
 }());
