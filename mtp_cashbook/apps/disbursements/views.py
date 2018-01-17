@@ -2,7 +2,7 @@ import logging
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import Http404
+from django.http import Http404, JsonResponse
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
@@ -15,6 +15,7 @@ from mtp_common.auth.exceptions import HttpNotFoundError
 from mtp_common import nomis
 from requests.exceptions import HTTPError, RequestException
 
+from cashbook.templatetags.currency import currency
 from disbursements import disbursements_available_required, forms as disbursement_forms
 from disbursements.utils import get_disbursement_viability
 from feedback.views import GetHelpView, GetHelpSuccessView
@@ -221,7 +222,25 @@ class PrisonerCheckView(CreateDisbursementView, TemplateView):
         return build_view_url(self.request, AmountView.url_name)
 
 
-class AmountView(CreateDisbursementFormView):
+class AmountViewMixin:
+    def get(self, request, *args, **kwargs):
+        if request.is_ajax():
+            try:
+                balances = nomis.get_account_balances(
+                    self.valid_form_data[disbursement_forms.PrisonerForm.__name__]['prison'],
+                    self.valid_form_data[disbursement_forms.PrisonerForm.__name__]['prisoner_number'],
+                )
+                return JsonResponse({
+                    'spends': currency(balances['spends'], '£'),
+                    'private': currency(balances['cash'], '£'),
+                    'savings': currency(balances['savings'], '£'),
+                })
+            except (RequestException, KeyError):
+                raise Http404('Balance not available')
+        return super().get(request, *args, **kwargs)
+
+
+class AmountView(AmountViewMixin, CreateDisbursementFormView):
     url_name = 'amount'
     previous_view = PrisonerCheckView
     template_name = 'disbursements/amount.html'
@@ -669,7 +688,7 @@ class UpdatePrisonerView(UpdateDisbursementFormView):
     previous_view = UpdateSendingMethodView
 
 
-class UpdateAmountView(UpdateDisbursementFormView):
+class UpdateAmountView(AmountViewMixin, UpdateDisbursementFormView):
     url_name = 'update_amount'
     template_name = 'disbursements/amount.html'
     form_class = disbursement_forms.AmountForm
