@@ -60,7 +60,7 @@
           </td>
           <td class="mtp-button-column">
             {% if disbursement.viable %}
-              <a id="id_next_btn" class="button mtp-next-button" href="{% url 'disbursements:pending_detail' pk=disbursement.id %}">{% trans 'Check details' %}</a>
+              <a id="id_next_btn" class="button" href="{% url 'disbursements:pending_detail' pk=disbursement.id %}">{% trans 'Check details' %}</a>
             {% else %}
               <a class="button button-secondary" href="{% url 'disbursements:pending_detail' pk=disbursement.id %}">{% trans 'Edit' %}</a>
             {% endif %}
