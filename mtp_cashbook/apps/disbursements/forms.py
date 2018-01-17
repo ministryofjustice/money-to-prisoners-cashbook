@@ -81,8 +81,8 @@ class DisbursementForm(GARequestErrorReportingMixin, forms.Form):
 
 class PrisonerForm(DisbursementForm):
     prisoner_number = forms.CharField(
-        label='Prisoner number',
-        help_text='For example, A1234BC',
+        label=_('Prisoner number'),
+        help_text=_('For example, A1234BC'),
         max_length=7,
     )
     error_messages = {
@@ -151,8 +151,8 @@ class AmountField(forms.DecimalField):
 
 class AmountForm(DisbursementForm):
     amount = AmountField(
-        label='Amount to send',
-        help_text='For example, 10.00',
+        label=_('Amount to send'),
+        help_text=_('For example, 10.00'),
         min_value=Decimal('0.01'),
         decimal_places=2,
         error_messages={
@@ -213,7 +213,7 @@ class RecipientContactForm(DisbursementForm):
     recipient_first_name = forms.CharField(label=_('Their first name'))
     recipient_last_name = forms.CharField(label=_('Last name'))
     address_line1 = forms.CharField(label=_('Their address'))
-    address_line2 = forms.CharField(label=_('Their address line 2'), required=False)
+    address_line2 = forms.CharField(label=_('Address line 2'), required=False)
     city = forms.CharField(label=_('Town or city'))
     postcode = forms.CharField(label=_('Postcode'))
     recipient_email = forms.EmailField(
