@@ -261,7 +261,8 @@ class RejectDisbursementForm(GARequestErrorReportingMixin, forms.Form):
         if reason:
             reasons = [{
                 'disbursement': disbursement_id,
-                'comment': reason
+                'comment': reason,
+                'category': 'reject',
             }]
             api_session.post('/disbursements/comments/', json=reasons)
         api_session.post(

@@ -238,6 +238,12 @@
                     {% blocktrans trimmed with staff_name=log_item.staff_name %}
                       Cancelled by {{ staff_name }}
                     {% endblocktrans %}
+                    {% with rejection_reason=disbursement.comments|find_rejection_reason %}
+                      <br>
+                      <small>
+                        {{ rejection_reason|truncatewords:5 }}
+                      </small>
+                    {% endwith %}
 
                   {% endif %}
                   {% if not forloop.last %}

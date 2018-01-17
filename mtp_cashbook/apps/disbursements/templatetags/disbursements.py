@@ -25,3 +25,10 @@ def format_disbursement_resolution(value):
         'confirmed': _('Confirmed'),
         'sent': _('Sent'),
     }.get(value, value)
+
+
+@register.filter
+def find_rejection_reason(comment_set):
+    for comment in filter(lambda comment: comment['category'] == 'reject', comment_set):
+        return comment['comment']
+    return ''
