@@ -402,15 +402,19 @@ class PendingDisbursementDetailView(DisbursementView, TemplateView):
     }
 
     def get_context_data(self, **kwargs):
+        kwargs['breadcrumbs_back'] = build_view_url(self.request, PendingDisbursementListView.url_name)
         context = super().get_context_data(**kwargs)
         self.pk = kwargs['pk']
 
         if 'e' in self.request.GET:
             context['errors'] = [self.error_messages.get(self.request.GET['e'])]
 
-        context['disbursement'] = self.api_session.get(
-            'disbursements/{pk}/'.format(pk=kwargs['pk'])
-        ).json()
+        try:
+            context['disbursement'] = self.api_session.get(
+                'disbursements/{pk}/'.format(pk=kwargs['pk'])
+            ).json()
+        except HttpNotFoundError:
+            raise Http404('Disbursement %s not found' % kwargs['pk'])
         context.update(
             **get_disbursement_viability(self.request, context['disbursement'])
         )
