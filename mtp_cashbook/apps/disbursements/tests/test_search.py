@@ -139,6 +139,7 @@ class DisbursementSearchFormTextCase(SimpleTestCase):
         })
         self.assertTrue(form.is_valid())
         query_params = form.get_api_request_params()
+        query_params.pop('resolution', None)
         self.assertDictEqual(query_params, {
             'ordering': '-created',
             'log__action': 'created',
@@ -156,6 +157,7 @@ class DisbursementSearchFormTextCase(SimpleTestCase):
         })
         self.assertTrue(form.is_valid())
         query_params = form.get_api_request_params()
+        query_params.pop('resolution', None)
         self.assertDictEqual(query_params, {
             'ordering': '-amount',
             'log__action': 'confirmed',

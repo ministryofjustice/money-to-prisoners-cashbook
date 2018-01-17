@@ -527,10 +527,9 @@ class SearchForm(BaseSearchForm):
 
     resolutions = [
         # NB: not all resolutions can be filtered
-        ('pending', _('Waiting for confirmation')),
-        ('rejected', _('Cancelled')),
         ('confirmed', _('Confirmed')),
         ('sent', _('Sent')),
+        ('rejected', _('Cancelled')),
     ]
     resolution = forms.ChoiceField(label=_('Status'), required=False,
                                    choices=insert_blank_option(resolutions, _('Any status')))
@@ -573,6 +572,7 @@ class SearchForm(BaseSearchForm):
                 filters['logged_at__gte'] = date__gte
             if date__lt:
                 filters['logged_at__lt'] = date__lt
+        filters['resolution'] = filters.get('resolution') or ['confirmed', 'sent', 'rejected']
         return filters
 
     def get_object_list_endpoint_path(self):
