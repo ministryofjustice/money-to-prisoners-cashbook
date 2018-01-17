@@ -223,7 +223,7 @@
       </div>
     </div>
 
-    <div class="js-hidden js-choice-yes">
+    <div class="js-choice-yes">
       <form action="{{ view.get_confirm_url }}" method="post">
         {% csrf_token %}
         <input type="submit" class="button mtp-next-button" value="{% trans 'Confirm payment' %}" />

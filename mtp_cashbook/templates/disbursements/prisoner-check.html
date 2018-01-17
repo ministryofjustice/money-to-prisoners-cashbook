@@ -48,7 +48,7 @@
     </div>
   </div>
 
-  <a class="button mtp-next-button js-hidden js-choice-yes" href="{{ view.get_success_url }}">{% trans 'Next' %}</a>
+  <a class="button mtp-next-button js-choice-yes" href="{{ view.get_success_url }}">{% trans 'Next' %}</a>
   <br/>
   <a href="{% url 'disbursements:clear_session' %}" class="button button-secondary hidden js-choice-no">{% trans 'Process another request' %}</a>
 
