@@ -18,32 +18,17 @@
     border: none;
   }
 
-  td {
-    text-align: center;
-  }
-
-  td.mtp-balance-column {
+  .mtp-balance-column {
     text-align: right;
   }
 
-  td.mtp-amount-column {
-    text-align: left;
+  .mtp-private-row td {
+    font-weight: bold;
   }
 
-  td.mtp-account-column {
-    text-align: left;
-  }
-
-  tr.mtp-private-row {
-    td {
-      font-weight: bold;
-    }
-  }
-
-  tr.mtp-refresh-row {
-    td {
-      border: none;
-    }
+  .mtp-refresh-row td {
+    border: none;
+    text-align: right;
   }
 }
 
