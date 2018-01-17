@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load mtp_common %}
 
+{% block page_title %}{% trans 'Hand over the paper form for confirmation' %} – {{ block.super }}{% endblock %}
 {% block body_classes %}{{ block.super }} mtp-create-disbursement{% endblock %}
 
 {% block inner_content %}
