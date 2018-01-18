@@ -102,8 +102,7 @@ class CreateDisbursementView(DisbursementView):
         for view in self.get_previous_views(self):
             if not hasattr(view, 'form_class') or not view.is_form_enabled(self.valid_form_data):
                 continue
-            form = view.form_class.unserialise_from_session(
-                request, self.valid_form_data)
+            form = view.form_class.unserialise_from_session(request)
             if form.is_valid():
                 self.valid_form_data[view.form_name()] = form.cleaned_data
             else:
@@ -160,8 +159,7 @@ class CreateDisbursementFormView(CreateDisbursementView, FormView):
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         if self.request.method == 'GET':
-            form = self.form_class.unserialise_from_session(
-                self.request, self.valid_form_data)
+            form = self.form_class.unserialise_from_session(self.request)
             if form.is_valid():
                 # valid form found in session so restore it
                 context_data['form'] = form
@@ -170,7 +168,6 @@ class CreateDisbursementFormView(CreateDisbursementView, FormView):
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['request'] = self.request
-        kwargs['previous_form_data'] = self.valid_form_data
         return kwargs
 
     def form_valid(self, form):
@@ -223,21 +220,32 @@ class PrisonerCheckView(CreateDisbursementView, TemplateView):
 
 
 class AmountViewMixin:
+    def get_nomis_balances(self):
+        try:
+            return nomis.get_account_balances(
+                self.valid_form_data[disbursement_forms.PrisonerForm.__name__]['prison'],
+                self.valid_form_data[disbursement_forms.PrisonerForm.__name__]['prisoner_number'],
+            )
+        except (RequestException, KeyError):
+            pass
+
     def get(self, request, *args, **kwargs):
         if request.is_ajax():
-            try:
-                balances = nomis.get_account_balances(
-                    self.valid_form_data[disbursement_forms.PrisonerForm.__name__]['prison'],
-                    self.valid_form_data[disbursement_forms.PrisonerForm.__name__]['prisoner_number'],
-                )
+            balances = self.get_nomis_balances()
+            if balances:
                 return JsonResponse({
                     'spends': currency(balances['spends'], '£'),
                     'private': currency(balances['cash'], '£'),
                     'savings': currency(balances['savings'], '£'),
                 })
-            except (RequestException, KeyError):
+            else:
                 raise Http404('Balance not available')
         return super().get(request, *args, **kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['nomis_balances'] = self.get_nomis_balances()
+        return kwargs
 
 
 class AmountView(AmountViewMixin, CreateDisbursementFormView):
@@ -600,15 +608,13 @@ class UpdateDisbursementFormView(DisbursementView, FormView):
         context_data = super().get_context_data(**kwargs)
         if self.request.method == 'GET':
             self.form_class.serialise_data(self.request.session, self.disbursement)
-            form = self.form_class.unserialise_from_session(
-                self.request, self.valid_form_data)
+            form = self.form_class.unserialise_from_session(self.request)
             context_data['form'] = form
         return context_data
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['request'] = self.request
-        kwargs['previous_form_data'] = self.valid_form_data
         return kwargs
 
     def dispatch(self, request, *args, **kwargs):
@@ -625,8 +631,7 @@ class UpdateDisbursementFormView(DisbursementView, FormView):
             if not hasattr(view, 'form_class') or not view.is_form_enabled(self.valid_form_data):
                 continue
             view.form_class.serialise_data(request.session, self.disbursement)
-            form = view.form_class.unserialise_from_session(
-                request, self.valid_form_data)
+            form = view.form_class.unserialise_from_session(request)
             if form.is_valid():
                 self.valid_form_data[view.form_name()] = form.cleaned_data
         return super().dispatch(request, *args, **kwargs)

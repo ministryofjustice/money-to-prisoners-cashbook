@@ -18,7 +18,6 @@ from django.utils.html import format_html, format_html_join
 from django.utils.translation import gettext_lazy as _, override as override_locale
 from extended_choices import Choices
 from form_error_reporting import GARequestErrorReportingMixin
-from mtp_common import nomis
 from mtp_common.auth.api_client import get_api_session
 from mtp_common.auth.exceptions import HttpNotFoundError, Forbidden
 from requests.exceptions import RequestException
@@ -33,7 +32,7 @@ SENDING_METHOD = Choices(
 
 class DisbursementForm(GARequestErrorReportingMixin, forms.Form):
     @classmethod
-    def unserialise_from_session(cls, request, previous_form_data):
+    def unserialise_from_session(cls, request):
         session = request.session
 
         def get_value(f):
@@ -49,7 +48,7 @@ class DisbursementForm(GARequestErrorReportingMixin, forms.Form):
             }
         except KeyError:
             data = None
-        return cls(request=request, data=data, previous_form_data=previous_form_data)
+        return cls(request=request, data=data)
 
     @classmethod
     def delete_from_session(cls, request):
@@ -64,10 +63,9 @@ class DisbursementForm(GARequestErrorReportingMixin, forms.Form):
                 value = getattr(cls, 'serialise_%s' % field)(value)
             session[field] = value
 
-    def __init__(self, request=None, previous_form_data={}, **kwargs):
+    def __init__(self, request=None, **kwargs):
         super().__init__(**kwargs)
         self.request = request
-        self.previous_form_data = previous_form_data
 
     def serialise_to_session(self):
         self.__class__.serialise_data(self.request.session, self.cleaned_data)
@@ -170,26 +168,15 @@ class AmountForm(DisbursementForm):
             'account, then click ‘Update balances’'),
     }
 
-    def __init__(self, **kwargs):
+    def __init__(self, nomis_balances=None, **kwargs):
         super().__init__(**kwargs)
-        try:
-            balances = nomis.get_account_balances(
-                self.previous_form_data[PrisonerForm.__name__]['prison'],
-                self.previous_form_data[PrisonerForm.__name__]['prisoner_number']
-            )
-            self.spends_balance = balances['spends']
-            self.private_balance = balances['cash']
-            self.savings_balance = balances['savings']
-            self.balance_available = True
-        except RequestException:
-            self.balance_available = False
+        self.nomis_balances = nomis_balances
 
     def clean_amount(self):
         amount = floor(Decimal(self.cleaned_data['amount'])*100)
-        if self.balance_available:
-            if amount > self.private_balance:
-                raise forms.ValidationError(
-                    self.error_messages['exceeds_funds'], code='exceeds_funds')
+        if self.nomis_balances and amount > self.nomis_balances['cash']:
+            raise forms.ValidationError(
+                self.error_messages['exceeds_funds'], code='exceeds_funds')
         return amount
 
 
