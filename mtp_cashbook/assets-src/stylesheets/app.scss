@@ -27,6 +27,16 @@
 }
 
 // app-specific styles
+%table-container {
+  @include media($max-width: $desktop-breakpoint, $ignore-for-ie: true) {
+    overflow-x: scroll;
+
+    table {
+      min-width: 900px;
+    }
+  }
+}
+
 .mtp-heading--compact {
   margin-bottom: 0.5em;
 }
