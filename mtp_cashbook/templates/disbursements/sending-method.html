@@ -20,6 +20,8 @@
       <form action="." method="post">
         {% csrf_token %}
 
+        {% include 'mtp_common/forms/error-summary.html' with form=form only %}
+
         <fieldset class="mtp-sending-method-choice">
           <legend id="{{ form.method.id_for_label }}-label" class="visually-hidden">{% trans 'Method by which to send money' %}</legend>
 
