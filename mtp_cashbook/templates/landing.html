@@ -28,7 +28,7 @@
 
     <div class="column-third">
       <div class="mtp-box">
-        <a href="{% if request.disbursements_preview %}{% url 'disbursements:process-overview' %}{% else %}{% url 'disbursements:start' %}{% endif %}" aria-labelledby="tool-2">{% trans 'Digital disbursements' %}</a>
+        <a href="{% url 'disbursements:start' %}">{% trans 'Digital disbursements' %}</a>
         <p id="tool-2">
           {% trans 'Send money out of a prisoner’s account by bank transfer or cheque' %}
         </p>
