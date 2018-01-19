@@ -86,9 +86,10 @@
           </tbody>
         </table>
       {% endif %}
-
-      {% page_list page=current_page page_count=page_count query_string=form.query_string %}
     </div>
+
+    {% page_list page=current_page page_count=page_count query_string=form.query_string %}
+
   {% endif %}
 
 {% endblock %}

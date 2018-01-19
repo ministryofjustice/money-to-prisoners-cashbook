@@ -265,9 +265,9 @@
           {% endfor %}
         </tbody>
       </table>
-
-      {% page_list page=form.cleaned_data.page page_count=form.page_count query_string=form.query_string %}
     </div>
+
+    {% page_list page=form.cleaned_data.page page_count=form.page_count query_string=form.query_string %}
   {% endif %}
 
 {% endblock %}

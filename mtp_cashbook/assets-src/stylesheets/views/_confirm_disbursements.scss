@@ -1,4 +1,6 @@
 .mtp-confirm-disbursements-list {
+  @extend %table-container;
+
   table {
     width: 100%;
 
