@@ -17,6 +17,17 @@ def format_sortcode(value):
 
 
 @register.filter
+def format_disbursement_action(value):
+    return {
+        'created': _('entered'),
+        'edited': _('edited'),
+        'rejected': _('cancelled'),
+        'confirmed': _('confirmed'),
+        'sent': _('sent'),
+    }.get(value, value)
+
+
+@register.filter
 def format_disbursement_resolution(value):
     return {
         'pending': _('Waiting for confirmation'),

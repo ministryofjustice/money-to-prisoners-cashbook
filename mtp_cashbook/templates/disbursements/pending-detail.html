@@ -184,7 +184,7 @@
         <th><h2 class="heading-small">{% trans 'History' %}</h2></th>
         <th colspan="2">
           {% for log in disbursement.log_set|parse_date_fields %}
-            {{ log.created|date:'d/m/Y H:m' }} - {{ log.action }} by {{ log.user.first_name }} {{ log.user.last_name }}<br/>
+            {{ log.created|date:'d/m/Y H:m' }} – {{ log.action|format_disbursement_action }} {% trans 'by' %} {{ log.user.first_name }} {{ log.user.last_name }}<br/>
           {% endfor %}
         </th>
         <th></th>
