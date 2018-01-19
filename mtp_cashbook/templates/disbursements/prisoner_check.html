@@ -2,16 +2,13 @@
 {% load i18n %}
 {% load mtp_common %}
 
-{% block page_title %}{% trans 'Confirm prisoner details' %} – {{ block.super }}{% endblock %}
 {% block body_classes %}{{ block.super }} mtp-create-disbursement{% endblock %}
 
 {% block inner_content %}
   {{ block.super }}
 
   <header>
-    <h1 class="heading-xlarge mtp-heading--compact">
-      {% trans 'Confirm prisoner details' %}
-    </h1>
+    <h1 class="heading-xlarge mtp-heading--compact">{{ view.title }}</h1>
   </header>
 
   <div class="grid-row">
@@ -48,7 +45,7 @@
           <p>
             {% trans 'Check with the prisoner they have entered their correct details on the paper form, then process it as a new request.' %}
           </p>
-          <a href="{% url 'disbursements:clear_session' %}" class="button button-secondary">{% trans 'Process another request' %}</a>
+          <a href="{% url 'disbursements:clear_disbursement' %}" class="button button-secondary">{% trans 'Process another request' %}</a>
         </div>
       </div>
     </div>

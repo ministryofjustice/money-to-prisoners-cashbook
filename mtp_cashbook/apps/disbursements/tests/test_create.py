@@ -7,7 +7,7 @@ from cashbook.tests import (
     MTPBaseTestCase, api_url, nomis_url, override_nomis_settings
 )
 from ..forms import PrisonerForm, AmountForm, SENDING_METHOD
-from ..views import DisbursementHandoverView
+from ..views import HandoverView
 
 
 class CreateDisbursementFlowTestCase(MTPBaseTestCase):
@@ -313,9 +313,9 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
         self.enter_amount()
         self.enter_recipient_details()
         self.enter_recipient_bank_account()
-        response = self.client.post(reverse('disbursements:complete'), follow=True)
+        response = self.client.post(reverse('disbursements:created'), follow=True)
 
-        self.assertOnPage(response, 'disbursements:complete')
+        self.assertOnPage(response, 'disbursements:created')
 
     @responses.activate
     @override_nomis_settings
@@ -333,9 +333,9 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
         self.enter_prisoner_details()
         self.enter_amount()
         self.enter_recipient_details()
-        response = self.client.post(reverse('disbursements:complete'), follow=True)
+        response = self.client.post(reverse('disbursements:created'), follow=True)
 
-        self.assertOnPage(response, 'disbursements:complete')
+        self.assertOnPage(response, 'disbursements:created')
 
     @responses.activate
     @override_nomis_settings
@@ -348,7 +348,7 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
         self.enter_recipient_details()
         self.enter_recipient_bank_account()
         with silence_logger():
-            response = self.client.post(reverse('disbursements:complete'), follow=True)
+            response = self.client.post(reverse('disbursements:created'), follow=True)
 
-        self.assertOnPage(response, 'disbursements:hand-over')
-        self.assertContains(response, DisbursementHandoverView.error_messages['connection'])
+        self.assertOnPage(response, 'disbursements:handover')
+        self.assertContains(response, HandoverView.error_messages['connection'])

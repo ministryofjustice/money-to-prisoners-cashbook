@@ -68,7 +68,7 @@ class DisbursementForm(GARequestErrorReportingMixin, forms.Form):
         self.request = request
 
     def serialise_to_session(self):
-        self.__class__.serialise_data(self.request.session, self.cleaned_data)
+        self.serialise_data(self.request.session, self.cleaned_data)
 
     def get_update_payload(self):
         update = {}

@@ -3,23 +3,20 @@
 {% load mtp_common %}
 {% load currency %}
 
-{% block page_title %}{% trans 'Enter amount' %} – {{ block.super }}{% endblock %}
 {% block body_classes %}{{ block.super }} mtp-create-disbursement{% endblock %}
 
 {% block inner_content %}
   {{ block.super }}
 
   <header>
-    <h1 class="heading-xlarge mtp-heading--compact">
-      {% trans 'Enter amount' %}
-    </h1>
+    <h1 class="heading-xlarge mtp-heading--compact">{{ view.title }}</h1>
   </header>
 
   <p>
     {% trans 'If there isn’t enough money in the prisoner’s private account, use NOMIS to move money across then ‘Update balances’ before you continue.' %}
   <p>
 
-  <form action="." method="post">
+  <form method="post">
     {% csrf_token %}
 
     {% include 'mtp_common/forms/error-summary.html' with form=form only %}

@@ -2,21 +2,18 @@
 {% load i18n %}
 {% load mtp_common %}
 
-{% block page_title %}{% trans 'Recipient details' %} – {{ block.super }}{% endblock %}
 {% block body_classes %}{{ block.super }} mtp-create-disbursement{% endblock %}
 
 {% block inner_content %}
   {{ block.super }}
 
   <header>
-    <h1 class="heading-xlarge mtp-heading--compact">
-      {% trans 'Enter recipient details' %}
-    </h1>
+    <h1 class="heading-xlarge mtp-heading--compact">{{ view.title }}</h1>
   </header>
 
   <div class="grid-row">
     <div class="column-two-thirds">
-      <form action="." method="post">
+      <form method="post">
         {% csrf_token %}
 
         {% include 'mtp_common/forms/error-summary.html' with form=form only %}
