@@ -73,7 +73,7 @@
       </p>
       <p>
         {% trans 'They need to log onto the tool to double-check the details entered match the paper form details.' %}
-        {# {% url 'disbursements:??????????' as link %} #}
+        {% url 'disbursements:pending_list' as link %}
         {% blocktrans trimmed %}
           If they do, they <a href="{{ link }}">‘Confirm payment’</a> and sign the paper form.
         {% endblocktrans %}

@@ -265,7 +265,6 @@ MAILGUN_SERVER_NAME = os.environ.get('MAILGUN_SERVER_NAME', '')
 MAILGUN_FROM_ADDRESS = os.environ.get('MAILGUN_FROM_ADDRESS', '')
 
 DISBURSEMENT_PRISONS = os.environ.get('DISBURSEMENT_PRISONS', '').split(',')
-DISBURSEMENT_PREVIEW_PRISONS = os.environ.get('DISBURSEMENT_PREVIEW_PRISONS', '').split(',')
 
 try:
     from .local import *  # noqa

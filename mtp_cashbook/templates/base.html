@@ -20,9 +20,7 @@
         <h2>{% trans 'Manage prisoner money' %}</h2>
         <ul>
           <li><a href="{% url 'new-credits' %}">{% trans 'Digital cashbook' %}</a></li>
-          {% if request.disbursements_preview %}
-            <li><a href="{% url 'disbursements:process-overview' %}">{% trans 'Digital disbursements' %}</a></li>
-          {% elif request.disbursements_available %}
+          {% if request.disbursements_available %}
             <li><a href="{% url 'disbursements:start' %}">{% trans 'Digital disbursements' %}</a></li>
           {% endif %}
         </ul>

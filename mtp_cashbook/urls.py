@@ -16,7 +16,7 @@ class LandingView(TemplateView):
     template_name = 'landing.html'
 
     def get(self, request, *args, **kwargs):
-        if not (request.disbursements_available or request.disbursements_preview):
+        if not request.disbursements_available:
             return redirect('new-credits')
         return super().get(request, *args, **kwargs)
 
