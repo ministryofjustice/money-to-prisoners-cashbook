@@ -17,7 +17,7 @@
 
   <p class="lede">{{ form.search_description.description }}</p>
 
-  <form action="." method="get" class="print-hidden">
+  <form method="get" class="print-hidden">
     <p><a href="{% url 'disbursements:process-overview' %}#section-track">{% trans 'How to trace a payment' %}</a></p>
 
     {{ form.ordering.as_hidden }}

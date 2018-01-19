@@ -5,16 +5,13 @@
 {% load disbursements %}
 {% load currency %}
 
-{% block page_title %}{% trans 'Check payment details' %} – {{ block.super }}{% endblock %}
 {% block body_classes %}{{ block.super }} mtp-create-disbursement{% endblock %}
 
 {% block inner_content %}
   {{ block.super }}
 
   <header>
-    <h1 class="heading-xlarge mtp-heading--compact">
-      {% trans 'Check payment details' %}
-    </h1>
+    <h1 class="heading-xlarge mtp-heading--compact">{{ view.title }}</h1>
     <p>
       {% trans 'Check if details below match the details on the paper form filled in by the prisoner.' %}
       <br>
@@ -30,7 +27,7 @@
         <th>{% trans 'Send by' %}:</th>
         <td>{{ method|sendingmethod }}</td>
         <td>
-          <a href="{% url 'disbursements:sending_method' %}" class="print-hidden">
+          <a href="{% url 'disbursements:sending_method' %}?next={{ view.url }}" class="print-hidden">
             {% trans 'Change' %}
             <span class="visually-hidden">{% trans 'Sending method' %}</span>
           </a>
@@ -40,7 +37,7 @@
         <th>{% trans 'Amount' %}:</th>
         <td>£{{ amount|currency }}</td>
         <td>
-          <a href="{% url 'disbursements:amount' %}" class="print-hidden">
+          <a href="{% url 'disbursements:amount' %}?next={{ view.url }}" class="print-hidden">
             {% trans 'Change' %}
             <span class="visually-hidden">{% trans 'Amount' %}</span>
           </a>
@@ -52,7 +49,7 @@
         <th>{% trans 'Name' %}:</th>
         <td>{{ recipient_first_name}} {{recipient_last_name}}</td>
         <td>
-          <a href="{% url 'disbursements:recipient_contact' %}" class="print-hidden">
+          <a href="{% url 'disbursements:recipient_contact' %}?next={{ view.url }}" class="print-hidden">
             {% trans 'Change' %}
             <span class="visually-hidden">{% trans 'Recipient details' %}</span>
           </a>
@@ -90,7 +87,7 @@
           <th>{% trans 'Sort code' %}:</th>
           <td>{{ sort_code|format_sortcode }}</td>
           <td>
-            <a href="{% url 'disbursements:recipient_bank_account' %}" class="print-hidden">
+            <a href="{% url 'disbursements:recipient_bank_account' %}?next={{ view.url }}" class="print-hidden">
               {% trans 'Change' %}
               <span class="visually-hidden">{% trans 'Recipient bank account details' %}</span>
             </a>
@@ -109,7 +106,7 @@
         <th>{% trans 'Name' %}:</th>
         <td>{{ prisoner_name }}</td>
         <td>
-          <a href="{% url 'disbursements:prisoner' %}" class="print-hidden">
+          <a href="{% url 'disbursements:prisoner' %}?next={{ view.url }}" class="print-hidden">
             {% trans 'Change' %}
             <span class="visually-hidden">{% trans 'Prisoner details' %}</span>
           </a>

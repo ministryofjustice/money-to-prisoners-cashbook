@@ -7,8 +7,9 @@ from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.functional import cached_property
+from django.utils.http import is_safe_url
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import FormView, TemplateView, View
+from django.views.generic import FormView, TemplateView
 from mtp_common.api import retrieve_all_pages_for_path
 from mtp_common.auth.api_client import get_api_session
 from mtp_common.auth.exceptions import HttpNotFoundError
@@ -23,122 +24,119 @@ from feedback.views import GetHelpView, GetHelpSuccessView
 logger = logging.getLogger('mtp')
 
 
-def build_view_url(request, url_name, args=[], kwargs={}):
-    url_name = '%s:%s' % (request.resolver_match.namespace, url_name)
-    return reverse(url_name, args=args, kwargs=kwargs)
-
-
-def clear_session_view(request):
+class BaseView(TemplateView):
     """
-    View that clears the session and restarts the user flow.
-    @param request: the HTTP request
+    Base view for all disbursement views
     """
-    DisbursementCompleteView.clear_session(request)
-    return redirect(build_view_url(request, DisbursementStartView.url_name))
+    title = None
+    url_name = None
 
-
-class DisbursementView(View):
+    @classmethod
+    def url(cls, **kwargs):
+        return reverse('disbursements:%s' % cls.url_name, kwargs=kwargs)
 
     @cached_property
     def api_session(self):
         return get_api_session(self.request)
-
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        try:
-            response = self.api_session.get(
-                'disbursements/', params={'resolution': 'pending'}
-            ).json()
-
-            context_data['confirm_tab_suffix'] = ' (%s)' % response['count']
-        except RequestException:
-            pass
-        return context_data
 
     @method_decorator(login_required)
     @method_decorator(disbursements_available_required)
     def dispatch(self, request, *args, **kwargs):
         request.proposition_app = {
             'name': _('Digital disbursements'),
-            'url': build_view_url(self.request, DisbursementStartView.url_name),
-            'help_url': reverse('disbursements:submit_ticket'),
+            'url': StartView.url(),
+            'help_url': DisbursementGetHelpView.url(),
         }
-        return super().dispatch(request, *args, **kwargs)
+        return super().dispatch(request, **kwargs)
 
-
-class DisbursementTemplateView(DisbursementView, TemplateView):
-    pass
-
-
-class CreateDisbursementView(DisbursementView):
-    previous_view = None
-    final_step = False
+    def get_template_names(self):
+        if self.template_name:
+            return [self.template_name]
+        if self.url_name:
+            return ['disbursements/%s.html' % self.url_name]
+        return super().get_template_names()
 
     def get_context_data(self, **kwargs):
-        if self.previous_view and not self.final_step:
-            kwargs['breadcrumbs_back'] = self.get_previous_url()
+        try:
+            response = self.api_session.get(
+                'disbursements/', params={'resolution': 'pending'}
+            ).json()
+
+            kwargs['confirm_tab_suffix'] = ' (%s)' % response['count']
+        except RequestException:
+            pass
         return super().get_context_data(**kwargs)
 
-    @classmethod
-    def clear_session(cls, request):
-        for view in cls.get_previous_views(cls):
-            if hasattr(view, 'form_class'):
-                view.form_class.delete_from_session(request)
+
+class BasePagedView(BaseView):
+    """
+    Base template view used in multi-page flows
+    """
+    previous_view = None
+    next_view = None
 
     @classmethod
-    def get_previous_views(cls, view):
-        if view.previous_view:
-            yield from cls.get_previous_views(view.previous_view)
-            yield view.previous_view
+    def as_view(cls, **initkwargs):
+        if cls.previous_view:
+            cls.previous_view.next_view = cls
+        return super().as_view(**initkwargs)
 
-    def get_previous_url(self):
-        return build_view_url(self.request, self.previous_view.url_name)
+    @classmethod
+    def get_previous_views(cls):
+        if cls.previous_view:
+            yield from cls.previous_view.get_previous_views()
+            yield cls.previous_view
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.valid_form_data = {}
+        self.redirect_success_url = None
+
+    def get_valid_form_data(self, view):
+        return self.valid_form_data.get(view.form_class.__name__, {})
 
     def dispatch(self, request, *args, **kwargs):
-        for view in self.get_previous_views(self):
-            if not hasattr(view, 'form_class') or not view.is_form_enabled(self.valid_form_data):
+        for view in self.get_previous_views():
+            if not issubclass(view, BasePagedFormView) or not view.is_form_enabled(self.valid_form_data):
                 continue
             form = view.form_class.unserialise_from_session(request)
             if form.is_valid():
-                self.valid_form_data[view.form_name()] = form.cleaned_data
+                self.valid_form_data[view.form_class.__name__] = form.cleaned_data
             else:
-                redirect_url = getattr(view, 'redirect_url_name', None) or view.url_name
-                return redirect(build_view_url(self.request, redirect_url))
-        return super().dispatch(request, *args, **kwargs)
-
-
-class DisbursementGetHelpView(DisbursementView, GetHelpView):
-    base_template_name = 'disbursements/base.html'
-    template_name = 'disbursements/feedback/submit_feedback.html'
-    success_url = reverse_lazy('disbursements:feedback_success')
-
-
-class DisbursementGetHelpSuccessView(DisbursementView, GetHelpSuccessView):
-    base_template_name = 'disbursements/base.html'
-    template_name = 'disbursements/feedback/success.html'
-
-
-class CreateDisbursementFormView(CreateDisbursementView, FormView):
-    @classmethod
-    def is_form_enabled(cls, previous_form_data):
-        return True
-
-    @classmethod
-    def form_name(cls):
-        return cls.form_class.__name__
+                return redirect(view.url())
+        next_url = request.GET.get('next')
+        if is_safe_url(next_url, host=request.get_host()):
+            self.redirect_success_url = next_url
+        return super().dispatch(request, **kwargs)
 
     def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
+        if self.previous_view:
+            kwargs['breadcrumbs_back'] = self.previous_view.url(**self.kwargs)
+        return super().get_context_data(**kwargs)
+
+    def get_success_url(self):
+        if self.redirect_success_url:
+            return self.redirect_success_url
+        if self.next_view:
+            return self.next_view.url()
+
+
+class BasePagedFormView(BasePagedView, FormView):
+    """
+    Base form view used in multi-page flows
+    """
+
+    @classmethod
+    def is_form_enabled(cls, valid_form_data):
+        return True
+
+    def get_form(self, form_class=None):
         if self.request.method == 'GET':
             form = self.form_class.unserialise_from_session(self.request)
             if form.is_valid():
                 # valid form found in session so restore it
-                context_data['form'] = form
-        return context_data
+                return form
+        return super().get_form(form_class)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -146,61 +144,52 @@ class CreateDisbursementFormView(CreateDisbursementView, FormView):
         return kwargs
 
     def form_valid(self, form):
-        # save valid form to session
+        # valid form so save in session
         form.serialise_to_session()
         return super().form_valid(form)
 
 
-class DisbursementStartView(CreateDisbursementView, TemplateView):
-    url_name = 'start'
-    template_name = 'disbursements/start.html'
-
-    def get_success_url(self):
-        return build_view_url(self.request, SendingMethodView.url_name)
+# creation flow
 
 
-class SendingMethodView(CreateDisbursementFormView):
+class SendingMethodView(BasePagedFormView):
+    title = _('How the prisoner wants to send money')
     url_name = 'sending_method'
-    previous_view = DisbursementStartView
-    template_name = 'disbursements/sending-method.html'
     form_class = disbursement_forms.SendingMethodForm
 
-    def get_success_url(self):
-        return build_view_url(self.request, PrisonerView.url_name)
+    def form_valid(self, form):
+        if form.cleaned_data['method'] == disbursement_forms.SENDING_METHOD.CHEQUE:
+            RecipientBankAccountView.form_class.delete_from_session(self.request)
+        return super().form_valid(form)
 
 
-class PrisonerView(CreateDisbursementFormView):
+class PrisonerView(BasePagedFormView):
+    title = _('Send money out for this prisoner')
     url_name = 'prisoner'
-    redirect_url_name = DisbursementStartView.url_name
     previous_view = SendingMethodView
-    template_name = 'disbursements/prisoner.html'
     form_class = disbursement_forms.PrisonerForm
 
-    def get_success_url(self):
-        return build_view_url(self.request, PrisonerCheckView.url_name)
 
-
-class PrisonerCheckView(CreateDisbursementView, TemplateView):
+class PrisonerCheckView(BasePagedView):
+    title = _('Confirm prisoner details')
     url_name = 'prisoner_check'
     previous_view = PrisonerView
-    template_name = 'disbursements/prisoner-check.html'
 
     def get_context_data(self, **kwargs):
-        prisoner_details = self.valid_form_data[PrisonerView.form_name()]
-        kwargs.update(**prisoner_details)
+        kwargs.update(self.get_valid_form_data(PrisonerView))
         return super().get_context_data(**kwargs)
 
-    def get_success_url(self):
-        return build_view_url(self.request, AmountView.url_name)
 
+class AmountView(BasePagedFormView):
+    title = _('Enter amount')
+    url_name = 'amount'
+    previous_view = PrisonerCheckView
+    form_class = disbursement_forms.AmountForm
 
-class AmountViewMixin:
     def get_nomis_balances(self):
         try:
-            return nomis.get_account_balances(
-                self.valid_form_data[disbursement_forms.PrisonerForm.__name__]['prison'],
-                self.valid_form_data[disbursement_forms.PrisonerForm.__name__]['prisoner_number'],
-            )
+            form_data = self.get_valid_form_data(PrisonerView)
+            return nomis.get_account_balances(form_data['prison'], form_data['prisoner_number'])
         except (RequestException, KeyError):
             pass
 
@@ -223,78 +212,56 @@ class AmountViewMixin:
         return kwargs
 
 
-class AmountView(AmountViewMixin, CreateDisbursementFormView):
-    url_name = 'amount'
-    previous_view = PrisonerCheckView
-    template_name = 'disbursements/amount.html'
-    form_class = disbursement_forms.AmountForm
-
-    def get_success_url(self):
-        return build_view_url(self.request, RecipientContactView.url_name)
-
-
-class RecipientContactView(CreateDisbursementFormView):
+class RecipientContactView(BasePagedFormView):
+    title = _('Enter recipient details')
     url_name = 'recipient_contact'
     previous_view = AmountView
-    template_name = 'disbursements/recipient-contact.html'
     form_class = disbursement_forms.RecipientContactForm
 
     def get_success_url(self):
-        sending_method = self.valid_form_data[SendingMethodView.form_name()]
-        if sending_method['method'] == disbursement_forms.SENDING_METHOD.CHEQUE:
-            return build_view_url(self.request, DetailsCheckView.url_name)
+        form_data = self.get_valid_form_data(SendingMethodView)
+        if form_data['method'] == disbursement_forms.SENDING_METHOD.CHEQUE:
+            self.next_view = DetailsCheckView
         else:
-            return build_view_url(self.request, RecipientBankAccountView.url_name)
+            self.next_view = RecipientBankAccountView
+        return super().get_success_url()
 
 
-class RecipientBankAccountView(CreateDisbursementFormView):
+class RecipientBankAccountView(BasePagedFormView):
+    title = _('Enter recipient bank details')
     url_name = 'recipient_bank_account'
     previous_view = RecipientContactView
-    template_name = 'disbursements/recipient-bank-account.html'
     form_class = disbursement_forms.RecipientBankAccountForm
 
     @classmethod
-    def is_form_enabled(cls, previous_form_data):
+    def is_form_enabled(cls, valid_form_data):
         return (
-            previous_form_data[SendingMethodView.form_name()]['method'] ==
+            valid_form_data[SendingMethodView.form_class.__name__]['method'] ==
             disbursement_forms.SENDING_METHOD.BANK_TRANSFER
         )
 
     def get_context_data(self, **kwargs):
-        recipient_details = self.valid_form_data[RecipientContactView.form_name()]
-        kwargs.update(**recipient_details)
+        kwargs.update(self.get_valid_form_data(RecipientContactView))
         return super().get_context_data(**kwargs)
 
-    def get_success_url(self):
-        return build_view_url(self.request, DetailsCheckView.url_name)
 
-
-class DetailsCheckView(CreateDisbursementView, TemplateView):
+class DetailsCheckView(BasePagedView):
+    title = _('Check payment details')
     url_name = 'details_check'
     previous_view = RecipientBankAccountView
-    template_name = 'disbursements/details-check.html'
 
     def get_context_data(self, **kwargs):
-        prisoner_details = self.valid_form_data[PrisonerView.form_name()]
-        recipient_contact_details = self.valid_form_data[RecipientContactView.form_name()]
-        sending_method_details = self.valid_form_data[SendingMethodView.form_name()]
-        amount_details = self.valid_form_data[AmountView.form_name()]
-        recipient_bank_details = self.valid_form_data.get(RecipientBankAccountView.form_name(), {})
-        kwargs.update(**prisoner_details)
-        kwargs.update(**recipient_contact_details)
-        kwargs.update(**recipient_bank_details)
-        kwargs.update(**sending_method_details)
-        kwargs.update(**amount_details)
-        return super().get_context_data(**kwargs)
-
-    def get_success_url(self):
-        return build_view_url(self.request, DisbursementHandoverView.url_name)
+        context = super().get_context_data(**kwargs)
+        for view in self.get_previous_views():
+            if issubclass(view, BasePagedFormView):
+                context.update(self.get_valid_form_data(view))
+        return context
 
 
-class DisbursementHandoverView(CreateDisbursementView, TemplateView):
-    url_name = 'hand-over'
+class HandoverView(BasePagedView):
+    title = _('Hand over the paper form for confirmation')
+    url_name = 'handover'
     previous_view = DetailsCheckView
-    template_name = 'disbursements/hand-over.html'
     error_messages = {
         'connection': _('Payment not created due to technical error, try again soon')
     }
@@ -304,72 +271,48 @@ class DisbursementHandoverView(CreateDisbursementView, TemplateView):
             kwargs['errors'] = [self.error_messages.get(self.request.GET['e'])]
         return super().get_context_data(**kwargs)
 
-    def get_success_url(self):
-        return build_view_url(self.request, DisbursementCompleteView.url_name)
 
-
-class DisbursementCompleteView(CreateDisbursementView, TemplateView):
-    url_name = 'complete'
-    previous_view = DisbursementHandoverView
-    template_name = 'disbursements/complete.html'
+class CreatedView(BasePagedView):
+    title = _('Disbursement request saved')
+    url_name = 'created'
+    previous_view = HandoverView
     http_method_names = ['post']
-    final_step = True
 
-    def post(self, request, *args, **kwargs):
-        prisoner_details = self.valid_form_data[PrisonerView.form_name()]
-        recipient_contact_details = self.valid_form_data[RecipientContactView.form_name()]
-        sending_method_details = self.valid_form_data[SendingMethodView.form_name()]
-        amount_details = self.valid_form_data[AmountView.form_name()]
-        recipient_bank_details = self.valid_form_data.get(RecipientBankAccountView.form_name(), {})
+    @classmethod
+    def clear_disbursement(cls, request):
+        view = StartView
+        for view in cls.get_previous_views():
+            if issubclass(view, BasePagedFormView):
+                view.form_class.delete_from_session(request)
+        return redirect(view.url())
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        del context['breadcrumbs_back']
+        return context
+
+    def post(self, request):
+        disbursement_data = {}
+        for view in self.get_previous_views():
+            if issubclass(view, BasePagedFormView):
+                disbursement_data.update(**self.get_valid_form_data(view))
         try:
-            disbursement_data = {
-                'prisoner_number': prisoner_details['prisoner_number'],
-                'prison': prisoner_details['prison'],
-            }
-            disbursement_data.update(**prisoner_details)
-            disbursement_data.update(**sending_method_details)
-            disbursement_data.update(**amount_details)
-            disbursement_data.update(**recipient_contact_details)
-            disbursement_data.update(**recipient_bank_details)
             self.api_session.post('/disbursements/', json=disbursement_data)
-
-            response = super().get(request, *args, **kwargs)
-            self.clear_session(request)
-            return response
         except RequestException:
             logger.exception('Failed to create disbursement')
-            return redirect(
-                '%s?e=connection' %
-                build_view_url(self.request, self.previous_view.url_name)
-            )
+            return redirect('%s?e=connection' % self.previous_view.url())
+
+        self.clear_disbursement(self.request)
+
+        return self.get(request)
 
 
-class SearchView(DisbursementView, FormView):
-    url_name = 'search'
-    template_name = 'disbursements/search.html'
-    form_class = disbursement_forms.SearchForm
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['request'] = self.request
-        request_data = self.get_initial()
-        request_data.update(self.request.GET.dict())
-        kwargs['data'] = request_data
-        return kwargs
-
-    def form_valid(self, form):
-        context = self.get_context_data(form=form)
-        context['disbursements'] = form.get_object_list()
-        return self.render_to_response(context)
-
-    get = FormView.post
+# confirmation flow
 
 
-class PendingDisbursementListView(DisbursementView, TemplateView):
+class PendingListView(BaseView):
     title = _('Confirm payments')
     url_name = 'pending_list'
-    template_name = 'disbursements/pending-list.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -390,10 +333,9 @@ class PendingDisbursementListView(DisbursementView, TemplateView):
         return context
 
 
-class PendingDisbursementDetailView(DisbursementView, TemplateView):
+class PendingDetailView(BaseView):
     title = _('Check payment details')
     url_name = 'pending_detail'
-    template_name = 'disbursements/pending-detail.html'
 
     error_messages = {
         'connection': _('Payment not confirmed due to technical error, try again soon'),
@@ -404,9 +346,8 @@ class PendingDisbursementDetailView(DisbursementView, TemplateView):
     }
 
     def get_context_data(self, **kwargs):
-        kwargs['breadcrumbs_back'] = build_view_url(self.request, PendingDisbursementListView.url_name)
+        kwargs['breadcrumbs_back'] = PendingListView.url()
         context = super().get_context_data(**kwargs)
-        self.pk = kwargs['pk']
 
         if 'e' in self.request.GET:
             context['errors'] = [self.error_messages.get(self.request.GET['e'])]
@@ -427,34 +368,15 @@ class PendingDisbursementDetailView(DisbursementView, TemplateView):
         return context
 
     def get_confirm_url(self):
-        return build_view_url(
-            self.request, PendingDisbursementConfirmView.url_name, args=[self.pk]
-        )
+        return ConfirmPendingView.url(**self.kwargs)
 
     def get_reject_url(self):
-        return build_view_url(
-            self.request, PendingDisbursementRejectView.url_name, args=[self.pk]
-        )
+        return RejectPendingView.url(**self.kwargs)
 
 
-class PendingDisbursementRejectView(View):
-    url_name = 'pending_reject'
-    http_method_names = ['post']
-
-    def post(self, request, *args, **kwargs):
-        form = disbursement_forms.RejectDisbursementForm(request.POST)
-        if form.is_valid():
-            form.reject(request, kwargs['pk'])
-            messages.info(request, _('Payment request cancelled.'))
-        else:
-            messages.error(request, _('Unable to cancel payment request.'))
-        return redirect(build_view_url(request, PendingDisbursementListView.url_name))
-
-
-class PendingDisbursementConfirmView(DisbursementView, TemplateView):
+class ConfirmPendingView(BaseView):
     title = _('Payment confirmation')
     url_name = 'pending_confirm'
-    template_name = 'disbursements/confirmed.html'
     http_method_names = ['post']
 
     def create_nomis_transaction(self, context):
@@ -498,7 +420,7 @@ class PendingDisbursementConfirmView(DisbursementView, TemplateView):
 
         return context
 
-    def post(self, request, *args, **kwargs):
+    def post(self, _, **kwargs):
         context = self.get_context_data(**kwargs)
 
         try:
@@ -541,86 +463,72 @@ class PendingDisbursementConfirmView(DisbursementView, TemplateView):
             )
 
             if context.get('invalid', False):
-                return redirect('%s?e=invalid' % build_view_url(
-                    request, PendingDisbursementDetailView.url_name,
-                    args=[disbursement['id']]
-                ))
+                return redirect('%s?e=invalid' % PendingDetailView.url(pk=disbursement['id']))
             else:
-                return redirect('%s?e=connection' % build_view_url(
-                    request, PendingDisbursementDetailView.url_name,
-                    args=[disbursement['id']]
-                ))
+                return redirect('%s?e=connection' % PendingDetailView.url(pk=disbursement['id']))
 
 
-class UpdateDisbursementFormView(DisbursementView, FormView):
-    previous_view = None
+class RejectPendingView(BaseView, FormView):
+    url_name = 'pending_reject'
+    form_class = disbursement_forms.RejectDisbursementForm
+    success_url = reverse_lazy('disbursements:%s' % PendingListView.url_name)
+    http_method_names = ['post']
 
-    @classmethod
-    def clear_session(cls, request):
-        for view in [cls, *cls.get_previous_views(cls)]:
-            if hasattr(view, 'form_class'):
-                view.form_class.delete_from_session(request)
+    def form_valid(self, form):
+        try:
+            form.reject(self.request, self.kwargs['pk'])
+            messages.info(self.request, _('Payment request cancelled.'))
+        except RequestException:
+            logger.exception('Could not reject disbursement')
+            messages.error(self.request, _('Unable to cancel payment request.'))
+        return super().form_valid(form)
 
-    @classmethod
-    def get_previous_views(cls, view):
-        if view.previous_view:
-            yield from cls.get_previous_views(view.previous_view)
-            yield view.previous_view
+    def form_invalid(self, form):
+        messages.error(self.request, _('Unable to cancel payment request.'))
+        return super().form_valid(form)
 
-    @classmethod
-    def is_form_enabled(cls, previous_form_data):
-        return True
 
-    @classmethod
-    def form_name(cls):
-        return cls.form_class.__name__
-
+class BaseEditFormView(BasePagedFormView):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.valid_form_data = {}
+        self.disbursement = None
 
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        if self.request.method == 'GET':
-            self.form_class.serialise_data(self.request.session, self.disbursement)
-            form = self.form_class.unserialise_from_session(self.request)
-            context_data['form'] = form
-        return context_data
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['request'] = self.request
-        return kwargs
-
-    def dispatch(self, request, *args, **kwargs):
-        self.pk = kwargs['pk']
-
+    def dispatch(self, request, **kwargs):
         try:
             self.disbursement = self.api_session.get(
                 'disbursements/{pk}/'.format(pk=kwargs['pk'])
             ).json()
         except HttpNotFoundError:
-            raise Http404
-
-        for view in self.get_previous_views(self):
+            raise Http404('Disbursement %s not found' % kwargs['pk'])
+        for view in list(self.get_previous_views()) + [self.__class__]:
             if not hasattr(view, 'form_class') or not view.is_form_enabled(self.valid_form_data):
                 continue
             view.form_class.serialise_data(request.session, self.disbursement)
             form = view.form_class.unserialise_from_session(request)
             if form.is_valid():
-                self.valid_form_data[view.form_name()] = form.cleaned_data
-        return super().dispatch(request, *args, **kwargs)
+                self.valid_form_data[view.form_class.__name__] = form.cleaned_data
+        return super().dispatch(request, **kwargs)
+
+    def get_template_names(self):
+        return ['disbursements/%s.html' % self.url_name.replace('update_', '')]
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['breadcrumbs_back'] = self.get_success_url()
+        return context
 
     def form_valid(self, form):
         update = self.get_update_payload(form)
-        changes = {}
+        changed_fields = set()
         for field in update:
             if update[field] != self.disbursement[field]:
-                changes[field] = update[field]
-        if changes:
+                changed_fields.add(field)
+        if 'prisoner_number' in changed_fields:
+            changed_fields.add('prison')
+        if changed_fields:
             self.api_session.patch(
-                'disbursements/{pk}/'.format(pk=self.pk),
-                json=changes
+                'disbursements/{pk}/'.format(**self.kwargs),
+                json={field: update[field] for field in changed_fields}
             )
         return super().form_valid(form)
 
@@ -628,67 +536,103 @@ class UpdateDisbursementFormView(DisbursementView, FormView):
         return form.get_update_payload()
 
     def get_success_url(self):
-        self.clear_session(self.request)
-        return build_view_url(
-            self.request, PendingDisbursementDetailView.url_name, args=[self.pk]
-        )
+        CreatedView.clear_disbursement(self.request)
+        return PendingDetailView.url(**self.kwargs)
 
 
-class UpdateSendingMethodView(UpdateDisbursementFormView):
+class UpdateSendingMethodView(BaseEditFormView, SendingMethodView):
     url_name = 'update_sending_method'
-    template_name = 'disbursements/sending-method.html'
-    form_class = disbursement_forms.SendingMethodForm
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.require_bank_account = False
 
     def form_valid(self, form):
-        if form.cleaned_data['method'] == disbursement_forms.SENDING_METHOD.CHEQUE:
-            self.require_bank_account = False
-            return super().form_valid(form)
-        else:
-            self.require_bank_account = True
-            return super(UpdateDisbursementFormView, self).form_valid(form)
+        self.require_bank_account = form.cleaned_data['method'] == disbursement_forms.SENDING_METHOD.BANK_TRANSFER
+        return super().form_valid(form)
 
     def get_update_payload(self, form):
+        if self.require_bank_account:
+            return {}
         payload = form.get_update_payload()
         payload.update(account_number='', sort_code='', roll_number='')
         return payload
 
     def get_success_url(self):
-        if not self.require_bank_account:
-            return super().get_success_url()
-        else:
-            return build_view_url(
-                self.request, UpdateRecipientBankAccountView.url_name, args=[self.pk]
-            )
+        if self.require_bank_account:
+            return UpdateRecipientBankAccountView.url(**self.kwargs)
+        return super().get_success_url()
 
 
-class UpdatePrisonerView(UpdateDisbursementFormView):
+class UpdatePrisonerView(BaseEditFormView, PrisonerView):
     url_name = 'update_prisoner'
-    template_name = 'disbursements/prisoner.html'
-    form_class = disbursement_forms.PrisonerForm
     previous_view = UpdateSendingMethodView
 
 
-class UpdateAmountView(AmountViewMixin, UpdateDisbursementFormView):
+class UpdateAmountView(BaseEditFormView, AmountView):
     url_name = 'update_amount'
-    template_name = 'disbursements/amount.html'
-    form_class = disbursement_forms.AmountForm
     previous_view = UpdatePrisonerView
 
 
-class UpdateRecipientContactView(UpdateDisbursementFormView):
+class UpdateRecipientContactView(BaseEditFormView, RecipientContactView):
     url_name = 'update_recipient_contact'
-    template_name = 'disbursements/recipient-contact.html'
-    form_class = disbursement_forms.RecipientContactForm
     previous_view = UpdateAmountView
 
 
-class UpdateRecipientBankAccountView(UpdateDisbursementFormView):
+class UpdateRecipientBankAccountView(BaseEditFormView, RecipientBankAccountView):
     url_name = 'update_recipient_bank_account'
-    template_name = 'disbursements/recipient-bank-account.html'
-    form_class = disbursement_forms.RecipientBankAccountForm
     previous_view = UpdateRecipientContactView
 
     def get_update_payload(self, form):
         payload = form.get_update_payload()
         payload.update(method=disbursement_forms.SENDING_METHOD.BANK_TRANSFER)
         return payload
+
+
+# misc views
+
+
+class StartView(BaseView):
+    url_name = 'start'
+    get_success_url = reverse_lazy('disbursements:%s' % SendingMethodView.url_name)
+
+
+class PaperFormsView(BaseView):
+    url_name = 'paper-forms'
+
+
+class SearchView(BaseView, FormView):
+    url_name = 'search'
+    form_class = disbursement_forms.SearchForm
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        request_data = self.get_initial()
+        request_data.update(self.request.GET.dict())
+        kwargs['data'] = request_data
+        kwargs['request'] = self.request
+        return kwargs
+
+    def form_valid(self, form):
+        context = self.get_context_data(form=form)
+        context['disbursements'] = form.get_object_list()
+        return self.render_to_response(context)
+
+    get = FormView.post
+
+
+class ProcessOverview(BaseView):
+    url_name = 'process-overview'
+
+
+class DisbursementGetHelpView(BaseView, GetHelpView):
+    url_name = 'submit_ticket'
+    base_template_name = 'disbursements/base.html'
+    template_name = 'disbursements/feedback/submit_feedback.html'
+    success_url = reverse_lazy('disbursements:feedback_success')
+
+
+class DisbursementGetHelpSuccessView(BaseView, GetHelpSuccessView):
+    url_name = 'feedback_success'
+    base_template_name = 'disbursements/base.html'
+    template_name = 'disbursements/feedback/success.html'
