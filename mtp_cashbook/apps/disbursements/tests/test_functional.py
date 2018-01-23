@@ -132,7 +132,7 @@ class DisbursementTestCase(CashbookTestCase):
         self.click_on_text_substring('Yes')
         self.click_button('Confirm payment')
 
-        self.assertShowingView('disbursements:pending_confirm')
+        self.assertShowingView('disbursements:confirmed')
         self.assertInSource('request sent to SSCL')
         self.click_on_text_substring('Confirm another payment')
 
@@ -264,7 +264,7 @@ class DisbursementTestCase(CashbookTestCase):
         self.click_on_text_substring('Yes')
         self.click_button('Confirm payment')
 
-        self.assertShowingView('disbursements:pending_confirm')
+        self.assertShowingView('disbursements:confirmed')
         self.assertInSource('request sent to SSCL')
         self.click_on_text_substring('Confirm another payment')
 

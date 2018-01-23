@@ -32,8 +32,6 @@ urlpatterns = [
         name=views.PendingListView.url_name),
     url(r'^pending/(?P<pk>\d+)/$', views.PendingDetailView.as_view(),
         name=views.PendingDetailView.url_name),
-    url(r'^pending/(?P<pk>\d+)/confirm/$', views.ConfirmPendingView.as_view(),
-        name=views.ConfirmPendingView.url_name),
     url(r'^pending/(?P<pk>\d+)/reject/$', views.RejectPendingView.as_view(),
         name=views.RejectPendingView.url_name),
     url(r'^pending/(?P<pk>\d+)/sending_method/$', views.UpdateSendingMethodView.as_view(),
@@ -46,6 +44,8 @@ urlpatterns = [
         name=views.UpdateRecipientContactView.url_name),
     url(r'^pending/(?P<pk>\d+)/recipient_bank_account/$', views.UpdateRecipientBankAccountView.as_view(),
         name=views.UpdateRecipientBankAccountView.url_name),
+    url(r'^confirmed/$', views.ConfirmedView.as_view(),
+        name=views.ConfirmedView.url_name),
 
     url(r'^paper-forms/$', views.PaperFormsView.as_view(),
         name=views.PaperFormsView.url_name),

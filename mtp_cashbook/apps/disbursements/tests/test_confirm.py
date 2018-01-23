@@ -1,5 +1,6 @@
 from django.test import override_settings
 from django.urls import reverse
+from mtp_common.test_utils import silence_logger
 import responses
 
 from cashbook.tests import (
@@ -504,7 +505,7 @@ class UpdatePendingDisbursementTestCase(PendingDisbursementTestCase):
 class ConfirmPendingDisbursementTestCase(PendingDisbursementTestCase):
 
     def url(self, pk):
-        return reverse('disbursements:pending_confirm', args=[pk])
+        return reverse('disbursements:pending_detail', args=[pk])
 
     @responses.activate
     @override_nomis_settings
@@ -534,8 +535,8 @@ class ConfirmPendingDisbursementTestCase(PendingDisbursementTestCase):
             status=200
         )
 
-        response = self.client.post(self.url(disbursement['id']), follow=True)
-        self.assertOnPage(response, 'disbursements:pending_confirm')
+        response = self.client.post(self.url(disbursement['id']), data={'confirmation': 'yes'}, follow=True)
+        self.assertOnPage(response, 'disbursements:confirmed')
         self.assertContains(response, '12345-1')
 
     @responses.activate
@@ -565,8 +566,10 @@ class ConfirmPendingDisbursementTestCase(PendingDisbursementTestCase):
             status=200
         )
 
-        response = self.client.post(self.url(disbursement['id']), follow=True)
+        with silence_logger():
+            response = self.client.post(self.url(disbursement['id']), data={'confirmation': 'yes'}, follow=True)
         self.assertOnPage(response, 'disbursements:pending_detail')
+        self.assertContains(response, 'Payment not confirmed due to technical error')
 
 
 class RejectPendingDisbursementTestCase(PendingDisbursementTestCase):
