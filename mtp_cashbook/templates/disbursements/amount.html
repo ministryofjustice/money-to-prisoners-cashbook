@@ -32,11 +32,11 @@
 
         <tr class="mtp-private-row">
           <td>{% trans 'Private' %}</td>
-          <td class="mtp-balance-column" data-balance="private">{{ form.private_balance|currency:'£'|default:_('Unknown') }}</td>
+          <td class="mtp-balance-column" data-balance="cash">{{ form.nomis_balances.cash|currency:'£'|default:_('Unknown') }}</td>
           <td>
             {% with field=form.amount %}
             <fieldset>
-              <legend class="visually-hidden">{% trans 'Please enter the amount in pounds' %}</legend>
+              <legend id="{{ field.id_for_label }}-label" class="visually-hidden">{% trans 'Please enter the amount in pounds' %}</legend>
               <div id="{{ field.id_for_label }}-wrapper" class="mtp-money-amount {% if field.errors %}form-group-error{% endif %}">
                 <div class="mtp-money-box">
                   <span class="form-control mtp-currency-sign">
@@ -57,13 +57,13 @@
 
         <tr>
           <td>{% trans 'Spends' %}</td>
-          <td class="mtp-balance-column" data-balance="spends">{{ form.spends_balance|currency:'£'|default:_('Unknown') }}</td>
+          <td class="mtp-balance-column" data-balance="spends">{{ form.nomis_balances.spends|currency:'£'|default:_('Unknown') }}</td>
           <td>{% trans 'Can’t be used for sending money out' %}</td>
         </tr>
 
         <tr>
           <td>{% trans 'Saving' %}</td>
-          <td class="mtp-balance-column" data-balance="savings">{{ form.savings_balance|currency:'£'|default:_('Unknown') }}</td>
+          <td class="mtp-balance-column" data-balance="savings">{{ form.nomis_balances.savings|currency:'£'|default:_('Unknown') }}</td>
           <td>{% trans 'Can’t be used for sending money out' %}</td>
         </tr>
 

@@ -199,7 +199,7 @@ class AmountView(BasePagedFormView):
             if balances:
                 return JsonResponse({
                     'spends': currency(balances['spends'], '£'),
-                    'private': currency(balances['cash'], '£'),
+                    'cash': currency(balances['cash'], '£'),
                     'savings': currency(balances['savings'], '£'),
                 })
             else:
