@@ -59,7 +59,7 @@ class BaseView(TemplateView):
     def get_context_data(self, **kwargs):
         try:
             response = self.api_session.get(
-                'disbursements/', params={'resolution': 'pending'}
+                'disbursements/', params={'resolution': 'pending', 'limit': 1}
             ).json()
 
             kwargs['confirm_tab_suffix'] = ' (%s)' % response['count']

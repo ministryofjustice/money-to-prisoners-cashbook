@@ -19,7 +19,7 @@ class DisbursementSearchViewTextCase(MTPBaseTestCase):
     def test_no_disbursements_response(self):
         self.login()
         with responses.RequestsMock() as rsps:
-            rsps.add(rsps.GET, api_url('/disbursements/?resolution=pending',),
+            rsps.add(rsps.GET, api_url('/disbursements/?resolution=pending&limit=1',),
                      json={'count': 0, 'results': []}, match_querystring=True)
             rsps.add(rsps.GET, api_url('/disbursements/',),
                      json={'count': 0, 'results': []})
@@ -36,7 +36,7 @@ class DisbursementSearchViewTextCase(MTPBaseTestCase):
     def test_disbursements_listed(self):
         self.login()
         with responses.RequestsMock() as rsps:
-            rsps.add(rsps.GET, api_url('/disbursements/?resolution=pending',),
+            rsps.add(rsps.GET, api_url('/disbursements/?resolution=pending&limit=1',),
                      json={'count': 1, 'results': []}, match_querystring=True)
             rsps.add(rsps.GET, api_url('/disbursements/',),
                      json={'count': 1, 'results': [{
