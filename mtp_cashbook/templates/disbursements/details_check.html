@@ -121,33 +121,42 @@
   </table>
   <br>
 
-  <p><strong>{% trans 'Do the details above match those on the paper form?' %}</strong></p>
+  <form method="post">
+    {% csrf_token %}
 
-  <div class="form-group">
-    <div class="multiple-choice">
-      {% random_string as choice_id %}
-      <input id="js-choice-{{ choice_id }}" class="mtp-radio-reveal" type="radio" name="form-check" value="{% trans 'Yes' %}" data-reveal=".js-choice-yes">
-      <label for="js-choice-{{ choice_id }}">{% trans 'Yes' %}</label>
-    </div>
-    <div class="panel panel-border-narrow mtp-button-panel js-hidden js-choice-yes">
-      <div>{% trans 'Sign the bottom of the paper form under ‘Staff’.' %}</div>
-      <div>
-        <img class="mtp-filled-form-sample" src="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-V1-signed-1.jpg' %}" srcset="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-V1-signed-1@2x.jpg' %} 2x" alt="{% trans 'Sign the bottom of the paper form under ‘Staff’.' %}" />
-      </div>
-      <div>
-        <a class="button mtp-next-button js-choice-yes" href="{{ view.get_success_url }}">{% trans 'Next' %}</a>
-      </div>
-    </div>
+    {% include 'mtp_common/forms/error-summary.html' with form=form only %}
 
-    <div class="multiple-choice">
-      {% random_string as choice_id %}
-      <input id="js-choice-{{ choice_id }}" class="mtp-radio-reveal" type="radio" name="form-check" value="{% trans 'No' %}" data-reveal=".js-choice-no">
-      <label for="js-choice-{{ choice_id }}">{% trans 'No' %}</label>
+    {% with field=form.confirmation choices=form.confirmation.field.choices %}
+      <fieldset>
+        <legend id="{{ field.id_for_label }}-label">
+          <strong>{{ field.label }}</strong>
+        </legend>
+
+        <div class="form-group {% if field.errors %}form-group-error{% endif %}">
+          <div class="multiple-choice">
+            <input id="js-choice-{{ choices.0.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.0.0 }}" data-reveal=".js-choice-yes">
+            <label for="js-choice-{{ choices.0.0 }}">{{ choices.0.1 }}</label>
+          </div>
+          <div class="panel panel-border-narrow mtp-button-panel js-hidden js-choice-yes">
+            <p>{% trans 'Sign the bottom of the paper form under ‘Staff’.' %}</p>
+            <img class="mtp-filled-form-sample" src="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-V1-signed-1.jpg' %}" srcset="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-V1-signed-1@2x.jpg' %} 2x" alt="{% trans 'Sign the bottom of the paper form under ‘Staff’.' %}" />
+          </div>
+
+          <div class="multiple-choice">
+            <input id="js-choice-{{ choices.1.0 }}" class="mtp-radio-reveal" type="radio" name="{{ form.confirmation.html_name }}" value="{{ choices.1.0 }}" data-reveal=".js-choice-no">
+            <label for="js-choice-{{ choices.1.0 }}">{{ choices.1.1 }}</label>
+          </div>
+          <div class="panel panel-border-narrow js-hidden js-choice-no">
+            {% blocktrans trimmed with button_name=_('Change')|wrapwithtag:'strong' %}
+              Use ‘{{ button_name }}’ buttons above to make sure the details match those on the paper form.
+            {% endblocktrans %}
+          </div>
+        </div>
+      </fieldset>
+    {% endwith %}
+
+    <div class="js-choice-yes">
+      <button type="submit" class="button mtp-next-button">{% trans 'Next' %}</button>
     </div>
-    <div class="panel panel-border-narrow js-hidden js-choice-no">
-      {% blocktrans trimmed with button_name=_('Change')|wrapwithtag:'strong' %}
-        Use ‘{{ button_name }}’ buttons above to make sure the details match those on the paper form.
-      {% endblocktrans %}
-    </div>
-  </div>
+  </form>
 {% endblock %}

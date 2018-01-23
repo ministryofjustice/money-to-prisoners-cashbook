@@ -30,6 +30,16 @@ SENDING_METHOD = Choices(
 )
 
 
+class ConfirmationForm(GARequestErrorReportingMixin, forms.Form):
+    confirmation = forms.ChoiceField(required=True, choices=(
+        ('yes', _('Yes')),
+        ('no', _('No')),
+    ), error_messages={
+        'required': _('Please select ‘yes’ or ‘no’'),
+        'cannot_proceed': _('You cannot proceed if you select ‘no’'),
+    })
+
+
 class DisbursementForm(GARequestErrorReportingMixin, forms.Form):
     @classmethod
     def unserialise_from_session(cls, request):

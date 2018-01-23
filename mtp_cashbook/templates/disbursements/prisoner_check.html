@@ -22,32 +22,44 @@
         {% trans 'Name' %}: <strong>{{ prisoner_name }}</strong>
       </p>
 
-      <p>
-        {% trans 'Does the name above match that on the paper form?' %}
-      </p>
+      <form method="post">
+        {% csrf_token %}
 
-      <div class="form-group">
-        <div class="multiple-choice">
-          {% random_string as choice_id %}
-          <input id="js-choice-{{ choice_id }}" class="mtp-radio-reveal" type="radio" name="form-check" value="{% trans 'Yes' %}" data-reveal=".js-choice-yes">
-          <label for="js-choice-{{ choice_id }}">{% trans 'Yes' %}</label>
-        </div>
-        <div class="panel panel-border-narrow mtp-button-panel js-hidden js-choice-yes">
-          <a class="button mtp-next-button" href="{{ view.get_success_url }}">{% trans 'Next' %}</a>
-        </div>
+        {% include 'mtp_common/forms/error-summary.html' with form=form only %}
 
-        <div class="multiple-choice">
-          {% random_string as choice_id %}
-          <input id="js-choice-{{ choice_id }}" class="mtp-radio-reveal" type="radio" name="form-check" value="{% trans 'No' %}" data-reveal=".js-choice-no">
-          <label for="js-choice-{{ choice_id }}">{% trans 'No' %}</label>
+        {% with field=form.confirmation choices=form.confirmation.field.choices %}
+          <fieldset>
+            <legend id="{{ field.id_for_label }}-label">
+              <strong>{{ field.label }}</strong>
+            </legend>
+
+            <div class="form-group {% if field.errors %}form-group-error{% endif %}">
+              <div class="multiple-choice">
+                <input id="js-choice-{{ choices.0.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.0.0 }}" data-reveal=".js-choice-yes">
+                <label for="js-choice-{{ choices.0.0 }}">{{ choices.0.1 }}</label>
+              </div>
+
+              <div class="multiple-choice">
+                <input id="js-choice-{{ choices.1.0 }}" class="mtp-radio-reveal" type="radio" name="{{ form.confirmation.html_name }}" value="{{ choices.1.0 }}" data-reveal=".js-choice-no">
+                <label for="js-choice-{{ choices.1.0 }}">{{ choices.1.1 }}</label>
+              </div>
+              <div class="panel panel-border-narrow mtp-button-panel js-hidden js-choice-no">
+                <p>
+                  {% trans 'Check with the prisoner they have entered their correct details on the paper form, then process it as a new request.' %}
+                </p>
+              </div>
+            </div>
+          </fieldset>
+        {% endwith %}
+
+        <div class="js-choice-yes">
+          <button type="submit" class="button mtp-next-button">{% trans 'Next' %}</button>
         </div>
-        <div class="panel panel-border-narrow js-hidden js-choice-no">
-          <p>
-            {% trans 'Check with the prisoner they have entered their correct details on the paper form, then process it as a new request.' %}
-          </p>
-          <a href="{% url 'disbursements:clear_disbursement' %}" class="button button-secondary">{% trans 'Process another request' %}</a>
+        <div class="hidden js-choice-no">
+          <a href="{{ view.alternate_success_url }}" class="button button-secondary">{% trans 'Process another request' %}</a>
         </div>
-      </div>
+      </form>
+
     </div>
   </div>
 
