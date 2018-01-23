@@ -244,6 +244,10 @@ class RejectDisbursementForm(GARequestErrorReportingMixin, forms.Form):
 
     def reject(self, request, disbursement_id):
         api_session = get_api_session(request)
+        api_session.post(
+            'disbursements/actions/reject/',
+            json={'disbursement_ids': [disbursement_id]}
+        )
         reason = self.cleaned_data['reason']
         if reason:
             reasons = [{
@@ -252,10 +256,6 @@ class RejectDisbursementForm(GARequestErrorReportingMixin, forms.Form):
                 'category': 'reject',
             }]
             api_session.post('/disbursements/comments/', json=reasons)
-        api_session.post(
-            'disbursements/actions/reject/',
-            json={'disbursement_ids': [disbursement_id]}
-        )
 
 
 def insert_blank_option(choices, title=_('Select an option')):
