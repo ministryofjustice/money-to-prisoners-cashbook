@@ -16,16 +16,16 @@
     <h1 class="bold-medium">
       {% trans 'Payment request sent to SSCL' %}
     </h1>
-    {% if disbursement.nomis_transaction_id %}
+    {% if nomis_transaction_id %}
       <br/>
-      {% blocktrans trimmed with nomis_ref=disbursement.nomis_transaction_id %}
-        The NOMIS reference is {{ nomis_ref }}
+      {% blocktrans trimmed %}
+        The NOMIS reference is {{ nomis_transaction_id }}
       {% endblocktrans %}
     {% endif %}
   </div>
 
   <p>
-    {% trans 'No more action from you is necessary.' %}
+    {% trans 'You don’t need to do anything else.' %}
   </p>
 
   <h2 class="heading-medium">{% trans 'What happens next' %}</h2>

@@ -360,7 +360,7 @@ class PendingListView(BaseView):
         return context
 
 
-class PendingDetailView(BaseView):
+class PendingDetailView(BaseConfirmationView):
     title = _('Check payment details')
     url_name = 'pending_detail'
 
@@ -372,42 +372,42 @@ class PendingDetailView(BaseView):
         )
     }
 
-    def get_context_data(self, **kwargs):
-        kwargs['breadcrumbs_back'] = PendingListView.url()
-        context = super().get_context_data(**kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.disbursement = None
+        self.disbursement_viability = {}
 
-        if 'e' in self.request.GET:
-            context['errors'] = [self.error_messages.get(self.request.GET['e'])]
-
+    def dispatch(self, request, **kwargs):
         try:
-            context['disbursement'] = self.api_session.get(
+            self.disbursement = self.api_session.get(
                 'disbursements/{pk}/'.format(pk=kwargs['pk'])
             ).json()
         except HttpNotFoundError:
             raise Http404('Disbursement %s not found' % kwargs['pk'])
-        context.update(
-            **get_disbursement_viability(self.request, context['disbursement'])
-        )
+        self.disbursement_viability = get_disbursement_viability(self.request, self.disbursement)
+        return super().dispatch(request, **kwargs)
 
-        form = disbursement_forms.RejectDisbursementForm()
-        context['reject_form'] = form
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form['confirmation'].label = _('Do the details above match those on the paper form?')
+        return form
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        reject_form = disbursement_forms.RejectDisbursementForm()
+
+        context.update(
+            reject_form=reject_form,
+            breadcrumbs_back=PendingListView.url(),
+            disbursement=self.disbursement,
+            **self.disbursement_viability
+        )
 
         return context
 
-    def get_confirm_url(self):
-        return ConfirmPendingView.url(**self.kwargs)
-
-    def get_reject_url(self):
-        return RejectPendingView.url(**self.kwargs)
-
-
-class ConfirmPendingView(BaseView):
-    title = _('Payment confirmation')
-    url_name = 'pending_confirm'
-    http_method_names = ['post']
-
-    def create_nomis_transaction(self, context):
-        disbursement = context['disbursement']
+    def create_nomis_transaction(self, form):
+        disbursement = self.disbursement
         try:
             nomis_response = nomis.create_transaction(
                 prison_id=disbursement['prison'],
@@ -421,78 +421,87 @@ class ConfirmPendingView(BaseView):
                 transaction_type='RELA',
                 retries=1
             )
-            context['success'] = True
-            context['disbursement']['nomis_transaction_id'] = nomis_response['id']
+            return nomis_response['id']
         except HTTPError as e:
             if e.response.status_code == 409:
                 logger.warning(
                     'Disbursement %s was already present in NOMIS' % disbursement['id']
                 )
-                context['success'] = True
+                return None
             elif e.response.status_code >= 500:
                 logger.error(
                     'Disbursement %s could not be made as NOMIS is unavailable'
                     % disbursement['id']
                 )
-                context['unavailable'] = True
+                form.add_error(None, self.error_messages['connection'])
             else:
                 logger.warning('Disbursement %s is invalid' % disbursement['id'])
-                context['invalid'] = True
+                form.add_error(None, self.error_messages['invalid'])
         except RequestException:
             logger.exception(
                 'Disbursement %s could not be made as NOMIS is unavailable'
                 % disbursement['id']
             )
-            context['unavailable'] = True
+            form.add_error(None, self.error_messages['connection'])
 
-        return context
+    def form_valid(self, form):
+        if form.cleaned_data['confirmation'] == 'no':
+            if self.alternate_success_url:
+                return redirect(self.alternate_success_url)
+            form.add_error('confirmation', form['confirmation'].field.error_messages['cannot_proceed'])
+            return self.form_invalid(form)
 
-    def post(self, _, **kwargs):
-        context = self.get_context_data(**kwargs)
+        if not self.disbursement_viability['viable']:
+            form.add_error(None, self.error_messages['invalid'])
+            return self.form_invalid(form)
 
+        nomis_transaction_id = None
         try:
-            disbursement = self.api_session.get(
-                'disbursements/{pk}/'.format(pk=kwargs['pk'])
-            ).json()
-            context['disbursement'] = disbursement
-        except HttpNotFoundError:
-            raise Http404
-
-        try:
-            if disbursement['resolution'] != 'preconfirmed':
+            if self.disbursement['resolution'] != 'preconfirmed':
                 self.api_session.post(
                     'disbursements/actions/preconfirm/',
-                    json={'disbursement_ids': [disbursement['id']]}
+                    json={'disbursement_ids': [self.disbursement['id']]}
                 )
 
-            context = self.create_nomis_transaction(context)
+            nomis_transaction_id = self.create_nomis_transaction(form)
         except HTTPError as e:
             if e.response.status_code == 409:
-                context['invalid'] = True
+                form.add_error(None, self.error_messages['invalid'])
             else:
                 raise e
 
-        if context.get('success', False):
-            update = {'id': disbursement['id']}
-            if 'nomis_transaction_id' in context['disbursement']:
-                update['nomis_transaction_id'] = (
-                    context['disbursement']['nomis_transaction_id']
-                )
+        if form.is_valid():
+            update = {'id': self.disbursement['id']}
+            url_suffix = '?nomis_transaction_id='
+            if nomis_transaction_id:
+                update['nomis_transaction_id'] = nomis_transaction_id
+                url_suffix = '%s%s' % (url_suffix, nomis_transaction_id)
             self.api_session.post(
                 'disbursements/actions/confirm/',
                 json=[update]
             )
-            return self.render_to_response(context)
-        else:
-            self.api_session.post(
-                'disbursements/actions/reset/',
-                json={'disbursement_ids': [disbursement['id']]}
-            )
+            return redirect(ConfirmedView.url() + url_suffix)
 
-            if context.get('invalid', False):
-                return redirect('%s?e=invalid' % PendingDetailView.url(pk=disbursement['id']))
-            else:
-                return redirect('%s?e=connection' % PendingDetailView.url(pk=disbursement['id']))
+        self.api_session.post(
+            'disbursements/actions/reset/',
+            json={'disbursement_ids': [self.disbursement['id']]}
+        )
+
+        return self.form_invalid(form)
+
+    def get_reject_url(self):
+        return RejectPendingView.url(**self.kwargs)
+
+
+class ConfirmedView(BaseView):
+    title = _('Payment confirmation')
+    url_name = 'confirmed'
+
+    def get_context_data(self, **kwargs):
+        if 'nomis_transaction_id' not in self.request.GET:
+            raise Http404('This view should not be accessed directly')
+        kwargs['nomis_transaction_id'] = self.request.GET['nomis_transaction_id']
+        return super().get_context_data(**kwargs)
 
 
 class RejectPendingView(BaseView, FormView):

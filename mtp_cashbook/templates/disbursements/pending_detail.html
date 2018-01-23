@@ -15,13 +15,6 @@
     <h1 class="heading-xlarge mtp-heading--compact">{{ view.title }}</h1>
   </header>
 
-  {% for error in errors %}
-    <div class="mtp-message mtp-message--error">
-      {{ error }}
-    </div>
-    <br/>
-  {% endfor %}
-
   {% if disbursement.resolution == 'rejected' %}
     <div class="mtp-message mtp-message--info">
       {% trans 'This payment request has been cancelled.' %}
@@ -202,53 +195,59 @@
 
   <br/>
   {% if viable %}
-    <p><strong>{% trans 'Do the details above match those on the paper form?' %}</strong></p>
+    <form method="post">
+      {% csrf_token %}
 
-    <div class="form-group">
-      <div class="multiple-choice">
-        {% random_string as choice_id %}
-        <input id="mtp-choice-{{ choice_id }}" class="mtp-radio-reveal" type="radio" name="mtp-choice" value="{% trans 'Yes' %}" data-reveal=".js-choice-yes">
-        <label for="mtp-choice-{{ choice_id }}">{% trans 'Yes' %}</label>
-      </div>
-      <div class="panel panel-border-narrow mtp-button-panel js-hidden js-choice-yes">
-        <div>{% trans 'Sign the bottom of the paper form under ‘Staff’.' %}</div>
-        <div>
-          <img class="mtp-filled-form-sample" src="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-V1-signed-2.jpg' %}" srcset="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-V1-signed-2@2x.jpg' %} 2x" alt="{% trans 'Sign the bottom of the paper form under ‘Staff’.' %}" />
-        </div>
-        <div>
-          <form action="{{ view.get_confirm_url }}" method="post">
-            {% csrf_token %}
-            <input type="submit" class="button mtp-next-button" value="{% trans 'Confirm payment' %}" />
-          </form>
-        </div>
-      </div>
+      {% include 'mtp_common/forms/error-summary.html' with form=form only %}
 
-      <div class="multiple-choice">
-        {% random_string as choice_id %}
-        <input id="mtp-choice-{{ choice_id }}" class="mtp-radio-reveal" type="radio" name="mtp-choice" value="{% trans 'No' %}" data-reveal=".js-choice-no">
-        <label for="mtp-choice-{{ choice_id }}">{% trans 'No' %}</label>
+      {% with field=form.confirmation choices=form.confirmation.field.choices %}
+        <fieldset>
+          <legend id="{{ field.id_for_label }}-label">
+            <strong>{{ field.label }}</strong>
+          </legend>
+
+          <div class="form-group {% if field.errors %}form-group-error{% endif %}">
+            <div class="multiple-choice">
+              <input id="js-choice-{{ choices.0.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.0.0 }}" data-reveal=".js-choice-yes">
+              <label for="js-choice-{{ choices.0.0 }}">{{ choices.0.1 }}</label>
+            </div>
+            <div class="panel panel-border-narrow mtp-button-panel js-hidden js-choice-yes">
+              <p>{% trans 'Sign the bottom of the paper form under ‘Staff’.' %}</p>
+              <img class="mtp-filled-form-sample" src="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-V1-signed-2.jpg' %}" srcset="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-V1-signed-2@2x.jpg' %} 2x" alt="{% trans 'Sign the bottom of the paper form under ‘Staff’.' %}" />
+            </div>
+
+            <div class="multiple-choice">
+              <input id="js-choice-{{ choices.1.0 }}" class="mtp-radio-reveal" type="radio" name="{{ form.confirmation.html_name }}" value="{{ choices.1.0 }}" data-reveal=".js-choice-no">
+              <label for="js-choice-{{ choices.1.0 }}">{{ choices.1.1 }}</label>
+            </div>
+            <div class="panel panel-border-narrow js-hidden js-choice-no">
+              {% trans 'Use ‘Change’ above to make sure the details match those on the paper form.' %}
+              {% trans 'Someone else will need to confirm this payment later.' %}
+            </div>
+          </div>
+        </fieldset>
+      {% endwith %}
+
+      <div class="js-choice-yes">
+        <button type="submit" class="button mtp-next-button">{% trans 'Confirm payment' %}</button>
       </div>
-      <div class="panel panel-border-narrow js-hidden js-choice-no">
-        {% trans 'Use ‘Change’ above to make sure the details match those on the paper form.' %}
-        {% trans 'Someone else will need to confirm this payment later.' %}
-      </div>
-    </div>
+    </form>
 
   {% endif %}
   {% if editable %}
-    <div>
+    <br/>
+    <p>
       {% blocktrans trimmed with linkstart='<a href="#cancel-disbursement-dialog" class="js-dialogue-open">' linkend='</a>' %}
         {{ linkstart }}Cancel this request{{ linkend }} if you no longer need to send it.
       {% endblocktrans %}
-    </div>
-    <div>
+      <br/>
       {% trans 'Cancelled requests are in ‘Payments made’.' %}
-    </div>
+    </p>
 
     {% dialoguebox html_id='cancel-disbursement-dialog' title=_('Are you sure you want to cancel this payment request?') %}
       <form action="{{ view.get_reject_url }}" method="post">
         {% csrf_token %}
-        <label class="mtp-reject-reason__label" for="{{ reject_form.reason.id_for_label }}">
+        <label for="{{ reject_form.reason.id_for_label }}">
           {% trans 'Why do you want to cancel?' %}
         </label>
         <textarea id="{{ reject_form.reason.id_for_label }}" class="form-control mtp-reject-reason__input" rows="4" name="{{ reject_form.reason.html_name }}"></textarea>
