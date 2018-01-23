@@ -41,7 +41,7 @@ class BaseView(TemplateView):
 
     @method_decorator(login_required)
     @method_decorator(disbursements_available_required)
-    def dispatch(self, request, *args, **kwargs):
+    def dispatch(self, request, **kwargs):
         request.proposition_app = {
             'name': _('Digital disbursements'),
             'url': StartView.url(),
@@ -95,7 +95,7 @@ class BasePagedView(BaseView):
     def get_valid_form_data(self, view):
         return self.valid_form_data.get(view.form_class.__name__, {})
 
-    def dispatch(self, request, *args, **kwargs):
+    def dispatch(self, request, **kwargs):
         for view in self.get_previous_views():
             if not issubclass(view, BasePagedFormView) or not view.is_form_enabled(self.valid_form_data):
                 continue
@@ -103,7 +103,7 @@ class BasePagedView(BaseView):
             if form.is_valid():
                 self.valid_form_data[view.form_class.__name__] = form.cleaned_data
             else:
-                return redirect(view.url())
+                return redirect(view.url(**kwargs))
         next_url = request.GET.get('next')
         if is_safe_url(next_url, host=request.get_host()):
             self.redirect_success_url = next_url
@@ -149,6 +149,22 @@ class BasePagedFormView(BasePagedView, FormView):
         return super().form_valid(form)
 
 
+class BaseConfirmationView(BaseView, FormView):
+    """
+    Base form view for yes/no steps which store no information
+    """
+    form_class = disbursement_forms.ConfirmationForm
+    alternate_success_url = None
+
+    def form_valid(self, form):
+        if form.cleaned_data['confirmation'] == 'no':
+            if self.alternate_success_url:
+                return redirect(self.alternate_success_url)
+            form.add_error('confirmation', form['confirmation'].field.error_messages['cannot_proceed'])
+            return self.form_invalid(form)
+        return super().form_valid(form)
+
+
 # creation flow
 
 
@@ -170,10 +186,16 @@ class PrisonerView(BasePagedFormView):
     form_class = disbursement_forms.PrisonerForm
 
 
-class PrisonerCheckView(BasePagedView):
+class PrisonerCheckView(BaseConfirmationView, BasePagedView):
     title = _('Confirm prisoner details')
     url_name = 'prisoner_check'
     previous_view = PrisonerView
+    alternate_success_url = reverse_lazy('disbursements:clear_disbursement')
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form['confirmation'].label = _('Does the name above match that on the paper form?')
+        return form
 
     def get_context_data(self, **kwargs):
         kwargs.update(self.get_valid_form_data(PrisonerView))
@@ -193,7 +215,7 @@ class AmountView(BasePagedFormView):
         except (RequestException, KeyError):
             pass
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request, **kwargs):
         if request.is_ajax():
             balances = self.get_nomis_balances()
             if balances:
@@ -204,7 +226,7 @@ class AmountView(BasePagedFormView):
                 })
             else:
                 raise Http404('Balance not available')
-        return super().get(request, *args, **kwargs)
+        return super().get(request, **kwargs)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -245,10 +267,15 @@ class RecipientBankAccountView(BasePagedFormView):
         return super().get_context_data(**kwargs)
 
 
-class DetailsCheckView(BasePagedView):
+class DetailsCheckView(BaseConfirmationView, BasePagedView):
     title = _('Check payment details')
     url_name = 'details_check'
     previous_view = RecipientBankAccountView
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form['confirmation'].label = _('Do the details above match those on the paper form?')
+        return form
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -501,7 +528,7 @@ class BaseEditFormView(BasePagedFormView):
         except HttpNotFoundError:
             raise Http404('Disbursement %s not found' % kwargs['pk'])
         for view in list(self.get_previous_views()) + [self.__class__]:
-            if not hasattr(view, 'form_class') or not view.is_form_enabled(self.valid_form_data):
+            if not issubclass(view, BasePagedFormView) or not view.is_form_enabled(self.valid_form_data):
                 continue
             view.form_class.serialise_data(request.session, self.disbursement)
             form = view.form_class.unserialise_from_session(request)
