@@ -48,18 +48,17 @@
       <br/>
     {% endif %}
 
-    {% if insufficient_funds %}
-      <div class="mtp-message mtp-message--warning">
-        {% trans 'There is not enough money in the prisoner’s private account.' %}
-        <br/>
-        <a href="#">{% trans 'View NOMIS balances' %}</a>
-      </div>
-      <br/>
-    {% endif %}
 
     {% if prisoner_moved %}
       <div class="mtp-message mtp-message--warning">
         {% trans 'The prisoner has moved or been released, please check NOMIS.' %}
+      </div>
+      <br/>
+    {% elif insufficient_funds %}
+      <div class="mtp-message mtp-message--warning">
+        {% trans 'There is not enough money in the prisoner’s private account.' %}
+        <br/>
+        <a href="{% url 'disbursements:update_amount' pk=disbursement.id %}">{% trans 'View NOMIS balances' %}</a>
       </div>
       <br/>
     {% endif %}
@@ -76,7 +75,7 @@
         <td>{{ disbursement.method|sendingmethod }}</td>
         <td>
           {% if editable %}
-            <a href="{% url 'disbursements:update_sending_method' disbursement.id %}" class="print-hidden">
+            <a href="{% url 'disbursements:update_sending_method' pk=disbursement.id %}" class="print-hidden">
               {% trans 'Change' %}
               <span class="visually-hidden">{% trans 'Sending method' %}</span>
             </a>
@@ -88,7 +87,7 @@
         <td>£{{ disbursement.amount|currency }}</td>
         <td>
           {% if editable %}
-            <a href="{% url 'disbursements:update_amount' disbursement.id %}" class="print-hidden">
+            <a href="{% url 'disbursements:update_amount' pk=disbursement.id %}" class="print-hidden">
               {% trans 'Change' %}
               <span class="visually-hidden">{% trans 'Amount' %}</span>
             </a>
@@ -102,7 +101,7 @@
         <td>{{ disbursement.recipient_first_name}} {{ disbursement.recipient_last_name }}</td>
         <td>
           {% if editable %}
-            <a href="{% url 'disbursements:update_recipient_contact' disbursement.id %}" class="print-hidden">
+            <a href="{% url 'disbursements:update_recipient_contact' pk=disbursement.id %}" class="print-hidden">
               {% trans 'Change' %}
               <span class="visually-hidden">{% trans 'Recipient details' %}</span>
             </a>
@@ -142,7 +141,7 @@
           <td>{{ disbursement.sort_code|format_sortcode }}</td>
           <td>
             {% if editable %}
-              <a href="{% url 'disbursements:update_recipient_bank_account' disbursement.id %}" class="print-hidden">
+              <a href="{% url 'disbursements:update_recipient_bank_account' pk=disbursement.id %}" class="print-hidden">
                 {% trans 'Change' %}
                 <span class="visually-hidden">{% trans 'Recipient bank account details' %}</span>
               </a>
@@ -163,7 +162,7 @@
         <td>{{ disbursement.prisoner_name }}</td>
         <td>
           {% if editable %}
-            <a href="{% url 'disbursements:update_prisoner' disbursement.id %}" class="print-hidden">
+            <a href="{% url 'disbursements:update_prisoner' pk=disbursement.id %}" class="print-hidden">
               {% trans 'Change' %}
               <span class="visually-hidden">{% trans 'Prisoner details' %}</span>
             </a>
