@@ -40,7 +40,7 @@ def credit_individual_credit_to_nomis(user, user_session, credit_id, credit):
             amount=credit['amount'],
             record_id=str(credit_id),
             description='Sent by {sender}'.format(sender=credit['sender_name']),
-            transaction_type='MRPR',  # switching to MTDS soon?
+            transaction_type='MTDS',
             retries=1,
             session=thread_local.nomis_session
         )
