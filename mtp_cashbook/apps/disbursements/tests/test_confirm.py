@@ -1,3 +1,5 @@
+import json
+
 from django.test import override_settings
 from django.urls import reverse
 from mtp_common.test_utils import silence_logger
@@ -538,6 +540,15 @@ class ConfirmPendingDisbursementTestCase(PendingDisbursementTestCase):
         response = self.client.post(self.url(disbursement['id']), data={'confirmation': 'yes'}, follow=True)
         self.assertOnPage(response, 'disbursements:confirmed')
         self.assertContains(response, '12345-1')
+        nomis_call = responses.calls[-3]
+        nomis_request = json.loads(nomis_call.request.body.decode())
+        self.assertDictEqual(nomis_request, {
+            'type': 'RELA',
+            'description': 'Sent to Katy Hicks',
+            'amount': 3000,
+            'client_transaction_id': 'd660',
+            'client_unique_ref': 'd660',
+        })
 
     @responses.activate
     @override_nomis_settings

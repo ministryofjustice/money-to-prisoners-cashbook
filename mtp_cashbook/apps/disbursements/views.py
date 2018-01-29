@@ -412,7 +412,7 @@ class PendingDetailView(BaseConfirmationView):
             nomis_response = nomis.create_transaction(
                 prison_id=disbursement['prison'],
                 prisoner_number=disbursement['prisoner_number'],
-                amount=disbursement['amount']*-1,
+                amount=disbursement['amount'],
                 record_id='d%s' % disbursement['id'],
                 description='Sent to {recipient_first_name} {recipient_last_name}'.format(
                     recipient_first_name=disbursement['recipient_first_name'],
