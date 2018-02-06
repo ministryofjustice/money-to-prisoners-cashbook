@@ -46,6 +46,7 @@ INSTALLED_APPS = (
     'django.contrib.auth',
 )
 PROJECT_APPS = (
+    'anymail',
     'mtp_common',
     'widget_tweaks',
     'cashbook',
@@ -259,10 +260,17 @@ NOMIS_API_BASE_URL = os.environ.get('NOMIS_API_BASE_URL', '')
 NOMIS_API_CLIENT_TOKEN = os.environ.get('NOMIS_API_CLIENT_TOKEN', '')
 NOMIS_API_PRIVATE_KEY = os.environ.get('NOMIS_API_PRIVATE_KEY', '').encode('utf8').decode('unicode_escape')
 
-EMAIL_BACKEND = 'django_mailgun.MailgunBackend'
-MAILGUN_ACCESS_KEY = os.environ.get('MAILGUN_ACCESS_KEY', '')
-MAILGUN_SERVER_NAME = os.environ.get('MAILGUN_SERVER_NAME', '')
+EMAIL_BACKEND = 'anymail.backends.mailgun.EmailBackend'
+ANYMAIL = {
+    'MAILGUN_API_KEY': os.environ.get('MAILGUN_ACCESS_KEY', ''),
+    'MAILGUN_SENDER_DOMAIN': os.environ.get('MAILGUN_SERVER_NAME', ''),
+    'SEND_DEFAULTS': {
+        'tags': [APP, ENVIRONMENT],
+    },
+}
 MAILGUN_FROM_ADDRESS = os.environ.get('MAILGUN_FROM_ADDRESS', '')
+if MAILGUN_FROM_ADDRESS:
+    DEFAULT_FROM_EMAIL = MAILGUN_FROM_ADDRESS
 
 DISBURSEMENT_PRISONS = os.environ.get('DISBURSEMENT_PRISONS', '').split(',')
 
