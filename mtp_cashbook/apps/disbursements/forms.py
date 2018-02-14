@@ -575,7 +575,9 @@ class SearchForm(BaseSearchForm):
     def get_object_list_endpoint_path(self):
         return '/disbursements/'
 
-    def format_log_set(self, object_list):
+    def get_object_list(self):
+        object_list = super().get_object_list()
+
         def format_staff_name(log_item):
             username = log_item['user']['username'] or _('Unknown user')
             log_item['staff_name'] = ' '.join(filter(None, (log_item['user']['first_name'],
@@ -588,6 +590,3 @@ class SearchForm(BaseSearchForm):
                 key=lambda log_item: log_item['created'], reverse=True
             )
         return object_list
-
-    def get_object_list(self):
-        return self.format_log_set(super().get_object_list())

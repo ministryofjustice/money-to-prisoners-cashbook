@@ -222,6 +222,11 @@
                     {% blocktrans trimmed with staff_name=log_item.staff_name %}
                       Confirmed by {{ staff_name }}
                     {% endblocktrans %}
+                    <br>
+                    <small>
+                      {% trans 'NOMIS reference' %}:
+                      {{ disbursement.nomis_transaction_id|default:'—' }}
+                    </small>
 
                   {% elif log_item.action == 'sent' %}
                     {{ log_item.created|date:'d/m/Y' }}
@@ -230,8 +235,8 @@
                     {% endblocktrans %}
                     <br>
                     <small>
-                      {% trans 'NOMIS reference' %}:
-                      {{ disbursement.nomis_transaction_id|default:'—' }}
+                      {% trans 'Invoice number' %}:
+                      {{ disbursement.invoice_number }}
                     </small>
 
                   {% elif log_item.action == 'rejected' %}
