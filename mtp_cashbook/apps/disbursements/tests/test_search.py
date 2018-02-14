@@ -40,7 +40,7 @@ class DisbursementSearchViewTextCase(MTPBaseTestCase):
                      json={'count': 1, 'results': []}, match_querystring=True)
             rsps.add(rsps.GET, api_url('/disbursements/',),
                      json={'count': 1, 'results': [{
-                         'id': 1, 'amount': 1250,
+                         'id': 100, 'amount': 1250, 'invoice_number': 'PMD1000100',
                          'method': 'cheque', 'resolution': 'sent', 'nomis_transaction_id': '123-1',
                          'prisoner_name': 'JOHN HALLS', 'prisoner_number': 'A1409AE',
                          'recipient_first_name': 'FN', 'recipient_last_name': 'SN', 'recipient_email': '',
@@ -61,6 +61,7 @@ class DisbursementSearchViewTextCase(MTPBaseTestCase):
         self.assertNotIn('Bank transfer', content)
         self.assertIn('Confirmed by A User', content)
         self.assertIn('Sent by SSCL', content)
+        self.assertIn('PMD1000100', content)
         self.assertIn('£12.50', content)
         self.assertIn('123-1', content)
         self.assertIn('JOHN HALLS', content)
@@ -77,7 +78,7 @@ class DisbursementSearchViewTextCase(MTPBaseTestCase):
             rsps.add(rsps.GET, api_url('/disbursements/?offset=10&limit=10&ordering=-created&resolution=confirmed',),
                      match_querystring=True,
                      json={'count': 11, 'results': [{
-                         'id': 1, 'amount': 25010,
+                         'id': 99, 'amount': 25010, 'invoice_number': '1000099',
                          'method': 'bank_transfer', 'resolution': 'confirmed', 'nomis_transaction_id': None,
                          'prisoner_name': 'JOHN HALLS', 'prisoner_number': 'A1409AE',
                          'recipient_first_name': 'FN', 'recipient_last_name': 'SN', 'recipient_email': 'email@local',
@@ -100,6 +101,7 @@ class DisbursementSearchViewTextCase(MTPBaseTestCase):
         self.assertIn('Bank transfer', content)
         self.assertIn('Confirmed by A User', content)
         self.assertNotIn('Sent by SSCL', content)
+        self.assertNotIn('1000099', content)
         self.assertIn('£250.10', content)
         self.assertIn('France', content)
         self.assertIn('00-00-00', content)
