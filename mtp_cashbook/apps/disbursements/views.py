@@ -282,6 +282,8 @@ class DetailsCheckView(BaseConfirmationView, BasePagedView):
         for view in self.get_previous_views():
             if issubclass(view, BasePagedFormView):
                 context.update(self.get_valid_form_data(view))
+        if context.get('method') == disbursement_forms.SENDING_METHOD.CHEQUE:
+            context['breadcrumbs_back'] = RecipientBankAccountView.previous_view.url()
         return context
 
 
