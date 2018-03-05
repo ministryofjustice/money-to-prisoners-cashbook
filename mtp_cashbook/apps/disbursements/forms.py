@@ -263,6 +263,29 @@ class RecipientBankAccountForm(DisbursementForm):
         return sort_code
 
 
+class RemittanceDescriptionForm(DisbursementForm):
+    confirmation = forms.ChoiceField(
+        label=_('Would you like to add a description with this disbursement?'),
+        required=True, choices=(
+            ('yes', _('Yes')),
+            ('no', _('No')),
+        ), error_messages={
+            'required': _('Please select ‘yes’ or ‘no’'),
+        })
+    remittance_description = forms.CharField(
+        label=_('Payment description'),
+        help_text=_('Limited to 250 characters'),
+        max_length=250, required=False,
+    )
+
+    def clean(self):
+        super().clean()
+        confirmation = self.cleaned_data.get('confirmation')
+        if confirmation == 'no':
+            self.cleaned_data['remittance_description'] = ''
+        return self.cleaned_data
+
+
 class RejectDisbursementForm(GARequestErrorReportingMixin, forms.Form):
     reason = forms.CharField(required=False)
 

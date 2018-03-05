@@ -242,8 +242,8 @@ class RecipientContactView(BasePagedFormView):
 
     def get_success_url(self):
         form_data = self.get_valid_form_data(SendingMethodView)
-        if form_data['method'] == disbursement_forms.SENDING_METHOD.CHEQUE:
-            self.next_view = DetailsCheckView
+        if form_data.get('method') == disbursement_forms.SENDING_METHOD.CHEQUE:
+            self.next_view = RemittanceDescriptionView
         else:
             self.next_view = RecipientBankAccountView
         return super().get_success_url()
@@ -267,10 +267,24 @@ class RecipientBankAccountView(BasePagedFormView):
         return super().get_context_data(**kwargs)
 
 
+class RemittanceDescriptionView(BasePagedFormView):
+    title = _('Add a payment description')
+    url_name = 'remittance_description'
+    previous_view = RecipientBankAccountView
+    form_class = disbursement_forms.RemittanceDescriptionForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        form_data = self.get_valid_form_data(SendingMethodView)
+        if form_data.get('method') == disbursement_forms.SENDING_METHOD.CHEQUE:
+            context['breadcrumbs_back'] = RecipientBankAccountView.previous_view.url()
+        return context
+
+
 class DetailsCheckView(BaseConfirmationView, BasePagedView):
     title = _('Check payment details')
     url_name = 'details_check'
-    previous_view = RecipientBankAccountView
+    previous_view = RemittanceDescriptionView
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
@@ -282,8 +296,6 @@ class DetailsCheckView(BaseConfirmationView, BasePagedView):
         for view in self.get_previous_views():
             if issubclass(view, BasePagedFormView):
                 context.update(self.get_valid_form_data(view))
-        if context.get('method') == disbursement_forms.SENDING_METHOD.CHEQUE:
-            context['breadcrumbs_back'] = RecipientBankAccountView.previous_view.url()
         return context
 
 
@@ -325,6 +337,8 @@ class CreatedView(BasePagedView):
         for view in self.get_previous_views():
             if issubclass(view, BasePagedFormView):
                 disbursement_data.update(**self.get_valid_form_data(view))
+        if 'confirmation' in disbursement_data:
+            del disbursement_data['confirmation']
         try:
             self.api_session.post('/disbursements/', json=disbursement_data)
         except RequestException:
