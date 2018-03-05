@@ -34,5 +34,10 @@ exports.Disbursements = {
         $infoRow.removeClass('js-hidden');
       }
     });
+
+    // prevent new lines in wrapped textareas
+    $('#id_remittance_description').keydown(function (e) {
+      return e.keyCode !== 13;
+    });
   }
 };

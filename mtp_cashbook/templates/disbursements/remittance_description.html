@@ -1,0 +1,59 @@
+{% extends 'disbursements/base.html' %}
+{% load i18n %}
+{% load mtp_common %}
+
+{% block body_classes %}{{ block.super }} mtp-create-disbursement{% endblock %}
+
+{% block inner_content %}
+  {{ block.super }}
+
+  <header>
+    <h1 class="heading-xlarge mtp-heading--compact">{{ view.title }}</h1>
+  </header>
+
+  <div class="grid-row">
+    <div class="column-two-thirds">
+      <p>
+        {% trans 'This will help the recipient know where their payment has come from.' %}
+      </p>
+      <p>
+        {% trans 'The description will be on the remittance advice to the recipient, which is an email (if provided) or a letter sent before the payment arrives.' %}
+        {% trans 'It will not show on the bank statement.' %}
+      </p>
+      <p>
+        {% trans 'This description could be useful when the payment is going to a business or organisation.' %}
+      </p>
+
+      <form method="post">
+        {% csrf_token %}
+
+        {% include 'mtp_common/forms/error-summary.html' with form=form only %}
+
+        {% with field=form.confirmation choices=form.confirmation.field.choices %}
+          <fieldset>
+            <legend id="{{ field.id_for_label }}-label">
+              <strong>{{ field.label }}</strong>
+            </legend>
+
+            <div class="form-group {% if field.errors %}form-group-error{% endif %}">
+              <div class="multiple-choice">
+                <input id="js-choice-{{ choices.0.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.0.0 }}" data-reveal=".js-choice-yes" {% if form.remittance_description.value %}checked{% endif %}>
+                <label for="js-choice-{{ choices.0.0 }}">{{ choices.0.1 }}</label>
+              </div>
+              <div class="panel panel-border-narrow js-hidden js-choice-yes">
+                {% include 'mtp_common/forms/textarea.html' with field=form.remittance_description rows=2 input_classes='form-control-3-4' only %}
+              </div>
+
+              <div class="multiple-choice">
+                <input id="js-choice-{{ choices.1.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.1.0 }}">
+                <label for="js-choice-{{ choices.1.0 }}">{{ choices.1.1 }}</label>
+              </div>
+            </div>
+          </fieldset>
+        {% endwith %}
+
+        <button type="submit" class="button mtp-next-button">{% trans 'Next' %}</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}

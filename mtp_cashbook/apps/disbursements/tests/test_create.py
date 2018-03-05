@@ -89,6 +89,16 @@ class CreateDisbursementFlowTestCase(MTPBaseTestCase):
             data=data, follow=True,
         )
 
+    def enter_remittance_description(self, remittance_description=''):
+        data = {
+            'confirmation': 'yes' if remittance_description else 'no',
+            'remittance_description': remittance_description,
+        }
+        return self.client.post(
+            reverse('disbursements:remittance_description'),
+            data=data, follow=True,
+        )
+
 
 class PrisonerTestCase(CreateDisbursementFlowTestCase):
 
@@ -204,7 +214,8 @@ class SendingMethodTestCase(CreateDisbursementFlowTestCase):
         self.enter_prisoner_details()
         self.enter_amount()
 
-        response = self.enter_recipient_details()
+        self.enter_recipient_details()
+        response = self.enter_remittance_description()
 
         self.assertOnPage(response, 'disbursements:details_check')
         content = response.content.decode(response.charset)
@@ -310,6 +321,53 @@ class RecipientBankAccountTestCase(CreateDisbursementFlowTestCase):
         )
 
 
+class RemittanceDescriptionTestCase(CreateDisbursementFlowTestCase):
+    @property
+    def url(self):
+        return reverse('disbursements:remittance_description')
+
+    @responses.activate
+    @override_nomis_settings
+    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
+    def test_remittance_choice_required(self):
+        self.login()
+        self.choose_sending_method(method=SENDING_METHOD.CHEQUE)
+        self.enter_prisoner_details()
+        self.enter_amount()
+        response = self.enter_recipient_details()
+        self.assertOnPage(response, 'disbursements:remittance_description')
+        response = self.client.post(self.url, data={'remittance_description': 'payment for housing'})
+        self.assertOnPage(response, 'disbursements:remittance_description')
+        self.assertContains(response, 'Please select ‘yes’ or ‘no’')
+
+    @responses.activate
+    @override_nomis_settings
+    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
+    def test_remittance_being_empty(self):
+        self.login()
+        self.choose_sending_method(method=SENDING_METHOD.CHEQUE)
+        self.enter_prisoner_details()
+        self.enter_amount()
+        self.enter_recipient_details()
+        response = self.enter_remittance_description('')
+        self.assertOnPage(response, 'disbursements:details_check')
+        self.assertContains(response, 'None given')
+
+    @responses.activate
+    @override_nomis_settings
+    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
+    def test_remittance_description(self):
+        self.login()
+        self.choose_sending_method(method=SENDING_METHOD.CHEQUE)
+        self.enter_prisoner_details()
+        self.enter_amount()
+        self.enter_recipient_details()
+        response = self.enter_remittance_description('payment for housing')
+        self.assertOnPage(response, 'disbursements:details_check')
+        self.assertContains(response, 'payment for housing')
+        self.assertNotContains(response, 'None given')
+
+
 class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
 
     @property
@@ -333,6 +391,7 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
         self.enter_amount()
         self.enter_recipient_details()
         self.enter_recipient_bank_account()
+        self.enter_remittance_description()
         response = self.client.post(reverse('disbursements:created'), follow=True)
 
         self.assertOnPage(response, 'disbursements:created')
@@ -353,6 +412,7 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
         self.enter_prisoner_details()
         self.enter_amount()
         self.enter_recipient_details()
+        self.enter_remittance_description()
         response = self.client.post(reverse('disbursements:created'), follow=True)
 
         self.assertOnPage(response, 'disbursements:created')
@@ -367,6 +427,7 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
         self.enter_amount()
         self.enter_recipient_details()
         self.enter_recipient_bank_account()
+        self.enter_remittance_description()
         with silence_logger():
             response = self.client.post(reverse('disbursements:created'), follow=True)
 

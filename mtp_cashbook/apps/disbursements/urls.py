@@ -19,6 +19,8 @@ urlpatterns = [
         name=views.RecipientContactView.url_name),
     url(r'^recipient_bank_account/$', views.RecipientBankAccountView.as_view(),
         name=views.RecipientBankAccountView.url_name),
+    url(r'^remittance_description/$', views.RemittanceDescriptionView.as_view(),
+        name=views.RemittanceDescriptionView.url_name),
     url(r'^details_check/$', views.DetailsCheckView.as_view(),
         name=views.DetailsCheckView.url_name),
     url(r'^handover/$', views.HandoverView.as_view(),

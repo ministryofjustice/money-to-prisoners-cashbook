@@ -23,7 +23,7 @@
     <caption class="visually-hidden">{% trans 'Disbursement details' %}</caption>
     <tbody class="mtp-confirm-table__details">
       <tr class="mtp-confirm-table__section">
-        <th rowspan="2"><h2 class="heading-small">{% trans 'Send' %}</h2></th>
+        <th rowspan="3"><h2 class="heading-small">{% trans 'Send' %}</h2></th>
         <th>{% trans 'Send by' %}:</th>
         <td>{{ method|sendingmethod }}</td>
         <td>
@@ -40,6 +40,22 @@
           <a href="{% url 'disbursements:amount' %}?next={{ view.url }}" class="print-hidden">
             {% trans 'Change' %}
             <span class="visually-hidden">{% trans 'Amount' %}</span>
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <th>{% trans 'Description' %}:</th>
+        <td>
+          {% if remittance_description %}
+            {{ remittance_description }}
+          {% else %}
+            <span class="text-secondary">({% trans 'None given' %})</span>
+          {% endif %}
+        </td>
+        <td>
+          <a href="{% url 'disbursements:remittance_description' %}?next={{ view.url }}" class="print-hidden">
+            {% trans 'Change' %}
+            <span class="visually-hidden">{% trans 'Description' %}</span>
           </a>
         </td>
       </tr>
