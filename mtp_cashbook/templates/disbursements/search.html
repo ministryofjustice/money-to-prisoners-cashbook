@@ -163,7 +163,7 @@
                 <small>
                   {% trans 'Description' %}:
                   {% if disbursement.remittance_description %}
-                    {{ disbursement.remittance_description }}
+                    {{ disbursement.remittance_description|hide_long_text }}
                   {% else %}
                     <span class="text-secondary">({% trans 'None given' %})</span>
                   {% endif %}
