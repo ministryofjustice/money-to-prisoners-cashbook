@@ -41,7 +41,7 @@
                 <label for="js-choice-{{ choices.0.0 }}">{{ choices.0.1 }}</label>
               </div>
               <div class="panel panel-border-narrow js-hidden js-choice-yes">
-                {% include 'mtp_common/forms/textarea.html' with field=form.remittance_description rows=2 input_classes='form-control-3-4' only %}
+                {% include 'mtp_common/forms/textarea.html' with field=form.remittance_description rows=2 input_classes='js-character-count' attrs=remittance_description_attrs only %}
               </div>
 
               <div class="multiple-choice">
