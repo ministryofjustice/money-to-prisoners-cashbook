@@ -278,6 +278,12 @@ class RemittanceDescriptionForm(DisbursementForm):
         max_length=250, required=False,
     )
 
+    def clean_remittance_description(self):
+        remittance_description = self.cleaned_data.get('remittance_description')
+        if remittance_description:
+            remittance_description = re.sub(r'\s+', ' ', remittance_description)
+        return remittance_description
+
     def clean(self):
         super().clean()
         if self.cleaned_data.get('remittance') == 'no':
