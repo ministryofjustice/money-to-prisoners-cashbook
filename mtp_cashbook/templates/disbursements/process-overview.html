@@ -120,14 +120,18 @@
 
       <h3 class="heading-small" id="section-track">{% trans 'How to trace a payment request' %}</h3>
       <p>
-        {% trans 'Once the payment has been sent, log into SOP to find out:' %}
+        {% trans 'Once SSCL has sent a payment, this is how to track it:' %}
       </p>
       <ul class="list list-bullet">
-        <li>{% trans 'the payment date' %}</li>
-        <li>{% trans 'if a cheque has been cashed' %}</li>
-        <li>{% trans 'if a bank transfer went through' %}</li>
-        <li>{% trans 'which bank account the transfer went into' %}</li>
+        <li>{% trans 'Go into the disbursement tool' %}</li>
+        <li>{% trans 'Find the invoice number from the ‘Payments made’ tab' %}</li>
+        <li>{% trans 'Search for the invoice in SOP > Accounts Payable' %}</li>
+        <li>{% trans 'Click ‘4 View Payments’ to see how and when the payment was sent' %}</li>
       </ul>
+      <p>
+        {% trans 'Example' %}:
+        <img src="{% static 'disbursements/sop-ap-track-disbursement.png' %}" class="mtp-help-screenshot" alt="{% trans 'Screenshot of tracking an invoice in SOP > Accounts Payable' %}">
+      </p>
 
       <h2 class="heading-medium" id="section-help">{% trans 'Further help' %}</h2>
       <p>
