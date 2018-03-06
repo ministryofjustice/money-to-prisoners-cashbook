@@ -278,6 +278,11 @@ class RemittanceDescriptionView(BasePagedFormView):
         form_data = self.get_valid_form_data(SendingMethodView)
         if form_data.get('method') == disbursement_forms.SENDING_METHOD.CHEQUE:
             context['breadcrumbs_back'] = RecipientBankAccountView.previous_view.url()
+
+        field = disbursement_forms.RemittanceDescriptionForm.base_fields['remittance_description']
+        context['remittance_description_attrs'] = {
+            'maxlength': field.max_length,
+        }
         return context
 
 

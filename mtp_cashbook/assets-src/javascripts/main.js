@@ -17,6 +17,7 @@
   require('track-printing').TrackPrinting.init();
   require('tabbed-panel').TabbedPanel.init();
   require('hide-long-text').HideLongText.init();
+  require('character-count-warning').CharacterCountWarning.init();
   require('mailcheck-warning').MailcheckWarning.init(
     '.mtp-account-management input[type=email]',
     ['hmps.gsi.gov.uk', 'noms.gsi.gov.uk', 'justice.gsi.gov.uk'],
