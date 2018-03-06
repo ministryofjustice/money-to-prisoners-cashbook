@@ -264,7 +264,7 @@ class RecipientBankAccountForm(DisbursementForm):
 
 
 class RemittanceDescriptionForm(DisbursementForm):
-    confirmation = forms.ChoiceField(
+    remittance = forms.ChoiceField(
         label=_('Would you like to add a description with this disbursement?'),
         required=True, choices=(
             ('yes', _('Yes')),
@@ -280,8 +280,7 @@ class RemittanceDescriptionForm(DisbursementForm):
 
     def clean(self):
         super().clean()
-        confirmation = self.cleaned_data.get('confirmation')
-        if confirmation == 'no':
+        if self.cleaned_data.get('remittance') == 'no':
             self.cleaned_data['remittance_description'] = ''
         return self.cleaned_data
 

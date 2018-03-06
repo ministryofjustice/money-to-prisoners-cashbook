@@ -498,7 +498,7 @@ class UpdatePendingDisbursementTestCase(PendingDisbursementTestCase):
         response = self.client.post(
             reverse('disbursements:update_remittance_description', args=[updated_disbursement['id']]),
             data={
-                'confirmation': 'yes',
+                'remittance': 'yes',
                 'remittance_description': new_remittance_description,
             },
             follow=True
