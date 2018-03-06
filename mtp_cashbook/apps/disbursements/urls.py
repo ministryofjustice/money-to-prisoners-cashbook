@@ -46,6 +46,8 @@ urlpatterns = [
         name=views.UpdateRecipientContactView.url_name),
     url(r'^pending/(?P<pk>\d+)/recipient_bank_account/$', views.UpdateRecipientBankAccountView.as_view(),
         name=views.UpdateRecipientBankAccountView.url_name),
+    url(r'^pending/(?P<pk>\d+)/remittance_description/$', views.UpdateRemittanceDescriptionView.as_view(),
+        name=views.UpdateRemittanceDescriptionView.url_name),
     url(r'^confirmed/$', views.ConfirmedView.as_view(),
         name=views.ConfirmedView.url_name),
 
