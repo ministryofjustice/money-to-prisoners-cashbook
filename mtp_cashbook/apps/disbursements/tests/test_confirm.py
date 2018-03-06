@@ -28,6 +28,7 @@ SAMPLE_DISBURSEMENTS = [
         'postcode': 'N2K 9FX',
         'country': 'UK',
         'recipient_email': 'Geoffrey.Jennings@mail.local',
+        'remittance_description': '',
         'roll_number': '',
         'sort_code': '11-11-11',
         'account_number': '11111111',
@@ -72,6 +73,7 @@ SAMPLE_DISBURSEMENTS = [
         'postcode': 'N21 7SS',
         'country': 'UK',
         'recipient_email': 'Angela.Wood@mail.local',
+        'remittance_description': '',
         'account_number': '89851042',
         'sort_code': '772930',
         'roll_number': None,
@@ -107,6 +109,7 @@ SAMPLE_DISBURSEMENTS = [
         'postcode': 'IM0M 2TJ',
         'country': 'UK',
         'recipient_email': None,
+        'remittance_description': '',
         'sort_code': '601368',
         'account_number': '19621156',
         'roll_number': None,
@@ -142,6 +145,7 @@ SAMPLE_DISBURSEMENTS = [
         'postcode': 'E09 5SP',
         'country': 'UK',
         'recipient_email': 'Ross.Johnson@mail.local',
+        'remittance_description': 'PAYMENT FOR HOUSING',
         'sort_code': '631535',
         'roll_number': None,
         'account_number': '91673671',
@@ -177,6 +181,7 @@ SAMPLE_DISBURSEMENTS = [
         'postcode': 'L8 0NY',
         'country': 'UK',
         'recipient_email': 'Katy.Hicks@mail.local',
+        'remittance_description': '',
         'sort_code': None,
         'account_number': None,
         'roll_number': None,
@@ -347,6 +352,7 @@ class PendingDetailDisbursementTestCase(PendingDisbursementTestCase):
         response = self.client.get(self.url(disbursement['id']))
         self.assertOnPage(response, 'disbursements:pending_detail')
         self.assertContains(response, 'Confirm payment')
+        self.assertContains(response, 'PAYMENT FOR HOUSING')
 
     @responses.activate
     @override_nomis_settings
@@ -432,6 +438,74 @@ class UpdatePendingDisbursementTestCase(PendingDisbursementTestCase):
         )
         self.assertOnPage(response, 'disbursements:pending_detail')
         self.assertContains(response, new_prisoner_number)
+
+    @responses.activate
+    @override_nomis_settings
+    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
+    def test_update_remittance_description(self):
+        self.login(credentials={'username': 'test-hmp-brixton-a', 'password': 'pass'})
+
+        # go to update page
+        disbursement = SAMPLE_DISBURSEMENTS[3]
+        self.pending_detail(disbursement=disbursement)
+        responses.add(
+            responses.GET,
+            api_url('/prisoner_locations/{prisoner_number}/'.format(
+                prisoner_number=disbursement['prisoner_number']
+            )),
+            json={
+                'prisoner_number': disbursement['prisoner_number'],
+                'prisoner_dob': '1970-01-01',
+                'prisoner_name': 'TEST QUASH2',
+                'prison': 'BXI'
+            },
+            status=200,
+        )
+
+        response = self.client.get(
+            reverse('disbursements:update_remittance_description', args=[disbursement['id']])
+        )
+        self.assertContains(response, disbursement['remittance_description'])
+        self.assertNotContains(response, 'None given')
+
+        responses.reset()
+
+        # post update
+        responses.add(
+            responses.GET,
+            api_url('/prisoner_locations/{prisoner_number}/'.format(
+                prisoner_number=disbursement['prisoner_number']
+            )),
+            json={
+                'prisoner_number': disbursement['prisoner_number'],
+                'prisoner_dob': '1970-01-01',
+                'prisoner_name': 'TEST QUASH2',
+                'prison': 'BXI'
+            },
+            status=200,
+        )
+        responses.add(
+            responses.PATCH,
+            api_url('/disbursements/{pk}/'.format(pk=disbursement['id'])),
+            status=200
+        )
+
+        new_remittance_description = 'LEGAL FEES'
+        updated_disbursement = dict(**disbursement)
+        updated_disbursement['remittance_description'] = new_remittance_description
+        self.pending_detail(disbursement=updated_disbursement)
+
+        response = self.client.post(
+            reverse('disbursements:update_remittance_description', args=[updated_disbursement['id']]),
+            data={
+                'confirmation': 'yes',
+                'remittance_description': new_remittance_description,
+            },
+            follow=True
+        )
+        self.assertOnPage(response, 'disbursements:pending_detail')
+        self.assertContains(response, new_remittance_description)
+        self.assertNotContains(response, 'None given')
 
     @responses.activate
     @override_nomis_settings
