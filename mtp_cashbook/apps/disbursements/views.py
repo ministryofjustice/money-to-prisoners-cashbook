@@ -337,8 +337,8 @@ class CreatedView(BasePagedView):
         for view in self.get_previous_views():
             if issubclass(view, BasePagedFormView):
                 disbursement_data.update(**self.get_valid_form_data(view))
-        if 'confirmation' in disbursement_data:
-            del disbursement_data['confirmation']
+        if 'remittance' in disbursement_data:
+            del disbursement_data['remittance']
         try:
             self.api_session.post('/disbursements/', json=disbursement_data)
         except RequestException:
@@ -550,7 +550,7 @@ class BaseEditFormView(BasePagedFormView):
             self.disbursement = self.api_session.get(
                 'disbursements/{pk}/'.format(pk=kwargs['pk'])
             ).json()
-            self.disbursement['confirmation'] = 'yes' if self.disbursement.get('remittance_description') else 'no'
+            self.disbursement['remittance'] = 'yes' if self.disbursement.get('remittance_description') else 'no'
         except HttpNotFoundError:
             raise Http404('Disbursement %s not found' % kwargs['pk'])
         for view in list(self.get_previous_views()) + [self.__class__]:
@@ -579,8 +579,8 @@ class BaseEditFormView(BasePagedFormView):
         if 'prisoner_number' in changed_fields:
             changed_fields.add('prison')
         if changed_fields:
-            if 'confirmation' in changed_fields:
-                changed_fields.remove('confirmation')
+            if 'remittance' in changed_fields:
+                changed_fields.remove('remittance')
             self.api_session.patch(
                 'disbursements/{pk}/'.format(**self.kwargs),
                 json={field: update[field] for field in changed_fields}

@@ -29,7 +29,7 @@
 
         {% include 'mtp_common/forms/error-summary.html' with form=form only %}
 
-        {% with field=form.confirmation choices=form.confirmation.field.choices %}
+        {% with field=form.remittance choices=form.remittance.field.choices %}
           <fieldset>
             <legend id="{{ field.id_for_label }}-label">
               <strong>{{ field.label }}</strong>

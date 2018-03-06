@@ -91,7 +91,7 @@ class CreateDisbursementFlowTestCase(MTPBaseTestCase):
 
     def enter_remittance_description(self, remittance_description=''):
         data = {
-            'confirmation': 'yes' if remittance_description else 'no',
+            'remittance': 'yes' if remittance_description else 'no',
             'remittance_description': remittance_description,
         }
         return self.client.post(
