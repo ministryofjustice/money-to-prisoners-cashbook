@@ -292,7 +292,7 @@ class RemittanceDescriptionForm(DisbursementForm):
 
 
 class RejectDisbursementForm(GARequestErrorReportingMixin, forms.Form):
-    reason = forms.CharField(required=False)
+    reason = forms.CharField(label=_('Why do you want to cancel?'), required=False)
 
     def reject(self, request, disbursement_id):
         api_session = get_api_session(request)
