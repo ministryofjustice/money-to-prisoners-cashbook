@@ -83,6 +83,11 @@ class DisbursementTestCase(CashbookTestCase):
         self.fill_in_form(bank_account)
         self.click_button('Next')
 
+        self.assertShowingView('disbursements:remittance_description')
+        self.click_on_text_substring('Yes')
+        self.type_in('id_remittance_description', 'LEGAL  FEES')
+        self.click_button('Next')
+
         self.assertShowingView('disbursements:details_check')
         self.assertInSource('Bank transfer')
         self.assertInSource('£11.00')
@@ -95,6 +100,7 @@ class DisbursementTestCase(CashbookTestCase):
         self.assertInSource(bank_account['id_account_number'])
         self.assertInSource('JILLY HALL')
         self.assertInSource('A1401AE')
+        self.assertInSource('LEGAL FEES')
         self.click_on_text_substring('No')
         try:
             self.click_button('Next')
@@ -217,6 +223,12 @@ class DisbursementTestCase(CashbookTestCase):
         self.fill_in_form(contact_form)
         self.click_button('Next')
 
+        self.assertShowingView('disbursements:remittance_description')
+        self.click_on_text_substring('Yes')
+        self.type_in('id_remittance_description', 'LEGAL  FEES')
+        self.click_on_text_substring('No')
+        self.click_button('Next')
+
         self.assertShowingView('disbursements:details_check')
         self.assertInSource('Cheque')
         self.assertInSource('£11.00')
@@ -227,6 +239,8 @@ class DisbursementTestCase(CashbookTestCase):
         self.assertInSource(contact_form['id_postcode'].upper())
         self.assertInSource('JILLY HALL')
         self.assertInSource('A1401AE')
+        self.assertNotInSource('LEGAL FEES')
+        self.assertInSource('(None given)')
         self.click_on_text_substring('No')
         try:
             self.click_button('Next')
