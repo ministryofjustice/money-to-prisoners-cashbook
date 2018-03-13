@@ -289,6 +289,26 @@ class RecipientBankAccountTestCase(CreateDisbursementFlowTestCase):
         self.assertFormError(response, 'form', 'sort_code', 'The sort code should be 6 digits long')
         self.assertFormError(response, 'form', 'account_number', 'The account number should be 8 digits long')
 
+    @responses.activate
+    @override_nomis_settings
+    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
+    def test_building_society_account_detected(self):
+        self.login()
+        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
+        self.enter_prisoner_details()
+        self.enter_amount()
+        self.enter_recipient_details()
+        response = self.enter_recipient_bank_account({
+            'sort_code': '40-32-14',
+            'account_number': '10572780',
+        })
+        self.assertOnPage(response, 'disbursements:recipient_bank_account')
+        self.assertFormError(
+            response, 'form', None,
+            'We don’t currently support building society accounts. ' +
+            'Contact the prisoner to get details of a different account or send a cheque.'
+        )
+
 
 class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
 
