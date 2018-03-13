@@ -15,10 +15,13 @@ from django.utils.dateformat import format as date_format
 from django.utils.dateparse import parse_date, parse_datetime
 from django.utils.functional import cached_property
 from django.utils.html import format_html, format_html_join
-from django.utils.translation import gettext_lazy as _, override as override_locale
+from django.utils.translation import (
+    gettext, gettext_lazy as _, override as override_locale
+)
 from extended_choices import Choices
 from form_error_reporting import GARequestErrorReportingMixin
 from mtp_common.auth.api_client import get_api_session
+from mtp_common.bank_accounts import roll_number_required
 from mtp_common.auth.exceptions import HttpNotFoundError, Forbidden
 from requests.exceptions import RequestException
 
@@ -241,6 +244,17 @@ class RecipientBankAccountForm(DisbursementForm):
         help_text=_('For example, 10-20-30'),
         validators=[validate_sort_code],
     )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if roll_number_required(
+            cleaned_data.get('sort_code'), cleaned_data.get('account_number')
+        ):
+            raise forms.ValidationError(
+                gettext('We don’t currently support building society accounts.') + ' ' +
+                gettext('Contact the prisoner to get details of a different account or send a cheque.')
+            )
+        return cleaned_data
 
     def clean_sort_code(self):
         sort_code = self.cleaned_data.get('sort_code')
