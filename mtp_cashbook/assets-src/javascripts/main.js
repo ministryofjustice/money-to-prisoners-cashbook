@@ -16,6 +16,14 @@
   require('analytics').Analytics.init();
   require('track-printing').TrackPrinting.init();
   require('tabbed-panel').TabbedPanel.init();
+  require('mailcheck-warning').MailcheckWarning.init(
+    '.mtp-account-management input[type=email]',
+    ['hmps.gsi.gov.uk', 'noms.gsi.gov.uk', 'justice.gsi.gov.uk'],
+    ['gsi.gov.uk', 'gov.uk']
+  );
+  require('mailcheck-warning').MailcheckWarning.init(
+    '.mtp-create-disbursement input[type=email]'
+  );
 
   // cashbook
   require('sticky-header').StickyHeader.init();
