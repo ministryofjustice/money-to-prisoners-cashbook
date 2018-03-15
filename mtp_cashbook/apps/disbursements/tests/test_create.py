@@ -315,10 +315,67 @@ class RecipientBankAccountTestCase(CreateDisbursementFlowTestCase):
         })
         self.assertOnPage(response, 'disbursements:recipient_bank_account')
         self.assertFormError(
-            response, 'form', None,
-            'We don’t currently support building society accounts. ' +
-            'Contact the prisoner to get details of a different account or send a cheque.'
+            response, 'form', 'roll_number',
+            'This is a building society account. ' +
+            'Contact the prisoner to get the building society roll number or send a cheque.'
         )
+
+    @responses.activate
+    @override_nomis_settings
+    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
+    def test_non_building_society_account_detected(self):
+        self.login()
+        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
+        self.enter_prisoner_details()
+        self.enter_amount()
+        self.enter_recipient_details()
+        response = self.enter_recipient_bank_account({
+            'sort_code': '60-70-80',
+            'account_number': '10572780',
+            'roll_number': '12345678',
+        })
+        self.assertOnPage(response, 'disbursements:recipient_bank_account')
+        self.assertFormError(
+            response, 'form', 'roll_number',
+            'You don’t need a roll number because this is not a building society account.'
+        )
+
+    @responses.activate
+    @override_nomis_settings
+    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
+    def test_building_society_roll_number_validation_failure(self):
+        self.login()
+        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
+        self.enter_prisoner_details()
+        self.enter_amount()
+        self.enter_recipient_details()
+        response = self.enter_recipient_bank_account({
+            'sort_code': '40-32-14',
+            'account_number': '10572780',
+            'roll_number': '12345678',
+        })
+        self.assertOnPage(response, 'disbursements:recipient_bank_account')
+        self.assertFormError(
+            response, 'form', 'roll_number',
+            'This roll number is not valid for this type of account. ' +
+            'Contact the prisoner to get the correct building society roll number or send a cheque.'
+        )
+
+    @responses.activate
+    @override_nomis_settings
+    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
+    def test_building_society_roll_number_validation_success(self):
+        self.login()
+        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
+        self.enter_prisoner_details()
+        self.enter_amount()
+        self.enter_recipient_details()
+        response = self.enter_recipient_bank_account({
+            'sort_code': '40-32-14',
+            'account_number': '10572780',
+            'roll_number': 'ABC1234567DEF',
+        })
+        self.assertOnPage(response, 'disbursements:remittance_description')
 
 
 class RemittanceDescriptionTestCase(CreateDisbursementFlowTestCase):
