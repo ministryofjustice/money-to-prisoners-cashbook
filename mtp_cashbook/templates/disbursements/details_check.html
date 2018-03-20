@@ -115,6 +115,14 @@
           <td>{{ account_number }}</td>
           <td></td>
         </tr>
+        {% if roll_number %}
+          <tr>
+            <td></td>
+            <th>{% trans 'Roll number' %}:</th>
+            <td>{{ roll_number }}</td>
+            <td></td>
+          </tr>
+        {% endif %}
       {% endif %}
 
       <tr class="mtp-confirm-table__section">

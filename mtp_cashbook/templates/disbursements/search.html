@@ -91,7 +91,7 @@
     {% endtabbedpanel %}
   </form>
 
-  <br>
+  <br/>
 
   {% if form.is_valid %}
     <div class="mtp-batch">
@@ -149,14 +149,14 @@
               <td>
                 <span class="visually-hidden">{% trans 'Prisoner' %}:</span>
                 {{ disbursement.prisoner_name }}
-                <hr>
+                <hr/>
                 <span class="visually-hidden">{% trans 'Prisoner number' %}:</span>
                 <small>{{ disbursement.prisoner_number }}</small>
               </td>
 
               <td>
                 {{ disbursement.amount|currency:'£' }}
-                <hr>
+                <hr/>
                 <span class="visually-hidden">{% trans 'Sent by' %}:</span>
                 <small>{{ disbursement.method|sendingmethod }}</small>
                 <hr>
@@ -172,22 +172,22 @@
 
               <td>
                 {{ disbursement.recipient_first_name }} {{ disbursement.recipient_last_name }}
-                <hr>
+                <hr/>
                 <span class="visually-hidden">{% trans 'Recipient address' %}:</span>
                 <address>
                   <small>
-                    {{ disbursement.address_line1 }}<br>
-                    {% if disbursement.address_line2 %}{{ disbursement.address_line2 }}<br>{% endif %}
-                    {{ disbursement.city }}<br>
+                    {{ disbursement.address_line1 }}<br/>
+                    {% if disbursement.address_line2 %}{{ disbursement.address_line2 }}<br/>{% endif %}
+                    {{ disbursement.city }}<br/>
                     {{ disbursement.postcode }}
                     {% if disbursement.country and disbursement.country != 'UK' %}
-                      <br>
+                      <br/>
                       <strong>{{ disbursement.country }}</strong>
                     {% endif %}
                   </small>
                 </address>
                 {% if disbursement.recipient_email %}
-                  <hr>
+                  <hr/>
                   <span class="visually-hidden">{% trans 'Recipient email' %}:</span>
                   <small>{{ disbursement.recipient_email }}</small>
                 {% endif %}
@@ -197,11 +197,11 @@
                 {% if disbursement.method == 'bank_transfer' %}
                   <span class="visually-hidden">{% trans 'Recipient sort code' %}:</span>
                   {{ disbursement.sort_code|format_sortcode }}
-                  <br>
+                  <br/>
                   <span class="visually-hidden">{% trans 'Recipient account number' %}:</span>
                   {{ disbursement.account_number }}
                   {% if disbursement.roll_number %}
-                    <br>
+                    <br/>
                     <span class="visually-hidden">{% trans 'Recipient roll number' %}:</span>
                     {{ disbursement.roll_number }}
                   {% endif %}
@@ -231,7 +231,7 @@
                     {% blocktrans trimmed with staff_name=log_item.staff_name %}
                       Confirmed by {{ staff_name }}
                     {% endblocktrans %}
-                    <br>
+                    <br/>
                     <small>
                       {% trans 'NOMIS reference' %}:
                       {{ disbursement.nomis_transaction_id|default:'—' }}
@@ -242,7 +242,7 @@
                     {% blocktrans trimmed %}
                       Sent by SSCL
                     {% endblocktrans %}
-                    <br>
+                    <br/>
                     <small>
                       {% trans 'Invoice number' %}:
                       {{ disbursement.invoice_number }}
@@ -254,7 +254,7 @@
                       Cancelled by {{ staff_name }}
                     {% endblocktrans %}
                     {% with rejection_reason=disbursement.comments|find_rejection_reason %}
-                      <br>
+                      <br/>
                       <small>
                         {{ rejection_reason|truncatewords:5 }}
                       </small>
@@ -262,7 +262,7 @@
 
                   {% endif %}
                   {% if not forloop.last %}
-                    <hr>
+                    <hr/>
                   {% endif %}
                 {% endfor %}
               </td>

@@ -21,7 +21,9 @@ from django.utils.translation import (
 from extended_choices import Choices
 from form_error_reporting import GARequestErrorReportingMixin
 from mtp_common.auth.api_client import get_api_session
-from mtp_common.bank_accounts import roll_number_required
+from mtp_common.bank_accounts import (
+    roll_number_required, roll_number_valid_for_account
+)
 from mtp_common.auth.exceptions import HttpNotFoundError, Forbidden
 from requests.exceptions import RequestException
 
@@ -244,16 +246,60 @@ class RecipientBankAccountForm(DisbursementForm):
         help_text=_('For example, 10-20-30'),
         validators=[validate_sort_code],
     )
+    roll_number = forms.CharField(
+        required=False,
+        label=_('Building society roll number (if applicable)'),
+        help_text=_(
+            'Up to 18 characters, which can include A to Z, 0 to 9, space, / and -'
+        ),
+    )
+    error_messages = {
+        'roll_number_required': (
+            gettext('This is a building society account.') + ' ' +
+            gettext(
+                'Contact the prisoner to get the building society '
+                'roll number or send a cheque.'
+            )
+        ),
+        'roll_number_invalid': (
+            gettext(
+                'This roll number is not valid for this '
+                'type of account.'
+            ) + ' ' +
+            gettext(
+                'Contact the prisoner to get the correct building '
+                'society roll number or send a cheque.'
+            )
+        ),
+        'roll_number_unneeded': _(
+            'You don’t need a roll number because this is not a '
+            'building society account.'
+        )
+    }
 
     def clean(self):
         cleaned_data = super().clean()
-        if roll_number_required(
-            cleaned_data.get('sort_code'), cleaned_data.get('account_number')
-        ):
-            raise forms.ValidationError(
-                gettext('We don’t currently support building society accounts.') + ' ' +
-                gettext('Contact the prisoner to get details of a different account or send a cheque.')
-            )
+        sort_code = cleaned_data.get('sort_code')
+        account_number = cleaned_data.get('account_number')
+        if sort_code and account_number:
+            if roll_number_required(sort_code, account_number):
+                roll_number = cleaned_data.get('roll_number')
+                if not roll_number:
+                    self.add_error(
+                        'roll_number',
+                        self.error_messages['roll_number_required']
+                    )
+                elif not roll_number_valid_for_account(
+                    sort_code, account_number, roll_number
+                ):
+                    self.add_error(
+                        'roll_number',
+                        self.error_messages['roll_number_invalid']
+                    )
+            elif cleaned_data.get('roll_number'):
+                self.add_error(
+                    'roll_number', self.error_messages['roll_number_unneeded']
+                )
         return cleaned_data
 
     def clean_sort_code(self):

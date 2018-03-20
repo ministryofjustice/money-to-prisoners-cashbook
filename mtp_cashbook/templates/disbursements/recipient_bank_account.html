@@ -27,6 +27,8 @@
 
         {% include 'mtp_common/forms/field.html' with field=form.account_number input_classes='form-control-1-3' only %}
 
+        {% include 'mtp_common/forms/field.html' with field=form.roll_number input_classes='form-control-1-2' only %}
+
         {% random_string as note_id %}
         <p>
           <a class="mtp-disclosure" href="#" aria-controls="mtp-{{ note_id }}" aria-expanded="false" role="button" data-analytics="pageview,/-help_open/{{ request.resolver_match.view_name }}/">
