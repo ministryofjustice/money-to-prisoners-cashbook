@@ -261,10 +261,10 @@ class RecipientAddressView(BasePagedFormView):
     def get_context_data(self, **kwargs):
         postcode = self.get_valid_form_data(RecipientPostcodeView).get('postcode')
         if postcode:
-            pass  # get addresses
+            kwargs['addresses'] = []
             kwargs['postcode'] = postcode
 
-        if postcode and not hasattr(self, 'redirect_success_url'):
+        if postcode and not self.redirect_success_url:
             kwargs['address_picker'] = True
         return super().get_context_data(**kwargs)
 

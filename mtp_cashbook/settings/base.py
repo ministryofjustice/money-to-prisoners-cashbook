@@ -277,6 +277,8 @@ if MAILGUN_FROM_ADDRESS:
 
 DISBURSEMENT_PRISONS = os.environ.get('DISBURSEMENT_PRISONS', '').split(',')
 
+POSTCODE_LOOKUP_ENDPOINT = os.environ.get('POSTCODE_LOOKUP_ENDPOINT', '')
+
 try:
     from .local import *  # noqa
 except ImportError:

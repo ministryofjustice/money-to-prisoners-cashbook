@@ -38,4 +38,5 @@
   require('page-contents').PageContents.init();
   require('conditionally-revealed').ConditionallyRevealed.init();
   require('disbursements').Disbursements.init();
+  require('address-picker').AddressPicker.init();
 }());
