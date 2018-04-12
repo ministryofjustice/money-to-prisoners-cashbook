@@ -97,12 +97,12 @@ class BasePagedView(BaseView):
 
     def dispatch(self, request, **kwargs):
         for view in self.get_previous_views():
-            if not issubclass(view, BasePagedFormView) or not view.is_form_enabled(self.valid_form_data):
+            if not issubclass(view, BasePagedFormView):
                 continue
             form = view.form_class.unserialise_from_session(request, self.valid_form_data)
             if form.is_valid():
                 self.valid_form_data[view.form_class.__name__] = form.cleaned_data
-            else:
+            elif view.is_form_required(self.valid_form_data):
                 return redirect(view.url(**kwargs))
         next_url = request.GET.get('next')
         if is_safe_url(next_url, host=request.get_host()):
@@ -127,7 +127,7 @@ class BasePagedFormView(BasePagedView, FormView):
     """
 
     @classmethod
-    def is_form_enabled(cls, valid_form_data):
+    def is_form_required(cls, valid_form_data):
         return True
 
     def get_form(self, form_class=None):
@@ -240,6 +240,34 @@ class RecipientContactView(BasePagedFormView):
     previous_view = AmountView
     form_class = disbursement_forms.RecipientContactForm
 
+
+class RecipientPostcodeView(BasePagedFormView):
+    title = _('Enter recipient address')
+    url_name = 'recipient_postcode'
+    previous_view = RecipientContactView
+    form_class = disbursement_forms.RecipientPostcodeForm
+
+    @classmethod
+    def is_form_required(cls, valid_form_data):
+        return False
+
+
+class RecipientAddressView(BasePagedFormView):
+    title = _('Enter recipient address')
+    url_name = 'recipient_address'
+    previous_view = RecipientPostcodeView
+    form_class = disbursement_forms.RecipientAddressForm
+
+    def get_context_data(self, **kwargs):
+        postcode = self.get_valid_form_data(RecipientPostcodeView).get('postcode')
+        if postcode:
+            pass  # get addresses
+            kwargs['postcode'] = postcode
+
+        if postcode and not hasattr(self, 'redirect_success_url'):
+            kwargs['address_picker'] = True
+        return super().get_context_data(**kwargs)
+
     def get_success_url(self):
         form_data = self.get_valid_form_data(SendingMethodView)
         if form_data.get('method') == disbursement_forms.SENDING_METHOD.CHEQUE:
@@ -252,11 +280,11 @@ class RecipientContactView(BasePagedFormView):
 class RecipientBankAccountView(BasePagedFormView):
     title = _('Enter recipient bank details')
     url_name = 'recipient_bank_account'
-    previous_view = RecipientContactView
+    previous_view = RecipientAddressView
     form_class = disbursement_forms.RecipientBankAccountForm
 
     @classmethod
-    def is_form_enabled(cls, valid_form_data):
+    def is_form_required(cls, valid_form_data):
         return (
             valid_form_data[SendingMethodView.form_class.__name__]['method'] ==
             disbursement_forms.SENDING_METHOD.BANK_TRANSFER
@@ -576,7 +604,7 @@ class BaseEditFormView(BasePagedFormView):
         except HttpNotFoundError:
             raise Http404('Disbursement %s not found' % kwargs['pk'])
         for view in list(self.get_previous_views()) + [self.__class__]:
-            if not issubclass(view, BasePagedFormView) or not view.is_form_enabled(self.valid_form_data):
+            if not issubclass(view, BasePagedFormView) or not view.is_form_required(self.valid_form_data):
                 continue
             disbursement_data = self.disbursement.copy()
             view.form_class.serialise_data(request.session, disbursement_data)
@@ -675,9 +703,14 @@ class UpdateRecipientContactView(BaseEditFormView, RecipientContactView):
         return update
 
 
+class UpdateRecipientAddressView(BaseEditFormView, RecipientAddressView):
+    url_name = 'update_recipient_address'
+    previous_view = UpdateRecipientContactView
+
+
 class UpdateRecipientBankAccountView(BaseEditFormView, RecipientBankAccountView):
     url_name = 'update_recipient_bank_account'
-    previous_view = UpdateRecipientContactView
+    previous_view = UpdateRecipientAddressView
 
     def get_update_payload(self, form):
         payload = super().get_update_payload(form)

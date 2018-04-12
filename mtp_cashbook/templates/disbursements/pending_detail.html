@@ -120,7 +120,7 @@
           {% if editable %}
             <a href="{% url 'disbursements:update_recipient_contact' pk=disbursement.id %}" class="print-hidden">
               {% trans 'Change' %}
-              <span class="visually-hidden">{% trans 'Recipient details' %}</span>
+              <span class="visually-hidden">{% trans 'Recipient contact' %}</span>
             </a>
           {% endif %}
         </td>
@@ -135,7 +135,14 @@
             {{ disbursement.city }}
           </address>
         </td>
-        <td></td>
+        <td>
+          {% if editable %}
+            <a href="{% url 'disbursements:update_recipient_address' pk=disbursement.id %}" class="print-hidden">
+              {% trans 'Change' %}
+              <span class="visually-hidden">{% trans 'Recipient address' %}</span>
+            </a>
+          {% endif %}
+        </td>
       </tr>
       <tr>
         <td></td>
@@ -148,7 +155,14 @@
         <td></td>
           <th>{% trans 'Email' %}:</th>
           <td>{{ disbursement.recipient_email }}</td>
-          <td></td>
+          <td>
+            {% if editable %}
+              <a href="{% url 'disbursements:update_recipient_contact' pk=disbursement.id %}" class="print-hidden">
+                {% trans 'Change' %}
+                <span class="visually-hidden">{% trans 'Recipient email' %}</span>
+              </a>
+            {% endif %}
+          </td>
         </tr>
       {% endif %}
       {% if disbursement.method == 'bank_transfer' %}

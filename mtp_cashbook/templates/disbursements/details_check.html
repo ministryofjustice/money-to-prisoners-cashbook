@@ -73,7 +73,7 @@
         <td>
           <a href="{% url 'disbursements:recipient_contact' %}?next={{ view.url }}" class="print-hidden">
             {% trans 'Change' %}
-            <span class="visually-hidden">{% trans 'Recipient details' %}</span>
+            <span class="visually-hidden">{% trans 'Recipient name' %}</span>
           </a>
         </td>
       </tr>
@@ -87,7 +87,12 @@
             {{ city }}
           </address>
         </td>
-        <td></td>
+        <td>
+          <a href="{% url 'disbursements:recipient_address' %}?next={{ view.url }}" class="print-hidden">
+            {% trans 'Change' %}
+            <span class="visually-hidden">{% trans 'Recipient address' %}</span>
+          </a>
+        </td>
       </tr>
       <tr>
         <td></td>
@@ -100,7 +105,12 @@
         <td></td>
           <th>{% trans 'Email' %}:</th>
           <td>{{ recipient_email }}</td>
-          <td></td>
+          <td>
+            <a href="{% url 'disbursements:recipient_contact' %}?next={{ view.url }}" class="print-hidden">
+              {% trans 'Change' %}
+              <span class="visually-hidden">{% trans 'Recipient email' %}</span>
+            </a>
+          </td>
         </tr>
       {% endif %}
       {% if method == 'bank_transfer' %}

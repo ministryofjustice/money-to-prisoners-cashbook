@@ -217,13 +217,12 @@ class RecipientContactForm(DisbursementForm):
         required=False
     )
 
-    address_line1 = forms.CharField(label=_('Their address'))
-    address_line2 = forms.CharField(label=_('Address line 2'), required=False)
-    city = forms.CharField(label=_('Town or city'))
-    postcode = forms.CharField(label=_('Postcode'))
     recipient_email = forms.EmailField(
         label=_('Their email address'),
-        help_text=_('The recipient will be notified about this request by email if given here and otherwise by letter'),
+        help_text=_(
+            'The recipient will be notified about this request by email '
+            'if given here and otherwise by letter'
+        ),
         required=False,
     )
 
@@ -239,12 +238,6 @@ class RecipientContactForm(DisbursementForm):
             data['recipient_type'] = 'person'
             data['recipient_company_name'] = ''
         super().serialise_data(session, data)
-
-    def clean_postcode(self):
-        postcode = self.cleaned_data.get('postcode')
-        if postcode:
-            postcode = postcode.upper()
-        return postcode
 
     def clean(self):
         cleaned_data = super().clean()
@@ -273,6 +266,24 @@ class RecipientContactForm(DisbursementForm):
             cleaned_data['recipient_first_name'] = ''
             cleaned_data['recipient_last_name'] = ''
         return cleaned_data
+
+
+class RecipientPostcodeForm(DisbursementForm):
+    postcode = forms.CharField(label=_('Postcode'))
+
+    def clean_postcode(self):
+        postcode = self.cleaned_data.get('postcode')
+        if postcode:
+            postcode = postcode.upper()
+            if len(postcode.replace(' ', '')) < 5:
+                raise forms.ValidationError(_('Enter a full valid UK postcode'))
+        return postcode
+
+
+class RecipientAddressForm(RecipientPostcodeForm):
+    address_line1 = forms.CharField(label=_('Their address'))
+    address_line2 = forms.CharField(label=_('Address line 2'), required=False)
+    city = forms.CharField(label=_('Town or city'))
 
 
 validate_account_number = RegexValidator(r'^\d{8}$', message=_('The account number should be 8 digits long'))
