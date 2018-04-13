@@ -18,7 +18,7 @@ from requests.exceptions import HTTPError, RequestException
 
 from cashbook.templatetags.currency import currency
 from disbursements import disbursements_available_required, forms as disbursement_forms
-from disbursements.utils import get_disbursement_viability
+from disbursements.utils import get_disbursement_viability, find_addresses
 from feedback.views import GetHelpView, GetHelpSuccessView
 
 logger = logging.getLogger('mtp')
@@ -259,13 +259,12 @@ class RecipientAddressView(BasePagedFormView):
     form_class = disbursement_forms.RecipientAddressForm
 
     def get_context_data(self, **kwargs):
-        postcode = self.get_valid_form_data(RecipientPostcodeView).get('postcode')
-        if postcode:
-            kwargs['addresses'] = []
-            kwargs['postcode'] = postcode
+        kwargs['postcode'] = self.get_valid_form_data(
+            RecipientPostcodeView).get('postcode')
 
-        if postcode and not self.redirect_success_url:
+        if kwargs['postcode'] and not self.redirect_success_url:
             kwargs['address_picker'] = True
+            kwargs['addresses'] = find_addresses(kwargs['postcode'])
         return super().get_context_data(**kwargs)
 
     def get_success_url(self):

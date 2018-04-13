@@ -22,6 +22,9 @@
     </p>
 
     <div class="form-group">
+      <label for="address-select" id="address-select-label" class="form-label">
+        {% trans 'Choose address' %}
+      </label>
       <select id="address-select" class="form-control mtp-address-picker">
         <option value="0">
           {% blocktrans trimmed with count=addresses|length %}
@@ -29,18 +32,12 @@
           {% endblocktrans %}
         </option>
         {% for address in addresses %}
-          <option value="{{ forloop.counter }}" data-address='{"address_line1": "{{ address.address_line1 }}", "address_line2": "{{ address_line2 }}", "city": "{{ address.city }}", "postcode": "{{ address.postcode }}"}'>
+          <option value="{{ forloop.counter }}" data-address='{"address_line1": "{{ address.address_line1 }}", "address_line2": "{{ address.address_line2 }}", "city": "{{ address.city }}", "postcode": "{{ address.postcode }}"}'>
             {{ address.address }}
           </option>
         {% endfor %}
       </select>
     </div>
-
-    <p>
-      <a class="mtp-disclosure" href="#" aria-controls="manual-address-entry" aria-expanded="{% if form.errors %}true{% else %}false{% endif %}" role="button">
-        {% trans 'I can’t find the address in the list' %}
-      </a>
-    </p>
   {% endif %}
 
   <div class="grid-row">
@@ -50,7 +47,7 @@
 
         <div id="manual-address-entry">
           {% if address_picker %}
-            <h3 class="heading-small">{% trans 'Enter the address manually' %}</h3>
+            <h3 class="heading-small">{% trans 'Or enter address manually' %}</h3>
             <br/>
           {% endif %}
 
