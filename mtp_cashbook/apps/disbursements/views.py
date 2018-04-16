@@ -484,7 +484,7 @@ class PendingDetailView(BaseConfirmationView):
                     recipient_first_name=disbursement['recipient_first_name'],
                     recipient_last_name=disbursement['recipient_last_name'],
                 ).replace('  ', ' '),
-                transaction_type='RELA',
+                transaction_type='DTDS',
                 retries=1
             )
             return nomis_response['id']
