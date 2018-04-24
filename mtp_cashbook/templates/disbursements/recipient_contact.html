@@ -18,9 +18,28 @@
 
         {% include 'mtp_common/forms/error-summary.html' with form=form only %}
 
-        {% include 'mtp_common/forms/field.html' with field=form.recipient_first_name input_classes='form-control-1-2' only %}
+        {% with field=form.recipient_type choices=form.recipient_type.field.choices %}
+          <fieldset>
+            <div class="form-group {% if field.errors %}form-group-error{% endif %}">
+              <div class="multiple-choice">
+                <input id="js-choice-{{ choices.0.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.0.0 }}" data-reveal=".js-choice-person" {% if field.value != choices.1.0 %}checked{% endif %}>
+                <label for="js-choice-{{ choices.0.0 }}">{{ choices.0.1 }}</label>
+              </div>
+              <div class="panel panel-border-narrow js-hidden js-choice-person">
+                {% include 'mtp_common/forms/field.html' with field=form.recipient_first_name input_classes='form-control-1-2' only %}
+                {% include 'mtp_common/forms/field.html' with field=form.recipient_last_name input_classes='form-control-1-2' only %}
+              </div>
 
-        {% include 'mtp_common/forms/field.html' with field=form.recipient_last_name input_classes='form-control-1-2' only %}
+              <div class="multiple-choice">
+                <input id="js-choice-{{ choices.1.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.1.0 }}" data-reveal=".js-choice-company" {% if field.value == choices.1.0 %}checked{% endif %}>
+                <label for="js-choice-{{ choices.1.0 }}">{{ choices.1.1 }}</label>
+              </div>
+              <div class="panel panel-border-narrow js-hidden js-choice-company">
+                {% include 'mtp_common/forms/field.html' with field=form.recipient_company_name input_classes='form-control-1-2' only %}
+              </div>
+            </div>
+          </fieldset>
+        {% endwith %}
 
         <fieldset>
           <div class="form-group {% if field.errors %}form-group-error{% endif %}">

@@ -212,8 +212,27 @@ class SendingMethodForm(DisbursementForm):
 
 
 class RecipientContactForm(DisbursementForm):
-    recipient_first_name = forms.CharField(label=_('Their first name'))
-    recipient_last_name = forms.CharField(label=_('Last name'))
+    recipient_type = forms.ChoiceField(
+        required=True, choices=(
+            ('person', _('Person')),
+            ('company', _('Company')),
+        ), error_messages={
+            'required': _('Please select ‘Person’ or ‘Company’'),
+        }
+    )
+    recipient_first_name = forms.CharField(
+        label=_('Their first name'),
+        required=False
+    )
+    recipient_last_name = forms.CharField(
+        label=_('Last name'),
+        required=False,
+    )
+    recipient_company_name = forms.CharField(
+        label=_('Company name'),
+        required=False
+    )
+
     address_line1 = forms.CharField(label=_('Their address'))
     address_line2 = forms.CharField(label=_('Address line 2'), required=False)
     city = forms.CharField(label=_('Town or city'))
@@ -229,6 +248,34 @@ class RecipientContactForm(DisbursementForm):
         if postcode:
             postcode = postcode.upper()
         return postcode
+
+    def clean(self):
+        cleaned_data = super().clean()
+        recipient_type = cleaned_data.get('recipient_type')
+        if recipient_type == 'person':
+            recipient_first_name = cleaned_data.get('recipient_first_name')
+            recipient_last_name = cleaned_data.get('recipient_last_name')
+            if not recipient_first_name:
+                self.add_error(
+                    'recipient_first_name',
+                    self['recipient_first_name'].field.error_messages['required']
+                )
+            if not recipient_last_name:
+                self.add_error(
+                    'recipient_last_name',
+                    self['recipient_last_name'].field.error_messages['required']
+                )
+            cleaned_data['recipient_company_name'] = ''
+        elif recipient_type == 'company':
+            recipient_company_name = cleaned_data.get('recipient_company_name')
+            if not recipient_company_name:
+                self.add_error(
+                    'recipient_company_name',
+                    self['recipient_company_name'].field.error_messages['required']
+                )
+            cleaned_data['recipient_first_name'] = ''
+            cleaned_data['recipient_last_name'] = ''
+        return cleaned_data
 
 
 validate_account_number = RegexValidator(r'^\d{8}$', message=_('The account number should be 8 digits long'))

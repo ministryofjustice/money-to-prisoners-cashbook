@@ -342,6 +342,14 @@ class CreatedView(BasePagedView):
         for view in self.get_previous_views():
             if issubclass(view, BasePagedFormView):
                 disbursement_data.update(**self.get_valid_form_data(view))
+        if disbursement_data['recipient_type'] == 'person':
+            disbursement_data['recipient_is_company'] = False
+        elif disbursement_data['recipient_type'] == 'company':
+            disbursement_data['recipient_is_company'] = True
+            disbursement_data['recipient_last_name'] = disbursement_data['recipient_company_name']
+        del disbursement_data['recipient_type']
+        del disbursement_data['recipient_company_name']
+        del disbursement_data['prisoner_dob']
         if 'remittance' in disbursement_data:
             del disbursement_data['remittance']
         try:
@@ -437,8 +445,8 @@ class PendingDetailView(BaseConfirmationView):
                 record_id='d%s' % disbursement['id'],
                 description='Sent to {recipient_first_name} {recipient_last_name}'.format(
                     recipient_first_name=disbursement['recipient_first_name'],
-                    recipient_last_name=disbursement['recipient_last_name']
-                ),
+                    recipient_last_name=disbursement['recipient_last_name'],
+                ).replace('  ', ' '),
                 transaction_type='RELA',
                 retries=1
             )
@@ -555,13 +563,22 @@ class BaseEditFormView(BasePagedFormView):
             self.disbursement = self.api_session.get(
                 'disbursements/{pk}/'.format(pk=kwargs['pk'])
             ).json()
-            self.disbursement['remittance'] = 'yes' if self.disbursement.get('remittance_description') else 'no'
         except HttpNotFoundError:
             raise Http404('Disbursement %s not found' % kwargs['pk'])
         for view in list(self.get_previous_views()) + [self.__class__]:
             if not issubclass(view, BasePagedFormView) or not view.is_form_enabled(self.valid_form_data):
                 continue
-            view.form_class.serialise_data(request.session, self.disbursement)
+            disbursement_data = self.disbursement.copy()
+            if disbursement_data.get('recipient_is_company'):
+                disbursement_data['recipient_type'] = 'company'
+                disbursement_data['recipient_company_name'] = disbursement_data['recipient_last_name']
+                disbursement_data['recipient_first_name'] = ''
+                disbursement_data['recipient_last_name'] = ''
+            else:
+                disbursement_data['recipient_type'] = 'person'
+                disbursement_data['recipient_company_name'] = ''
+            disbursement_data['remittance'] = 'yes' if disbursement_data.get('remittance_description') else 'no'
+            view.form_class.serialise_data(request.session, disbursement_data)
             form = view.form_class.unserialise_from_session(request)
             if form.is_valid():
                 self.valid_form_data[view.form_class.__name__] = form.cleaned_data
@@ -576,19 +593,30 @@ class BaseEditFormView(BasePagedFormView):
         return context
 
     def form_valid(self, form):
-        update = self.get_update_payload(form)
-        changed_fields = set()
-        for field in update:
-            if update[field] != self.disbursement[field]:
-                changed_fields.add(field)
-        if 'prisoner_number' in changed_fields:
-            changed_fields.add('prison')
-        if changed_fields:
-            if 'remittance' in changed_fields:
-                changed_fields.remove('remittance')
+        disbursement_data = self.get_update_payload(form)
+        if disbursement_data.get('recipient_type') == 'person':
+            disbursement_data['recipient_is_company'] = False
+        elif disbursement_data.get('recipient_type') == 'company':
+            disbursement_data['recipient_is_company'] = True
+            disbursement_data['recipient_last_name'] = disbursement_data['recipient_company_name']
+            disbursement_data['recipient_first_name'] = ''
+        if 'recipient_type' in disbursement_data:
+            del disbursement_data['recipient_type']
+        if 'recipient_company_name' in disbursement_data:
+            del disbursement_data['recipient_company_name']
+        if 'remittance' in disbursement_data:
+            del disbursement_data['remittance']
+
+        update = {}
+        for field in disbursement_data:
+            if disbursement_data[field] != self.disbursement.get(field):
+                update[field] = disbursement_data[field]
+        if 'prisoner_number' in update:
+            update['prison'] = disbursement_data['prison']
+        if update:
             self.api_session.patch(
                 'disbursements/{pk}/'.format(**self.kwargs),
-                json={field: update[field] for field in changed_fields}
+                json=update
             )
         return super().form_valid(form)
 

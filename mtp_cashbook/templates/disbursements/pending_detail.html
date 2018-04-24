@@ -108,8 +108,14 @@
 
       <tr class="mtp-confirm-table__section">
         <th><h2 class="heading-small">{% trans 'To' %}</h2></th>
-        <th>{% trans 'Name' %}:</th>
-        <td>{{ disbursement.recipient_first_name}} {{ disbursement.recipient_last_name }}</td>
+        <th>
+          {% if disbursement.recipient_is_company %}
+            {% trans 'Company' %}:
+          {% else %}
+            {% trans 'Name' %}:
+          {% endif %}
+        </th>
+        <td>{{ disbursement.recipient_first_name }} {{ disbursement.recipient_last_name }} {{ disbursement.recipient_company_name }}</td>
         <td>
           {% if editable %}
             <a href="{% url 'disbursements:update_recipient_contact' pk=disbursement.id %}" class="print-hidden">

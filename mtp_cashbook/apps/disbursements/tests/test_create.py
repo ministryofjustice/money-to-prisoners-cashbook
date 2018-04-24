@@ -66,6 +66,7 @@ class CreateDisbursementFlowTestCase(MTPBaseTestCase):
 
     def enter_recipient_details(self, data=None):
         data = data or {
+            'recipient_type': 'person',
             'recipient_first_name': 'John',
             'recipient_last_name': 'Smith',
             'address_line1': '54 Fake Road',
@@ -255,6 +256,7 @@ class RecipientContactTestCase(CreateDisbursementFlowTestCase):
         self.enter_amount()
 
         response = self.enter_recipient_details({
+            'recipient_type': 'person',
             'recipient_first_name': 'John',
             'recipient_last_name': 'Smith',
             'city': 'London',
@@ -262,6 +264,65 @@ class RecipientContactTestCase(CreateDisbursementFlowTestCase):
         })
         self.assertOnPage(response, 'disbursements:recipient_contact')
         self.assertFormError(response, 'form', 'address_line1', 'This field is required')
+
+    @responses.activate
+    @override_nomis_settings
+    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
+    def test_first_name_required(self):
+        self.login()
+        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
+        self.enter_prisoner_details()
+        self.enter_amount()
+
+        response = self.enter_recipient_details({
+            'recipient_type': 'person',
+            'recipient_first_name': '',
+            'recipient_last_name': 'Smith',
+            'address_line1': '10 Fake Road',
+            'city': 'London',
+            'postcode': 'n17 9bj',
+        })
+        self.assertOnPage(response, 'disbursements:recipient_contact')
+        self.assertFormError(response, 'form', 'recipient_first_name', 'This field is required')
+
+    @responses.activate
+    @override_nomis_settings
+    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
+    def test_last_name_required(self):
+        self.login()
+        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
+        self.enter_prisoner_details()
+        self.enter_amount()
+
+        response = self.enter_recipient_details({
+            'recipient_type': 'person',
+            'recipient_first_name': 'John',
+            'recipient_last_name': '',
+            'address_line1': '10 Fake Road',
+            'city': 'London',
+            'postcode': 'n17 9bj',
+        })
+        self.assertOnPage(response, 'disbursements:recipient_contact')
+        self.assertFormError(response, 'form', 'recipient_last_name', 'This field is required')
+
+    @responses.activate
+    @override_nomis_settings
+    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
+    def test_company_name_required(self):
+        self.login()
+        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
+        self.enter_prisoner_details()
+        self.enter_amount()
+
+        response = self.enter_recipient_details({
+            'recipient_type': 'company',
+            'recipient_company_name': '',
+            'address_line1': '10 Fake Road',
+            'city': 'London',
+            'postcode': 'n17 9bj',
+        })
+        self.assertOnPage(response, 'disbursements:recipient_contact')
+        self.assertFormError(response, 'form', 'recipient_company_name', 'This field is required')
 
 
 class RecipientBankAccountTestCase(CreateDisbursementFlowTestCase):
@@ -445,13 +506,35 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
         self.enter_prisoner_details()
-        self.enter_amount()
+        self.enter_amount(10)
         self.enter_recipient_details()
         self.enter_recipient_bank_account()
         self.enter_remittance_description()
-        response = self.client.post(reverse('disbursements:created'), follow=True)
 
+        response = self.client.post(reverse('disbursements:created'), follow=True)
         self.assertOnPage(response, 'disbursements:created')
+
+        post_requests = [call.request for call in responses.calls if call.request.method == responses.POST]
+        self.assertEqual(len(post_requests), 1)
+        self.assertJSONEqual(post_requests[0].body.decode(), {
+            'method': SENDING_METHOD.BANK_TRANSFER,
+            'prisoner_number': self.prisoner_number,
+            'prison': 'BXI',
+            'prisoner_name': 'JILLY HALL',
+            'amount': 1000,
+            'sort_code': '605789',
+            'account_number': '90908787',
+            'roll_number': '',
+            'recipient_is_company': False,
+            'recipient_first_name': 'John',
+            'recipient_last_name': 'Smith',
+            'address_line1': '54 Fake Road',
+            'address_line2': '',
+            'city': 'London',
+            'postcode': 'N17 9BJ',
+            'recipient_email': 'recipient@mtp.local',
+            'remittance_description': '',
+        })
 
     @responses.activate
     @override_nomis_settings
@@ -473,6 +556,67 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
         response = self.client.post(reverse('disbursements:created'), follow=True)
 
         self.assertOnPage(response, 'disbursements:created')
+
+    @responses.activate
+    @override_nomis_settings
+    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
+    def test_create_edited_valid_company_cheque_disbursement(self):
+        responses.add(
+            responses.POST,
+            api_url('/disbursements/'),
+            json={'id': 1},
+            status=200,
+        )
+
+        self.login()
+        self.choose_sending_method(method=SENDING_METHOD.CHEQUE)
+        self.enter_prisoner_details()
+        self.enter_amount(10)
+        self.enter_recipient_details()
+        self.enter_remittance_description()
+        response = self.client.get(reverse('disbursements:details_check'))
+        self.assertContains(response, 'John')
+        self.assertContains(response, 'Smith')
+
+        # edit recipient
+        self.enter_recipient_details({
+            'recipient_type': 'company',
+            'recipient_company_name': 'Boots',
+            'recipient_first_name': '',
+            'recipient_last_name': '',
+            'address_line1': '54 Fake Road',
+            'address_line2': '',
+            'city': 'London',
+            'postcode': 'n17 9bj',
+            'recipient_email': 'recipient@mtp.local',
+        })
+        response = self.client.get(reverse('disbursements:details_check'))
+        self.assertContains(response, 'Boots')
+        self.assertNotContains(response, 'John')
+        self.assertNotContains(response, 'Smith')
+
+        # save
+        response = self.client.post(reverse('disbursements:created'), follow=True)
+        self.assertOnPage(response, 'disbursements:created')
+
+        post_requests = [call.request for call in responses.calls if call.request.method == responses.POST]
+        self.assertEqual(len(post_requests), 1)
+        self.assertJSONEqual(post_requests[0].body.decode(), {
+            'method': SENDING_METHOD.CHEQUE,
+            'prisoner_number': self.prisoner_number,
+            'prison': 'BXI',
+            'prisoner_name': 'JILLY HALL',
+            'amount': 1000,
+            'recipient_is_company': True,
+            'recipient_first_name': '',
+            'recipient_last_name': 'Boots',
+            'address_line1': '54 Fake Road',
+            'address_line2': '',
+            'city': 'London',
+            'postcode': 'N17 9BJ',
+            'recipient_email': 'recipient@mtp.local',
+            'remittance_description': '',
+        })
 
     @responses.activate
     @override_nomis_settings

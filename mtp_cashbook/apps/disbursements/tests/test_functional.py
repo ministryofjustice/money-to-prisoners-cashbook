@@ -1,6 +1,5 @@
 from django.test import override_settings
 from django.utils.crypto import get_random_string
-from selenium.common.exceptions import InvalidElementStateException
 
 from cashbook.tests.test_functional import CashbookTestCase
 from disbursements.templatetags.disbursements import format_sortcode
@@ -18,6 +17,7 @@ class DisbursementTestCase(CashbookTestCase):
             for button in buttons:
                 if button.text.strip() == text or button.get_attribute('value') == text:
                     break
+                button = None
             self.assertIsNotNone(button)
         else:
             self.assertEqual(len(buttons), 1)
@@ -52,14 +52,14 @@ class DisbursementTestCase(CashbookTestCase):
         self.fill_in_form({
             'id_amount': '11a',
         })
-        self.click_button('Confirm')
+        self.click_button('Next')
         self.assertShowingView('disbursements:amount')
         self.assertInSource('Enter amount as a number')
         self.get_element('id_amount').clear()
         self.fill_in_form({
             'id_amount': '11',
         })
-        self.click_button('Confirm')
+        self.click_button('Next')
 
         self.assertShowingView('disbursements:recipient_contact')
         contact_form = {
@@ -104,7 +104,7 @@ class DisbursementTestCase(CashbookTestCase):
         self.click_on_text_substring('No')
         try:
             self.click_button('Next')
-        except InvalidElementStateException:
+        except AssertionError:
             pass
         self.assertShowingView('disbursements:details_check')
         self.click_on_text_substring('Yes')
@@ -174,7 +174,7 @@ class DisbursementTestCase(CashbookTestCase):
         self.assertInSource('JILLY HALL')
         self.assertInSource('A1401AE')
 
-    def test_create_cheque_disbursement(self):
+    def test_create_cheque_disbursement_to_company(self):
         self.login(self.username, self.username)
 
         self.assertShowingView('home')
@@ -202,23 +202,22 @@ class DisbursementTestCase(CashbookTestCase):
         self.fill_in_form({
             'id_amount': '11a',
         })
-        self.click_button('Confirm')
+        self.click_button('Next')
         self.assertShowingView('disbursements:amount')
         self.assertInSource('Enter amount as a number')
         self.get_element('id_amount').clear()
         self.fill_in_form({
             'id_amount': '11',
         })
-        self.click_button('Confirm')
+        self.click_button('Next')
 
         self.assertShowingView('disbursements:recipient_contact')
+        self.click_on_text_substring('Company')
         contact_form = {
-            'id_recipient_first_name': 'Mary-' + get_random_string(3),
-            'id_recipient_last_name': 'Halls-' + get_random_string(3),
+            'id_recipient_company_name': 'Boots-' + get_random_string(3),
             'id_address_line1': 'Street-' + get_random_string(3),
             'id_city': 'City-' + get_random_string(3),
             'id_postcode': 'PostCode-' + get_random_string(3),
-            'id_recipient_email': 'mary-halls-' + get_random_string(3) + '@outside.local',
         }
         self.fill_in_form(contact_form)
         self.click_button('Next')
@@ -232,10 +231,10 @@ class DisbursementTestCase(CashbookTestCase):
         self.assertShowingView('disbursements:details_check')
         self.assertInSource('Cheque')
         self.assertInSource('£11.00')
-        for key in ('id_recipient_first_name', 'id_recipient_last_name',
-                    'id_address_line1', 'id_city',
-                    'id_recipient_email'):
+        for key in ('id_recipient_company_name',
+                    'id_address_line1', 'id_city'):
             self.assertInSource(contact_form[key])
+        self.assertInSource('Company:')
         self.assertInSource(contact_form['id_postcode'].upper())
         self.assertInSource('JILLY HALL')
         self.assertInSource('A1401AE')
@@ -244,7 +243,7 @@ class DisbursementTestCase(CashbookTestCase):
         self.click_on_text_substring('No')
         try:
             self.click_button('Next')
-        except InvalidElementStateException:
+        except AssertionError:
             pass
         self.assertShowingView('disbursements:details_check')
         self.click_on_text_substring('Yes')
@@ -283,7 +282,7 @@ class DisbursementTestCase(CashbookTestCase):
         self.click_on_text_substring('Confirm another payment')
 
         self.assertShowingView('disbursements:pending_list')
-        self.assertNotInSource(contact_form['id_recipient_first_name'])
+        self.assertNotInSource(contact_form['id_recipient_company_name'])
 
         self.click_logout()
 
@@ -296,7 +295,7 @@ class DisbursementTestCase(CashbookTestCase):
 
         self.assertShowingView('disbursements:search')
         self.click_on_link('Recipient')
-        self.type_in('id_recipient_name', contact_form['id_recipient_first_name'], send_return=True)
+        self.type_in('id_recipient_name', contact_form['id_recipient_company_name'], send_return=True)
         self.assertShowingView('disbursements:search')
         self.assertNotInSource('There was a problem')
         self.get_element('id_recipient_name').clear()
@@ -306,7 +305,7 @@ class DisbursementTestCase(CashbookTestCase):
         self.assertInSource('Confirmed by HMP LEEDS Clerk')
         self.assertInSource('Cheque')
         self.assertInSource('£11.00')
-        for key in ('id_recipient_first_name', 'id_recipient_last_name', 'id_address_line1', 'id_city'):
+        for key in ('id_recipient_company_name', 'id_address_line1', 'id_city'):
             self.assertInSource(contact_form[key])
         self.assertInSource(contact_form['id_postcode'].upper())
         self.assertInSource('JILLY HALL')
