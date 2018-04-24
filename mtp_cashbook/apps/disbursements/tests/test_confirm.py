@@ -20,10 +20,11 @@ SAMPLE_DISBURSEMENTS = [
         'prison': 'BXI',
         'prisoner_name': 'EDWARD WEBBER',
         'prisoner_number': 'A1407AE',
+        'recipient_is_company': False,
         'recipient_first_name': 'Geoffrey',
         'recipient_last_name': 'Jennings',
         'address_line1': '632 Shane stravenue',
-        'address_line2': None,
+        'address_line2': '',
         'city': 'Lake Louisville',
         'postcode': 'N2K 9FX',
         'country': 'UK',
@@ -65,6 +66,7 @@ SAMPLE_DISBURSEMENTS = [
         'prison': 'BXI',
         'prisoner_name': 'PRISONER MOVED',
         'prisoner_number': 'A1403AE',
+        'recipient_is_company': False,
         'recipient_first_name': 'Angela',
         'recipient_last_name': 'Wood',
         'address_line1': 'Flat 66x',
@@ -101,6 +103,7 @@ SAMPLE_DISBURSEMENTS = [
         'prison': 'BXI',
         'prisoner_name': 'SOID4 CHTEST',
         'prisoner_number': 'A3530AE',
+        'recipient_is_company': False,
         'recipient_first_name': 'Jessica',
         'recipient_last_name': 'Hill',
         'address_line1': 'Flat 6',
@@ -137,10 +140,11 @@ SAMPLE_DISBURSEMENTS = [
         'prison': 'BXI',
         'prisoner_name': 'TEST ASSESSMENT',
         'prisoner_number': 'A1433AE',
+        'recipient_is_company': False,
         'recipient_first_name': 'Ross',
         'recipient_last_name': 'Johnson',
         'address_line1': '460 Johnson springs',
-        'address_line2': None,
+        'address_line2': '',
         'city': 'South Georgia',
         'postcode': 'E09 5SP',
         'country': 'UK',
@@ -173,10 +177,11 @@ SAMPLE_DISBURSEMENTS = [
         'prison': 'BXI',
         'prisoner_name': 'TEST QUASH2',
         'prisoner_number': 'A1448AE',
+        'recipient_is_company': False,
         'recipient_first_name': 'Katy',
         'recipient_last_name': 'Hicks',
         'address_line1': '4 Morris spurs',
-        'address_line2': None,
+        'address_line2': '',
         'city': 'Jennaview',
         'postcode': 'L8 0NY',
         'country': 'UK',
@@ -198,7 +203,44 @@ SAMPLE_DISBURSEMENTS = [
                 'action': 'created'
             }
         ]
-    }
+    },
+    # cheque and company
+    {
+        'id': 660,
+        'method': 'cheque',
+        'amount': 3000,
+        'resolution': 'pending',
+        'nomis_transaction_id': None,
+        'prison': 'BXI',
+        'prisoner_name': 'TEST QUASH2',
+        'prisoner_number': 'A1448AE',
+        'recipient_is_company': True,
+        'recipient_first_name': '',
+        'recipient_last_name': 'Boots',
+        'address_line1': '4 Morris spurs',
+        'address_line2': '',
+        'city': 'Jennaview',
+        'postcode': 'L8 0NY',
+        'country': 'UK',
+        'recipient_email': '',
+        'remittance_description': '',
+        'sort_code': None,
+        'account_number': None,
+        'roll_number': None,
+        'created': '2017-12-21T04:32:27.154403Z',
+        'modified': '2017-12-21T04:32:27.154403Z',
+        'log_set': [
+            {
+                'user': {
+                    'last_name': 'Clerk',
+                    'username': 'test-hmp-brixton',
+                    'first_name': 'HMP BRIXTON'
+                },
+                'created': '2017-12-21T04:32:27.154403Z',
+                'action': 'created'
+            }
+        ]
+    },
 ]
 
 
@@ -442,6 +484,171 @@ class UpdatePendingDisbursementTestCase(PendingDisbursementTestCase):
     @responses.activate
     @override_nomis_settings
     @override_settings(DISBURSEMENT_PRISONS=['BXI'])
+    def test_update_person_to_company(self):
+        self.login(credentials={'username': 'test-hmp-brixton-a', 'password': 'pass'})
+
+        # go to update page
+        disbursement = SAMPLE_DISBURSEMENTS[3]
+        self.pending_detail(disbursement=disbursement)
+        responses.add(
+            responses.GET,
+            api_url('/prisoner_locations/{prisoner_number}/'.format(
+                prisoner_number=disbursement['prisoner_number']
+            )),
+            json={
+                'prisoner_number': disbursement['prisoner_number'],
+                'prisoner_dob': '1970-01-01',
+                'prisoner_name': 'TEST QUASH2',
+                'prison': 'BXI'
+            },
+            status=200,
+        )
+
+        response = self.client.get(
+            reverse('disbursements:update_recipient_contact', args=[disbursement['id']]),
+        )
+
+        self.assertContains(response, disbursement['recipient_first_name'])
+        self.assertContains(response, disbursement['recipient_last_name'])
+        self.assertOnPage(response, 'disbursements:update_recipient_contact')
+
+        responses.reset()
+
+        # post update
+        responses.add(
+            responses.GET,
+            api_url('/prisoner_locations/{prisoner_number}/'.format(
+                prisoner_number=disbursement['prisoner_number']
+            )),
+            json={
+                'prisoner_number': disbursement['prisoner_number'],
+                'prisoner_dob': '1970-01-01',
+                'prisoner_name': 'TEST QUASH2',
+                'prison': 'BXI'
+            },
+            status=200,
+        )
+        responses.add(
+            responses.PATCH,
+            api_url('/disbursements/{pk}/'.format(pk=disbursement['id'])),
+            status=200
+        )
+
+        new_recipient_type = 'company'
+        new_recipient_company_name = 'Boots'
+        self.pending_detail(disbursement=disbursement)
+
+        response = self.client.post(
+            reverse('disbursements:update_recipient_contact', args=[disbursement['id']]),
+            data={
+                'recipient_type':  new_recipient_type,
+                'recipient_company_name': new_recipient_company_name,
+                'recipient_first_name': '',
+                'recipient_last_name': '',
+                'address_line1': '460 Johnson springs',
+                'address_line2': '',
+                'city': 'South Georgia',
+                'postcode': 'E09 5SP',
+                'recipient_email': 'Ross.Johnson@mail.local',
+            },
+            follow=True
+        )
+
+        self.assertOnPage(response, 'disbursements:pending_detail')
+
+        patch_requests = [call.request for call in responses.calls if call.request.method == responses.PATCH]
+        self.assertEqual(len(patch_requests), 1)
+        self.assertJSONEqual(patch_requests[0].body.decode(), {
+            'recipient_is_company': True,
+            'recipient_first_name': '',
+            'recipient_last_name': new_recipient_company_name,
+        })
+
+    @responses.activate
+    @override_nomis_settings
+    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
+    def test_update_company_to_person(self):
+        self.login(credentials={'username': 'test-hmp-brixton-a', 'password': 'pass'})
+
+        # go to update page
+        disbursement = SAMPLE_DISBURSEMENTS[5]
+        self.pending_detail(disbursement=disbursement)
+        responses.add(
+            responses.GET,
+            api_url('/prisoner_locations/{prisoner_number}/'.format(
+                prisoner_number=disbursement['prisoner_number']
+            )),
+            json={
+                'prisoner_number': disbursement['prisoner_number'],
+                'prisoner_dob': '1970-01-01',
+                'prisoner_name': 'TEST QUASH2',
+                'prison': 'BXI'
+            },
+            status=200,
+        )
+
+        response = self.client.get(
+            reverse('disbursements:update_recipient_contact', args=[disbursement['id']]),
+        )
+
+        self.assertContains(response, disbursement['recipient_last_name'])
+        self.assertOnPage(response, 'disbursements:update_recipient_contact')
+
+        responses.reset()
+
+        # post update
+        responses.add(
+            responses.GET,
+            api_url('/prisoner_locations/{prisoner_number}/'.format(
+                prisoner_number=disbursement['prisoner_number']
+            )),
+            json={
+                'prisoner_number': disbursement['prisoner_number'],
+                'prisoner_dob': '1970-01-01',
+                'prisoner_name': 'TEST QUASH2',
+                'prison': 'BXI'
+            },
+            status=200,
+        )
+        responses.add(
+            responses.PATCH,
+            api_url('/disbursements/{pk}/'.format(pk=disbursement['id'])),
+            status=200
+        )
+
+        new_recipient_type = 'person'
+        new_recipient_first_name = 'Joe'
+        new_recipient_last_name = 'Smith'
+        self.pending_detail(disbursement=disbursement)
+
+        response = self.client.post(
+            reverse('disbursements:update_recipient_contact', args=[disbursement['id']]),
+            data={
+                'recipient_type':  new_recipient_type,
+                'recipient_first_name': new_recipient_first_name,
+                'recipient_last_name': new_recipient_last_name,
+                'address_line1': '4 Morris spurs',
+                'address_line2': '',
+                'city': 'Jennaview',
+                'postcode': 'L8 0NY',
+                'recipient_email': '',
+            },
+            follow=True
+        )
+
+        self.assertOnPage(response, 'disbursements:pending_detail')
+
+        patch_requests = [call.request for call in responses.calls if call.request.method == responses.PATCH]
+        self.assertEqual(len(patch_requests), 1)
+        self.assertJSONEqual(patch_requests[0].body.decode(), {
+            'recipient_is_company': False,
+            'recipient_first_name': new_recipient_first_name,
+            'recipient_last_name': new_recipient_last_name,
+        })
+
+    @responses.activate
+    @override_nomis_settings
+    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_update_remittance_description(self):
         self.login(credentials={'username': 'test-hmp-brixton-a', 'password': 'pass'})
 
@@ -491,12 +698,10 @@ class UpdatePendingDisbursementTestCase(PendingDisbursementTestCase):
         )
 
         new_remittance_description = 'LEGAL FEES'
-        updated_disbursement = dict(**disbursement)
-        updated_disbursement['remittance_description'] = new_remittance_description
-        self.pending_detail(disbursement=updated_disbursement)
+        self.pending_detail(disbursement=disbursement)
 
         response = self.client.post(
-            reverse('disbursements:update_remittance_description', args=[updated_disbursement['id']]),
+            reverse('disbursements:update_remittance_description', args=[disbursement['id']]),
             data={
                 'remittance': 'yes',
                 'remittance_description': new_remittance_description,
@@ -504,8 +709,12 @@ class UpdatePendingDisbursementTestCase(PendingDisbursementTestCase):
             follow=True
         )
         self.assertOnPage(response, 'disbursements:pending_detail')
-        self.assertContains(response, new_remittance_description)
-        self.assertNotContains(response, 'None given')
+
+        patch_requests = [call.request for call in responses.calls if call.request.method == responses.PATCH]
+        self.assertEqual(len(patch_requests), 1)
+        self.assertJSONEqual(patch_requests[0].body.decode(), {
+            'remittance_description': new_remittance_description,
+        })
 
     @responses.activate
     @override_nomis_settings

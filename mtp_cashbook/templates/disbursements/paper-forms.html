@@ -26,15 +26,15 @@
 
   <div class="mtp-paper-form-download grid-row">
     {% trans 'Download for bank transfer or cheque (PDF)' as link_title %}
-    {% static 'disbursements/disbursement-by-bank-transfer-or-cheque-V2.pdf' as pdf_link %}
+    {% static 'disbursements/disbursement-by-bank-transfer-or-cheque-V3.pdf' as pdf_link %}
     <div class="column-one-third">
       <a href="{{ pdf_link }}">
-        <img src="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-V2.jpg' %}" srcset="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-V2@2x.jpg' %} 2x" alt="{{ link_title }}" />
+        <img src="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-V3.jpg' %}" srcset="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-V3@2x.jpg' %} 2x" alt="{{ link_title }}" />
       </a>
     </div>
     <div class="column-two-thirds">
       <a href="{{ pdf_link }}">{{ link_title }}</a>
-      <p>V2 03/2018</p>
+      <p>V3 04/2018</p>
       {% trans 'If the prisoner uses this form:' %}
       <ul class="list list-bullet">
         <li>{% trans 'Give them an envelope to protect their privacy' %}</li>

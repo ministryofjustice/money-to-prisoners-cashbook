@@ -44,7 +44,7 @@
               {% trans 'Bank transfer' %}
             {% endif %}
           </td>
-          <td>{{ disbursement.recipient_first_name }} {{ disbursement.recipient_last_name }}</td>
+          <td>{{ disbursement.recipient_first_name }} {{ disbursement.recipient_last_name }} {{ disbursement.recipient_company_name }}</td>
           <td>
             {% if disbursement.prisoner_moved %}
               {% trans 'Prisoner no longer in  this prison' %}

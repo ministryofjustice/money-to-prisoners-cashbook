@@ -62,8 +62,14 @@
 
       <tr class="mtp-confirm-table__section">
         <th><h2 class="heading-small">{% trans 'To' %}</h2></th>
-        <th>{% trans 'Name' %}:</th>
-        <td>{{ recipient_first_name}} {{recipient_last_name}}</td>
+        <th>
+          {% if recipient_type == 'company' %}
+            {% trans 'Company' %}:
+          {% else %}
+            {% trans 'Name' %}:
+          {% endif %}
+        </th>
+        <td>{{ recipient_first_name }} {{ recipient_last_name }} {{ recipient_company_name }}</td>
         <td>
           <a href="{% url 'disbursements:recipient_contact' %}?next={{ view.url }}" class="print-hidden">
             {% trans 'Change' %}
