@@ -20,19 +20,27 @@ exports.PrintBatch = {
   onClickPrint: function (e) {
     e.preventDefault();
 
-    this.$iframe = $('<iframe>', {'style': 'visibility: hidden'}).appendTo('body');
+    this.$iframe = $(
+      '<iframe>', {'style': 'position: absolute; top: -1000px'}
+    ).appendTo('body');
 
     this.$iframe.on('load', $.proxy(this.onLoadIframe, this));
     this.$iframe.attr('src', $(e.target).attr('href'));
   },
 
   onLoadIframe: function () {
+    var printFrame = this.$iframe[0]
+
+    printFrame.contentWindow.addEventListener(
+      'afterprint', function () {printFrame.remove();}
+    );
+
     try {
-      this.$iframe[0].contentWindow.document.execCommand('print', false, null);
+      if (!printFrame.contentWindow.document.execCommand('print', false, null)) {
+        printFrame.contentWindow.print();
+      }
     } catch (e) {
-      this.$iframe[0].contentWindow.print();
-    } finally {
-      this.$iframe.remove();
+      printFrame.contentWindow.print();
     }
   }
 };
