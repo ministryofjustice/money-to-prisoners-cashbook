@@ -31,7 +31,7 @@ exports.PrintBatch = {
   onLoadIframe: function () {
     var printFrame = this.$iframe[0]
 
-    printFrame.contentWindow.addEventListener(
+    $(printFrame.contentWindow).on(
       'afterprint', function () {printFrame.remove();}
     );
 
