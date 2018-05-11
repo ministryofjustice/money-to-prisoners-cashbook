@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.conf.urls import url
 from django.urls import reverse_lazy
 from mtp_common.auth import views
@@ -6,7 +7,10 @@ urlpatterns = [
     url(
         r'^login/$', views.login, {
             'template_name': 'mtp_auth/login.html',
-        }, name='login'
+            'extra_context': {
+                'start_page_url': settings.START_PAGE_URL,
+            },
+        }, name='login',
     ),
     url(
         r'^logout/$', views.logout, {
