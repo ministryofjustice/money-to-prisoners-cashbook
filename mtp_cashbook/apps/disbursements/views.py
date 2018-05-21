@@ -594,19 +594,6 @@ class BaseEditFormView(BasePagedFormView):
 
     def form_valid(self, form):
         disbursement_data = self.get_update_payload(form)
-        if disbursement_data.get('recipient_type') == 'person':
-            disbursement_data['recipient_is_company'] = False
-        elif disbursement_data.get('recipient_type') == 'company':
-            disbursement_data['recipient_is_company'] = True
-            disbursement_data['recipient_last_name'] = disbursement_data['recipient_company_name']
-            disbursement_data['recipient_first_name'] = ''
-        if 'recipient_type' in disbursement_data:
-            del disbursement_data['recipient_type']
-        if 'recipient_company_name' in disbursement_data:
-            del disbursement_data['recipient_company_name']
-        if 'remittance' in disbursement_data:
-            del disbursement_data['remittance']
-
         update = {}
         for field in disbursement_data:
             if disbursement_data[field] != self.disbursement.get(field):
@@ -621,7 +608,10 @@ class BaseEditFormView(BasePagedFormView):
         return super().form_valid(form)
 
     def get_update_payload(self, form):
-        return form.get_update_payload()
+        update = {}
+        for field in form.base_fields:
+            update[field] = form.cleaned_data[field]
+        return update
 
     def get_success_url(self):
         CreatedView.clear_disbursement(self.request)
@@ -642,7 +632,7 @@ class UpdateSendingMethodView(BaseEditFormView, SendingMethodView):
     def get_update_payload(self, form):
         if self.require_bank_account:
             return {}
-        payload = form.get_update_payload()
+        payload = super().get_update_payload(form)
         payload.update(account_number='', sort_code='', roll_number='')
         return payload
 
@@ -656,6 +646,11 @@ class UpdatePrisonerView(BaseEditFormView, PrisonerView):
     url_name = 'update_prisoner'
     previous_view = UpdateSendingMethodView
 
+    def get_update_payload(self, form):
+        payload = super().get_update_payload(form)
+        payload['prison'] = form.cleaned_data['prison']
+        return payload
+
 
 class UpdateAmountView(BaseEditFormView, AmountView):
     url_name = 'update_amount'
@@ -666,13 +661,25 @@ class UpdateRecipientContactView(BaseEditFormView, RecipientContactView):
     url_name = 'update_recipient_contact'
     previous_view = UpdateAmountView
 
+    def get_update_payload(self, form):
+        update = super().get_update_payload(form)
+        if update['recipient_type'] == 'person':
+            update['recipient_is_company'] = False
+        elif update['recipient_type'] == 'company':
+            update['recipient_is_company'] = True
+            update['recipient_first_name'] = ''
+            update['recipient_last_name'] = update['recipient_company_name']
+        del update['recipient_type']
+        del update['recipient_company_name']
+        return update
+
 
 class UpdateRecipientBankAccountView(BaseEditFormView, RecipientBankAccountView):
     url_name = 'update_recipient_bank_account'
     previous_view = UpdateRecipientContactView
 
     def get_update_payload(self, form):
-        payload = form.get_update_payload()
+        payload = super().get_update_payload(form)
         payload.update(method=disbursement_forms.SENDING_METHOD.BANK_TRANSFER)
         return payload
 
@@ -680,6 +687,11 @@ class UpdateRecipientBankAccountView(BaseEditFormView, RecipientBankAccountView)
 class UpdateRemittanceDescriptionView(BaseEditFormView, RemittanceDescriptionView):
     url_name = 'update_remittance_description'
     previous_view = UpdateRecipientBankAccountView
+
+    def get_update_payload(self, form):
+        update = super().get_update_payload(form)
+        del update['remittance']
+        return update
 
 
 # misc views
