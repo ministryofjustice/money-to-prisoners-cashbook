@@ -85,12 +85,6 @@ class DisbursementForm(GARequestErrorReportingMixin, forms.Form):
     def serialise_to_session(self):
         self.serialise_data(self.request.session, self.cleaned_data)
 
-    def get_update_payload(self):
-        update = {}
-        for field in self.base_fields:
-            update[field] = self.cleaned_data[field]
-        return update
-
 
 class PrisonerForm(DisbursementForm):
     prisoner_number = forms.CharField(
@@ -137,13 +131,6 @@ class PrisonerForm(DisbursementForm):
                 raise forms.ValidationError(
                     self.error_messages['connection'], code='connection')
         return prisoner_number
-
-    def get_update_payload(self):
-        update = {
-            'prisoner_number': self.cleaned_data['prisoner_number'],
-            'prison': self.cleaned_data['prison']
-        }
-        return update
 
 
 def serialise_amount(amount):
