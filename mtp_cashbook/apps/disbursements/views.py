@@ -569,15 +569,6 @@ class BaseEditFormView(BasePagedFormView):
             if not issubclass(view, BasePagedFormView) or not view.is_form_enabled(self.valid_form_data):
                 continue
             disbursement_data = self.disbursement.copy()
-            if disbursement_data.get('recipient_is_company'):
-                disbursement_data['recipient_type'] = 'company'
-                disbursement_data['recipient_company_name'] = disbursement_data['recipient_last_name']
-                disbursement_data['recipient_first_name'] = ''
-                disbursement_data['recipient_last_name'] = ''
-            else:
-                disbursement_data['recipient_type'] = 'person'
-                disbursement_data['recipient_company_name'] = ''
-            disbursement_data['remittance'] = 'yes' if disbursement_data.get('remittance_description') else 'no'
             view.form_class.serialise_data(request.session, disbursement_data)
             form = view.form_class.unserialise_from_session(request)
             if form.is_valid():

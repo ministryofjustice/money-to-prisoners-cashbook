@@ -230,6 +230,19 @@ class RecipientContactForm(DisbursementForm):
         required=False,
     )
 
+    @classmethod
+    def serialise_data(cls, session, data):
+        recipient_is_company = data.get('recipient_is_company')
+        if recipient_is_company is True:
+            data['recipient_type'] = 'company'
+            data['recipient_company_name'] = data['recipient_last_name']
+            data['recipient_first_name'] = ''
+            data['recipient_last_name'] = ''
+        elif recipient_is_company is False:
+            data['recipient_type'] = 'person'
+            data['recipient_company_name'] = ''
+        super().serialise_data(session, data)
+
     def clean_postcode(self):
         postcode = self.cleaned_data.get('postcode')
         if postcode:
@@ -357,6 +370,11 @@ class RemittanceDescriptionForm(DisbursementForm):
         help_text=_('Limited to 60 characters'),
         max_length=60, required=False,
     )
+
+    @classmethod
+    def serialise_data(cls, session, data):
+        data['remittance'] = 'yes' if data.get('remittance_description') else 'no'
+        super().serialise_data(session, data)
 
     def clean_remittance_description(self):
         remittance_description = self.cleaned_data.get('remittance_description')
