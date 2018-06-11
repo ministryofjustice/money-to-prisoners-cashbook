@@ -79,5 +79,6 @@ def credit_individual_credit_to_nomis(user, user_session, credit_id, credit):
                 'feedback_url': settings.CITIZEN_CONTACT_PAGE_URL,
                 'site_url': settings.START_PAGE_URL,
             },
-            html_template='cashbook/email/credited-confirmation.html'
+            html_template='cashbook/email/credited-confirmation.html',
+            anymail_tags=['credited'],
         )
