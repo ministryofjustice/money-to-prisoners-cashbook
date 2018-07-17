@@ -61,8 +61,8 @@ class BaseView(TemplateView):
             response = self.api_session.get(
                 'disbursements/', params={'resolution': 'pending', 'limit': 1}
             ).json()
-
-            kwargs['confirm_tab_suffix'] = ' (%s)' % response['count']
+            kwargs['pending_disbursement_count'] = response['count']
+            kwargs['confirm_tab_suffix'] = ' (%s)' % kwargs['pending_disbursement_count']
         except RequestException:
             pass
         return super().get_context_data(**kwargs)
@@ -691,6 +691,15 @@ class UpdateRemittanceDescriptionView(BaseEditFormView, RemittanceDescriptionVie
 class StartView(BaseView):
     url_name = 'start'
     get_success_url = reverse_lazy('disbursements:%s' % SendingMethodView.url_name)
+
+    def get_context_data(self, **kwargs):
+        kwargs['confirmed_disbursement_count'] = sum(
+            self.api_session.get(
+                'disbursements/', params={'resolution': resolution, 'limit': 1}
+            ).json().get('count', 0)
+            for resolution in ['confirmed', 'sent']
+        )
+        return super().get_context_data(**kwargs)
 
 
 class PaperFormsView(BaseView):
