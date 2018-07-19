@@ -167,9 +167,8 @@
                 {% plural %}
                   <strong>{{ new_credits }}</strong> new credits.
                 {% endblocktrans %}
-                <span class="mtp-none-selected">{% trans 'You haven’t selected any to process yet.' %}</span>
-                <span class="mtp-some-selected">
-                  <strong><span class="js-SelectionCount"></span></strong> {% trans 'credits selected for processing in NOMIS' %}.
+                <span class="js-SelectionCount">
+                  {% trans 'You haven’t selected any to process yet.' %}
                 </span>
               </p>
             </div>
