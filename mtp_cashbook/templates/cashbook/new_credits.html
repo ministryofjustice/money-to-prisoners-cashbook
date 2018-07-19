@@ -227,7 +227,7 @@
                   <p>{% trans 'There is no longer any need to print records.' %}</p>
                 </div>
               </td>
-              <td class="mtp-all">
+              <td class="mtp-check-all mtp-compact-cell">
                 <input type="checkbox" id="select-all-header" class="Checkbox Checkbox--left js-SelectAll" data-name="{{ form.new.credits.html_name }}">
                 <label data-analytics="event,select-all,header" for="select-all-header">{% trans 'Select all' %}</label>
               </td>
@@ -242,7 +242,7 @@
             {% if request.pre_approval_required %}
               <th>{% trans 'Security' %}</th>
             {% endif %}
-            <th class="check print-hidden"><span id="id_credits-label">{% trans 'Select' %}</span></th>
+            <th class="mtp-check-col mtp-compact-cell print-hidden">{% trans 'Select' %}</th>
           </tr>
         </thead>
 
@@ -318,7 +318,7 @@
           <tfoot>
             <tr class="print-hidden">
               <td colspan="{% if request.pre_approval_required %}5{% else %}4{% endif %}" class="mtp-compact-cell"></td>
-              <td class="mtp-all">
+              <td class="mtp-check-all mtp-compact-cell">
                 <input type="checkbox" id="select-all-footer" class="Checkbox Checkbox--left js-SelectAll" data-name="{{ form.new.credits.html_name }}">
                 <label data-analytics="event,select-all,footer" for="select-all-footer">{% trans 'Select all' %}</label>
               </td>
