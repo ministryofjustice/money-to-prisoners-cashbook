@@ -2,42 +2,30 @@
 'use strict';
 
 exports.SelectionCount = {
-  selector: '.js-SelectionCount',
-
   init: function () {
-    this.cacheEls();
-
+    this.$countContainer = $('.js-SelectionCount');
     if (this.$countContainer.length) {
-      this.bindEvents();
-      this.render();
+      this.$items = $('.js-SelectionCount-item');
+      this.$items.on('change', $.proxy(this.updateCount, this));
+      this.updateCount();
     }
-  },
-
-  cacheEls: function () {
-    this.$body = $('body');
-    this.$items = $('.js-SelectionCount-item');
-    this.$countContainer = $(this.selector);
-  },
-
-  bindEvents: function () {
-    this.$body.on('SelectionCount.render', $.proxy(this.render, this));
-    this.$items.on('change', $.proxy(this.updateCount, this));
   },
 
   updateCount: function () {
-    this.$itemCount = $('.js-SelectionCount-item:checked').length;
-    this.$countContainer.html(this.$itemCount);
-
-    if (this.$itemCount > 0) {
-      $('.mtp-none-selected').hide();
-      $('.mtp-some-selected').show();
+    var itemCount = $('.js-SelectionCount-item:checked').length;
+    if (itemCount > 0) {
+      var message = django.ngettext(
+        '%(count)s credit selected for processing in NOMIS.',
+        '%(count)s credits selected for processing in NOMIS.',
+        itemCount
+      );
+      this.$countContainer.html(
+        django.interpolate(message, {'count': '<strong>' + itemCount + '</strong>'}, true)
+      );
     } else {
-      $('.mtp-none-selected').show();
-      $('.mtp-some-selected').hide();
+      this.$countContainer.text(
+        django.gettext('You haven’t selected any to process yet.')
+      );
     }
-  },
-
-  render: function () {
-    this.updateCount();
   }
 };
