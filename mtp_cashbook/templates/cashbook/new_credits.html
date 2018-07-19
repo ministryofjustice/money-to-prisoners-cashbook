@@ -196,13 +196,13 @@
       {% endif %}
 
 
-      <table>
+      <table class="mtp-table">
         <caption class="visually-hidden">{{ view.title }}</caption>
 
         <thead>
           {% if new_object_list %}
             <tr class="print-hidden">
-              <td colspan="{% if request.pre_approval_required %}5{% else %}4{% endif %}" class="cell--compact">
+              <td colspan="{% if request.pre_approval_required %}5{% else %}4{% endif %}" class="mtp-compact-cell">
                 <p>
                   <a class="mtp-disclosure" href="#" aria-controls="mtp-help-box" aria-expanded="false" role="button" data-analytics="pageview,/-help_open/{{ request.resolver_match.view_name }}/">
                     <span></span>{% trans 'What do I do here?' %}
@@ -236,30 +236,9 @@
           {% endif %}
 
           <tr>
-            <th class="{{ request_params|ordering_classes:'received_at' }}">
-              <a href="?{{ request_params|query_string_with_reversed_ordering:'received_at' }}">
-                <span>
-                  {% trans 'Date sent' %}
-                  {% describe_ordering_for_screenreader request_params 'received_at' %}
-                </span>
-              </a>
-            </th>
-            <th class="{{ request_params|ordering_classes:'prisoner_number' }}">
-              <a href="?{{ request_params|query_string_with_reversed_ordering:'prisoner_number' }}">
-                <span>
-                  {% trans 'Prisoner' %}
-                  {% describe_ordering_for_screenreader request_params 'prisoner_number' %}
-                </span>
-              </a>
-            </th>
-            <th class="{{ request_params|ordering_classes:'amount' }} number">
-              <a href="?{{ request_params|query_string_with_reversed_ordering:'amount' }}">
-                <span>
-                  {% trans 'Amount' %}
-                  {% describe_ordering_for_screenreader request_params 'amount' %}
-                </span>
-              </a>
-            </th>
+            {% sortable_cell _('Date sent') request_params 'received_at' %}
+            {% sortable_cell _('Prisoner') request_params 'prisoner_number' %}
+            {% sortable_cell _('Amount') request_params 'amount' cell_classes='numeric' %}
             <th>{% trans 'Sender' %}</th>
             {% if request.pre_approval_required %}
               <th>{% trans 'Security' %}</th>
@@ -292,7 +271,11 @@
                   <div>{{ credit.prisoner_number }}</div>
                   <div class="sub">{{ credit.prisoner_name }}</div>
                 </td>
-                <td class="number">£{{ credit.amount|currency }}</td>
+                <td class="numeric">
+                  <span class="mtp-sortable-cell--pad">
+                    £{{ credit.amount|currency }}
+                  </span>
+                </td>
                 <td>{{ credit.sender_name }}</td>
                 {% if request.pre_approval_required %}
                   <td>
@@ -303,7 +286,7 @@
                     {% endif %}
                   </td>
                 {% endif %}
-                <td class="check print-hidden">
+                <td class="mtp-check-cell print-hidden">
                   <input
                     type="checkbox"
                     name="{{ form.new.credits.html_name }}"
@@ -335,7 +318,7 @@
 
           <tfoot>
             <tr class="print-hidden">
-              <td colspan="{% if request.pre_approval_required %}5{% else %}4{% endif %}" class="cell--compact"></td>
+              <td colspan="{% if request.pre_approval_required %}5{% else %}4{% endif %}" class="mtp-compact-cell"></td>
               <td class="mtp-all">
                 <input type="checkbox" id="select-all-footer" class="Checkbox Checkbox--left js-SelectAll" data-name="{{ form.new.credits.html_name }}">
                 <label data-analytics="event,select-all,footer" for="select-all-footer">{% trans 'Select all' %}</label>

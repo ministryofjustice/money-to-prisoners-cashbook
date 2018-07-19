@@ -19,84 +19,88 @@
   {% endfor %}
 
   {% if disbursements %}
-  <p>{% trans 'Have the completed form in front of you and choose the payment details you want to check.' %}</p>
+    <p>{% trans 'Have the completed form in front of you and choose the payment details you want to check.' %}</p>
 
-  <div class="mtp-confirm-disbursements-list">
-    <table>
-      <caption class="visually-hidden">{% trans 'List of disbursements to confirm' %}</caption>
-      <tr>
-        <th>{% trans 'Sender' %}</th>
-        <th>{% trans 'Amount' %}</th>
-        <th>{% trans 'Recipient' %}</th>
-        <th colspan="2">{% trans 'Status' %}</th>
-      </tr>
-      {% for disbursement in disbursements %}
-        <tr>
-          <td>
-            {{ disbursement.prisoner_name }}<br/>
-            {{ disbursement.prisoner_number }}
-          </td>
-          <td>
-            £{{ disbursement.amount|currency }}<br/>
-            {% if disbursement.method == 'cheque' %}
-              {% trans 'Cheque' %}
-            {% elif disbursement.method == 'bank_transfer' %}
-              {% trans 'Bank transfer' %}
-            {% endif %}
-          </td>
-          <td>{{ disbursement.recipient_first_name }} {{ disbursement.recipient_last_name }} {{ disbursement.recipient_company_name }}</td>
-          <td>
-            {% if disbursement.prisoner_moved %}
-              {% trans 'Prisoner no longer in  this prison' %}
-            {% elif disbursement.insufficient_funds %}
-              {% trans 'Insufficient funds' %}
-            {% else %}
-              {% trans 'Confirmation required' %}
-              {% if disbursement.self_own %}
-                <br>
-                {% trans 'Another colleague needs to confirm this payment' %}
-                <a href="#" class="mtp-question-button">
-                  {% trans 'Why can’t I confirm this payment?' %}
-                </a>
-              {% endif %}
-            {% endif %}
-          </td>
-          <td class="mtp-button-column">
-            {% if disbursement.viable %}
-              <a class="button" href="{% url 'disbursements:pending_detail' pk=disbursement.id %}">{% trans 'Check details' %}</a>
-            {% else %}
-              <a class="button button-secondary" href="{% url 'disbursements:pending_detail' pk=disbursement.id %}">{% trans 'Edit' %}</a>
-            {% endif %}
-          </td>
-        </tr>
-        {% if disbursement.confirmable_by_other %}
-          <tr class="js-hidden">
-            <td colspan="3"></td>
-            <td colspan="2">
-              <div class="panel panel-border-narrow">
-                <strong>
-                  {% trans 'A payment can’t be confirmed by the person who' %}:
-                </strong>
-                <ul class="list list-bullet">
-                  <li>
-                    {% trans '‘entered’ the payment request' %}
-                    –
-                    {% trans 'the process still needs a different member of staff to check the details' %}
-                  </li>
-                  <li>
-                    {% trans 'made a ‘change’ or ‘edit’ to the request' %}
-                  </li>
-                </ul>
-                <a href="{% url 'disbursements:process-overview' %}">
-                  {% trans 'Read more about how the disbursement process works' %}
-                </a>
-              </div>
-            </td>
+    <div class="mtp-confirm-disbursements-list">
+      <table class="mtp-table">
+        <caption class="visually-hidden">{% trans 'List of disbursements to confirm' %}</caption>
+        <thead>
+          <tr>
+            <th>{% trans 'Sender' %}</th>
+            <th>{% trans 'Amount' %}</th>
+            <th>{% trans 'Recipient' %}</th>
+            <th colspan="2">{% trans 'Status' %}</th>
           </tr>
-        {% endif %}
-      {% endfor %}
-    </table>
-  </div>
+        </thead>
+        <tbody>
+          {% for disbursement in disbursements %}
+            <tr>
+              <td>
+                {{ disbursement.prisoner_name }}<br/>
+                {{ disbursement.prisoner_number }}
+              </td>
+              <td>
+                £{{ disbursement.amount|currency }}<br/>
+                {% if disbursement.method == 'cheque' %}
+                  {% trans 'Cheque' %}
+                {% elif disbursement.method == 'bank_transfer' %}
+                  {% trans 'Bank transfer' %}
+                {% endif %}
+              </td>
+              <td>{{ disbursement.recipient_first_name }} {{ disbursement.recipient_last_name }} {{ disbursement.recipient_company_name }}</td>
+              <td>
+                {% if disbursement.prisoner_moved %}
+                  {% trans 'Prisoner no longer in  this prison' %}
+                {% elif disbursement.insufficient_funds %}
+                  {% trans 'Insufficient funds' %}
+                {% else %}
+                  {% trans 'Confirmation required' %}
+                  {% if disbursement.self_own %}
+                    <br>
+                    {% trans 'Another colleague needs to confirm this payment' %}
+                    <a href="#" class="mtp-question-button">
+                      {% trans 'Why can’t I confirm this payment?' %}
+                    </a>
+                  {% endif %}
+                {% endif %}
+              </td>
+              <td class="mtp-button-column">
+                {% if disbursement.viable %}
+                  <a class="button" href="{% url 'disbursements:pending_detail' pk=disbursement.id %}">{% trans 'Check details' %}</a>
+                {% else %}
+                  <a class="button button-secondary" href="{% url 'disbursements:pending_detail' pk=disbursement.id %}">{% trans 'Edit' %}</a>
+                {% endif %}
+              </td>
+            </tr>
+            {% if disbursement.confirmable_by_other %}
+              <tr class="js-hidden">
+                <td colspan="3"></td>
+                <td colspan="2">
+                  <div class="panel panel-border-narrow">
+                    <strong>
+                      {% trans 'A payment can’t be confirmed by the person who' %}:
+                    </strong>
+                    <ul class="list list-bullet">
+                      <li>
+                        {% trans '‘entered’ the payment request' %}
+                        –
+                        {% trans 'the process still needs a different member of staff to check the details' %}
+                      </li>
+                      <li>
+                        {% trans 'made a ‘change’ or ‘edit’ to the request' %}
+                      </li>
+                    </ul>
+                    <a href="{% url 'disbursements:process-overview' %}">
+                      {% trans 'Read more about how the disbursement process works' %}
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
 
   {% else %}
 
