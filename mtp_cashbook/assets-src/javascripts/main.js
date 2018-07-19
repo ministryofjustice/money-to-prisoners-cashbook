@@ -29,11 +29,8 @@
 
   // cashbook
   require('sticky-header').StickyHeader.init();
-  require('align-totals').AlignTotals.init();
   require('batch-validation').BatchValidation.init();
-  require('running-total').RunningTotal.init();
   require('selection-count').SelectionCount.init();
-  require('confirmation-button').ConfirmationButton.init();
   require('confirm-manual').ConfirmManual.init();
   require('print-batch').PrintBatch.init();
   require('navigation').Navigation.init();

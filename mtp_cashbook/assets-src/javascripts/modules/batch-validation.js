@@ -12,7 +12,6 @@ exports.BatchValidation = {
   },
 
   cacheEls: function () {
-    this.$body = $('body');
     this.$form = $(this.selector);
     this.creditsName = this.$form.data('credits-name');
     this.$credits = $('[name="' + this.creditsName + '"]');
