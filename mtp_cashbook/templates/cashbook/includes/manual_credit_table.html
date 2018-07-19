@@ -4,7 +4,7 @@
 {% load mtp_common %}
 
 <div class="mtp-batch mtp-manual-credits-batch">
-  <table>
+  <table class="mtp-table">
     <caption class="visually-hidden">
       {% blocktrans trimmed count manual_credits=manual_object_list|length %}
         {{ manual_credits }} credit needs your manual input in NOMIS
@@ -15,14 +15,14 @@
 
     <thead>
       <tr class="print-hidden">
-        <td colspan="{% if pre_approval_required %}6{% else %}5{% endif %}" class="cell--compact">
+        <td colspan="{% if pre_approval_required %}6{% else %}5{% endif %}" class="mtp-compact-cell">
           <a href="#" class="js-print-trigger" data-do-not-print=".mtp-new-credits-batch">{% trans 'Print these credits' %}</a>
         </td>
       </tr>
       <tr>
         <th>{% trans 'Date sent' %}</th>
         <th>{% trans 'Prisoner' %}</th>
-        <th class="number">{% trans 'Amount' %}</th>
+        <th class="numeric">{% trans 'Amount' %}</th>
         <th>{% trans 'Sender' %}</th>
         {% if pre_approval_required %}
           <th>{% trans 'Security' %}</th>
@@ -54,7 +54,7 @@
             <div>{{ credit.prisoner_number }}</div>
             <div class="sub">{{ credit.prisoner_name }}</div>
           </td>
-          <td class="number">£{{ credit.amount|currency }}</td>
+          <td class="numeric">£{{ credit.amount|currency }}</td>
           <td>{{ credit.sender_name }}</td>
           {% if pre_approval_required %}
             <td>
@@ -116,7 +116,7 @@
               {% endif %}
             </div>
           </td>
-          <td class="mtp-manual-action print-hidden" style="text-align: center;">
+          <td class="mtp-manual-action print-hidden">
             <button type="submit" name="submit_manual_{{ credit_pk }}" value="submit" class="button" data-credit-id="{{ credit_pk }}">{% trans 'Done' %}</button>
             {% dialoguebox html_id=credit_pk|prefixed_slug:'manual-confirm-dialog-' %}
               <table class="mtp-dialog-info-table">
@@ -128,7 +128,7 @@
                   </tr>
                   <tr>
                     <th>{% trans 'Prisoner:' %}</th>
-                    <td>{{ credit.prisoner_number }} {{ credit.prisoner_name }}</td>
+                    <td>{{ credit.prisoner_number }} &nbsp; {{ credit.prisoner_name }}</td>
                   </tr>
                   <tr>
                     <th>{% trans 'Amount:' %}</th>
@@ -140,12 +140,12 @@
                   </tr>
                 </tbody>
               </table>
-              <button type="submit"
-                      name="submit_manual_{{ credit_pk }}"
-                      class="button"
-                      value="override">{% trans 'Yes' %}</button>
-              <br/><br/>
-              <a href="#" class="{{ dialogue_close_class }}" role="button">{% trans 'No, I’ll do that now' %}</a>
+              <button type="submit" name="submit_manual_{{ credit_pk }}" class="button" value="override">
+                {% trans 'Yes' %}
+              </button>
+              <a href="#" class="{{ dialogue_close_class }} mtp-dialog-info-table__close" role="button">
+                {% trans 'No, I’ll do that now' %}
+              </a>
             {% enddialoguebox %}
           </td>
         </tr>

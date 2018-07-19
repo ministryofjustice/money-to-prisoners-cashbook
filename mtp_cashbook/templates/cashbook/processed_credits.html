@@ -47,14 +47,14 @@
   <div class="mtp-batch">
     {% if object_list %}
 
-      <table>
+      <table class="mtp-table">
         <caption class="visually-hidden">{{ view.title }}</caption>
 
         <thead>
           <tr>
             <th>{% trans 'Date credited' %}</th>
             <th>{% trans 'Number of credits' %}</th>
-            <th class="number">{% trans 'Total' %}</th>
+            <th class="numeric">{% trans 'Total' %}</th>
             <th>{% trans 'Credited by' %}</th>
             {% if request.pre_approval_required %}
               <th>{% trans 'Security notes' %}</th>
@@ -91,7 +91,7 @@
                   {% endblocktrans %}
                 </a>
               </td>
-              <td class="number">£{{ batch.total|currency }}</td>
+              <td class="numeric">£{{ batch.total|currency }}</td>
               <td>{{ batch.owner_name }}</td>
               {% if request.pre_approval_required %}
                 {% if batch.comment_count %}

@@ -1,31 +1,11 @@
 {% load i18n %}
+{% load mtp_common %}
 {% load credits %}
 
 <tr>
-  <th class="{{ form.cleaned_data|ordering_classes:'received_at' }}">
-    <a href="?{{ form.cleaned_data|query_string_with_reversed_ordering:'received_at' }}">
-      <span>
-        {% trans 'Date sent' %}
-        {% describe_ordering_for_screenreader form.cleaned_data 'received_at' %}
-      </span>
-    </a>
-  </th>
-  <th class="{{ form.cleaned_data|ordering_classes:'prisoner_number' }}">
-    <a href="?{{ form.cleaned_data|query_string_with_reversed_ordering:'prisoner_number' }}">
-      <span>
-        {% trans 'Prisoner' %}
-        {% describe_ordering_for_screenreader form.cleaned_data 'prisoner_number' %}
-      </span>
-    </a>
-  </th>
-  <th class="{{ form.cleaned_data|ordering_classes:'amount' }} number">
-    <a href="?{{ form.cleaned_data|query_string_with_reversed_ordering:'amount' }}">
-      <span>
-        {% trans 'Amount' %}
-        {% describe_ordering_for_screenreader form.cleaned_data 'amount' %}
-      </span>
-    </a>
-  </th>
+  {% sortable_cell _('Date sent') form.cleaned_data 'received_at' %}
+  {% sortable_cell _('Prisoner') form.cleaned_data 'prisoner_number' %}
+  {% sortable_cell _('Amount') form.cleaned_data 'amount' cell_classes='numeric' %}
   <th>{% trans 'Sender' %}</th>
   {% if pre_approval_required %}
     <th>{% trans 'Security check' %}</th>

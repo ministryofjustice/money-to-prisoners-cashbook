@@ -25,7 +25,11 @@
     {{ credit.prisoner_number }}
     <div class="sub">{{ credit.prisoner_name }}</div>
   </td>
-  <td class="number">£{{ credit.amount|currency }}</td>
+  <td class="numeric">
+    <span class="mtp-sortable-cell--pad">
+      £{{ credit.amount|currency }}
+    </span>
+  </td>
   <td>
     {% if credit.anonymous %}
       {% trans 'Anonymous sender' %}

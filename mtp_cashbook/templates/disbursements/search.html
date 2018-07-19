@@ -95,51 +95,16 @@
 
   {% if form.is_valid %}
     <div class="mtp-batch">
-      <table>
+      <table class="mtp-table">
         <caption class="visually-hidden">{{ form.search_description.description }}</caption>
         <thead>
           <tr>
-            <th class="{{ form.cleaned_data|ordering_classes:'prisoner_name' }}">
-              <a href="?{{ form.cleaned_data|query_string_with_reversed_ordering:'prisoner_name' }}">
-                <span>
-                  {% trans 'Prisoner' %}
-                  {% describe_ordering_for_screenreader form.cleaned_data 'prisoner_name' %}
-                </span>
-              </a>
-            </th>
-            <th class="{{ form.cleaned_data|ordering_classes:'amount' }}">
-              <a href="?{{ form.cleaned_data|query_string_with_reversed_ordering:'amount' }}">
-                <span>
-                  {% trans 'Amount' %}
-                  {% describe_ordering_for_screenreader form.cleaned_data 'amount' %}
-                </span>
-              </a>
-            </th>
-            <th class="{{ form.cleaned_data|ordering_classes:'recipient_name' }}">
-              <a href="?{{ form.cleaned_data|query_string_with_reversed_ordering:'recipient_name' }}">
-                <span>
-                  {% trans 'Recipient' %}
-                  {% describe_ordering_for_screenreader form.cleaned_data 'recipient_name' %}
-                </span>
-              </a>
-            </th>
+            {% sortable_cell _('Prisoner') form.cleaned_data 'prisoner_name' %}
+            {% sortable_cell _('Amount') form.cleaned_data 'amount' %}
+            {% sortable_cell _('Recipient') form.cleaned_data 'recipient_name' %}
             <th>{% trans 'Recipient’s account' %}</th>
-            <th class="{{ form.cleaned_data|ordering_classes:'resolution' }}">
-              <a href="?{{ form.cleaned_data|query_string_with_reversed_ordering:'resolution' }}">
-                <span>
-                  {% trans 'Status' %}
-                  {% describe_ordering_for_screenreader form.cleaned_data 'resolution' %}
-                </span>
-              </a>
-            </th>
-            <th class="{{ form.cleaned_data|ordering_classes:'created' }}">
-              <a href="?{{ form.cleaned_data|query_string_with_reversed_ordering:'created' }}">
-                <span>
-                  {% trans 'History' %}
-                  {% describe_ordering_for_screenreader form.cleaned_data 'created' %}
-                </span>
-              </a>
-            </th>
+            {% sortable_cell _('Status') form.cleaned_data 'resolution' %}
+            {% sortable_cell _('History') form.cleaned_data 'created' %}
           </tr>
         </thead>
         <tbody>
