@@ -99,7 +99,7 @@ class BasePagedView(BaseView):
         for view in self.get_previous_views():
             if not issubclass(view, BasePagedFormView) or not view.is_form_enabled(self.valid_form_data):
                 continue
-            form = view.form_class.unserialise_from_session(request)
+            form = view.form_class.unserialise_from_session(request, self.valid_form_data)
             if form.is_valid():
                 self.valid_form_data[view.form_class.__name__] = form.cleaned_data
             else:
@@ -132,7 +132,7 @@ class BasePagedFormView(BasePagedView, FormView):
 
     def get_form(self, form_class=None):
         if self.request.method == 'GET':
-            form = self.form_class.unserialise_from_session(self.request)
+            form = self.form_class.unserialise_from_session(self.request, self.valid_form_data)
             if form.is_valid():
                 # valid form found in session so restore it
                 return form
@@ -272,6 +272,12 @@ class RemittanceDescriptionView(BasePagedFormView):
     url_name = 'remittance_description'
     previous_view = RecipientBankAccountView
     form_class = disbursement_forms.RemittanceDescriptionForm
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form_data = self.get_valid_form_data(PrisonerView)
+        form.set_prisoner_name(form_data.get('prisoner_name'))
+        return form
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -570,7 +576,7 @@ class BaseEditFormView(BasePagedFormView):
                 continue
             disbursement_data = self.disbursement.copy()
             view.form_class.serialise_data(request.session, disbursement_data)
-            form = view.form_class.unserialise_from_session(request)
+            form = view.form_class.unserialise_from_session(request, self.valid_form_data)
             if form.is_valid():
                 self.valid_form_data[view.form_class.__name__] = form.cleaned_data
         return super().dispatch(request, **kwargs)

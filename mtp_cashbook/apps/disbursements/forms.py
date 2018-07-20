@@ -47,7 +47,7 @@ class ConfirmationForm(GARequestErrorReportingMixin, forms.Form):
 
 class DisbursementForm(GARequestErrorReportingMixin, forms.Form):
     @classmethod
-    def unserialise_from_session(cls, request):
+    def unserialise_from_session(cls, request, valid_form_data):
         session = request.session
 
         def get_value(f):
@@ -369,9 +369,21 @@ class RemittanceDescriptionForm(DisbursementForm):
     )
 
     @classmethod
+    def unserialise_from_session(cls, request, valid_form_data):
+        form = super().unserialise_from_session(request, valid_form_data)
+        form.set_prisoner_name(valid_form_data.get(PrisonerForm.__name__, {}).get('prisoner_name'))
+        return form
+
+    @classmethod
     def serialise_data(cls, session, data):
-        data['remittance'] = 'yes' if data.get('remittance_description') else 'no'
+        if 'remittance' not in data:
+            data['remittance'] = 'yes'
         super().serialise_data(session, data)
+
+    def set_prisoner_name(self, prisoner_name):
+        if not prisoner_name:
+            return
+        self['remittance_description'].field.initial = 'Payment from %s' % prisoner_name
 
     def clean_remittance_description(self):
         remittance_description = self.cleaned_data.get('remittance_description')
@@ -381,8 +393,14 @@ class RemittanceDescriptionForm(DisbursementForm):
 
     def clean(self):
         super().clean()
-        if self.cleaned_data.get('remittance') == 'no':
-            self.cleaned_data['remittance_description'] = ''
+        remittance = self.cleaned_data.get('remittance')
+        if remittance == 'no':
+            self.cleaned_data['remittance_description'] = self['remittance_description'].initial
+        elif (
+            remittance == 'yes' and
+            self.cleaned_data.get('remittance_description') == self['remittance_description'].initial
+        ):
+            self.cleaned_data['remittance'] = 'no'
         return self.cleaned_data
 
 
