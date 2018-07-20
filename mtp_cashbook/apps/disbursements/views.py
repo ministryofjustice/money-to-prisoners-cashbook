@@ -145,7 +145,7 @@ class BasePagedFormView(BasePagedView, FormView):
 
     def form_valid(self, form):
         # valid form so save in session
-        form.serialise_to_session()
+        form.serialise_data(self.request.session, form.cleaned_data)
         return super().form_valid(form)
 
 

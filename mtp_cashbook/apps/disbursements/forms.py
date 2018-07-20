@@ -82,9 +82,6 @@ class DisbursementForm(GARequestErrorReportingMixin, forms.Form):
         super().__init__(**kwargs)
         self.request = request
 
-    def serialise_to_session(self):
-        self.serialise_data(self.request.session, self.cleaned_data)
-
 
 class PrisonerForm(DisbursementForm):
     prisoner_number = forms.CharField(
