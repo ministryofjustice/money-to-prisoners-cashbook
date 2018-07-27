@@ -90,9 +90,9 @@ class CreateDisbursementFlowTestCase(MTPBaseTestCase):
             data=data, follow=True,
         )
 
-    def enter_remittance_description(self, remittance_description=''):
+    def enter_remittance_description(self, remittance, remittance_description=''):
         data = {
-            'remittance': 'yes' if remittance_description else 'no',
+            'remittance': remittance,
             'remittance_description': remittance_description,
         }
         return self.client.post(
@@ -216,7 +216,7 @@ class SendingMethodTestCase(CreateDisbursementFlowTestCase):
         self.enter_amount()
 
         self.enter_recipient_details()
-        response = self.enter_remittance_description()
+        response = self.enter_remittance_description(remittance='no')
 
         self.assertOnPage(response, 'disbursements:details_check')
         content = response.content.decode(response.charset)
@@ -467,7 +467,7 @@ class RemittanceDescriptionTestCase(CreateDisbursementFlowTestCase):
         self.enter_prisoner_details()
         self.enter_amount()
         self.enter_recipient_details()
-        response = self.enter_remittance_description('')
+        response = self.enter_remittance_description(remittance='yes', remittance_description='')
         self.assertOnPage(response, 'disbursements:details_check')
         self.assertContains(response, 'None given')
 
@@ -480,9 +480,23 @@ class RemittanceDescriptionTestCase(CreateDisbursementFlowTestCase):
         self.enter_prisoner_details()
         self.enter_amount()
         self.enter_recipient_details()
-        response = self.enter_remittance_description('payment for housing')
+        response = self.enter_remittance_description(remittance='yes', remittance_description='payment for housing')
         self.assertOnPage(response, 'disbursements:details_check')
         self.assertContains(response, 'payment for housing')
+        self.assertNotContains(response, 'None given')
+
+    @responses.activate
+    @override_nomis_settings
+    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
+    def test_remmitance_default_description(self):
+        self.login()
+        self.choose_sending_method(method=SENDING_METHOD.CHEQUE)
+        self.enter_prisoner_details()
+        self.enter_amount()
+        self.enter_recipient_details()
+        response = self.enter_remittance_description(remittance='no')
+        self.assertOnPage(response, 'disbursements:details_check')
+        self.assertContains(response, 'Payment from JILLY HALL')
         self.assertNotContains(response, 'None given')
 
 
@@ -509,7 +523,7 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
         self.enter_amount(10)
         self.enter_recipient_details()
         self.enter_recipient_bank_account()
-        self.enter_remittance_description()
+        self.enter_remittance_description(remittance='yes', remittance_description='')
 
         response = self.client.post(reverse('disbursements:created'), follow=True)
         self.assertOnPage(response, 'disbursements:created')
@@ -552,7 +566,7 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
         self.enter_prisoner_details()
         self.enter_amount()
         self.enter_recipient_details()
-        self.enter_remittance_description()
+        self.enter_remittance_description(remittance='no')
         response = self.client.post(reverse('disbursements:created'), follow=True)
 
         self.assertOnPage(response, 'disbursements:created')
@@ -573,7 +587,7 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
         self.enter_prisoner_details()
         self.enter_amount(10)
         self.enter_recipient_details()
-        self.enter_remittance_description()
+        self.enter_remittance_description(remittance='no')
         response = self.client.get(reverse('disbursements:details_check'))
         self.assertContains(response, 'John')
         self.assertContains(response, 'Smith')
@@ -615,7 +629,7 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
             'city': 'London',
             'postcode': 'N17 9BJ',
             'recipient_email': 'recipient@mtp.local',
-            'remittance_description': '',
+            'remittance_description': 'Payment from JILLY HALL',
         })
 
     @responses.activate
@@ -628,7 +642,7 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
         self.enter_amount()
         self.enter_recipient_details()
         self.enter_recipient_bank_account()
-        self.enter_remittance_description()
+        self.enter_remittance_description(remittance='no')
         with silence_logger():
             response = self.client.post(reverse('disbursements:created'), follow=True)
 

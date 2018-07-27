@@ -14,14 +14,17 @@
   <div class="grid-row">
     <div class="column-two-thirds">
       <p>
-        {% trans 'This will help the recipient know where their payment has come from.' %}
+        {% trans 'To help the recipient know where their payment has come from, a description can be useful.' %}
+        {% trans 'Especially when the payment is going to a business or organisation.' %}
       </p>
       <p>
-        {% trans 'The description will be on the remittance advice to the recipient, which is an email (if provided) or a letter sent before the payment arrives.' %}
-        {% trans 'It will not show on the bank statement.' %}
+        {% trans 'It appears on the remittance advice (either an email or a letter) sent out by SSCL before the payment arrives.' %}
+        {% trans 'It won’t show on the bank statement.' %}
       </p>
       <p>
-        {% trans 'This description could be useful when the payment is going to a business or organisation.' %}
+        {% blocktrans trimmed %}
+          What automatically appears is <strong>‘Payment from {{ prisoner_name }}’</strong>.
+        {% endblocktrans %}
       </p>
 
       <form method="post">
@@ -41,7 +44,15 @@
                 <label for="js-choice-{{ choices.0.0 }}">{{ choices.0.1 }}</label>
               </div>
               <div class="panel panel-border-narrow js-hidden js-choice-yes">
-                {% include 'mtp_common/forms/textarea.html' with field=form.remittance_description rows=2 input_classes='js-character-count' attrs=remittance_description_attrs only %}
+                {% with field=form.remittance_description rows=2 input_classes='js-character-count' attrs=remittance_description_attrs %}
+                  <div id="{{ field.id_for_label }}-wrapper" class="form-group {% if field.errors %}form-group-error{% endif %}">
+                    <label for="{{ field.id_for_label }}" id="{{ field.id_for_label }}-label" class="form-label">
+                      {% include 'mtp_common/forms/field-help-text.html' with field=field only %}
+                    </label>
+                    {% include 'mtp_common/forms/field-errors.html' with field=field only %}
+                    <textarea id="{{ field.id_for_label }}" class="form-control {% if field.errors %}form-control-error{% endif %} {{ input_classes }}" name="{{ field.html_name }}" rows="{{ rows|default:4 }}" cols="{{ cols|default:50 }}" {% for attr, attr_val in attrs.items %}{{ attr }}="{{ attr_val }}"{% endfor %}>{{ value|default:field.value|default_if_none:'' }}</textarea>
+                  </div>
+                {% endwith %}
               </div>
 
               <div class="multiple-choice">

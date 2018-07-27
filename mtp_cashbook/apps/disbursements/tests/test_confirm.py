@@ -29,7 +29,7 @@ SAMPLE_DISBURSEMENTS = [
         'postcode': 'N2K 9FX',
         'country': 'UK',
         'recipient_email': 'Geoffrey.Jennings@mail.local',
-        'remittance_description': '',
+        'remittance_description': 'Payment from EDWARD WEBBER',
         'roll_number': '',
         'sort_code': '11-11-11',
         'account_number': '11111111',
@@ -112,7 +112,7 @@ SAMPLE_DISBURSEMENTS = [
         'postcode': 'IM0M 2TJ',
         'country': 'UK',
         'recipient_email': None,
-        'remittance_description': '',
+        'remittance_description': 'Payment from SOID4 CHTEST',
         'sort_code': '601368',
         'account_number': '19621156',
         'roll_number': None,
@@ -186,7 +186,7 @@ SAMPLE_DISBURSEMENTS = [
         'postcode': 'L8 0NY',
         'country': 'UK',
         'recipient_email': 'Katy.Hicks@mail.local',
-        'remittance_description': '',
+        'remittance_description': 'Payment from TEST QUASH2',
         'sort_code': None,
         'account_number': None,
         'roll_number': None,
@@ -223,7 +223,7 @@ SAMPLE_DISBURSEMENTS = [
         'postcode': 'L8 0NY',
         'country': 'UK',
         'recipient_email': '',
-        'remittance_description': '',
+        'remittance_description': 'Payment from TEST QUASH2',
         'sort_code': None,
         'account_number': None,
         'roll_number': None,
@@ -714,6 +714,75 @@ class UpdatePendingDisbursementTestCase(PendingDisbursementTestCase):
         self.assertEqual(len(patch_requests), 1)
         self.assertJSONEqual(patch_requests[0].body.decode(), {
             'remittance_description': new_remittance_description,
+        })
+
+    @responses.activate
+    @override_nomis_settings
+    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
+    def test_update_remittance_description_to_default(self):
+        self.login(credentials={'username': 'test-hmp-brixton-a', 'password': 'pass'})
+
+        # go to update page
+        disbursement = SAMPLE_DISBURSEMENTS[3]
+        self.pending_detail(disbursement=disbursement)
+        responses.add(
+            responses.GET,
+            api_url('/prisoner_locations/{prisoner_number}/'.format(
+                prisoner_number=disbursement['prisoner_number']
+            )),
+            json={
+                'prisoner_number': disbursement['prisoner_number'],
+                'prisoner_dob': '1970-01-01',
+                'prisoner_name': 'TEST QUASH2',
+                'prison': 'BXI'
+            },
+            status=200,
+        )
+
+        response = self.client.get(
+            reverse('disbursements:update_remittance_description', args=[disbursement['id']])
+        )
+        self.assertContains(response, disbursement['remittance_description'])
+        self.assertNotContains(response, 'None given')
+
+        responses.reset()
+
+        # post update
+        responses.add(
+            responses.GET,
+            api_url('/prisoner_locations/{prisoner_number}/'.format(
+                prisoner_number=disbursement['prisoner_number']
+            )),
+            json={
+                'prisoner_number': disbursement['prisoner_number'],
+                'prisoner_dob': '1970-01-01',
+                'prisoner_name': 'TEST QUASH2',
+                'prison': 'BXI'
+            },
+            status=200,
+        )
+        responses.add(
+            responses.PATCH,
+            api_url('/disbursements/{pk}/'.format(pk=disbursement['id'])),
+            status=200
+        )
+
+        # new_remittance_description = 'LEGAL FEES'
+        self.pending_detail(disbursement=disbursement)
+
+        response = self.client.post(
+            reverse('disbursements:update_remittance_description', args=[disbursement['id']]),
+            data={
+                'remittance': 'no',
+            },
+            follow=True
+        )
+        self.assertOnPage(response, 'disbursements:pending_detail')
+
+        patch_requests = [call.request for call in responses.calls if call.request.method == responses.PATCH]
+        self.assertEqual(len(patch_requests), 1)
+        self.assertJSONEqual(patch_requests[0].body.decode(), {
+            'remittance_description': 'Payment from TEST QUASH2',
         })
 
     @responses.activate
