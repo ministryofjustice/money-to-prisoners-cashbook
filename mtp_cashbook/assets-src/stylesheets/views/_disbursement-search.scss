@@ -31,4 +31,37 @@
   .mtp-batch small {
     font-size: 16px;
   }
+
+  .mtp-batch small.mtp-description {
+    font-size: 14px;
+
+    div {
+      color: $grey-1;
+    }
+  }
+
+  .mtp-sender {
+    width: 10%;
+  }
+
+  .mtp-amount {
+    width: 30%;
+  }
+
+  .mtp-recipient {
+    width: 15%;
+  }
+
+  .mtp-status {
+    width: 5%;
+    font-weight: bold;
+  }
+
+  .mtp-status--sent, .mtp-status--confirmed {
+    color: $button-colour;
+  }
+
+  .mtp-history {
+    width: 35%;
+  }
 }
