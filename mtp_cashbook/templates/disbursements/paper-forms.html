@@ -15,50 +15,75 @@
       </header>
 
       <p>
-        {% trans 'Prisoners can send money out to people by bank transfer, cheque, cash or postal order.' %}
+        {% trans 'Prisoners can send money out digitally by bank transfer or cheque and (if your prison offers this) by cash or postal order.' %}
       </p>
-      <p>
-        {% trans 'Download and print the correct form, then give it to the prisoner to fill in.' %}
-      </p>
-
     </div>
   </div>
 
+  <h2 class="heading-medium">
+    {% trans 'Digital disbursement form' %}
+  </h2>
   <div class="mtp-paper-form-download grid-row">
-    {% trans 'Download for bank transfer or cheque (PDF)' as link_title %}
-    {% static 'disbursements/disbursement-by-bank-transfer-or-cheque-V3.pdf' as pdf_link %}
+    {% trans 'Bank transfer or cheque (PDF)' as link_title %}
+    {% static 'disbursements/disbursement-by-bank-transfer-or-cheque-V6.pdf' as pdf_link %}
     <div class="column-one-third">
       <a href="{{ pdf_link }}">
-        <img src="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-V3.jpg' %}" srcset="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-V3@2x.jpg' %} 2x" alt="{{ link_title }}" />
+        <img src="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-V6.jpg' %}" srcset="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-V6@2x.jpg' %} 2x" alt="{{ link_title }}" />
       </a>
     </div>
     <div class="column-two-thirds">
       <a href="{{ pdf_link }}">{{ link_title }}</a>
-      <p>V3 04/2018</p>
+      <p>V2 07/2018</p>
       {% trans 'If the prisoner uses this form:' %}
       <ul class="list list-bullet">
-        <li>{% trans 'Give them an envelope to protect their privacy' %}</li>
         <li>{% trans 'Process the request online in ‘Send payment’' %}</li>
+        <li>{% trans 'Have colleague confirm the request in ‘Confirm payments’' %}</li>
       </ul>
     </div>
   </div>
 
+  <h2 class="heading-medium">
+    {% trans 'Non-digital disbursement forms' %}
+  </h2>
   <div class="mtp-paper-form-download grid-row">
-    {% trans 'Download for cash or postal order (PDF)' as link_title %}
-    {% static 'disbursements/disbursement-by-cash-or-postal-order-V1.pdf' as pdf_link %}
+    {% trans 'Cash or postal order (PDF)' as link_title %}
+    {% static 'disbursements/disbursement-by-cash-or-postal-order-V2.pdf' as pdf_link %}
     <div class="column-one-third">
       <a href="{{ pdf_link }}">
-        <img src="{% static 'disbursements/disbursement-by-cash-or-postal-order-V1.jpg' %}" srcset="{% static 'disbursements/disbursement-by-cash-or-postal-order-V1@2x.jpg' %} 2x" alt="{{ link_title }}" />
+        <img src="{% static 'disbursements/disbursement-by-cash-or-postal-order-V2.jpg' %}" srcset="{% static 'disbursements/disbursement-by-cash-or-postal-order-V2@2x.jpg' %} 2x" alt="{{ link_title }}" />
       </a>
     </div>
     <div class="column-two-thirds">
       <a href="{{ pdf_link }}">{{ link_title }}</a>
-      <p>V1 01/2018</p>
-      {% trans 'If the prisoner uses this form:' %}
-      <ul class="list list-bullet">
-        <li>{% trans 'Give them an envelope to protect their privacy' %}</li>
-        <li>{% trans 'Process the request in the usual way' %}</li>
-      </ul>
+      <p>V2 07/2018</p>
+    </div>
+  </div>
+
+  <div class="mtp-paper-form-download grid-row">
+    {% trans 'Cash only (PDF)' as link_title %}
+    {% static 'disbursements/disbursement-by-cash-V2.pdf' as pdf_link %}
+    <div class="column-one-third">
+      <a href="{{ pdf_link }}">
+        <img src="{% static 'disbursements/disbursement-by-cash-V2.jpg' %}" srcset="{% static 'disbursements/disbursement-by-cash-V2@2x.jpg' %} 2x" alt="{{ link_title }}" />
+      </a>
+    </div>
+    <div class="column-two-thirds">
+      <a href="{{ pdf_link }}">{{ link_title }}</a>
+      <p>V2 07/2018</p>
+    </div>
+  </div>
+
+  <div class="mtp-paper-form-download grid-row">
+    {% trans 'Postal order only (PDF)' as link_title %}
+    {% static 'disbursements/disbursement-by-postal-order-V2.pdf' as pdf_link %}
+    <div class="column-one-third">
+      <a href="{{ pdf_link }}">
+        <img src="{% static 'disbursements/disbursement-by-postal-order-V2.jpg' %}" srcset="{% static 'disbursements/disbursement-by-postal-order-V2@2x.jpg' %} 2x" alt="{{ link_title }}" />
+      </a>
+    </div>
+    <div class="column-two-thirds">
+      <a href="{{ pdf_link }}">{{ link_title }}</a>
+      <p>V2 07/2018</p>
     </div>
   </div>
 
