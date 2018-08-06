@@ -8,7 +8,6 @@ from django.template.response import TemplateResponse
 from django.views.decorators.cache import cache_control
 from django.views.generic.base import RedirectView, TemplateView
 from django.views.i18n import JavaScriptCatalog
-
 from moj_irat.views import HealthcheckView, PingJsonView
 
 
@@ -30,11 +29,13 @@ class LandingView(TemplateView):
 urlpatterns = i18n_patterns(
     url(r'^$', login_required(LandingView.as_view()), name='home'),
 
-    url(r'^', include('mtp_auth.urls')),
     url(r'^', include('cashbook.urls')),
-    url(r'^', include('feedback.urls')),
-    url(r'^', include('mtp_common.user_admin.urls')),
     url(r'^disbursements/', include('disbursements.urls', namespace='disbursements')),
+
+    url(r'^', include('mtp_auth.urls')),
+    url(r'^', include('mtp_common.user_admin.urls')),
+
+    url(r'^', include('feedback.urls')),
 
     url(r'^js-i18n.js$', cache_control(public=True, max_age=86400)(JavaScriptCatalog.as_view()), name='js-i18n'),
 

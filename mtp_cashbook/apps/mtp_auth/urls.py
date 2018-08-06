@@ -3,6 +3,8 @@ from django.conf.urls import url
 from django.urls import reverse_lazy
 from mtp_common.auth import views
 
+from mtp_auth.views import CashbookSignUpView
+
 urlpatterns = [
     url(
         r'^login/$', views.login, {
@@ -49,4 +51,6 @@ urlpatterns = [
             'cancel_url': reverse_lazy('new-credits'),
         }, name='reset_password_done'
     ),
+
+    url(r'^users/sign-up/$', CashbookSignUpView.as_view(), name='sign-up'),
 ]
