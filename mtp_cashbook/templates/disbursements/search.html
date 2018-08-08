@@ -177,7 +177,7 @@
               <td class="mtp-history">
                 {% for log_item in disbursement.log_set %}
                   {% if log_item.action == 'created' %}
-                    {% trans 'Entered' %} {{ log_item.created|date:'d/m/Y' }}<br/>
+                    {% trans 'Entered' %} {{ log_item.created|date:'d/m/Y' }}<br />
                     <small>
                       {% blocktrans trimmed with staff_name=log_item.staff_name %}
                         by {{ staff_name }}
@@ -185,7 +185,7 @@
                     </small>
 
                   {% elif log_item.action == 'edited' %}
-                    {% trans 'Edited' %} {{ log_item.created|date:'d/m/Y' }}<br/>
+                    {% trans 'Edited' %} {{ log_item.created|date:'d/m/Y' }}<br />
                     <small>
                       {% blocktrans trimmed with staff_name=log_item.staff_name %}
                         by {{ staff_name }}
@@ -193,7 +193,7 @@
                     </small>
 
                   {% elif log_item.action == 'confirmed' %}
-                    {% trans 'Confirmed' %} {{ log_item.created|date:'d/m/Y' }}<br/>
+                    {% trans 'Confirmed' %} {{ log_item.created|date:'d/m/Y' }}<br />
                     <small>
                       {% blocktrans trimmed with staff_name=log_item.staff_name %}
                         by {{ staff_name }}
@@ -206,7 +206,7 @@
                     </small>
 
                   {% elif log_item.action == 'sent' %}
-                    {% trans 'Sent to SSCL' %} {{ log_item.created|date:'d/m/Y' }}
+                    {% trans 'Sent to SSCL' %} {{ log_item.created|date:'d/m/Y' }}<br/>
                       <small>
                         {% trans 'Invoice' %}: {{ disbursement.invoice_number }}
                       </small>
