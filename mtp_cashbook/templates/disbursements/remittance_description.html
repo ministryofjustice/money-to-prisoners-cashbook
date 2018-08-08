@@ -14,16 +14,15 @@
   <div class="grid-row">
     <div class="column-two-thirds">
       <p>
-        {% trans 'To help the recipient know where their payment has come from, a description can be useful.' %}
-        {% trans 'Especially when the payment is going to a business or organisation.' %}
+        {% trans 'A description can be useful to help the recipient know who their payment has come from, especially when the recipient is a business or organisation.' %}
       </p>
       <p>
-        {% trans 'It appears on the remittance advice (either an email or a letter) sent out by SSCL before the payment arrives.' %}
-        {% trans 'It won’t show on the bank statement.' %}
+        {% trans 'The description will appear on the remittance advice - either an email or a letter - sent out by SSCL to the recipient before the payment itself arrives' %}
       </p>
       <p>
         {% blocktrans trimmed %}
-          What automatically appears is <strong>‘Payment from {{ prisoner_name }}’</strong>.
+          What will automatically appears is <strong>‘Payment from {{ prisoner_name }}’</strong>.
+          You can change - or add to - this description but if you delete the prisoner's name, it won't appear on the recipient's bank statement or any where else on the transaction.
         {% endblocktrans %}
       </p>
 
