@@ -24,7 +24,7 @@
     {% trans 'Digital disbursement form' %}
   </h2>
   <p>
-    {% blocktrans %}
+    {% blocktrans trimmed %}
       This is the only <strong>digital</strong> disbursement form.
     {% endblocktrans %}
   </p>
@@ -37,8 +37,10 @@
       </a>
     </div>
     <div class="column-two-thirds">
-      <a href="{{ pdf_link }}">{{ link_title }}</a><br />
-      {% trans 'Use to send a payment by bank transfer or cheque using the digital disbursement tool' %}
+      <a href="{{ pdf_link }}">{{ link_title }}</a>
+      <p>
+        {% trans 'Use to send a payment by bank transfer or cheque using the digital disbursement tool' %}
+      </p>
     </div>
   </div>
 
