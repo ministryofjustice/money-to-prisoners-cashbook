@@ -13,7 +13,6 @@
       <header>
         <h1 class="heading-xlarge">{% trans 'Paper forms' %}</h1>
       </header>
-
       <p>
         {% trans 'Prisoners can send money out digitally by bank transfer or cheque.' %}
         {% trans 'They can also continue to send money out non-digitally by cash and/or postal order.' %}
@@ -38,13 +37,8 @@
       </a>
     </div>
     <div class="column-two-thirds">
-      <a href="{{ pdf_link }}">{{ link_title }}</a>
-      <p>V6 07/2018</p>
+      <a href="{{ pdf_link }}">{{ link_title }}</a><br />
       {% trans 'Use to send a payment by bank transfer or cheque using the digital disbursement tool' %}
-      <!-- <ul class="list list-bullet">
-        <li>{% trans 'Process the request online in ‘Send payment’' %}</li>
-        <li>{% trans 'Have a colleague confirm the request in ‘Confirm payments’' %}</li>
-      </ul> -->
     </div>
   </div>
 
@@ -66,7 +60,6 @@
     </div>
     <div class="column-two-thirds">
       <a href="{{ pdf_link }}">{{ link_title }}</a>
-      <p>V2 07/2018</p>
       <p>
         {% trans 'Use if your prison offers both cash and postal order disbursements' %}
       </p>
@@ -83,7 +76,6 @@
     </div>
     <div class="column-two-thirds">
       <a href="{{ pdf_link }}">{{ link_title }}</a>
-      <p>V2 07/2018</p>
       <p>
         {% trans 'Use if your prison offers only cash disbursements' %}
       </p>
@@ -100,7 +92,6 @@
     </div>
     <div class="column-two-thirds">
       <a href="{{ pdf_link }}">{{ link_title }}</a>
-      <p>V2 07/2018</p>
       <p>
         {% trans 'Use if your prison offers only postal order disbursements' %}
       </p>
