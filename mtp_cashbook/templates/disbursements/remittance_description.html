@@ -17,13 +17,14 @@
         {% trans 'A description can be useful to help the recipient know who their payment has come from, especially when the recipient is a business or organisation.' %}
       </p>
       <p>
-        {% trans 'The description will appear on the remittance advice - either an email or a letter - sent out by SSCL to the recipient before the payment itself arrives' %}
+        {% trans 'The description will appear on the remittance advice - either an email or a letter - sent out by SSCL to the recipient before the payment itself arrives.' %}
       </p>
       <p>
         {% blocktrans trimmed %}
           What will automatically appears is <strong>‘Payment from {{ prisoner_name }}’</strong>.
-          You can change - or add to - this description but if you delete the prisoner's name, it won't appear on the recipient's bank statement or any where else on the transaction.
         {% endblocktrans %}
+
+        {% trans 'You can change - or add to - this description but if you delete the prisoners name, it won’t appear on the recipient’s bank statement or any where else on the transaction.' %}git
       </p>
 
       <form method="post">
