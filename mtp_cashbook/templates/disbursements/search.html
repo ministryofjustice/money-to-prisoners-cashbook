@@ -99,10 +99,9 @@
         <caption class="visually-hidden">{{ form.search_description.description }}</caption>
         <thead>
           <tr>
-            {% sortable_cell _('Prisoner') form.cleaned_data 'prisoner_name' %}
+            {% sortable_cell _('Sender') form.cleaned_data 'prisoner_name' %}
             {% sortable_cell _('Amount') form.cleaned_data 'amount' %}
             {% sortable_cell _('Recipient') form.cleaned_data 'recipient_name' %}
-            <th>{% trans 'Recipient’s account' %}</th>
             {% sortable_cell _('Status') form.cleaned_data 'resolution' %}
             {% sortable_cell _('History') form.cleaned_data 'created' %}
           </tr>
@@ -111,22 +110,37 @@
           {% for disbursement in disbursements %}
             <tr>
               <!-- {{ disbursement.id }} -->
-              <td>
+              <td class="mtp-sender">
                 <span class="visually-hidden">{% trans 'Prisoner' %}:</span>
                 {{ disbursement.prisoner_name }}
-                <hr/>
+                <br/>
+                <br/>
                 <span class="visually-hidden">{% trans 'Prisoner number' %}:</span>
                 <small>{{ disbursement.prisoner_number }}</small>
               </td>
 
-              <td>
+              <td class="mtp-amount">
                 {{ disbursement.amount|currency:'£' }}
-                <hr/>
-                <span class="visually-hidden">{% trans 'Sent by' %}:</span>
-                <small>{{ disbursement.method|sendingmethod }}</small>
-                <hr>
-                <small>
-                  {% trans 'Description' %}:
+                <br/>
+                <br/>
+                {% if disbursement.method == 'bank_transfer' %}
+                  <small>
+                    {% blocktrans trimmed with account_number=disbursement.account_number %}
+                      Account {{ account_number }}<br/>
+                    {% endblocktrans %}
+                    {% blocktrans trimmed with sort_code=disbursement.sort_code|format_sortcode %}
+                      Sort code {{ sort_code }}
+                    {% endblocktrans %}
+                  </small>
+                  <br/>
+                  <br/>
+                {% else %}
+                  <small>{% trans 'Cheque' %}</small>
+                  <br/>
+                  <br/>
+                {% endif %}
+                <small class="mtp-description">
+                  <div>{% trans 'Description' %}:</div>
                   {% if disbursement.remittance_description %}
                     {{ disbursement.remittance_description|hide_long_text }}
                   {% else %}
@@ -135,99 +149,85 @@
                 </small>
               </td>
 
-              <td>
+              <td class="mtp-recipient">
                 {{ disbursement.recipient_first_name }} {{ disbursement.recipient_last_name }}
-                <hr/>
+                <br/>
+                <br/>
                 <span class="visually-hidden">{% trans 'Recipient address' %}:</span>
                 <address>
                   <small>
                     {{ disbursement.address_line1 }}<br/>
                     {% if disbursement.address_line2 %}{{ disbursement.address_line2 }}<br/>{% endif %}
-                    {{ disbursement.city }}<br/>
-                    {{ disbursement.postcode }}
-                    {% if disbursement.country and disbursement.country != 'UK' %}
+                      {{ disbursement.city }}<br/>
+                      {{ disbursement.postcode }}
+                      {% if disbursement.country and disbursement.country != 'UK' %}
                       <br/>
                       <strong>{{ disbursement.country }}</strong>
                     {% endif %}
                   </small>
                 </address>
-                {% if disbursement.recipient_email %}
-                  <hr/>
+                {% if disbursement.recipient_email %}<br/>
                   <span class="visually-hidden">{% trans 'Recipient email' %}:</span>
                   <small>{{ disbursement.recipient_email }}</small>
                 {% endif %}
               </td>
 
-              <td>
-                {% if disbursement.method == 'bank_transfer' %}
-                  <span class="visually-hidden">{% trans 'Recipient sort code' %}:</span>
-                  {{ disbursement.sort_code|format_sortcode }}
-                  <br/>
-                  <span class="visually-hidden">{% trans 'Recipient account number' %}:</span>
-                  {{ disbursement.account_number }}
-                  {% if disbursement.roll_number %}
-                    <br/>
-                    <span class="visually-hidden">{% trans 'Recipient roll number' %}:</span>
-                    {{ disbursement.roll_number }}
-                  {% endif %}
-                {% endif %}
-              </td>
-
-              <td>
+              <td class="mtp-status mtp-status--{{ disbursement.resolution }}">
                 {{ disbursement.resolution|format_disbursement_resolution }}
               </td>
 
-              <td>
+              <td class="mtp-history">
                 {% for log_item in disbursement.log_set %}
                   {% if log_item.action == 'created' %}
-                    {{ log_item.created|date:'d/m/Y' }}
-                    {% blocktrans trimmed with staff_name=log_item.staff_name %}
-                      Entered by {{ staff_name }}
-                    {% endblocktrans %}
+                    {% trans 'Entered' %} {{ log_item.created|date:'d/m/Y' }}<br />
+                    <small>
+                      {% blocktrans trimmed with staff_name=log_item.staff_name %}
+                        by {{ staff_name }}
+                      {% endblocktrans %}
+                    </small>
 
                   {% elif log_item.action == 'edited' %}
-                    {{ log_item.created|date:'d/m/Y' }}
-                    {% blocktrans trimmed with staff_name=log_item.staff_name %}
-                      Edited by {{ staff_name }}
-                    {% endblocktrans %}
+                    {% trans 'Edited' %} {{ log_item.created|date:'d/m/Y' }}<br />
+                    <small>
+                      {% blocktrans trimmed with staff_name=log_item.staff_name %}
+                        by {{ staff_name }}
+                      {% endblocktrans %}
+                    </small>
 
                   {% elif log_item.action == 'confirmed' %}
-                    {{ log_item.created|date:'d/m/Y' }}
-                    {% blocktrans trimmed with staff_name=log_item.staff_name %}
-                      Confirmed by {{ staff_name }}
-                    {% endblocktrans %}
+                    {% trans 'Confirmed' %} {{ log_item.created|date:'d/m/Y' }}<br />
+                    <small>
+                      {% blocktrans trimmed with staff_name=log_item.staff_name %}
+                        by {{ staff_name }}
+                      {% endblocktrans %}
+                    </small>
                     <br/>
                     <small>
-                      {% trans 'NOMIS reference' %}:
+                      {% trans 'NOMIS ref' %}:
                       {{ disbursement.nomis_transaction_id|default:'—' }}
                     </small>
 
                   {% elif log_item.action == 'sent' %}
-                    {{ log_item.created|date:'d/m/Y' }}
-                    {% blocktrans trimmed %}
-                      Sent by SSCL
-                    {% endblocktrans %}
-                    <br/>
+                    {% trans 'Sent to SSCL' %} {{ log_item.created|date:'d/m/Y' }}<br/>
                     <small>
-                      {% trans 'Invoice number' %}:
-                      {{ disbursement.invoice_number }}
+                      {% trans 'Invoice' %}: {{ disbursement.invoice_number }}
                     </small>
 
                   {% elif log_item.action == 'rejected' %}
-                    {{ log_item.created|date:'d/m/Y' }}
-                    {% blocktrans trimmed with staff_name=log_item.staff_name %}
-                      Cancelled by {{ staff_name }}
-                    {% endblocktrans %}
+                    {% trans 'Cancelled' %} {{ log_item.created|date:'d/m/Y' }}<br/>
+                    <small>
+                      {% blocktrans trimmed with staff_name=log_item.staff_name %}
+                        by {{ staff_name }}
+                      {% endblocktrans %}
+                    </small>
+                    <br/>
                     {% with rejection_reason=disbursement.comments|find_rejection_reason %}
-                      <br/>
-                      <small>
-                        {{ rejection_reason|truncatewords:5 }}
-                      </small>
+                      <small>{{ rejection_reason|truncatewords:5 }}</small>
                     {% endwith %}
-
                   {% endif %}
                   {% if not forloop.last %}
-                    <hr/>
+                    <br/>
+                    <br />
                   {% endif %}
                 {% endfor %}
               </td>
