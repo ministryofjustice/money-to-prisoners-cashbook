@@ -139,12 +139,14 @@
                   <br/>
                   <br/>
                 {% endif %}
-                {% if disbursement.remittance_description %}
-                  <small class="mtp-description">
-                    <div>{% trans 'Description' %}:</div>
+                <small class="mtp-description">
+                  <div>{% trans 'Description' %}:</div>
+                  {% if disbursement.remittance_description %}
                     {{ disbursement.remittance_description|hide_long_text }}
-                  </small>
-                {% endif %}
+                  {% else %}
+                    <span class="text-secondary">({% trans 'None given' %})</span>
+                  {% endif %}
+                </small>
               </td>
 
               <td class="mtp-recipient">
@@ -202,14 +204,14 @@
                     <br/>
                     <small>
                       {% trans 'NOMIS ref' %}:
-                      {{ disbursement.nomis_transaction_id|default:'' }}
+                      {{ disbursement.nomis_transaction_id|default:'—' }}
                     </small>
 
                   {% elif log_item.action == 'sent' %}
                     {% trans 'Sent to SSCL' %} {{ log_item.created|date:'d/m/Y' }}<br/>
-                      <small>
-                        {% trans 'Invoice' %}: {{ disbursement.invoice_number }}
-                      </small>
+                    <small>
+                      {% trans 'Invoice' %}: {{ disbursement.invoice_number }}
+                    </small>
 
                   {% elif log_item.action == 'rejected' %}
                     {% trans 'Cancelled' %} {{ log_item.created|date:'d/m/Y' }}<br/>
