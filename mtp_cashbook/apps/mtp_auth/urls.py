@@ -3,7 +3,7 @@ from django.conf.urls import url
 from django.urls import reverse_lazy
 from mtp_common.auth import views
 
-from mtp_auth.views import CashbookSignUpView
+from mtp_auth.views import CashbookSignUpView, CashbookAcceptRequestView
 
 urlpatterns = [
     url(
@@ -53,4 +53,9 @@ urlpatterns = [
     ),
 
     url(r'^users/sign-up/$', CashbookSignUpView.as_view(), name='sign-up'),
+    url(
+        r'^users/request/(?P<account_request>\d+)/accept/$',
+        CashbookAcceptRequestView.as_view(),
+        name='accept-request'
+    ),
 ]
