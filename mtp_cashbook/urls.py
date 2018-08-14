@@ -9,6 +9,7 @@ from django.views.decorators.cache import cache_control
 from django.views.generic.base import RedirectView, TemplateView
 from django.views.i18n import JavaScriptCatalog
 from moj_irat.views import HealthcheckView, PingJsonView
+from mtp_common.auth import api_client
 
 
 class LandingView(TemplateView):
@@ -20,6 +21,9 @@ class LandingView(TemplateView):
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
+        if self.request.user.has_perm('auth.change_user'):
+            response = api_client.get_api_session(self.request).get('requests/', params={'page_size': 1})
+            kwargs['user_request_count'] = response.json().get('count')
         return super().get_context_data(
             start_page_url=settings.START_PAGE_URL,
             **kwargs

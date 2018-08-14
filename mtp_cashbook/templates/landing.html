@@ -5,6 +5,20 @@
 {% block inner_content %}
   {% notifications_box request 'cashbook_all' %}
 
+  {% if user_request_count %}
+    <div class="mtp-notification mtp-notification--info">
+      <h1>
+        <a href="{% url 'list-users' %}" class="mtp-notification__headline">
+          {% blocktrans trimmed count count=user_request_count %}
+            You have {{ count }} new user request
+          {% plural %}
+            You have {{ count }} new user requests
+          {% endblocktrans %}
+        </a>
+      </h1>
+    </div>
+  {% endif %}
+
   <header>
     <h1 class="heading-xlarge mtp-heading--compact">
       {% blocktrans trimmed with name=request.user.get_full_name|default:request.user.username %}
