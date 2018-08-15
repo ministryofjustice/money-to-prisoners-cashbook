@@ -1,0 +1,19 @@
+{% extends 'mtp_common/user_admin/sign-up-has-role.html' %}
+{% load i18n %}
+{% load mtp_common %}
+
+{% block confirm_changes %}
+
+  {{ block.super }}
+
+  <h2 class="heading-medium">
+    {% trans 'Moved to a different prison?' %}
+  </h2>
+  <p>
+    {% url 'move-prison' as link %}
+    {% blocktrans trimmed with link=_('Move prison')|wraplink:link %}
+      Sign in and select ‘{{ link }}’ from the user menu.
+    {% endblocktrans %}
+  </p>
+
+{% endblock %}

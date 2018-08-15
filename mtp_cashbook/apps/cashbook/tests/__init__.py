@@ -44,8 +44,10 @@ class MTPBaseTestCase(SimpleTestCase):
         user_data = {
             'first_name': 'My First Name',
             'last_name': 'My Last Name',
+            'email': '%s@mtp.local' % credentials['username'],
             'username': credentials['username'],
             'permissions': permissions,
+            'roles': ['prison-clerk'],
             'prisons': [{
                 'nomis_id': 'BXI',
                 'name': 'HMP Brixton',
