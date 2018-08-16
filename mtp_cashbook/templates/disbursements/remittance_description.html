@@ -40,7 +40,7 @@
 
             <div class="form-group {% if field.errors %}form-group-error{% endif %}">
               <div class="multiple-choice">
-                <input id="js-choice-{{ choices.0.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.0.0 }}" data-reveal=".js-choice-yes" {% if form.remittance_description.value %}checked{% endif %}>
+                <input id="js-choice-{{ choices.0.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.0.0 }}" data-reveal=".js-choice-yes" {% if form.remittance.value == 'yes' %}checked{% endif %}>
                 <label for="js-choice-{{ choices.0.0 }}">{{ choices.0.1 }}</label>
               </div>
               <div class="panel panel-border-narrow js-hidden js-choice-yes">
@@ -56,7 +56,10 @@
               </div>
 
               <div class="multiple-choice">
-                <input id="js-choice-{{ choices.1.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.1.0 }}">
+                <input id="js-choice-{{ choices.1.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.1.0 }}"
+                {% if form.remittance.value == 'no' %}checked{% endif %}>
+
+
                 <label for="js-choice-{{ choices.1.0 }}">{{ choices.1.1 }}</label>
               </div>
             </div>
