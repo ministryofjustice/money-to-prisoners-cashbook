@@ -3,7 +3,6 @@ from django.conf.urls import include, url
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-from django.shortcuts import redirect
 from django.template.response import TemplateResponse
 from django.views.decorators.cache import cache_control
 from django.views.generic.base import RedirectView, TemplateView
@@ -14,11 +13,6 @@ from mtp_common.auth import api_client
 
 class LandingView(TemplateView):
     template_name = 'landing.html'
-
-    def get(self, request, *args, **kwargs):
-        if not request.disbursements_available:
-            return redirect('new-credits')
-        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         if self.request.user.has_perm('auth.change_user'):

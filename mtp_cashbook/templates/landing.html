@@ -40,13 +40,15 @@
       </div>
     </div>
 
-    <div class="column-third">
-      <div class="mtp-box">
-        <a href="{% url 'disbursements:start' %}">{% trans 'Digital disbursements' %}</a>
-        <p id="tool-2">
-          {% trans 'Send money out of a prisoner’s account by bank transfer or cheque' %}
-        </p>
+    {% if request.disbursements_available %}
+      <div class="column-third">
+        <div class="mtp-box">
+          <a href="{% url 'disbursements:start' %}">{% trans 'Digital disbursements' %}</a>
+          <p id="tool-2">
+            {% trans 'Send money out of a prisoner’s account by bank transfer or cheque' %}
+          </p>
+        </div>
       </div>
-    </div>
+    {% endif %}
   </div>
 {% endblock %}
