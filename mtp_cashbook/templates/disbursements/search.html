@@ -44,6 +44,14 @@
         </div>
       {% endpaneltab %}
 
+      {% paneltab name='invoice_number' title=_('Invoice number') %}
+        <div class="grid-row">
+          <div class="column-two-thirds">
+            {% include 'mtp_common/forms/field.html' with field=form.invoice_number %}
+          </div>
+        </div>
+      {% endpaneltab %}
+
       {% paneltab name='status' title=_('Status') %}
         <div class="grid-row">
           <div class="column-third">
