@@ -14,14 +14,17 @@
   <div class="grid-row">
     <div class="column-two-thirds">
       <p>
-        {% trans 'This will help the recipient know where their payment has come from.' %}
+        {% trans 'A description can be useful to help the recipient know who their payment has come from, especially when the recipient is a business or organisation.' %}
       </p>
       <p>
-        {% trans 'The description will be on the remittance advice to the recipient, which is an email (if provided) or a letter sent before the payment arrives.' %}
-        {% trans 'It will not show on the bank statement.' %}
+        {% trans 'The description will appear on the remittance advice - either an email or a letter - sent out by SSCL to the recipient before the payment itself arrives.' %}
       </p>
       <p>
-        {% trans 'This description could be useful when the payment is going to a business or organisation.' %}
+        {% blocktrans trimmed %}
+          What will automatically appear is <strong>‘Payment from {{ prisoner_name }}’</strong>.
+        {% endblocktrans %}
+
+        {% trans 'You can change - or add to - this description but if you delete the prisoner’s name, it won’t appear on the recipient’s bank statement or anywhere else on the transaction.' %}
       </p>
 
       <form method="post">
@@ -37,15 +40,26 @@
 
             <div class="form-group {% if field.errors %}form-group-error{% endif %}">
               <div class="multiple-choice">
-                <input id="js-choice-{{ choices.0.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.0.0 }}" data-reveal=".js-choice-yes" {% if form.remittance_description.value %}checked{% endif %}>
+                <input id="js-choice-{{ choices.0.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.0.0 }}" data-reveal=".js-choice-yes" {% if form.remittance.value == 'yes' %}checked{% endif %}>
                 <label for="js-choice-{{ choices.0.0 }}">{{ choices.0.1 }}</label>
               </div>
               <div class="panel panel-border-narrow js-hidden js-choice-yes">
-                {% include 'mtp_common/forms/textarea.html' with field=form.remittance_description rows=2 input_classes='js-character-count' attrs=remittance_description_attrs only %}
+                {% with field=form.remittance_description rows=2 input_classes='js-character-count' attrs=remittance_description_attrs %}
+                  <div id="{{ field.id_for_label }}-wrapper" class="form-group {% if field.errors %}form-group-error{% endif %}">
+                    <label for="{{ field.id_for_label }}" id="{{ field.id_for_label }}-label" class="form-label">
+                      {% include 'mtp_common/forms/field-help-text.html' with field=field only %}
+                    </label>
+                    {% include 'mtp_common/forms/field-errors.html' with field=field only %}
+                    <textarea id="{{ field.id_for_label }}" class="form-control {% if field.errors %}form-control-error{% endif %} {{ input_classes }}" name="{{ field.html_name }}" rows="{{ rows|default:4 }}" cols="{{ cols|default:50 }}" {% for attr, attr_val in attrs.items %}{{ attr }}="{{ attr_val }}"{% endfor %}>{{ value|default:field.value|default_if_none:'' }}</textarea>
+                  </div>
+                {% endwith %}
               </div>
 
               <div class="multiple-choice">
-                <input id="js-choice-{{ choices.1.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.1.0 }}">
+                <input id="js-choice-{{ choices.1.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.1.0 }}"
+                {% if form.remittance.value == 'no' %}checked{% endif %}>
+
+
                 <label for="js-choice-{{ choices.1.0 }}">{{ choices.1.1 }}</label>
               </div>
             </div>
