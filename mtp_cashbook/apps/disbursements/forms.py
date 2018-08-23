@@ -621,8 +621,10 @@ class BaseSearchForm(GARequestErrorReportingMixin, forms.Form):
             }
 
 
-validate_prisoner_number = RegexValidator(r'^[a-z]\d{4}[a-z]{2}$', flags=re.IGNORECASE,
-                                          message=_('The prisoner number should be in the form A1234AB'))
+validate_prisoner_number = RegexValidator(
+    r'^[a-z]\d{4}[a-z]{2}$', flags=re.IGNORECASE,
+    message=_('The prisoner number should be in the form A1234AB')
+)
 
 
 @validate_range_field('date', _('Must be after the ‘from’ date'))
@@ -661,6 +663,7 @@ class SearchForm(BaseSearchForm):
                                       validators=[validate_prisoner_number])
     recipient_name = forms.CharField(label=_('Recipient name'), required=False)
     nomis_transaction_id = forms.CharField(label=_('NOMIS reference'), required=False)
+    invoice_number = forms.CharField(label=_('Invoice number'), required=False)
 
     resolutions = [
         # NB: not all resolutions can be filtered
