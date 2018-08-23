@@ -13,9 +13,7 @@
   }
 }
 
-.mtp-pending-cannot-confirm-row {
-  th, td {
-    border-bottom: 0;
-    padding-bottom: 0;
-  }
+.mtp-pending-cannot-confirm-row + tr td {
+  border-top: 0;
+  padding-top: 0;
 }
