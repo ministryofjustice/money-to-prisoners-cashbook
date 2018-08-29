@@ -700,7 +700,7 @@ class UpdateRemittanceDescriptionView(BaseEditFormView, RemittanceDescriptionVie
 
 class StartView(BaseView):
     url_name = 'start'
-    get_success_url = reverse_lazy('disbursements:%s' % SendingMethodView.url_name)
+    get_success_url = reverse_lazy('disbursements:clear_disbursement')
 
     def get_context_data(self, **kwargs):
         kwargs['confirmed_disbursement_count'] = sum(
