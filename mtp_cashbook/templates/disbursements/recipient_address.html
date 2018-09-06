@@ -26,7 +26,7 @@
         {% trans 'Choose address' %}
       </label>
       <select id="address-select" class="form-control mtp-address-picker">
-        <option value="0">
+        <option value="">
           {% blocktrans trimmed with count=addresses|length %}
             {{ count }} addresses found
           {% endblocktrans %}

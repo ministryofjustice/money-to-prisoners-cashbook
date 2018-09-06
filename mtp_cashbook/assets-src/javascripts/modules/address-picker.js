@@ -15,7 +15,7 @@ exports.AddressPicker = {
     var postcode = $('#id_postcode');
 
     function update () {
-      if (addressSelect.val() > 0) {
+      if (addressSelect.val()) {
         var selectedAddress = $('#address-select option:selected');
         var addressData = selectedAddress.data('address');
         addressLine1.val(addressData.address_line1);
