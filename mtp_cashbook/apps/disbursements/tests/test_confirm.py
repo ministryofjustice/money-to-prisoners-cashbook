@@ -322,6 +322,21 @@ class PendingDisbursementTestCase(MTPBaseTestCase):
 
         self.add_nomis_responses_for_disbursement(disbursement)
 
+    def prisoner_location_response(self, disbursement):
+        responses.add(
+            responses.GET,
+            api_url('/prisoner_locations/{prisoner_number}/'.format(
+                prisoner_number=disbursement['prisoner_number']
+            )),
+            json={
+                'prisoner_number': disbursement['prisoner_number'],
+                'prisoner_dob': '1970-01-01',
+                'prisoner_name': 'TEST QUASH2',
+                'prison': 'BXI'
+            },
+            status=200,
+        )
+
 
 class PendingListDisbursementTestCase(PendingDisbursementTestCase):
 
@@ -655,19 +670,7 @@ class UpdatePendingDisbursementTestCase(PendingDisbursementTestCase):
         # go to update page
         disbursement = SAMPLE_DISBURSEMENTS[3]
         self.pending_detail(disbursement=disbursement)
-        responses.add(
-            responses.GET,
-            api_url('/prisoner_locations/{prisoner_number}/'.format(
-                prisoner_number=disbursement['prisoner_number']
-            )),
-            json={
-                'prisoner_number': disbursement['prisoner_number'],
-                'prisoner_dob': '1970-01-01',
-                'prisoner_name': 'TEST QUASH2',
-                'prison': 'BXI'
-            },
-            status=200,
-        )
+        self.prisoner_location_response(disbursement)
 
         response = self.client.get(
             reverse('disbursements:update_remittance_description', args=[disbursement['id']])
@@ -784,6 +787,56 @@ class UpdatePendingDisbursementTestCase(PendingDisbursementTestCase):
         self.assertJSONEqual(patch_requests[0].body.decode(), {
             'remittance_description': 'Payment from TEST QUASH2',
         })
+
+    @responses.activate
+    @override_nomis_settings
+    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
+    def test_update_address(self):
+        self.login(credentials={'username': 'test-hmp-brixton-a', 'password': 'pass'})
+
+        # go to update page
+        disbursement = SAMPLE_DISBURSEMENTS[3]
+        self.pending_detail(disbursement=disbursement)
+        self.prisoner_location_response(disbursement)
+
+        response = self.client.get(
+            reverse('disbursements:update_recipient_address', args=[disbursement['id']])
+        )
+        self.assertOnPage(response, 'disbursements:update_recipient_address')
+        # address picker shouldn't show on update
+        self.assertNotContains(response, 'Choose address')
+        self.assertNotContains(response, 'Or enter address manually')
+
+        responses.reset()
+
+        # post update
+        responses.add(
+            responses.PATCH,
+            api_url('/disbursements/{pk}/'.format(pk=disbursement['id'])),
+            status=200
+        )
+
+        new_address = {
+            'address_line1': '54 Fake Road',
+            'address_line2': '',
+            'city': 'London',
+            'postcode': 'n17 9xy'
+        }
+        updated_disbursement = dict(**disbursement)
+        updated_disbursement.update(new_address)
+        self.pending_detail(disbursement=updated_disbursement)
+        self.prisoner_location_response(disbursement)
+
+        response = self.client.post(
+            reverse('disbursements:update_recipient_address', args=[updated_disbursement['id']]),
+            data=new_address,
+            follow=True
+        )
+        self.assertOnPage(response, 'disbursements:pending_detail')
+        self.assertContains(response, new_address['address_line1'])
+        self.assertContains(response, new_address['address_line2'])
+        self.assertContains(response, new_address['city'])
+        self.assertContains(response, new_address['postcode'])
 
     @responses.activate
     @override_nomis_settings

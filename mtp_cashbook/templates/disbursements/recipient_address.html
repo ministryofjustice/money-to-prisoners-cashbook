@@ -1,0 +1,82 @@
+{% extends 'disbursements/base.html' %}
+{% load i18n %}
+{% load mtp_common %}
+
+{% block body_classes %}{{ block.super }} mtp-create-disbursement{% endblock %}
+
+{% block inner_content %}
+  {{ block.super }}
+
+  <header>
+    <h1 class="heading-xlarge mtp-heading--compact">{{ view.title }}</h1>
+  </header>
+
+  {% if address_picker %}
+    <p>
+      {% trans 'Postcode:' %}
+      <strong>{{ postcode }}</strong>
+      <a href="{% url 'disbursements:recipient_postcode' %}?next={{ view.url }}" class="print-hidden">
+        {% trans 'Change' %}
+        <span class="visually-hidden">{% trans 'Postcode' %}</span>
+      </a>
+    </p>
+
+    <div class="form-group">
+      <label for="address-select" id="address-select-label" class="form-label">
+        {% trans 'Choose address' %}
+      </label>
+      <select id="address-select" class="form-control mtp-address-picker">
+        <option value="">
+          {% blocktrans trimmed with count=addresses|length %}
+            {{ count }} addresses found
+          {% endblocktrans %}
+        </option>
+        {% for address in addresses %}
+          <option value="{{ forloop.counter }}" data-address='{"address_line1": "{{ address.address_line1 }}", "address_line2": "{{ address.address_line2 }}", "city": "{{ address.city }}", "postcode": "{{ address.postcode }}"}'>
+            {{ address.address }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+  {% endif %}
+
+  <div class="grid-row">
+    <div class="column-two-thirds">
+      <form method="post">
+        {% csrf_token %}
+
+        <div id="manual-address-entry">
+          {% if address_picker %}
+            <h3 class="heading-small">{% trans 'Or enter address manually' %}</h3>
+            <br/>
+          {% endif %}
+
+          {% include 'mtp_common/forms/error-summary.html' with form=form only %}
+
+          <fieldset>
+            <div class="form-group {% if field.errors %}form-group-error{% endif %}">
+              {% include 'mtp_common/forms/field-label.html' with field=form.address_line1 only %}
+
+              {% with field=form.address_line1 %}
+                {% include 'mtp_common/forms/field-errors.html' with field=field only %}
+                <input id="{{ field.id_for_label }}" class="form-control {% if field.errors %}form-control-error{% endif %} form-control-1-2" name="{{ field.html_name }}" value="{{ field.value|default:'' }}" type="{{ field.field.widget.input_type|default:'text' }}" />
+              {% endwith %}
+
+              {% with field=form.address_line2 %}
+                {% include 'mtp_common/forms/field-errors.html' with field=field only %}
+                <label for="{{ field.id_for_label }}" class="visually-hidden">{{ field.label }}</label>
+                <input id="{{ field.id_for_label }}" class="form-control {% if field.errors %}form-control-error{% endif %} form-control-1-2" name="{{ field.html_name }}" value="{{ field.value|default:'' }}" type="{{ field.field.widget.input_type|default:'text' }}" />
+              {% endwith %}
+            </div>
+          </fieldset>
+
+          {% include 'mtp_common/forms/field.html' with field=form.city input_classes='form-control-1-2' only %}
+
+          {% include 'mtp_common/forms/field.html' with field=form.postcode input_classes='form-control-1-4' initial_value='{{ postcode }}' only %}
+        </div>
+
+        <button type="submit" class="button mtp-next-button">{% trans 'Next' %}</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}

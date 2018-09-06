@@ -65,12 +65,25 @@ class DisbursementTestCase(CashbookTestCase):
         contact_form = {
             'id_recipient_first_name': 'Mary-' + get_random_string(3),
             'id_recipient_last_name': 'Halls-' + get_random_string(3),
-            'id_address_line1': 'Street-' + get_random_string(3),
-            'id_city': 'City-' + get_random_string(3),
-            'id_postcode': 'PostCode-' + get_random_string(3),
             'id_recipient_email': 'mary-halls-' + get_random_string(3) + '@outside.local',
         }
         self.fill_in_form(contact_form)
+        self.click_button('Next')
+
+        self.assertShowingView('disbursements:recipient_postcode')
+        postcode_form = {
+            'id_postcode': 'PostCode-' + get_random_string(3),
+        }
+        self.fill_in_form(postcode_form)
+        self.click_button('Find address')
+
+        self.assertShowingView('disbursements:recipient_address')
+        address_form = {
+            'id_address_line1': 'Street-' + get_random_string(3),
+            'id_city': 'City-' + get_random_string(3),
+            'id_postcode': 'PostCode-' + get_random_string(3),
+        }
+        self.fill_in_form(address_form)
         self.click_button('Next')
 
         self.assertShowingView('disbursements:recipient_bank_account')
@@ -92,10 +105,11 @@ class DisbursementTestCase(CashbookTestCase):
         self.assertInSource('Bank transfer')
         self.assertInSource('£11.00')
         for key in ('id_recipient_first_name', 'id_recipient_last_name',
-                    'id_address_line1', 'id_city',
                     'id_recipient_email'):
             self.assertInSource(contact_form[key])
-        self.assertInSource(contact_form['id_postcode'].upper())
+        for key in ('id_address_line1', 'id_city'):
+            self.assertInSource(address_form[key])
+        self.assertInSource(address_form['id_postcode'].upper())
         self.assertInSource(format_sortcode(bank_account['id_sort_code']))
         self.assertInSource(bank_account['id_account_number'])
         self.assertInSource('JILLY HALL')
@@ -215,11 +229,24 @@ class DisbursementTestCase(CashbookTestCase):
         self.click_on_text_substring('Company')
         contact_form = {
             'id_recipient_company_name': 'Boots-' + get_random_string(3),
+        }
+        self.fill_in_form(contact_form)
+        self.click_button('Next')
+
+        self.assertShowingView('disbursements:recipient_postcode')
+        postcode_form = {
+            'id_postcode': 'PostCode-' + get_random_string(3),
+        }
+        self.fill_in_form(postcode_form)
+        self.click_button('Find address')
+
+        self.assertShowingView('disbursements:recipient_address')
+        address_form = {
             'id_address_line1': 'Street-' + get_random_string(3),
             'id_city': 'City-' + get_random_string(3),
             'id_postcode': 'PostCode-' + get_random_string(3),
         }
-        self.fill_in_form(contact_form)
+        self.fill_in_form(address_form)
         self.click_button('Next')
 
         self.assertShowingView('disbursements:remittance_description')
@@ -231,9 +258,11 @@ class DisbursementTestCase(CashbookTestCase):
         self.assertShowingView('disbursements:details_check')
         self.assertInSource('Cheque')
         self.assertInSource('£11.00')
-        for key in ('id_recipient_company_name',
-                    'id_address_line1', 'id_city'):
+        for key in ('id_recipient_first_name', 'id_recipient_last_name'):
             self.assertInSource(contact_form[key])
+        for key in ('id_address_line1', 'id_city'):
+            self.assertInSource(address_form[key])
+        self.assertInSource(address_form['id_postcode'].upper())
         self.assertInSource('Company:')
         self.assertInSource(contact_form['id_postcode'].upper())
         self.assertInSource('JILLY HALL')

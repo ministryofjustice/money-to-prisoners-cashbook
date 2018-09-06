@@ -69,14 +69,31 @@ class CreateDisbursementFlowTestCase(MTPBaseTestCase):
             'recipient_type': 'person',
             'recipient_first_name': 'John',
             'recipient_last_name': 'Smith',
-            'address_line1': '54 Fake Road',
-            'address_line2': '',
-            'city': 'London',
-            'postcode': 'n17 9bj',
             'recipient_email': 'recipient@mtp.local',
         }
         return self.client.post(
             reverse('disbursements:recipient_contact'),
+            data=data, follow=True,
+        )
+
+    def enter_recipient_postcode(self, data=None):
+        data = data or {
+            'postcode': 'n17 9bj',
+        }
+        return self.client.post(
+            reverse('disbursements:recipient_postcode'),
+            data=data, follow=True,
+        )
+
+    def enter_recipient_address(self, data=None):
+        data = data or {
+            'address_line1': '54 Fake Road',
+            'address_line2': '',
+            'city': 'London',
+            'postcode': 'n17 9bj',
+        }
+        return self.client.post(
+            reverse('disbursements:recipient_address'),
             data=data, follow=True,
         )
 
@@ -216,6 +233,8 @@ class SendingMethodTestCase(CreateDisbursementFlowTestCase):
         self.enter_amount()
 
         self.enter_recipient_details()
+        self.enter_recipient_postcode()
+        self.enter_recipient_address()
         response = self.enter_remittance_description(remittance='no')
 
         self.assertOnPage(response, 'disbursements:details_check')
@@ -236,7 +255,9 @@ class SendingMethodTestCase(CreateDisbursementFlowTestCase):
         self.enter_prisoner_details()
         self.enter_amount()
 
-        response = self.enter_recipient_details()
+        self.enter_recipient_details()
+        self.enter_recipient_postcode()
+        response = self.enter_recipient_address()
 
         self.assertOnPage(response, 'disbursements:recipient_bank_account')
 
@@ -258,12 +279,102 @@ class RecipientContactTestCase(CreateDisbursementFlowTestCase):
         response = self.enter_recipient_details({
             'recipient_type': 'person',
             'recipient_first_name': 'John',
-            'recipient_last_name': 'Smith',
-            'city': 'London',
-            'postcode': 'n17 9bj',
         })
         self.assertOnPage(response, 'disbursements:recipient_contact')
-        self.assertFormError(response, 'form', 'address_line1', 'This field is required')
+        self.assertFormError(response, 'form', 'recipient_last_name', 'This field is required')
+
+
+class RecipientPostcodeTestCase(CreateDisbursementFlowTestCase):
+    @property
+    def url(self):
+        return reverse('disbursements:recipient_postcode')
+
+    @responses.activate
+    @override_nomis_settings
+    @override_settings(
+        DISBURSEMENT_PRISONS=['BXI'],
+        POSTCODE_LOOKUP_ENDPOINT='https://fakepostcodes.com/lookup',
+        POSTCODE_LOOKUP_AUTH_TOKEN='auth618',
+    )
+    def test_postcode_populates_addresses(self):
+        responses.add(
+            responses.GET,
+            'https://fakepostcodes.com/lookup?postcode=X178VL&key=auth618',
+            json={
+                'header': {
+                    'uri': 'https://fakepostcodes.com/lookup?postcode=X178VL&key=auth618',
+                    'query': 'postcode=X178VL',
+                    'offset': 0,
+                    'totalresults': 17,
+                    'format': 'JSON',
+                    'dataset': 'DPA',
+                    'lr': 'EN,CY',
+                    'maxresults': 100,
+                    'epoch': '57',
+                    'output_srs': 'EPSG:27700'
+                },
+                'results': [{
+                    'DPA': {
+                        'UPRN': '100021195586',
+                        'UDPRN': '15674582',
+                        'ADDRESS': '36, WUMBERLEY ROAD, LONDON, X17 8VL',
+                        'BUILDING_NUMBER': '36',
+                        'THOROUGHFARE_NAME': 'WUMBERLEY ROAD',
+                        'POST_TOWN': 'LONDON',
+                        'POSTCODE': 'X17 8VL',
+                        'RPC': '1',
+                        'X_COORDINATE': 0.0,
+                        'Y_COORDINATE': 0.0,
+                        'STATUS': 'APPROVED',
+                        'LOGICAL_STATUS_CODE': '1',
+                        'CLASSIFICATION_CODE': 'RD04',
+                        'CLASSIFICATION_CODE_DESCRIPTION': 'Terraced',
+                        'LOCAL_CUSTODIAN_CODE': 5420,
+                        'LOCAL_CUSTODIAN_CODE_DESCRIPTION': 'BURPINGTON',
+                        'POSTAL_ADDRESS_CODE': 'D',
+                        'POSTAL_ADDRESS_CODE_DESCRIPTION': 'A record which is linked to PAF',
+                        'BLPU_STATE_CODE_DESCRIPTION': 'Unknown/Not applicable',
+                        'TOPOGRAPHY_LAYER_TOID': 'osgb1000006209347',
+                        'LAST_UPDATE_DATE': '10/02/2016',
+                        'ENTRY_DATE': '31/03/2004',
+                        'LANGUAGE': 'EN',
+                        'MATCH': 1.0,
+                        'MATCH_DESCRIPTION': 'EXACT'
+                    }
+                }]
+            }
+        )
+
+        self.login()
+        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
+        self.enter_prisoner_details()
+        self.enter_amount()
+        self.enter_recipient_details()
+
+        response = self.enter_recipient_postcode({
+            'postcode': 'X178VL'
+        })
+        self.assertOnPage(response, 'disbursements:recipient_address')
+        self.assertContains(response, '36, WUMBERLEY ROAD, LONDON, X17 8VL')
+
+    @responses.activate
+    @override_nomis_settings
+    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
+    def test_full_postcode_required(self):
+        self.login()
+        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
+        self.enter_prisoner_details()
+        self.enter_amount()
+        self.enter_recipient_details()
+
+        response = self.enter_recipient_postcode({
+            'postcode': 'SW1H'
+        })
+        self.assertOnPage(response, 'disbursements:recipient_postcode')
+        self.assertFormError(
+            response, 'form', 'postcode',
+            'Enter a full valid UK postcode'
+        )
 
     @responses.activate
     @override_nomis_settings
@@ -339,6 +450,8 @@ class RecipientBankAccountTestCase(CreateDisbursementFlowTestCase):
         self.enter_prisoner_details()
         self.enter_amount()
         self.enter_recipient_details()
+        self.enter_recipient_postcode()
+        self.enter_recipient_address()
         response = self.enter_recipient_bank_account({'sort_code': ''})
         self.assertOnPage(response, 'disbursements:recipient_bank_account')
         self.assertFormError(response, 'form', 'sort_code', 'This field is required')
@@ -353,6 +466,8 @@ class RecipientBankAccountTestCase(CreateDisbursementFlowTestCase):
         self.enter_prisoner_details()
         self.enter_amount()
         self.enter_recipient_details()
+        self.enter_recipient_postcode()
+        self.enter_recipient_address()
         response = self.enter_recipient_bank_account({
             'sort_code': '60-57-89a',
             'account_number': '9090878',
@@ -370,6 +485,8 @@ class RecipientBankAccountTestCase(CreateDisbursementFlowTestCase):
         self.enter_prisoner_details()
         self.enter_amount()
         self.enter_recipient_details()
+        self.enter_recipient_postcode()
+        self.enter_recipient_address()
         response = self.enter_recipient_bank_account({
             'sort_code': '40-32-14',
             'account_number': '10572780',
@@ -390,6 +507,8 @@ class RecipientBankAccountTestCase(CreateDisbursementFlowTestCase):
         self.enter_prisoner_details()
         self.enter_amount()
         self.enter_recipient_details()
+        self.enter_recipient_postcode()
+        self.enter_recipient_address()
         response = self.enter_recipient_bank_account({
             'sort_code': '60-70-80',
             'account_number': '10572780',
@@ -410,6 +529,8 @@ class RecipientBankAccountTestCase(CreateDisbursementFlowTestCase):
         self.enter_prisoner_details()
         self.enter_amount()
         self.enter_recipient_details()
+        self.enter_recipient_postcode()
+        self.enter_recipient_address()
         response = self.enter_recipient_bank_account({
             'sort_code': '40-32-14',
             'account_number': '10572780',
@@ -431,6 +552,8 @@ class RecipientBankAccountTestCase(CreateDisbursementFlowTestCase):
         self.enter_prisoner_details()
         self.enter_amount()
         self.enter_recipient_details()
+        self.enter_recipient_postcode()
+        self.enter_recipient_address()
         response = self.enter_recipient_bank_account({
             'sort_code': '40-32-14',
             'account_number': '10572780',
@@ -452,7 +575,9 @@ class RemittanceDescriptionTestCase(CreateDisbursementFlowTestCase):
         self.choose_sending_method(method=SENDING_METHOD.CHEQUE)
         self.enter_prisoner_details()
         self.enter_amount()
-        response = self.enter_recipient_details()
+        self.enter_recipient_details()
+        self.enter_recipient_postcode()
+        response = self.enter_recipient_address()
         self.assertOnPage(response, 'disbursements:remittance_description')
         response = self.client.post(self.url, data={'remittance_description': 'payment for housing'})
         self.assertOnPage(response, 'disbursements:remittance_description')
@@ -467,6 +592,8 @@ class RemittanceDescriptionTestCase(CreateDisbursementFlowTestCase):
         self.enter_prisoner_details()
         self.enter_amount()
         self.enter_recipient_details()
+        self.enter_recipient_postcode()
+        self.enter_recipient_address()
         response = self.enter_remittance_description(remittance='yes', remittance_description='')
         self.assertOnPage(response, 'disbursements:details_check')
         self.assertContains(response, 'None given')
@@ -480,6 +607,8 @@ class RemittanceDescriptionTestCase(CreateDisbursementFlowTestCase):
         self.enter_prisoner_details()
         self.enter_amount()
         self.enter_recipient_details()
+        self.enter_recipient_postcode()
+        self.enter_recipient_address()
         response = self.enter_remittance_description(remittance='yes', remittance_description='payment for housing')
         self.assertOnPage(response, 'disbursements:details_check')
         self.assertContains(response, 'payment for housing')
@@ -488,12 +617,14 @@ class RemittanceDescriptionTestCase(CreateDisbursementFlowTestCase):
     @responses.activate
     @override_nomis_settings
     @override_settings(DISBURSEMENT_PRISONS=['BXI'])
-    def test_remmitance_default_description(self):
+    def test_remittance_default_description(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.CHEQUE)
         self.enter_prisoner_details()
         self.enter_amount()
         self.enter_recipient_details()
+        self.enter_recipient_postcode()
+        self.enter_recipient_address()
         response = self.enter_remittance_description(remittance='no')
         self.assertOnPage(response, 'disbursements:details_check')
         self.assertContains(response, 'Payment from JILLY HALL')
@@ -522,6 +653,8 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
         self.enter_prisoner_details()
         self.enter_amount(10)
         self.enter_recipient_details()
+        self.enter_recipient_postcode()
+        self.enter_recipient_address()
         self.enter_recipient_bank_account()
         self.enter_remittance_description(remittance='yes', remittance_description='')
 
@@ -566,6 +699,8 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
         self.enter_prisoner_details()
         self.enter_amount()
         self.enter_recipient_details()
+        self.enter_recipient_postcode()
+        self.enter_recipient_address()
         self.enter_remittance_description(remittance='no')
         response = self.client.post(reverse('disbursements:created'), follow=True)
 
@@ -587,6 +722,8 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
         self.enter_prisoner_details()
         self.enter_amount(10)
         self.enter_recipient_details()
+        self.enter_recipient_postcode()
+        self.enter_recipient_address()
         self.enter_remittance_description(remittance='no')
         response = self.client.get(reverse('disbursements:details_check'))
         self.assertContains(response, 'John')
@@ -641,6 +778,8 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
         self.enter_prisoner_details()
         self.enter_amount()
         self.enter_recipient_details()
+        self.enter_recipient_postcode()
+        self.enter_recipient_address()
         self.enter_recipient_bank_account()
         self.enter_remittance_description(remittance='no')
         with silence_logger():
