@@ -97,21 +97,17 @@ def find_addresses(postcode):
                 address_data, 'DOUBLE_DEPENDENT_LOCALITY', 'DEPENDENT_LOCALITY'
             )
 
-            line_1 = ''
-            line_2 = ''
+            address['address_line1'] = ''
+            address['address_line2'] = ''
 
-            for item in [business, po_box, building, street_number, locality]:
-                if item:
-                    if line_1:
-                        if line_2:
-                            line_2 = ', '.join([line_2, item])
-                        else:
-                            line_2 = item
-                    else:
-                        line_1 = item
-
-            address['address_line1'] = line_1
-            address['address_line2'] = line_2
+            items = [
+                item for item in
+                [business, po_box, building, street_number, locality]
+                if item
+            ]
+            if items:
+                address['address_line1'] = items[0]
+                address['address_line2'] = ', '.join(items[1:])
 
             addresses.append(address)
 
