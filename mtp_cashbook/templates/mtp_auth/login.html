@@ -52,19 +52,20 @@
 
     <div class="grid-row">
       <section class="column-half">
-        <h2 class="heading-medium">{% trans 'How to get access' %}</h2>
+        <h2 class="heading-medium">{% trans 'Access to the tools' %}</h2>
         {% comment %} << uncomment once disbursements are live
         <p>
           {% trans 'Log into both tools with your existing digital cashbook details.' %}
         </p>
         {% endcomment %}
         <p>
-          {% trans 'Your business hub administrator can set up an account for you if you don’t have access to the digital cashbook.' %}
+          {% trans 'Only hub staff have access to the digital cashbook and disbursement tool.' %}<br />
+          <a href="{% url '#' %}">Request access</a>
         </p>
         <p>
-          <a href="{% url 'submit_ticket' %}">
-            {% trans 'Need more help?' %}
-          </a>
+          {% blocktrans trimmed %}
+            Intelligence staff need to log into the <a href="#"> prisoner money intelligence tool </a> instead.
+          {% endblocktrans %}
         </p>
       </section>
 
