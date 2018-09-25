@@ -52,18 +52,13 @@
 
     <div class="grid-row">
       <section class="column-half">
-        <h2 class="heading-medium">{% trans 'How to get access' %}</h2>
-        {% comment %} << uncomment once disbursements are live
+        <h2 class="heading-medium">{% trans 'Need access?' %}</h2>
         <p>
-          {% trans 'Log into both tools with your existing digital cashbook details.' %}
-        </p>
-        {% endcomment %}
-        <p>
-          {% trans 'Your business hub administrator can set up an account for you if you don’t have access to the digital cashbook.' %}
+          {% trans 'If you’re a business hub staff member in a public prison in England or Wales, you can request access to the digital cashbook.' %}
         </p>
         <p>
-          <a href="{% url 'submit_ticket' %}">
-            {% trans 'Need more help?' %}
+          <a href="{% url 'sign-up' %}">
+            {% trans 'Request access' %}
           </a>
         </p>
       </section>
@@ -91,6 +86,15 @@
 
       </section>
     </div>
+
+    <br/>
+
+    <p>
+      {% url 'submit_ticket' as get_help_link %}
+      {% blocktrans trimmed %}
+        <a href="{{ get_help_link }}">Get help</a> if you’re having difficulties requesting access or signing in.
+      {% endblocktrans %}
+    </p>
   </div>
 
 {% endblock %}

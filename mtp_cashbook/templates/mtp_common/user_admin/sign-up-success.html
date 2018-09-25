@@ -1,0 +1,9 @@
+{% extends 'mtp_common/user_admin/sign-up-success.html' %}
+{% load i18n %}
+
+{% block whats_next_message %}
+  {{ block.super }}
+  <p>
+    {% trans 'If you have any problems, please talk to your business hub manager.' %}
+  </p>
+{% endblock %}

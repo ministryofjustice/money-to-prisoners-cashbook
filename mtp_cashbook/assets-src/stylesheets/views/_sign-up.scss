@@ -1,0 +1,13 @@
+.js-enabled .mtp-account-management__sign-up select#id_prison {
+  display: none;
+}
+
+.mtp-autocomplete-suggestions {
+  max-width: 16em;
+  border: 2px solid $border-colour;
+
+  a {
+    display: block;
+    padding: 5px;
+  }
+}
