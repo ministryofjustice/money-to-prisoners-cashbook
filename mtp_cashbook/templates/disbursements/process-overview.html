@@ -32,6 +32,8 @@
           <li><a href="#section-create">2. {% trans 'Hub staff #1 enters paper form details into the new disbursement tool' %}</a></li>
           <li><a href="#section-confirm">3. {% trans 'Hub staff #2 double-checks and confirms the dtails on the paper form and the details in the digital tool are the same' %}</a></li>
           <li><a href="#section-sent">4. {% trans 'Payment request is automatically deducted from NOMIS then goes to SSCL which sends out payment and remittance advice' %}</a></li>
+          <li><a href="#section-video">5. {% trans 'Watch the short video guide' %}</a></li>
+          <li><a href="#section-further-information">6. {% trans 'Further information' %}</a></li>
         </ul>
       </nav>
     </div>
@@ -60,46 +62,38 @@
         {% trans 'It can be put into an envelope to make it secure.' %}
       </p>
 
-      <div class="grid-row">
-        <div class="column-two-thirds">
-          {% random_string as content_id %}
-          <p>
-            <a class="mtp-disclosure" href="#" aria-controls="mtp-{{ content_id }}" aria-expanded="false" >
-              <span></span>{% trans 'Follow normal security procedures' %}
-            </a>
-          </p>
-          <div id="mtp-{{ content_id }}" class="mtp-disclosure__contents panel panel-border-narrow">
-            <p>
-              {% trans 'When a prisoner submits a disbursement, please follow your prison’s normal security procedures.' %}
-              {% trans 'Prison identity must be verified in person and hub staff must confirm the authorised signature on the paper form, just as before.' %}
-              {% trans 'If forms need to be checked by security staff, before or after going to the business hub, this process should stay the same.' %}
-            </p>
-          </div>
-        </div>
+      {% random_string as content_id %}
+      <p>
+        <a class="mtp-disclosure" href="#" aria-controls="mtp-{{ content_id }}" aria-expanded="false" >
+          <span></span>{% trans 'Follow normal security procedures' %}
+        </a>
+      </p>
+      <div id="mtp-{{ content_id }}" class="mtp-disclosure__contents panel panel-border-narrow">
+        <p>
+          {% trans 'When a prisoner submits a disbursement, please follow your prison’s normal security procedures.' %}
+          {% trans 'Prison identity must be verified in person and hub staff must confirm the authorised signature on the paper form, just as before.' %}
+          {% trans 'If forms need to be checked by security staff, before or after going to the business hub, this process should stay the same.' %}
+        </p>
       </div>
 
-      <div class="grid-row">
-        <div class="column-two-thirds">
-          {% random_string as content_id %}
-          <p>
-            <a class="mtp-disclosure" href="#" aria-controls="mtp-{{ content_id }}" aria-expanded="false">
-              <span></span>{% trans 'Paper forms' %}
-            </a>
-          </p>
-          <div id="mtp-{{ content_id }}" class="mtp-disclosure__contents panel panel-border-narrow">
-            {% url 'disbursements:paper-forms' as link %}
-            {% blocktrans trimmed %}
-              All <a href="{{ link }}">paper forms</a> have been updated.
-            {% endblocktrans %}
-            {% trans 'Print out and use whichever of the four forms suit your prison procedures:' %}
-            <ul class="list list-bullet" >
-              <li> {% trans 'digital disbursements (bank transfer and cheques)' %}</li>
-              <li> {% trans 'postal order and cash' %}</li>
-              <li> {% trans 'postal orders only' %}</li>
-              <li> {% trans 'cash only' %}</li>
-            </ul>
-          </div>
-        </div>
+      {% random_string as content_id %}
+      <p>
+        <a class="mtp-disclosure" href="#" aria-controls="mtp-{{ content_id }}" aria-expanded="false">
+          <span></span>{% trans 'Paper forms' %}
+        </a>
+      </p>
+      <div id="mtp-{{ content_id }}" class="mtp-disclosure__contents panel panel-border-narrow">
+        {% url 'disbursements:paper-forms' as link %}
+        {% blocktrans trimmed %}
+          All <a href="{{ link }}">paper forms</a> have been updated.
+        {% endblocktrans %}
+        {% trans 'Print out and use whichever of the four forms suit your prison procedures:' %}
+        <ul class="list list-bullet" >
+          <li> {% trans 'digital disbursements (bank transfer and cheques)' %}</li>
+          <li> {% trans 'postal order and cash' %}</li>
+          <li> {% trans 'postal orders only' %}</li>
+          <li> {% trans 'cash only' %}</li>
+        </ul>
       </div>
 
       <h2 class="heading-medium" id="section-create">2. {% trans 'Hub staff #1 enters paper form details into the new disbursement tool' %}</h2>
@@ -133,24 +127,18 @@
         {% trans 'The confirmed requests automatically go to SSCL for processing.' %}
       </p>
 
-      <div class="grid-row">
-        <div class="column-two-thirds">
-          {% random_string as content_id %}
-          <p>
-            <a class="mtp-disclosure" href="#" aria-controls="mtp-{{ content_id }}" aria-expanded="false">
-              <span></span>{% trans 'Who can’t confirm payment' %}
-            </a>
-          </p>
-          <div id="mtp-{{ content_id }}" class="mtp-disclosure__contents panel panel-border-narrow">
-            <p>
-              {% trans 'A payment can’t be confirmed by the person who:' %}
-              <ul class="list list-bullet">
-                <li> {% trans '‘entered’ the payment request - the process needs a different member of staff to check the details' %}</li>
-                <li> {% trans 'is last to make the ‘change’ or ‘edit’ to the request' %}</li>
-              </ul>
-            </p>
-          </div>
-        </div>
+      {% random_string as content_id %}
+      <p>
+        <a class="mtp-disclosure" href="#" aria-controls="mtp-{{ content_id }}" aria-expanded="false">
+          <span></span>{% trans 'Who can’t confirm payment' %}
+        </a>
+      </p>
+      <div id="mtp-{{ content_id }}" class="mtp-disclosure__contents panel panel-border-narrow">
+        {% trans 'A payment can’t be confirmed by the person who:' %}
+        <ul class="list list-bullet">
+          <li> {% trans '‘entered’ the payment request - the process needs a different member of staff to check the details' %}</li>
+          <li> {% trans 'is last to make the ‘change’ or ‘edit’ to the request' %}</li>
+        </ul>
       </div>
 
       <h2 class="heading-medium" id="section-sent">4. {% trans 'Payment request is automatically deducted from NOMIS then goes to SSCL which sends out payment and remittance advice' %}</h2>
@@ -165,149 +153,133 @@
         {% trans 'There’s no postage or processing charge to the prison, the prisoner or the recipient.' %}
       </p>
 
-      <div class="grid-row">
-        <div class="column-two-thirds">
-          {% random_string as content_id %}
+      {% random_string as content_id %}
+      <p>
+        <a class="mtp-disclosure" href="#" aria-controls="mtp-{{ content_id }}" aria-expanded="false">
+          <span></span>{% trans 'If prisoner gets the recipient’s bank details wrong.' %}
+        </a>
+      </p>
+      <div id="mtp-{{ content_id }}" class="mtp-disclosure__contents panel panel-border-narrow">
+        {% trans 'If this happens, SSCL will cancel the disbursement and notify the prisoner by email.' %}
+      </div>
+
+      <h2 class="heading-medium" id="section-video">{% trans 'Watch the short video guide' %}</h2>
+      <p>[VIDEO LINK]</p>
+
+      <h1 class="heading-medium" id="section-further-information">Further information</h1>
+      {% random_string as content_id %}
+      <p>
+        <a class="mtp-disclosure" href="#" aria-controls="mtp-{{ content_id }}" aria-expanded="false">
+          <span></span>{% trans 'No more cheques to send out' %}
+        </a>
+      </p>
+      <div id="mtp-{{ content_id }}" class="mtp-disclosure__contents panel panel-border-narrow">
+        <p>
+          {% trans 'The business hub no longer needs to send out cheques.' %}
+          {% trans 'When you’ve digitally processed a cheque payment using the disbursement tool, SSCL will write and post out the cheques.' %}
+        </p>
+      </div>
+
+      {% random_string as content_id %}
+      <p>
+        <a class="mtp-disclosure" href="#" aria-controls="mtp-{{ content_id }}" aria-expanded="false">
+          <span></span>{% trans 'Notify the prisoner' %}
+        </a>
+      </p>
+      <div id="mtp-{{ content_id }}" class="mtp-disclosure__contents panel panel-border-narrow">
+        <p>
+          {% trans 'Once the payment request is in progress, the prisoner money team will email a notification to the prison staff so they can notify the prisoner.' %}
+        </p>
+        {% url 'disbursements:feedback' as link %}
+        {% blocktrans trimmed %}
+          <a href="{{ link }}">‘Contact us’</a> to get these notifications.
+        {% endblocktrans %}
+      </div>
+
+        {% random_string as content_id %}
+        <p>
+          <a class="mtp-disclosure" href="#" aria-controls="mtp-{{ content_id }}" aria-expanded="false">
+            <span></span>{% trans 'Use cash and postal orders' %}
+          </a>
+        </p>
+        <div id="mtp-{{ content_id }}" class="mtp-disclosure__contents panel panel-border-narrow">
           <p>
-            <a class="mtp-disclosure" href="#" aria-controls="mtp-{{ content_id }}" aria-expanded="false">
-              <span></span>{% trans 'If prisoner gets the recipient’s bank details wrong.' %}
-            </a>
+            {% trans 'You don’t have to use cash or postal orders if you don’t want to or don’t already offer these methods.' %}
+            {% trans 'If you do offer them, the process is the same as before.'%}
+            {% trans 'you can only digitally process bank transfers and cheque payments' %}
           </p>
-          <div id="mtp-{{ content_id }}" class="mtp-disclosure__contents panel panel-border-narrow">
-            <p>
-              {% trans 'If this happens, SSCL will cancel the disbursement and notify the prisoner by email' %}<br/>
-              <h2 class="medium-large">{% trans 'Watch the short video guide' %}</h2><br/>
-              [VIDEO LINK]
-            </p>
-          </div>
+        {% url 'disbursements:feedback' as link %}
+        {% blocktrans trimmed %}
+          <a href="{{ link }}">‘Contact us’</a> to get these notifications.
+        {% endblocktrans %}
         </div>
 
-        <div class="column-two-thirds">
-          {% random_string as content_id %}
+        {% random_string as content_id %}
+        <p>
+          <a class="mtp-disclosure" href="#" aria-controls="mtp-{{ content_id }}" aria-expanded="false">
+            <span></span>{% trans 'Track payment progress' %}
+          </a>
+        </p>
+        <div id="mtp-{{ content_id }}" class="mtp-disclosure__contents panel panel-border-narrow">
+        <p>
+          {% trans 'You can track payment progress. Enter invoice number into SOP.' %}
+          {% trans 'Check your prison’s digital disbursement in the ‘Payments made’ section.'%}
+          {% trans 'Once SSCL has recieved the payment request, go to the history column to find the invoice number.' %}
+          {% trans 'Use this invoice number in ‘Accounts payable’ in SOP to see when the bank transfer has been made or the cheque sent out.' %}
+        </p>
+        <p>
+          {% trans 'Example' %}:
+          <img src="{% static 'disbursements/sop-ap-track-disbursement.png' %}" class="mtp-help-screenshot" alt="{% trans 'Screenshot of tracking an invoice in SOP > Accounts Payable' %}">
+        </p>
+
+        {% random_string as content_id %}
+        <p>
+          <a class="mtp-disclosure" href="#" aria-controls="mtp-{{ content_id }}" aria-expanded="false">
+            <span></span>{% trans 'If a bank transfer fails' %}
+          </a>
+        </p>
+        <div id="mtp-{{ content_id }}" class="mtp-disclosure__contents panel panel-border-narrow">
           <p>
-            <a class="mtp-disclosure" href="#" aria-controls="mtp-{{ content_id }}" aria-expanded="false">
-              <span></span>{% trans 'No more cheques to send out' %}
-            </a>
+            {% trans 'A bank transfer fails when the recipient’s account details are wrong.' %}
+            {% trans 'If it’s sort code, SSCL identifies the issue, reports it same day, then rejects it.'%}
+            {% trans 'If the account number is invalid, this only gets checked at the bank, then rejected.'%}
+            {% trans 'It can take up to 10 days for the rejection notification to reach the prisoner money team even though SSCL will cancel the payment as soon as possible.' %}
+            {% trans 'The team contacts the prison and the prison decides if a replacement cheque should be sent.' %}
+            {% trans 'In this instant, the invoice number is no longer valid as it has been accounted for on SOP.'%}
+            {% trans 'A new disbursement must be submitted with a new invoice number.' %}
           </p>
-          <div id="mtp-{{ content_id }}" class="mtp-disclosure__contents panel panel-border-narrow">
-            <p>
-              {% trans 'The business hub no longer needs to send out cheques.' %}
-              {% trans 'When you’ve digitally processed a cheque payment using the disbursement tool, SSCL will write and post out the cheques.' %}
-            </p>
-          </div>
         </div>
 
-        <div class="column-two-thirds">
-          {% random_string as content_id %}
+        {% random_string as content_id %}
+        <p>
+          <a class="mtp-disclosure" href="#" aria-controls="mtp-{{ content_id }}" aria-expanded="false">
+            <span></span>{% trans 'How a bank transfer fails' %}
+          </a>
+        </p>
+        <div id="mtp-{{ content_id }}" class="mtp-disclosure__contents panel panel-border-narrow">
           <p>
-            <a class="mtp-disclosure" href="#" aria-controls="mtp-{{ content_id }}" aria-expanded="false">
-              <span></span>{% trans 'Notify the prisoner' %}
-            </a>
+            {% trans 'To cancel a cheque or bank transfer, the prison needs to raise a Service Request (SR) within 24 hours of the disbursement being sent.' %}
+            {% trans 'It needs to follow up with a phone call to the customer service contact centre.'%}
+            {% trans 'SSCL has 5 working days to look into the SR but they can’t guarentee a cancellation.'%}
+            {% trans 'Once the bank is notified, it takes up to 2 days for them to cancel a cheque up to which time the cheque can still be cashed.' %}
+            {% trans 'When a cheque is cancelled, the money moves back into SOP where it’s recorded.' %}
           </p>
-          <div id="mtp-{{ content_id }}" class="mtp-disclosure__contents panel panel-border-narrow">
-            <p>
-              {% trans 'Once the payment request is in progress, the prisoner money team will email a notification to the prison staff so they can notify the prisoner.' %}
-            </p>
-            {% url 'disbursements:feedback' as link %}
-            {% blocktrans trimmed %}
-              <a href="{{ link }}">‘Contact us’</a> to get these notifications.
-            {% endblocktrans %}
-          </div>
         </div>
 
-        <div class="column-two-thirds">
-          {% random_string as content_id %}
+        {% random_string as content_id %}
+        <p>
+          <a class="mtp-disclosure" href="#" aria-controls="mtp-{{ content_id }}" aria-expanded="false">
+            <span></span>{% trans 'Make security staff aware' %}
+          </a>
+        </p>
+        <div id="mtp-{{ content_id }}" class="mtp-disclosure__contents panel panel-border-narrow">
           <p>
-            <a class="mtp-disclosure" href="#" aria-controls="mtp-{{ content_id }}" aria-expanded="false">
-              <span></span>{% trans 'Use cash and postal orders' %}
-            </a>
+            {% trans 'Money sent out using this digital service is shown alongside money coming into the intelligence tool so please tell security staff.' %}
+            {% trans 'However, the intelligence tool won’t show postal orders, cash or cheques using the previous postal method.'%}
           </p>
-          <div id="mtp-{{ content_id }}" class="mtp-disclosure__contents panel panel-border-narrow">
-            <p>
-              {% trans 'You don’t have to use cash or postal orders if you don’t want to or don’t already offer these methods.' %}
-              {% trans 'If you do offer them, the process is the same as before.'%}
-              {% trans 'you can only digitally process bank transfers and cheque payments' %}
-            </p>
-            {% url 'disbursements:feedback' as link %}
-            {% blocktrans trimmed %}
-              <a href="{{ link }}">‘Contact us’</a> to get these notifications.
-            {% endblocktrans %}
-          </div>
-        </div>
-
-        <div class="column-two-thirds">
-          {% random_string as content_id %}
-          <p>
-            <a class="mtp-disclosure" href="#" aria-controls="mtp-{{ content_id }}" aria-expanded="false">
-              <span></span>{% trans 'Track payment progress' %}
-            </a>
-          </p>
-          <div id="mtp-{{ content_id }}" class="mtp-disclosure__contents panel panel-border-narrow">
-            <p>
-              {% trans 'You can track payment progress. Enter invoice number into SOP.' %}
-              {% trans 'Check your prison’s digital disbursement in the ‘Payments made’ section.'%}
-              {% trans 'Once SSCL has recieved the payment request, go to the history column to find the invoice number.' %}
-              {% trans 'Use this invoice number in ‘Accounts payable’ in SOP to see when the bank transfer has been made or the cheque sent out.' %}
-            </p>
-            <p>
-              {% trans 'Example' %}:
-              <img src="{% static 'disbursements/sop-ap-track-disbursement.png' %}" class="mtp-help-screenshot" alt="{% trans 'Screenshot of tracking an invoice in SOP > Accounts Payable' %}">
-            </p>
-          </div>
-        </div>
-
-        <div class="column-two-thirds">
-          {% random_string as content_id %}
-          <p>
-            <a class="mtp-disclosure" href="#" aria-controls="mtp-{{ content_id }}" aria-expanded="false">
-              <span></span>{% trans 'If a bank transfer fails' %}
-            </a>
-          </p>
-          <div id="mtp-{{ content_id }}" class="mtp-disclosure__contents panel panel-border-narrow">
-            <p>
-              {% trans 'A bank transfer fails when the recipient’s account details are wrong.' %}
-              {% trans 'If it’s sort code, SSCL identifies the issue, reports it same day, then rejects it.'%}
-              {% trans 'If the account number is invalid, this only gets checked at the bank, then rejected.'%}
-              {% trans 'It can take up to 10 days for the rejection notification to reach the prisoner money team even though SSCL will cancel the payment as soon as possible.' %}
-              {% trans 'The team contacts the prison and the prison decides if a replacement cheque should be sent.' %}
-              {% trans 'In this instant, the invoice number is no longer valid as it has been accounted for on SOP.'%}
-              {% trans 'A new disbursement must be submitted with a new invoice number.' %}
-            </p>
-          </div>
-        </div>
-
-        <div class="column-two-thirds">
-          {% random_string as content_id %}
-          <p>
-            <a class="mtp-disclosure" href="#" aria-controls="mtp-{{ content_id }}" aria-expanded="false">
-              <span></span>{% trans 'How a bank transfer fails' %}
-            </a>
-          </p>
-          <div id="mtp-{{ content_id }}" class="mtp-disclosure__contents panel panel-border-narrow">
-            <p>
-              {% trans 'To cancel a cheque or bank transfer, the prison needs to raise a Service Request (SR) within 24 hours of the disbursement being sent.' %}
-              {% trans 'It needs to follow up with a phone call to the customer service contact centre.'%}
-              {% trans 'SSCL has 5 working days to look into the SR but they can’t guarentee a cancellation.'%}
-              {% trans 'Once the bank is notified, it takes up to 2 days for them to cancel a cheque up to which time the cheque can still be cashed.' %}
-              {% trans 'When a cheque is cancelled, the money moves back into SOP where it’s recorded.' %}
-            </p>
-          </div>
-        </div>
-
-        <div class="column-two-thirds">
-          {% random_string as content_id %}
-          <p>
-            <a class="mtp-disclosure" href="#" aria-controls="mtp-{{ content_id }}" aria-expanded="false">
-              <span></span>{% trans 'Make security staff aware' %}
-            </a>
-          </p>
-          <div id="mtp-{{ content_id }}" class="mtp-disclosure__contents panel panel-border-narrow">
-            <p>
-              {% trans 'Money sent out using this digital service is shown alongside money coming into the intelligence tool so please tell security staff.' %}
-              {% trans 'However, the intelligence tool won’t show postal orders, cash or cheques using the previous postal method.'%}
-            </p>
-          </div>
         </div>
       </div>
+    </div>
+  </div>
 
 {% endblock %}
