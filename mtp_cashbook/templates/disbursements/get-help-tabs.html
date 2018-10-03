@@ -3,15 +3,15 @@
 <nav class="mtp-page-tabs">
   <ul>
     <li>
-      <a href="{% url 'disbursements:submit_ticket' %}" {% if page == 1 %}class="active"{% endif %}>
-        {% trans 'Contact us' %}
-        {% if page == 1 %}<span class="visually-hidden">{% trans '(current page)' %}</span>{% endif %}
-      </a>
-    </li>
-    <li>
       <a href="{% url 'disbursements:process-overview' %}" {% if page == 2 %}class="active"{% endif %}>
         {% trans 'How it works' %}
         {% if page == 2 %}<span class="visually-hidden">{% trans '(current page)' %}</span>{% endif %}
+      </a>
+    </li>
+    <li>
+      <a href="{% url 'disbursements:submit_ticket' %}" {% if page == 1 %}class="active"{% endif %}>
+        {% trans 'Contact us' %}
+        {% if page == 1 %}<span class="visually-hidden">{% trans '(current page)' %}</span>{% endif %}
       </a>
     </li>
   </ul>
