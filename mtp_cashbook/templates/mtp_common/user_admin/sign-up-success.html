@@ -1,9 +1,15 @@
 {% extends 'mtp_common/user_admin/sign-up-success.html' %}
 {% load i18n %}
+{% load mtp_common %}
 
 {% block whats_next_message %}
-  {{ block.super }}
-  <p>
-    {% trans 'If you have any problems, please talk to your business hub manager.' %}
-  </p>
+  <div class="grid-row">
+    <div class="column-two-thirds">
+      <p>
+        {% blocktrans trimmed with who=_('your business hub manager')|wrapwithtag:'strong' %}
+          Once {{ who }} has approved it through the cashbook, you’ll get an email with your login details.
+        {% endblocktrans %}
+      </p>
+    </div>
+  </div>
 {% endblock %}
