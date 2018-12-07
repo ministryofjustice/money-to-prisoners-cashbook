@@ -127,10 +127,10 @@ class ProcessManualCreditsForm(GARequestErrorReportingMixin, forms.Form):
 
 class FilterProcessedCreditsListForm(GARequestErrorReportingMixin, forms.Form):
     start = forms.DateField(label=gettext_lazy('From date'),
-                            help_text=gettext_lazy('e.g. 13/6/2017'),
+                            help_text=gettext_lazy('For example, 13/6/2017'),
                             required=False)
     end = forms.DateField(label=gettext_lazy('To date'),
-                          help_text=gettext_lazy('e.g. 15/6/2017'),
+                          help_text=gettext_lazy('For example, 15/6/2017'),
                           required=False)
     page = forms.IntegerField(required=False, widget=forms.HiddenInput)
 
@@ -220,12 +220,12 @@ class FilterProcessedCreditsListForm(GARequestErrorReportingMixin, forms.Form):
 class FilterProcessedCreditsDetailForm(FilterProcessedCreditsListForm):
     names = forms.CharField(
         label=gettext_lazy('Name of prisoner or sender'),
-        help_text=gettext_lazy('e.g. Bob Phillips'),
+        help_text=gettext_lazy('For example, Bob Phillips'),
         required=False
     )
     prisoner_number = forms.CharField(
         label=gettext_lazy('Prisoner number'),
-        help_text=gettext_lazy('e.g. A1234AB'),
+        help_text=gettext_lazy('For example, A1234AB'),
         required=False
     )
     ordering = forms.ChoiceField(
@@ -280,13 +280,13 @@ class SearchForm(GARequestErrorReportingMixin, forms.Form):
         ]
     )
     start = forms.DateField(label=gettext_lazy('From date'),
-                            help_text=gettext_lazy('e.g. 13/6/2017'),
+                            help_text=gettext_lazy('For example, 13/6/2017'),
                             required=False)
     end = forms.DateField(label=gettext_lazy('To date'),
-                          help_text=gettext_lazy('e.g. 15/6/2017'),
+                          help_text=gettext_lazy('For example, 15/6/2017'),
                           required=False)
     search = forms.CharField(label=gettext_lazy('Keywords'),
-                             help_text=gettext_lazy('e.g. prisoner name, prisoner number or sender name'),
+                             help_text=gettext_lazy('For example, prisoner name, prisoner number or sender name'),
                              required=False)
     page = forms.IntegerField(required=False, widget=forms.HiddenInput)
 
