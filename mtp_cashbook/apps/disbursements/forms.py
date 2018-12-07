@@ -679,9 +679,9 @@ class SearchForm(BaseSearchForm):
                                     initial='confirmed',
                                     choices=[('created', _('Date entered')),
                                              ('confirmed', _('Date confirmed'))])
-    date__gte = forms.DateField(label=_('From'), help_text=_('For example 17/01/2018'),
+    date__gte = forms.DateField(label=_('From'), help_text=_('For example, 17/01/2018'),
                                 required=False)
-    date__lt = forms.DateField(label=_('To'), help_text=_('For example 18/01/2018'),
+    date__lt = forms.DateField(label=_('To'), help_text=_('For example, 18/01/2018'),
                                required=False)
 
     prisoner_name = forms.CharField(label=_('Prisoner name'), required=False)
