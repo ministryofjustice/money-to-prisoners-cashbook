@@ -40,6 +40,7 @@ class CashbookTestCase(FunctionalTestCase):
 
     def login_and_go_to(self, link_text, substring=False):
         self.login(self.username, self.username)
+        self.click_on_link('Digital cashbook')
         if substring:
             self.click_on_text_substring(link_text)
         else:
@@ -101,7 +102,7 @@ class NewCreditsPageTests(CashbookTestCase):
 
     def setUp(self):
         super().setUp()
-        self.login(self.username, self.username)
+        self.login_and_go_to('New credits')
 
     def test_going_to_the_credits_page(self):
         self.assertShowingView('new-credits')
