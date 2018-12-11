@@ -258,13 +258,12 @@ class DisbursementTestCase(CashbookTestCase):
         self.assertShowingView('disbursements:details_check')
         self.assertInSource('Cheque')
         self.assertInSource('£11.00')
-        for key in ('id_recipient_first_name', 'id_recipient_last_name'):
+        for key in ('id_recipient_company_name',):
             self.assertInSource(contact_form[key])
         for key in ('id_address_line1', 'id_city'):
             self.assertInSource(address_form[key])
         self.assertInSource(address_form['id_postcode'].upper())
         self.assertInSource('Company:')
-        self.assertInSource(contact_form['id_postcode'].upper())
         self.assertInSource('JILLY HALL')
         self.assertInSource('A1401AE')
         self.assertNotInSource('LEGAL FEES')
