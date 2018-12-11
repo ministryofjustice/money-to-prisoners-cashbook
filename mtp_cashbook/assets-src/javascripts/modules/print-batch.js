@@ -29,11 +29,11 @@ exports.PrintBatch = {
   },
 
   onLoadIframe: function () {
-    var printFrame = this.$iframe[0]
+    var printFrame = this.$iframe[0];
 
-    $(printFrame.contentWindow).on(
-      'afterprint', function () {printFrame.remove();}
-    );
+    $(printFrame.contentWindow).on('afterprint', function () {
+      printFrame.remove();
+    });
 
     try {
       if (!printFrame.contentWindow.document.execCommand('print', false, null)) {
