@@ -23,7 +23,7 @@ exports.SignUpChoices = {
         return false;
       }
       return true;
-    })
+    });
   },
 
   replaceSelect: function () {
