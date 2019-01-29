@@ -556,7 +556,7 @@ class UpdatePendingDisbursementTestCase(PendingDisbursementTestCase):
         response = self.client.post(
             reverse('disbursements:update_recipient_contact', args=[disbursement['id']]),
             data={
-                'recipient_type':  new_recipient_type,
+                'recipient_type': new_recipient_type,
                 'recipient_company_name': new_recipient_company_name,
                 'recipient_first_name': '',
                 'recipient_last_name': '',
@@ -639,7 +639,7 @@ class UpdatePendingDisbursementTestCase(PendingDisbursementTestCase):
         response = self.client.post(
             reverse('disbursements:update_recipient_contact', args=[disbursement['id']]),
             data={
-                'recipient_type':  new_recipient_type,
+                'recipient_type': new_recipient_type,
                 'recipient_first_name': new_recipient_first_name,
                 'recipient_last_name': new_recipient_last_name,
                 'address_line1': '4 Morris spurs',
