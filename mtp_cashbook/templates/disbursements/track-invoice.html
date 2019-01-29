@@ -1,0 +1,117 @@
+{% extends 'disbursements/base.html' %}
+{% load i18n %}
+{% load mtp_common %}
+{% load static %}
+
+{% block page_title %}{% trans 'How it works' %} – {{ block.super }}{% endblock %}
+
+{% block sub_nav %}
+  {% include 'disbursements/get-help-tabs.html' with page=2 only %}
+  {{ block.super }}
+{% endblock %}
+
+{% block inner_content %}
+  {{ block.super }}
+
+  <div class="grid-row">
+    <div class="column-two-thirds mtp-track-invoice-help">
+
+      <header>
+        <h1 class="heading-xlarge">
+          {% trans 'How to track digital disbursements in SOP' %}
+        </h1>
+      </header>
+
+      <p>
+        {% trans 'Disbursements normally appear in SOP and ‘accounts payable’ a couple of days after they’re confirmed in the digital cashbook.' %}
+      </p>
+      <p>
+        {% trans 'If a payment has been rejected by SSCL, there’ll be no information on SOP.' %}
+        {% trans 'In this case, you’ll receive an email letting you know.' %}
+      </p>
+
+      <figure>
+        <figcaption class="heading-medium">
+          1.
+          {% blocktrans trimmed with name='NMS AP Enquiry (View Only)' %}
+            Log into SOP and open ‘{{ name }}’
+          {% endblocktrans %}
+        </figcaption>
+        <img src="{% static 'disbursements/track-invoice/1-ap-enquiry.png' %}" alt="{% trans 'SOP screenshot' %}" />
+      </figure>
+
+      <figure>
+        <figcaption class="heading-medium">
+          2.
+          {% blocktrans trimmed with name='Invoices' %}
+            Open ‘{{ name }}’
+          {% endblocktrans %}
+        </figcaption>
+        <img src="{% static 'disbursements/track-invoice/2-invoices.png' %}" alt="{% trans 'SOP screenshot' %}" />
+      </figure>
+
+      <figure>
+        <figcaption class="heading-medium">
+          3.
+          {% blocktrans trimmed with name='Invoice Number' button='Find' %}
+            Enter the reference number of the transaction in the {{ name }} box and click on {{ button }}
+          {% endblocktrans %}
+        </figcaption>
+        <img src="{% static 'disbursements/track-invoice/3-search-invoice.png' %}" alt="{% trans 'SOP screenshot' %}" />
+      </figure>
+
+      <figure>
+        <figcaption class="heading-medium">
+          4.
+          {% trans 'This screen shows an overview of the payment information' %}
+        </figcaption>
+        <p>
+          {% blocktrans trimmed with name='View Payments' %}
+            To see further details, click on the {{ name }} tab
+          {% endblocktrans %}
+        </p>
+        <img src="{% static 'disbursements/track-invoice/4-invoice-overview.png' %}" alt="{% trans 'SOP screenshot' %}" />
+      </figure>
+
+      <figure>
+        <figcaption class="heading-medium">
+          5.
+          {% trans 'This screen shows the payment method (bank transfer or cheque) and the date of the payment' %}
+        </figcaption>
+        <img src="{% static 'disbursements/track-invoice/5-bank-transfer-details.png' %}" alt="{% trans 'SOP screenshot' %}" />
+        <p>
+          {% blocktrans trimmed with name='Payment Overview' %}
+            Click on {{ name }} for further information if required
+          {% endblocktrans %}
+        </p>
+      </figure>
+
+      <figure>
+        <figcaption class="heading-small">
+          {% blocktrans trimmed with column='Payment Method' cheque='Check' bank_transfer='Electronic' %}
+            Where the payment had been made via cheque, the {{ column }} will list ‘{{ cheque }}’ instead of ‘{{ bank_transfer }}’
+          {% endblocktrans %}
+        </figcaption>
+        <img src="{% static 'disbursements/track-invoice/6-cheque-details.png' %}" alt="{% trans 'SOP screenshot' %}" />
+        <p>
+          {% trans 'The document number is the cheque number' %}
+        </p>
+      </figure>
+
+      <figure>
+        <figcaption class="heading-medium">
+          {% trans 'If the payment has been sent but is then rejected by the bank, SSCL will cancel the transaction' %}
+        </figcaption>
+        <img src="{% static 'disbursements/track-invoice/7-cancelled-overview.png' %}" alt="{% trans 'SOP screenshot' %}" />
+        <p>
+          {% blocktrans trimmed with name='Status' %}
+            This is shown in the {{ name }} box of the transaction in ‘accounts payable’
+          {% endblocktrans %}
+        </p>
+        <img src="{% static 'disbursements/track-invoice/8-cancelled-details.png' %}" alt="{% trans 'SOP screenshot' %}" />
+      </figure>
+
+    </div>
+  </div>
+
+{% endblock %}

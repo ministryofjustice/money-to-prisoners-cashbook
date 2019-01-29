@@ -65,6 +65,9 @@ urlpatterns = [
 
     url(r'^process-overview/$', views.ProcessOverview.as_view(),
         name=views.ProcessOverview.url_name),
+    url(r'^track-invoice/$', views.TrackInvoice.as_view(),
+        name=views.TrackInvoice.url_name),
+
     url(r'^feedback/$', views.DisbursementGetHelpView.as_view(),
         name=views.DisbursementGetHelpView.url_name),
     url(r'^feedback/success/$', views.DisbursementGetHelpSuccessView.as_view(),

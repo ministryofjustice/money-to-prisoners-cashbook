@@ -34,3 +34,23 @@
 .mtp-help-screenshot {
   max-width: 100%;
 }
+
+#mtp-remittance-sample img {
+  max-width: 100%;
+}
+
+.mtp-track-invoice-help {
+  img {
+    max-width: 100%;
+  }
+
+  figure {
+    page-break-before: always;
+    break-before: page;
+
+    &:first-of-type {
+      page-break-before: avoid;
+      break-before: avoid;
+    }
+  }
+}
