@@ -131,7 +131,7 @@ class PrisonerForm(DisbursementForm):
 
 
 def serialise_amount(amount):
-    return '{0:.2f}'.format(amount/100)
+    return '{0:.2f}'.format(amount / 100)
 
 
 def unserialise_amount(amount_text):
@@ -172,7 +172,7 @@ class AmountForm(DisbursementForm):
         self.nomis_balances = nomis_balances
 
     def clean_amount(self):
-        amount = floor(Decimal(self.cleaned_data['amount'])*100)
+        amount = floor(Decimal(self.cleaned_data['amount']) * 100)
         if self.nomis_balances and amount > self.nomis_balances['cash']:
             raise forms.ValidationError(
                 self.error_messages['exceeds_funds'], code='exceeds_funds')

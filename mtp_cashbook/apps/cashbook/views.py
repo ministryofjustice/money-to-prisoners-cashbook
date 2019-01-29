@@ -197,7 +197,7 @@ class ProcessingCreditsView(CashbookView, TemplateView):
                 'credits/', params={'resolution': 'pending', 'pk': credit_ids}
             ).json()
             done_credit_count = total - incomplete_credits['count']
-            context['percentage'] = int((done_credit_count/total)*100)
+            context['percentage'] = int((done_credit_count / total) * 100)
         return self.render_to_response(context)
 
 
