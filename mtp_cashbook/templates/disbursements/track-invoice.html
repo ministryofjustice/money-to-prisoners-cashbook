@@ -30,6 +30,33 @@
         {% trans 'In this case, you’ll receive an email letting you know.' %}
       </p>
 
+      <h2 class="heading-medium">
+        {% trans 'Set up SOP access, if needed' %}
+      </h2>
+      <p>
+        {% trans 'If you can’t follow some of the steps below, you might not have the right access set up in SOP.' %}
+      </p>
+      <p>
+        {% trans 'To get access, fill in a SOP71 form.' %}
+        {% blocktrans trimmed with link='https://myservices.justice.gov.uk/noms/forms' website_name='MyServices' page_name='SOP Access forms' %}
+          Go to the <a href="{{ link }}">Forms section in {{ website_name }}</a> and download it from ‘{{ page_name }}’.
+        {% endblocktrans %}
+      </p>
+      <p>
+        {% trans 'Check the guidance notes on this page as they may have changed.' %}
+      </p>
+      <p>
+        {% blocktrans trimmed with name='Finance and HR' %}
+          Request these responsibilities from the ‘{{ name }}’ category:
+        {% endblocktrans %}
+      </p>
+      <ul class="list list-bullet">
+        <li>NMS AP Enquiry (View Only)</li>
+        <li>NMS GL Enquiry Exc Pay</li>
+        <li>NMS GL Central FSG Reports</li>
+        <li>NMS Disco FIN General Ledger</li>
+      </ul>
+
       <figure>
         <figcaption class="heading-medium">
           1.

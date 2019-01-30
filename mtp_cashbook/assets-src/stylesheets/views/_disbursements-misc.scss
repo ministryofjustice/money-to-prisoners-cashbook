@@ -47,10 +47,5 @@
   figure {
     page-break-before: always;
     break-before: page;
-
-    &:first-of-type {
-      page-break-before: avoid;
-      break-before: avoid;
-    }
   }
 }
