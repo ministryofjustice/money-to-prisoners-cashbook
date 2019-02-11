@@ -14,6 +14,7 @@ ALLOWED_HOSTS = [
     'localhost',
     '.dsd.io',
     '.service.gov.uk',
+    '.svc.cluster.local',
 ]
 
 OAUTHLIB_INSECURE_TRANSPORT = os.environ.get('OAUTHLIB_INSECURE_TRANSPORT') == 'True'
@@ -22,7 +23,8 @@ if not OAUTHLIB_INSECURE_TRANSPORT:
 
 # security tightening
 if ENVIRONMENT != 'local':
-    SECURE_SSL_REDIRECT = True  # also done at nginx level
+    # ssl redirect done at nginx and kubernetes level
+    # SECURE_SSL_REDIRECT = True
     # strict-transport set at nginx level
     # SECURE_HSTS_SECONDS = 31536000
     # SECURE_HSTS_INCLUDE_SUBDOMAINS = True
