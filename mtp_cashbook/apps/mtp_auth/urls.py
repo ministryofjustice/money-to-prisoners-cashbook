@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.conf.urls import url
 from django.urls import reverse_lazy
+from django.views.generic import TemplateView
 from mtp_common.auth import views
 
 from mtp_auth.views import CashbookSignUpView, CashbookAcceptRequestView, MovePrisonView
@@ -19,6 +20,12 @@ urlpatterns = [
             'template_name': 'mtp_auth/login.html',
             'next_page': reverse_lazy('login'),
         }, name='logout'
+    ),
+
+    url(
+        r'^settings/$',
+        TemplateView.as_view(template_name='mtp_auth/settings.html'),
+        name='settings'
     ),
     url(
         r'^password_change/$', views.password_change, {
