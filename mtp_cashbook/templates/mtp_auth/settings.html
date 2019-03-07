@@ -1,0 +1,17 @@
+{% extends 'mtp_common/settings.html' %}
+{% load i18n %}
+
+{% block extra_settings %}
+  <div class="mtp-settings-item">
+    <h2 class="heading-large">
+      {% trans 'Move prison' %}
+    </h2>
+    <p>{% trans 'You are currently at:' %}</p>
+    <ul class="list list-bullet">
+      {% for prison in request.user.user_data.prisons %}
+        <li>{{ prison.name }}</li>
+      {% endfor %}
+    </ul>
+    <a class="button" href="{% url 'move-prison' %}">{% trans 'Move prison' %}</a>
+  </div>
+{% endblock %}

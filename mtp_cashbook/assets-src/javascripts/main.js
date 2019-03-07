@@ -5,7 +5,6 @@
   require('placeholder-polyfill').PlaceholderPolyfill.init();
 
   // common
-  require('proposition-user-menu').PropositionUserMenu.init();
   require('dialogue-box').DialogueBox.init();
   require('messages').Messages.init();
   require('notifications').Notifications.init();
