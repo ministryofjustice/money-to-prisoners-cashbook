@@ -10,6 +10,7 @@ from django.utils.functional import cached_property
 from django.utils.http import is_safe_url
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView, TemplateView
+from mtp_common.analytics import genericised_pageview
 from mtp_common.api import retrieve_all_pages_for_path
 from mtp_common.auth.api_client import get_api_session
 from mtp_common.auth.exceptions import HttpNotFoundError
@@ -749,8 +750,16 @@ class PaperFormsView(BaseView):
 
 
 class SearchView(BaseView, FormView):
+    title = _('Payments made')
     url_name = 'search'
     form_class = disbursement_forms.SearchForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['google_analytics_pageview'] = genericised_pageview(
+            self.request, self.title
+        )
+        return context
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
