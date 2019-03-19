@@ -9,6 +9,7 @@ from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView, TemplateView, View
+from mtp_common.analytics import genericised_pageview
 from mtp_common.auth import api_client
 from mtp_common import nomis
 from requests.exceptions import RequestException
@@ -322,6 +323,9 @@ class SearchView(CashbookView, FormView):
             'current_page': current_page,
             'page_count': page_count,
             'credit_owner_name': self.request.user.get_full_name(),
+            'google_analytics_pageview': genericised_pageview(
+                self.request, SearchView.title
+            )
         })
         return context
 

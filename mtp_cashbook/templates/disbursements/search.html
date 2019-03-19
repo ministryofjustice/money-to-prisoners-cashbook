@@ -5,7 +5,7 @@
 {% load credits %}
 {% load disbursements %}
 
-{% block page_title %}{% trans 'Payments made' %} – {{ block.super }}{% endblock %}
+{% block page_title %}{{ view.title }} – {{ block.super }}{% endblock %}
 {% block body_classes %}{{ block.super }} mtp-disbursement-search{% endblock %}
 
 {% block inner_content %}
