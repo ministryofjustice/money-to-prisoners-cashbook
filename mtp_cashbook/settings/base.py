@@ -68,6 +68,7 @@ MIDDLEWARE = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'cashbook.utils.CashbookMiddleware',
+    'mtp_common.analytics.ReferrerPolicyMiddleware',
 )
 
 HEALTHCHECKS = []
@@ -133,6 +134,7 @@ TEMPLATES = [
                 'mtp_common.context_processors.app_environment',
                 'cashbook.context_processors.govuk_localisation',
                 'cashbook.context_processors.cashbook_settings',
+                'mtp_common.analytics.default_genericised_pageview',
             ],
         },
     },
