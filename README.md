@@ -66,5 +66,4 @@ Push latest English to Transifex with ``./run.py translations --push``. NB: you 
 
 ## Deploying
 
-This is handled by MOJ Digital's CI server. Request access and head there. Consult the dev
-runbook if necessary.
+This is handled by [money-to-prisoners-deploy](https://github.com/ministryofjustice/money-to-prisoners-deploy/).
