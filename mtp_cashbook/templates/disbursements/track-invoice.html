@@ -25,10 +25,6 @@
       <p>
         {% trans 'Disbursements normally appear in SOP and ‘accounts payable’ a couple of days after they’re confirmed in the digital cashbook.' %}
       </p>
-      <p>
-        {% trans 'If a payment has been rejected by SSCL, there’ll be no information on SOP.' %}
-        {% trans 'In this case, you’ll receive an email letting you know.' %}
-      </p>
 
       <h2 class="heading-medium">
         {% trans 'Set up SOP access, if needed' %}
@@ -125,10 +121,17 @@
         </p>
       </figure>
 
+      <p></p>
       <figure>
         <figcaption class="heading-medium">
-          {% trans 'If the payment has been sent but is then rejected by the bank, SSCL will cancel the transaction' %}
+          {% trans 'If the prisoner gets the recipient’s details wrong' %}
         </figcaption>
+        <p>
+          {% trans 'If the sort code is wrong, SSCL will cancel the bank transfer and SOP will not show any information.' %}
+        </p>
+        <p>
+          {% trans 'If the payment has been sent but is then rejected by the bank (or a cheque is returned), SSCL will return the money and SOP will show a ‘cancelled’ status' %}
+        </p>
         <img src="{% static 'disbursements/track-invoice/7-cancelled-overview.png' %}" alt="{% trans 'SOP screenshot' %}" />
         <p>
           {% blocktrans trimmed with name='Status' %}
