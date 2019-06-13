@@ -1,5 +1,5 @@
 import datetime
-from django.test import SimpleTestCase, override_settings
+from django.test import SimpleTestCase
 from django.urls import reverse
 from django.utils.html import strip_tags
 import responses
@@ -8,7 +8,6 @@ from cashbook.tests import MTPBaseTestCase, api_url
 from disbursements.forms import SearchForm
 
 
-@override_settings(DISBURSEMENT_PRISONS=['BXI'])
 class DisbursementSearchViewTextCase(MTPBaseTestCase):
     user = {'username': 'abc123', 'first_name': 'A', 'last_name': 'User'}
 

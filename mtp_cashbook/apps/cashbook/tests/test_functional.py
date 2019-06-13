@@ -2,7 +2,6 @@ from datetime import date
 import logging
 import os
 
-from django.test import override_settings
 from mtp_common.test_utils import silence_logger
 from mtp_common.test_utils.functional_tests import FunctionalTestCase
 
@@ -61,7 +60,6 @@ class CashbookTestCase(FunctionalTestCase):
         self.driver.find_element_by_link_text(text).click()
 
 
-@override_settings(DISBURSEMENT_PRISONS=['LEI'])
 class LoginTests(CashbookTestCase):
     """
     Tests for Login page
@@ -94,7 +92,6 @@ class LoginTests(CashbookTestCase):
         self.assertShowingView('login')
 
 
-@override_settings(DISBURSEMENT_PRISONS=[])
 class NewCreditsPageTests(CashbookTestCase):
     """
     Tests for new credits page
@@ -149,7 +146,6 @@ class NewCreditsPageTests(CashbookTestCase):
         self.assertInSource('credits sent to NOMIS')
 
 
-@override_settings(DISBURSEMENT_PRISONS=[])
 class ProcessedCreditsPageTests(CashbookTestCase):
     """
     Tests for processed credits page
@@ -179,7 +175,6 @@ class ProcessedCreditsPageTests(CashbookTestCase):
         self.assertNotInSource('There was a problem')
 
 
-@override_settings(DISBURSEMENT_PRISONS=[])
 class SearchCreditsTests(CashbookTestCase):
     """
     Tests for search credits

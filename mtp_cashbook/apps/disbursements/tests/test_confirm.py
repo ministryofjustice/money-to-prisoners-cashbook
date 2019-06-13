@@ -1,6 +1,5 @@
 import json
 
-from django.test import override_settings
 from django.urls import reverse
 from mtp_common.test_utils import silence_logger
 import responses
@@ -346,7 +345,6 @@ class PendingListDisbursementTestCase(PendingDisbursementTestCase):
 
     @responses.activate
     @override_nomis_settings
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_display_pending_disbursements(self):
         self.login(credentials={'username': 'test-hmp-brixton-a', 'password': 'pass'})
         self.pending_list(disbursements=[SAMPLE_DISBURSEMENTS[3], SAMPLE_DISBURSEMENTS[4]])
@@ -358,7 +356,6 @@ class PendingListDisbursementTestCase(PendingDisbursementTestCase):
 
     @responses.activate
     @override_nomis_settings
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_pending_list_self_own(self):
         self.login(credentials={'username': 'test-hmp-brixton-a', 'password': 'pass'})
         self.pending_list(disbursements=[SAMPLE_DISBURSEMENTS[0]])
@@ -370,7 +367,6 @@ class PendingListDisbursementTestCase(PendingDisbursementTestCase):
 
     @responses.activate
     @override_nomis_settings
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_pending_list_prisoner_moved(self):
         self.login(credentials={'username': 'test-hmp-brixton-a', 'password': 'pass'})
         self.pending_list(disbursements=[SAMPLE_DISBURSEMENTS[1]])
@@ -382,7 +378,6 @@ class PendingListDisbursementTestCase(PendingDisbursementTestCase):
 
     @responses.activate
     @override_nomis_settings
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_pending_list_with_insufficient_funds(self):
         self.login(credentials={'username': 'test-hmp-brixton-a', 'password': 'pass'})
         self.pending_list(disbursements=[SAMPLE_DISBURSEMENTS[2]])
@@ -400,7 +395,6 @@ class PendingDetailDisbursementTestCase(PendingDisbursementTestCase):
 
     @responses.activate
     @override_nomis_settings
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_valid_pending_disbursement(self):
         self.login(credentials={'username': 'test-hmp-brixton-a', 'password': 'pass'})
         disbursement = SAMPLE_DISBURSEMENTS[3]
@@ -413,7 +407,6 @@ class PendingDetailDisbursementTestCase(PendingDisbursementTestCase):
 
     @responses.activate
     @override_nomis_settings
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_insufficient_funds_pending_disbursement(self):
         self.login(credentials={'username': 'test-hmp-brixton-a', 'password': 'pass'})
         disbursement = SAMPLE_DISBURSEMENTS[2]
@@ -435,7 +428,6 @@ class UpdatePendingDisbursementTestCase(PendingDisbursementTestCase):
 
     @responses.activate
     @override_nomis_settings
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_update_prisoner(self):
         self.login(credentials={'username': 'test-hmp-brixton-a', 'password': 'pass'})
 
@@ -498,7 +490,6 @@ class UpdatePendingDisbursementTestCase(PendingDisbursementTestCase):
 
     @responses.activate
     @override_nomis_settings
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_update_person_to_company(self):
         self.login(credentials={'username': 'test-hmp-brixton-a', 'password': 'pass'})
 
@@ -581,7 +572,6 @@ class UpdatePendingDisbursementTestCase(PendingDisbursementTestCase):
 
     @responses.activate
     @override_nomis_settings
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_update_company_to_person(self):
         self.login(credentials={'username': 'test-hmp-brixton-a', 'password': 'pass'})
 
@@ -663,7 +653,6 @@ class UpdatePendingDisbursementTestCase(PendingDisbursementTestCase):
 
     @responses.activate
     @override_nomis_settings
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_update_remittance_description(self):
         self.login(credentials={'username': 'test-hmp-brixton-a', 'password': 'pass'})
 
@@ -721,7 +710,6 @@ class UpdatePendingDisbursementTestCase(PendingDisbursementTestCase):
 
     @responses.activate
     @override_nomis_settings
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_update_remittance_description_to_default(self):
         self.login(credentials={'username': 'test-hmp-brixton-a', 'password': 'pass'})
 
@@ -790,7 +778,6 @@ class UpdatePendingDisbursementTestCase(PendingDisbursementTestCase):
 
     @responses.activate
     @override_nomis_settings
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_update_address(self):
         self.login(credentials={'username': 'test-hmp-brixton-a', 'password': 'pass'})
 
@@ -840,7 +827,6 @@ class UpdatePendingDisbursementTestCase(PendingDisbursementTestCase):
 
     @responses.activate
     @override_nomis_settings
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_change_sending_method_to_bank_transfer_requests_account_details(self):
         self.login(credentials={'username': 'test-hmp-brixton-a', 'password': 'pass'})
 
@@ -916,7 +902,6 @@ class ConfirmPendingDisbursementTestCase(PendingDisbursementTestCase):
 
     @responses.activate
     @override_nomis_settings
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_confirm_disbursement(self):
         self.login(credentials={'username': 'test-hmp-brixton-a', 'password': 'pass'})
 
@@ -957,7 +942,6 @@ class ConfirmPendingDisbursementTestCase(PendingDisbursementTestCase):
 
     @responses.activate
     @override_nomis_settings
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_confirm_disbursement_resets_on_failure(self):
         self.login(credentials={'username': 'test-hmp-brixton-a', 'password': 'pass'})
 
@@ -995,7 +979,6 @@ class RejectPendingDisbursementTestCase(PendingDisbursementTestCase):
 
     @responses.activate
     @override_nomis_settings
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_reject_disbursement(self):
         self.login(credentials={'username': 'test-hmp-brixton-a', 'password': 'pass'})
 
