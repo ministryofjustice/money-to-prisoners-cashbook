@@ -18,7 +18,7 @@ from mtp_common import nomis
 from requests.exceptions import HTTPError, RequestException
 
 from cashbook.templatetags.currency import currency
-from disbursements import disbursements_available_required, forms as disbursement_forms
+from disbursements import forms as disbursement_forms
 from disbursements.utils import get_disbursement_viability, find_addresses
 from feedback.views import GetHelpView, GetHelpSuccessView
 
@@ -41,7 +41,6 @@ class BaseView(TemplateView):
         return get_api_session(self.request)
 
     @method_decorator(login_required)
-    @method_decorator(disbursements_available_required)
     def dispatch(self, request, **kwargs):
         request.proposition_app = {
             'name': _('Digital disbursements'),

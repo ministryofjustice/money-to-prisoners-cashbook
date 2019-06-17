@@ -1,11 +1,9 @@
-from django.test import override_settings
 from django.utils.crypto import get_random_string
 
 from cashbook.tests.test_functional import CashbookTestCase
 from disbursements.templatetags.disbursements import format_sortcode
 
 
-@override_settings(DISBURSEMENT_PRISONS=['LEI'])
 class DisbursementTestCase(CashbookTestCase):
     def tearDown(self):
         self.click_logout()

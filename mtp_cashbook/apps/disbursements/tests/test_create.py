@@ -125,7 +125,6 @@ class PrisonerTestCase(CreateDisbursementFlowTestCase):
         return reverse('disbursements:prisoner')
 
     @responses.activate
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_valid_prisoner_number(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
@@ -133,7 +132,6 @@ class PrisonerTestCase(CreateDisbursementFlowTestCase):
         self.assertOnPage(response, 'disbursements:prisoner_check')
 
     @responses.activate
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_invalid_prisoner_number(self):
         prisoner_number = 'A1404AE'
         responses.add(
@@ -156,7 +154,6 @@ class PrisonerTestCase(CreateDisbursementFlowTestCase):
         self.assertContains(response, PrisonerForm.error_messages['not_found'])
 
     @responses.activate
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_prisoner_in_different_prison(self):
         prisoner_number = 'A1404AE'
         responses.add(
@@ -187,7 +184,6 @@ class AmountTestCase(CreateDisbursementFlowTestCase):
 
     @responses.activate
     @override_nomis_settings
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_valid_amount(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.CHEQUE)
@@ -198,7 +194,6 @@ class AmountTestCase(CreateDisbursementFlowTestCase):
 
     @responses.activate
     @override_nomis_settings
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_too_high_amount(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
@@ -210,7 +205,6 @@ class AmountTestCase(CreateDisbursementFlowTestCase):
 
     @responses.activate
     @override_nomis_settings
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_nomis_unavailable(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
@@ -225,7 +219,6 @@ class SendingMethodTestCase(CreateDisbursementFlowTestCase):
 
     @responses.activate
     @override_nomis_settings
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_cheque_sending_method_skips_bank_account(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.CHEQUE)
@@ -248,7 +241,6 @@ class SendingMethodTestCase(CreateDisbursementFlowTestCase):
 
     @responses.activate
     @override_nomis_settings
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_cheque_sending_method_includes_bank_account(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
@@ -269,7 +261,6 @@ class RecipientContactTestCase(CreateDisbursementFlowTestCase):
 
     @responses.activate
     @override_nomis_settings
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_contact_details_required(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
@@ -292,7 +283,6 @@ class RecipientPostcodeTestCase(CreateDisbursementFlowTestCase):
     @responses.activate
     @override_nomis_settings
     @override_settings(
-        DISBURSEMENT_PRISONS=['BXI'],
         POSTCODE_LOOKUP_ENDPOINT='https://fakepostcodes.com/lookup',
         POSTCODE_LOOKUP_AUTH_TOKEN='auth618',
     )
@@ -359,7 +349,6 @@ class RecipientPostcodeTestCase(CreateDisbursementFlowTestCase):
 
     @responses.activate
     @override_nomis_settings
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_full_postcode_required(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
@@ -378,7 +367,6 @@ class RecipientPostcodeTestCase(CreateDisbursementFlowTestCase):
 
     @responses.activate
     @override_nomis_settings
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_first_name_required(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
@@ -398,7 +386,6 @@ class RecipientPostcodeTestCase(CreateDisbursementFlowTestCase):
 
     @responses.activate
     @override_nomis_settings
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_last_name_required(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
@@ -418,7 +405,6 @@ class RecipientPostcodeTestCase(CreateDisbursementFlowTestCase):
 
     @responses.activate
     @override_nomis_settings
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_company_name_required(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
@@ -443,7 +429,6 @@ class RecipientBankAccountTestCase(CreateDisbursementFlowTestCase):
 
     @responses.activate
     @override_nomis_settings
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_account_details_required(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
@@ -459,7 +444,6 @@ class RecipientBankAccountTestCase(CreateDisbursementFlowTestCase):
 
     @responses.activate
     @override_nomis_settings
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_account_details_validity(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
@@ -478,7 +462,6 @@ class RecipientBankAccountTestCase(CreateDisbursementFlowTestCase):
 
     @responses.activate
     @override_nomis_settings
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_building_society_account_detected(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
@@ -500,7 +483,6 @@ class RecipientBankAccountTestCase(CreateDisbursementFlowTestCase):
 
     @responses.activate
     @override_nomis_settings
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_non_building_society_account_detected(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
@@ -522,7 +504,6 @@ class RecipientBankAccountTestCase(CreateDisbursementFlowTestCase):
 
     @responses.activate
     @override_nomis_settings
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_building_society_roll_number_validation_failure(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
@@ -545,7 +526,6 @@ class RecipientBankAccountTestCase(CreateDisbursementFlowTestCase):
 
     @responses.activate
     @override_nomis_settings
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_building_society_roll_number_validation_success(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
@@ -569,7 +549,6 @@ class RemittanceDescriptionTestCase(CreateDisbursementFlowTestCase):
 
     @responses.activate
     @override_nomis_settings
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_remittance_choice_required(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.CHEQUE)
@@ -585,7 +564,6 @@ class RemittanceDescriptionTestCase(CreateDisbursementFlowTestCase):
 
     @responses.activate
     @override_nomis_settings
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_remittance_being_empty(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.CHEQUE)
@@ -600,7 +578,6 @@ class RemittanceDescriptionTestCase(CreateDisbursementFlowTestCase):
 
     @responses.activate
     @override_nomis_settings
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_remittance_description(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.CHEQUE)
@@ -616,7 +593,6 @@ class RemittanceDescriptionTestCase(CreateDisbursementFlowTestCase):
 
     @responses.activate
     @override_nomis_settings
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_remittance_default_description(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.CHEQUE)
@@ -639,7 +615,6 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
 
     @responses.activate
     @override_nomis_settings
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_create_valid_bank_transfer_disbursement(self):
         responses.add(
             responses.POST,
@@ -685,7 +660,6 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
 
     @responses.activate
     @override_nomis_settings
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_create_valid_cheque_disbursement(self):
         responses.add(
             responses.POST,
@@ -708,7 +682,6 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
 
     @responses.activate
     @override_nomis_settings
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_create_edited_valid_company_cheque_disbursement(self):
         responses.add(
             responses.POST,
@@ -771,7 +744,6 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
 
     @responses.activate
     @override_nomis_settings
-    @override_settings(DISBURSEMENT_PRISONS=['BXI'])
     def test_create_disbursement_service_unavailable(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
