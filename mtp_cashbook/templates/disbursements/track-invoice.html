@@ -23,46 +23,47 @@
       </header>
 
       <p>
-        {% trans 'Disbursements normally appear in SOP and ‘accounts payable’ a couple of days after they’re confirmed in the digital cashbook.' %}
+        {% trans 'Disbursements will normally appear in SOP ‘accounts payable’ and the ‘general ledger (GL)’ a couple of days after they have been processed via the digital cashbook.' %}
       </p>
       <p>
-        {% trans 'If a payment has been rejected by SSCL, there’ll be no information on SOP.' %}
-        {% trans 'In this case, you’ll receive an email letting you know.' %}
+        {% trans 'In the ‘accounts payable’ enquiry screen, you can view all details of the individual disbursements (see screenshots below).' %}
+      </p>
+      <p>
+        {% trans 'The transactions are listed in the GL report but are always dated for the last day of the month, not the date they were uploaded to SOP.' %}
+        {% trans 'As every transaction uploaded within a month will have the same GL date, it’s recommended that the GL report is run daily for the NOMIS to SOP reconciliation.' %}
+      </p>
+      <p>
+        {% trans 'Alternatively, it is possible to run a ‘discoverer report’ to see the details of a disbursement.' %}
+        {% trans 'The date parameters of the discoverer report must be for the whole month to ensure the disbursement transactions are included.' %}
       </p>
 
       <h2 class="heading-medium">
         {% trans 'Set up SOP access, if needed' %}
       </h2>
       <p>
-        {% trans 'If you can’t follow some of the steps below, you might not have the right access set up in SOP.' %}
+        {% trans 'If you can’t follow some of the steps below, you might not have the right access in SOP.' %}
       </p>
       <p>
-        {% trans 'To get access, fill in a SOP71 form.' %}
-        {% blocktrans trimmed with link='https://myservices.justice.gov.uk/noms/forms' website_name='MyServices' page_name='SOP Access forms' %}
-          Go to the <a href="{{ link }}">Forms section in {{ website_name }}</a> and download it from ‘{{ page_name }}’.
+        {% blocktrans trimmed with link='https://hmpps.myhub.sscl.com/' %}
+          To get access, complete a SOP71 form which can be found on <a href="{{ link }}">My Hub</a>.
         {% endblocktrans %}
       </p>
       <p>
-        {% trans 'Check the guidance notes on this page as they may have changed.' %}
+        {% trans 'Please check the guidance notes on this page as they may have changed.' %}
       </p>
       <p>
-        {% blocktrans trimmed with name='Finance and HR' %}
-          Request these responsibilities from the ‘{{ name }}’ category:
-        {% endblocktrans %}
+        {% trans 'Request these responsibilities from the ‘Finance and HR’ category' %}:
       </p>
       <ul class="list list-bullet">
         <li>NMS AP Enquiry (View Only)</li>
         <li>NMS GL Enquiry Exc Pay</li>
-        <li>NMS GL Central FSG Reports</li>
         <li>NMS Disco FIN General Ledger</li>
       </ul>
 
       <figure>
         <figcaption class="heading-medium">
           1.
-          {% blocktrans trimmed with name='NMS AP Enquiry (View Only)' %}
-            Log into SOP and open ‘{{ name }}’
-          {% endblocktrans %}
+          {% trans 'Log into SOP and open ‘NMS AP Enquiry (View Only)’' %}
         </figcaption>
         <img src="{% static 'disbursements/track-invoice/1-ap-enquiry.png' %}" alt="{% trans 'SOP screenshot' %}" />
       </figure>
@@ -70,9 +71,7 @@
       <figure>
         <figcaption class="heading-medium">
           2.
-          {% blocktrans trimmed with name='Invoices' %}
-            Open ‘{{ name }}’
-          {% endblocktrans %}
+          {% trans 'Open ‘Invoices’' %}
         </figcaption>
         <img src="{% static 'disbursements/track-invoice/2-invoices.png' %}" alt="{% trans 'SOP screenshot' %}" />
       </figure>
@@ -80,9 +79,7 @@
       <figure>
         <figcaption class="heading-medium">
           3.
-          {% blocktrans trimmed with name='Invoice Number' button='Find' %}
-            Enter the reference number of the transaction in the {{ name }} box and click on {{ button }}
-          {% endblocktrans %}
+          {% trans 'Enter the reference number of the transaction in the ‘Invoice Number’ box and click on ‘Find’' %}
         </figcaption>
         <img src="{% static 'disbursements/track-invoice/3-search-invoice.png' %}" alt="{% trans 'SOP screenshot' %}" />
       </figure>
@@ -90,13 +87,9 @@
       <figure>
         <figcaption class="heading-medium">
           4.
-          {% trans 'This screen shows an overview of the payment information' %}
+          {% trans 'This screen shows an overview of the payment information.' %}
+          {% trans 'To see further details, click on the ‘View Payments’ tab.' %}
         </figcaption>
-        <p>
-          {% blocktrans trimmed with name='View Payments' %}
-            To see further details, click on the {{ name }} tab
-          {% endblocktrans %}
-        </p>
         <img src="{% static 'disbursements/track-invoice/4-invoice-overview.png' %}" alt="{% trans 'SOP screenshot' %}" />
       </figure>
 
@@ -107,17 +100,13 @@
         </figcaption>
         <img src="{% static 'disbursements/track-invoice/5-bank-transfer-details.png' %}" alt="{% trans 'SOP screenshot' %}" />
         <p>
-          {% blocktrans trimmed with name='Payment Overview' %}
-            Click on {{ name }} for further information if required
-          {% endblocktrans %}
+          {% trans 'Click on ‘Payment Overview’ for further information, if required' %}
         </p>
       </figure>
 
       <figure>
         <figcaption class="heading-small">
-          {% blocktrans trimmed with column='Payment Method' cheque='Check' bank_transfer='Electronic' %}
-            Where the payment had been made via cheque, the {{ column }} will list ‘{{ cheque }}’ instead of ‘{{ bank_transfer }}’
-          {% endblocktrans %}
+          {% trans 'Where the payment had been made via cheque, the payment method will list ‘Check’ instead of ‘Electronic’' %}
         </figcaption>
         <img src="{% static 'disbursements/track-invoice/6-cheque-details.png' %}" alt="{% trans 'SOP screenshot' %}" />
         <p>
@@ -127,13 +116,17 @@
 
       <figure>
         <figcaption class="heading-medium">
-          {% trans 'If the payment has been sent but is then rejected by the bank, SSCL will cancel the transaction' %}
+          {% trans 'If the prisoner gets the recipient’s details wrong' %}
         </figcaption>
+        <p>
+          {% trans 'If the sort code is wrong, SSCL will cancel the bank transfer and SOP will not show any information.' %}
+        </p>
+        <p>
+          {% trans 'If the payment has been sent but is then rejected by the bank (or a cheque is returned), SSCL will return the money and SOP will show a ‘Cancelled’ status.' %}
+        </p>
         <img src="{% static 'disbursements/track-invoice/7-cancelled-overview.png' %}" alt="{% trans 'SOP screenshot' %}" />
         <p>
-          {% blocktrans trimmed with name='Status' %}
-            This is shown in the {{ name }} box of the transaction in ‘accounts payable’
-          {% endblocktrans %}
+          {% trans 'This is shown in the ‘Status’ box of the transaction in ‘accounts payable’' %}
         </p>
         <img src="{% static 'disbursements/track-invoice/8-cancelled-details.png' %}" alt="{% trans 'SOP screenshot' %}" />
       </figure>

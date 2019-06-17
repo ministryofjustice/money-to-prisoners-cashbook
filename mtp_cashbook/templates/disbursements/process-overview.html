@@ -201,13 +201,6 @@
         {% trans 'There’s no postage or processing charge to the prison, the prisoner or the recipient.' %}
       </p>
 
-      <h3 class="heading-small">
-        {% trans 'If the prisoner gets the recipient’s bank details wrong' %}
-      </h3>
-      <p>
-        {% trans 'If this happens, SSCL will cancel the disbursement and notify the prison by email.' %}
-      </p>
-
       <h2 id="section-more-info" class="heading-medium">
         {% trans 'Further information' %}
       </h2>
@@ -253,14 +246,14 @@
         {% trans 'Use this invoice number in ‘accounts payable’ in SOP to see when the bank transfer has been made or the cheque sent out.' %}
       </p>
       <h3 class="heading-small">
-        {% trans 'If a bank transfer fails' %}
+        {% trans 'If the prisoner gets the recipient’s bank details wrong' %}
       </h3>
       <p>
-        {% trans 'A bank transfer fails when the recipient’s account details are wrong.' %}
-        {% trans 'With bank transfers, a rejection by the bank can take up to 10 days to reach SSCL.' %}
+        {% trans 'If the sort code is wrong, SSCL will cancel the bank transfer and email the prison in about 2 days.' %}
       </p>
       <p>
-        {% trans 'We will email you if this happens.' %}
+        {% trans 'If the bank transfer gets rejected by the bank, then SSCL cancels it and emails the prison.' %}
+        {% trans 'This takes about 10 days.' %}
       </p>
       <h3 class="heading-small">
         {% trans 'How to cancel a cheque/bank transfer' %}
