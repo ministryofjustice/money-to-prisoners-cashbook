@@ -19,23 +19,15 @@
       <div class="grid-row">
         <header class="column-two-thirds">
           <h1 class="heading-xlarge">
-            {% trans 'Process money sent to your prison' %}
-            {% comment %} << once disbursements are live, replace above trans line with this
-            {% trans 'Manage prisoner money' %}
-            {% endcomment %}
+            {% trans 'Process money in and out of your prison' %}
           </h1>
 
           <aside>
-            {% blocktrans trimmed %}
-              This is where you process credits sent to your prison by a member of the public through the <a href="{{ start_page_url }}">Send money to someone in prison</a> service.
-            {% endblocktrans %}
-            {% comment %} << once disbursements are live, replace above blocktrans block with this
-            {% trans 'These tools will help you manage prisoner money' %}
+            {% trans 'These tools will help you manage prisoner money' %}:
             <ul class="list list-bullet">
-              <li>{% trans 'Digital cashbook' %}</li>
-              <li>{% trans 'Digital disbursements' %}</li>
+              <li>{% trans 'digital cashbook' %}</li>
+              <li>{% trans 'digital disbursements' %}</li>
             </ul>
-            {% endcomment %}
           </aside>
         </header>
 
