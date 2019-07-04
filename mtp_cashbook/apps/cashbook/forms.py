@@ -1,6 +1,5 @@
 import collections
 from datetime import timedelta
-import logging
 from math import ceil
 from urllib.parse import urlencode
 
@@ -16,8 +15,6 @@ from mtp_common.auth.api_client import get_api_session
 
 from .tasks import credit_selected_credits_to_nomis
 from .templatetags.credits import parse_date_fields
-
-logger = logging.getLogger('mtp')
 
 MANUALLY_CREDITED_LOG_LEVEL = 21
 
