@@ -434,7 +434,7 @@ class RejectDisbursementForm(GARequestErrorReportingMixin, forms.Form):
             api_session.post('/disbursements/comments/', json=reasons)
 
 
-def insert_blank_option(choices, title=_('Select an option')):
+def insert_blank_option(choices, title):
     new_choices = [('', title)]
     new_choices.extend(choices)
     return new_choices
