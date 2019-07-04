@@ -103,10 +103,9 @@ class ProcessManualCreditsForm(GARequestErrorReportingMixin, forms.Form):
         Gets the credits currently available the user.
         """
         credits = self._request_all_credits()
-        id_credits = []
-        for credit in parse_date_fields(credits):
-            id_credits.append((credit['id'], credit))
-        return id_credits
+        return [
+            (t['id'], t) for t in parse_date_fields(credits)
+        ]
 
     def save(self):
         credit_id = int(self.cleaned_data['credit'])
