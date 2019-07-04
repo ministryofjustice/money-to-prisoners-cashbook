@@ -456,7 +456,7 @@ def validate_range_field(field_name, bound_ordering_msg):
                 self.add_error(upper, forms.ValidationError(msg, code='bound_ordering'))
             return self.cleaned_data
 
-        setattr(cls, 'clean', clean)
+        cls.clean = clean
         return cls
 
     return inner
