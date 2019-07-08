@@ -1,6 +1,5 @@
 import collections
 from datetime import timedelta
-import logging
 from math import ceil
 from urllib.parse import urlencode
 
@@ -16,8 +15,6 @@ from mtp_common.auth.api_client import get_api_session
 
 from .tasks import credit_selected_credits_to_nomis
 from .templatetags.credits import parse_date_fields
-
-logger = logging.getLogger('mtp')
 
 MANUALLY_CREDITED_LOG_LEVEL = 21
 
@@ -103,10 +100,9 @@ class ProcessManualCreditsForm(GARequestErrorReportingMixin, forms.Form):
         Gets the credits currently available the user.
         """
         credits = self._request_all_credits()
-        id_credits = []
-        for credit in parse_date_fields(credits):
-            id_credits.append((credit['id'], credit))
-        return id_credits
+        return [
+            (t['id'], t) for t in parse_date_fields(credits)
+        ]
 
     def save(self):
         credit_id = int(self.cleaned_data['credit'])

@@ -169,3 +169,19 @@ class DisbursementSearchFormTextCase(SimpleTestCase):
         description = form.search_description
         self.assertTrue(description['has_filters'])
         self.assertIn('date confirmed before 10 Jan 2018', strip_tags(description['description']))
+
+    def test_invalid_date_options(self):
+        form = SearchForm(
+            request=None,
+            data={
+                'date_filter': 'created',
+                'date__gte': '11/01/18',
+                'date__lt': '10/01/2018',
+            }
+        )
+        self.assertFalse(form.is_valid())
+        errors = form.errors.as_data()
+        self.assertEqual(
+            [error.message for error in errors['date__lt']],
+            ['Must be after the ‘from’ date']
+        )

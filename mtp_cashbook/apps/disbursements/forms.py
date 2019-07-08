@@ -434,7 +434,7 @@ class RejectDisbursementForm(GARequestErrorReportingMixin, forms.Form):
             api_session.post('/disbursements/comments/', json=reasons)
 
 
-def insert_blank_option(choices, title=_('Select an option')):
+def insert_blank_option(choices, title):
     new_choices = [('', title)]
     new_choices.extend(choices)
     return new_choices
@@ -456,7 +456,7 @@ def validate_range_field(field_name, bound_ordering_msg):
                 self.add_error(upper, forms.ValidationError(msg, code='bound_ordering'))
             return self.cleaned_data
 
-        setattr(cls, 'clean', clean)
+        cls.clean = clean
         return cls
 
     return inner

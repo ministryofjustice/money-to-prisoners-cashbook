@@ -285,7 +285,9 @@ class PendingDisbursementTestCase(MTPBaseTestCase):
             status=200
         )
 
-    def pending_list(self, disbursements=SAMPLE_DISBURSEMENTS, preconfirmed=[]):
+    def pending_list(self, disbursements=SAMPLE_DISBURSEMENTS, preconfirmed=None):
+        preconfirmed = preconfirmed or []
+
         responses.add(
             responses.GET,
             api_url('/disbursements/?resolution=pending&offset=0&limit=100'),
