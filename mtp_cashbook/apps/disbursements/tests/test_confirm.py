@@ -935,7 +935,7 @@ class ConfirmPendingDisbursementTestCase(PendingDisbursementTestCase):
         nomis_call = responses.calls[-3]
         nomis_request = json.loads(nomis_call.request.body.decode())
         self.assertDictEqual(nomis_request, {
-            'type': 'RELA',
+            'type': 'DTDS',
             'description': 'Sent to Katy Hicks',
             'amount': 3000,
             'client_transaction_id': 'd660',
