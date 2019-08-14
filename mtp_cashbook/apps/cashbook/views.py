@@ -311,6 +311,7 @@ class SearchView(CashbookView, FormView):
             if credit['resolution'] == 'credited':
                 new_credit_list, old_credit_list = new_credit_list[:index], new_credit_list[index:]
                 break
+        object_count = form.pagination['count']
         current_page = form.pagination['page']
         page_count = form.pagination['page_count']
         if form.is_valid() and form.cleaned_data.get('search'):
@@ -320,6 +321,7 @@ class SearchView(CashbookView, FormView):
             'new_credit_list': new_credit_list,
             'old_credit_list': old_credit_list,
             'credits_returned': form.is_valid() and (new_credit_list or old_credit_list),
+            'object_count': object_count,
             'current_page': current_page,
             'page_count': page_count,
             'credit_owner_name': self.request.user.get_full_name(),
