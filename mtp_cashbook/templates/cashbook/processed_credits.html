@@ -112,7 +112,17 @@
         </tbody>
       </table>
 
-      {% page_list page=current_page page_count=page_count query_string=form.query_string %}
+      <div class="mtp-page-list__container">
+        {% page_list page=current_page page_count=page_count query_string=form.query_string %}
+
+        <p class="mtp-page-list__count">
+          {% blocktrans trimmed count count=object_count with number=object_count|separate_thousands %}
+            {{ number }} batch
+          {% plural %}
+            {{ number }} batches
+          {% endblocktrans %}
+        </p>
+      </div>
 
     {% else %}
 

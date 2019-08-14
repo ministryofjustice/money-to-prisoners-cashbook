@@ -2,3 +2,5 @@ $is-ie: true;
 $ie-version: 8;
 
 @import 'app';
+
+@import 'elements/ie-support-banner';
