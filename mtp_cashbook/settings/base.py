@@ -61,6 +61,7 @@ ROOT_URLCONF = 'mtp_cashbook.urls'
 MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+    'mtp_common.cp_migration.middleware.CloudPlatformMigrationMiddleware',
     'django.middleware.common.CommonMiddleware',
     'mtp_common.auth.csrf.CsrfViewMiddleware',
     'mtp_common.auth.middleware.AuthenticationMiddleware',
@@ -280,6 +281,9 @@ if MAILGUN_FROM_ADDRESS:
 
 POSTCODE_LOOKUP_ENDPOINT = os.environ.get('POSTCODE_LOOKUP_ENDPOINT', '')
 POSTCODE_LOOKUP_AUTH_TOKEN = os.environ.get('POSTCODE_LOOKUP_AUTH_TOKEN', '')
+
+CLOUD_PLATFORM_MIGRATION_MODE = os.environ.get('CLOUD_PLATFORM_MIGRATION_MODE', '')
+CLOUD_PLATFORM_MIGRATION_URL = os.environ.get('CLOUD_PLATFORM_MIGRATION_URL', '')
 
 try:
     from .local import *  # noqa
