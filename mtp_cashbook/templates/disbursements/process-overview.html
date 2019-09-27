@@ -236,14 +236,14 @@
         {% trans 'Track payment progress' %}
       </h3>
       <p>
-        {% trans 'Prisons can track payment progress.' %}
+        {% trans 'To track payment progress you’ll need the invoice number from the digital disbursement tool.' %}
+        {% trans 'You’ll find this in the ‘payments made’ section.' %}
+      </p>
+      <p>
         {% url 'disbursements:track-invoice' as link %}
         {% blocktrans trimmed %}
-          Enter invoice number into <a href="{{ link }}">SOP</a>.
+          Once you have the invoice number, enter it into <a href="{{ link }}">SOP (into ‘accounts payable’)</a> to see when the bank transfer has been made or the cheque sent out.
         {% endblocktrans %}
-        {% trans 'Check your prison’s digital disbursements in the ‘payments made’ section.' %}
-        {% trans 'Once SSCL has received the payment request, go to the ‘history’ column to find the invoice number.' %}
-        {% trans 'Use this invoice number in ‘accounts payable’ in SOP to see when the bank transfer has been made or the cheque sent out.' %}
       </p>
       <h3 class="heading-small">
         {% trans 'If the prisoner gets the recipient’s bank details wrong' %}
