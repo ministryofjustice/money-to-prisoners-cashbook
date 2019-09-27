@@ -784,7 +784,16 @@ class TrackInvoice(BaseView):
     url_name = 'track-invoice'
 
     def get_context_data(self, **kwargs):
-        return super().get_context_data(breadcrumbs_back=reverse('disbursements:process-overview'), **kwargs)
+        kwargs.setdefault('breadcrumbs_back', reverse('disbursements:process-overview'))
+        return super().get_context_data(**kwargs)
+
+
+class KioskInstructions(BaseView):
+    url_name = 'kiosk-instructions'
+
+    def get_context_data(self, **kwargs):
+        kwargs.setdefault('breadcrumbs_back', f"{reverse('disbursements:process-overview')}#section-fill-form")
+        return super().get_context_data(**kwargs)
 
 
 class DisbursementGetHelpView(BaseView, GetHelpView):

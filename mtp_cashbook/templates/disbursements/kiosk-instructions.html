@@ -1,0 +1,84 @@
+{% extends 'disbursements/base.html' %}
+{% load i18n %}
+{% load mtp_common %}
+{% load static %}
+
+{% block page_title %}{% trans 'How it works' %} – {{ block.super }}{% endblock %}
+
+{% block sub_nav %}
+  {% include 'disbursements/get-help-tabs.html' with page=2 only %}
+  {{ block.super }}
+{% endblock %}
+
+{% block inner_content %}
+  {{ block.super }}
+
+  <div class="grid-row">
+    <div class="column-two-thirds">
+
+      <header>
+        <h1 class="heading-xlarge">
+          {% trans 'How to set up the new ‘digital disbursement survey’ on kiosks' %}
+        </h1>
+      </header>
+
+      <p>
+        {% trans 'In prisons with kiosks, the digital disbursement process requires a kiosk ‘disbursement survey’ (the kiosk equivalent of the paper form already in use) to be filled in by a prisoner.' %}
+      </p>
+      <p>
+        {% trans 'This survey needs to be added to the kiosk before you can use the digital disbursement tool.' %}
+      </p>
+      <p>
+        {% trans 'Once the prisoner has filled in their payment request online at a kiosk, it will be sent to the business hub for you to process using the new digital service.' %}
+      </p>
+
+      <h2 class="heading-medium">
+        {% trans 'How to upload and alter the ‘survey’ on the kiosk' %}
+      </h2>
+      <ol class="list list-number">
+        <li>
+          {% trans 'Click on the ‘Surveys’ module, then the ‘Surveys’ button to open up current surveys' %}
+        </li>
+        <li>
+          {% trans 'Click on the option ‘Active’ and untick the box as you change the settings' %}
+          –
+          {% trans 'remember to re-activate it once you’ve finished' %}
+          –
+          {% trans '‘Only allow assigned nominals to complete this survey’ must be ticked for this system to work' %}
+        </li>
+        <li>
+          {% trans 'Click the option ‘Import’ at the bottom of the screen' %}
+          –
+          {% trans 'ignore the error message and click ‘OK’' %}
+        </li>
+        <li>
+          {% trans 'Select the ‘Survey’ you want to upload from your USB device which should show in the ‘Surveys’ list' %}
+        </li>
+        <li>
+          {% trans 'Click ‘Change’ to change parts of each section' %}
+        </li>
+        <li>
+          {% trans 'Change the ‘Header’ section to fit your requirements' %}
+          –
+          {% trans 'for example, HMP Berwyn decided to only allow 2 cash transfers of a maximum of £20 each.' %}
+          {% trans 'Your site may be different so you’ll need to change this.' %}
+          {% trans 'If you do, you’ll also need to change later parts of the survey' %}
+        </li>
+        <li>
+          {% trans 'To allow daily use of the survey, have the ‘Open-ended conditions’ set to re-activate every 1 day' %}
+        </li>
+        <li>
+          {% trans 'The next section with the ‘Question set’ can be changed accordingly too' %}
+        </li>
+        <li>
+          {% trans 'Remember to go back to the ‘Surveys’ button and untick the option ‘Active’ once you’ve changed the settings.' %}
+          {% trans 'You must tick ‘Only allow assigned nominals to complete this survey’ for this system to work' %}
+        </li>
+        <li>
+          {% trans 'Perhaps do a trial run to see if it all works?' %}
+        </li>
+      </ol>
+    </div>
+  </div>
+
+{% endblock %}
