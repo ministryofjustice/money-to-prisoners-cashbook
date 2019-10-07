@@ -3,7 +3,7 @@
 {% load mtp_common %}
 
 {% block inner_content %}
-  {% notifications_box request 'cashbook_all' %}
+  {% notifications_box request 'cashbook_dashboard' 'cashbook_all' %}
 
   {% if user_request_count %}
     <div class="mtp-notification mtp-notification--info">
