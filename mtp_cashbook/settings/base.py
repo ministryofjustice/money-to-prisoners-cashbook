@@ -264,7 +264,7 @@ NOMIS_API_BASE_URL = os.environ.get('NOMIS_API_BASE_URL', '')
 NOMIS_API_CLIENT_TOKEN = os.environ.get('NOMIS_API_CLIENT_TOKEN', '')
 NOMIS_API_PRIVATE_KEY = os.environ.get('NOMIS_API_PRIVATE_KEY', '').encode('utf8').decode('unicode_escape')
 
-TOKEN_RETRIEVAL_USER = os.environ.get('TOKEN_RETRIEVAL_USER', '_token_retrieval')
+TOKEN_RETRIEVAL_USERNAME = os.environ.get('TOKEN_RETRIEVAL_USERNAME', '_token_retrieval')
 TOKEN_RETRIEVAL_PASSWORD = os.environ.get('TOKEN_RETRIEVAL_PASSWORD', '_token_retrieval')
 
 EMAIL_BACKEND = 'anymail.backends.mailgun.EmailBackend'
