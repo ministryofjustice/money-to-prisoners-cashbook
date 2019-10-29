@@ -135,7 +135,6 @@ TEMPLATES = [
                 'mtp_common.context_processors.app_environment',
                 'cashbook.context_processors.govuk_localisation',
                 'cashbook.context_processors.cashbook_settings',
-                'mtp_common.analytics.default_genericised_pageview',
             ],
         },
     },
@@ -244,6 +243,7 @@ OAUTHLIB_INSECURE_TRANSPORT = True
 
 REQUEST_PAGE_SIZE = 100
 
+ANALYTICS_REQUIRED = os.environ.get('ANALYTICS_REQUIRED', 'True') == 'True'
 GOOGLE_ANALYTICS_ID = os.environ.get('GOOGLE_ANALYTICS_ID', None)
 
 ZENDESK_BASE_URL = 'https://ministryofjustice.zendesk.com'
