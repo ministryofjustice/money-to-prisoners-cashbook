@@ -1,12 +1,13 @@
-import json
+from functools import partial
+from unittest import mock
 
 from django.urls import reverse
 from mtp_common.test_utils import silence_logger
+from requests.exceptions import HTTPError
 import responses
 
-from cashbook.tests import (
-    MTPBaseTestCase, api_url, nomis_url, override_nomis_settings
-)
+from cashbook.tests import MTPBaseTestCase, api_url
+
 
 SAMPLE_DISBURSEMENTS = [
     # last edited by self
@@ -244,48 +245,48 @@ SAMPLE_DISBURSEMENTS = [
 
 
 class PendingDisbursementTestCase(MTPBaseTestCase):
-
-    def add_nomis_responses_for_disbursement(self, disbursement):
-        if disbursement['prisoner_name'] == 'PRISONER MOVED':
-            responses.add(
-                responses.GET,
-                nomis_url('/prison/{nomis_id}/offenders/{prisoner_number}/accounts/'.format(
-                    nomis_id=disbursement['prison'],
-                    prisoner_number=disbursement['prisoner_number']
-                )),
-                status=500
-            )
-        else:
-            responses.add(
-                responses.GET,
-                nomis_url('/prison/{nomis_id}/offenders/{prisoner_number}/accounts/'.format(
-                    nomis_id=disbursement['prison'],
-                    prisoner_number=disbursement['prisoner_number']
-                )),
-                json={
-                    'cash': 10000,
-                    'spends': 2000,
-                    'savings': 10000
-                },
-                status=200
-            )
-
+    def prisoner_location_response(self, disbursement):
         responses.add(
             responses.GET,
-            nomis_url('/offenders/{prisoner_number}/location/'.format(
+            api_url('/prisoner_locations/{prisoner_number}/'.format(
                 prisoner_number=disbursement['prisoner_number']
             )),
-            json={'establishment': {
-                'code': (
-                    'LEI' if disbursement['prisoner_name'] == 'PRISONER MOVED'
-                    else disbursement['prison']
-                ),
-                'desc': 'HMP'
-            }},
-            status=200
+            json={
+                'prisoner_number': disbursement['prisoner_number'],
+                'prisoner_dob': '1970-01-01',
+                'prisoner_name': 'TEST QUASH2',
+                'prison': 'BXI'
+            },
+            status=200,
         )
 
-    def pending_list(self, disbursements=SAMPLE_DISBURSEMENTS, preconfirmed=None):
+
+def mock_nomis_responses_for_disbursement(mock_nomis_get_account_balances, mock_nomis_get_location, disbursement):
+    if disbursement['prisoner_name'] == 'PRISONER MOVED':
+        mock_nomis_get_account_balances.side_effect = HTTPError(
+            response=mock.Mock(
+                status_code=500,
+            ),
+        )
+    else:
+        mock_nomis_get_account_balances.return_value = {
+            'cash': 10000,
+            'spends': 2000,
+            'savings': 10000,
+        }
+
+    mock_nomis_get_location.return_value = {
+        'nomis_id': (
+            'LEI'
+            if disbursement['prisoner_name'] == 'PRISONER MOVED'
+            else disbursement['prison']
+        ),
+        'name': 'HMP',
+    }
+
+
+def mock_pending_list(func):
+    def mocker(mock_nomis_get_account_balances, mock_nomis_get_location, disbursements, preconfirmed=None):
         preconfirmed = preconfirmed or []
 
         responses.add(
@@ -311,32 +312,48 @@ class PendingDisbursementTestCase(MTPBaseTestCase):
         )
 
         for disbursement in (disbursements + preconfirmed):
-            self.add_nomis_responses_for_disbursement(disbursement)
+            mock_nomis_responses_for_disbursement(
+                mock_nomis_get_account_balances,
+                mock_nomis_get_location,
+                disbursement,
+            )
 
-    def pending_detail(self, disbursement):
+    @responses.activate
+    @mock.patch('disbursements.utils.nomis.get_location')
+    @mock.patch('disbursements.utils.nomis.get_account_balances')
+    def wrapper(self, mock_nomis_get_account_balances, mock_nomis_get_location, *args, **kwargs):
+        func(
+            self,
+            partial(mocker, mock_nomis_get_account_balances, mock_nomis_get_location),
+            *args,
+            **kwargs,
+        )
+
+    return wrapper
+
+
+def mock_pending_detail(func):
+    def mocker(mock_nomis_get_account_balances, mock_nomis_get_location, disbursement):
         responses.add(
             responses.GET,
             api_url('/disbursements/{pk}/'.format(pk=disbursement['id'])),
             json=disbursement,
             status=200
         )
+        mock_nomis_responses_for_disbursement(mock_nomis_get_account_balances, mock_nomis_get_location, disbursement)
 
-        self.add_nomis_responses_for_disbursement(disbursement)
-
-    def prisoner_location_response(self, disbursement):
-        responses.add(
-            responses.GET,
-            api_url('/prisoner_locations/{prisoner_number}/'.format(
-                prisoner_number=disbursement['prisoner_number']
-            )),
-            json={
-                'prisoner_number': disbursement['prisoner_number'],
-                'prisoner_dob': '1970-01-01',
-                'prisoner_name': 'TEST QUASH2',
-                'prison': 'BXI'
-            },
-            status=200,
+    @responses.activate
+    @mock.patch('disbursements.utils.nomis.get_location')
+    @mock.patch('disbursements.utils.nomis.get_account_balances')
+    def wrapper(self, mock_nomis_get_account_balances, mock_nomis_get_location, *args, **kwargs):
+        func(
+            self,
+            partial(mocker, mock_nomis_get_account_balances, mock_nomis_get_location),
+            *args,
+            **kwargs,
         )
+
+    return wrapper
 
 
 class PendingListDisbursementTestCase(PendingDisbursementTestCase):
@@ -345,44 +362,40 @@ class PendingListDisbursementTestCase(PendingDisbursementTestCase):
     def url(self):
         return reverse('disbursements:pending_list')
 
-    @responses.activate
-    @override_nomis_settings
-    def test_display_pending_disbursements(self):
+    @mock_pending_list
+    def test_display_pending_disbursements(self, calls_mocker):
         self.login(credentials={'username': 'test-hmp-brixton-a', 'password': 'pass'})
-        self.pending_list(disbursements=[SAMPLE_DISBURSEMENTS[3], SAMPLE_DISBURSEMENTS[4]])
+        calls_mocker(disbursements=[SAMPLE_DISBURSEMENTS[3], SAMPLE_DISBURSEMENTS[4]])
 
         response = self.client.get(self.url)
         self.assertOnPage(response, 'disbursements:pending_list')
 
         self.assertContains(response, 'Confirmation required')
 
-    @responses.activate
-    @override_nomis_settings
-    def test_pending_list_self_own(self):
+    @mock_pending_list
+    def test_pending_list_self_own(self, calls_mocker):
         self.login(credentials={'username': 'test-hmp-brixton-a', 'password': 'pass'})
-        self.pending_list(disbursements=[SAMPLE_DISBURSEMENTS[0]])
+        calls_mocker(disbursements=[SAMPLE_DISBURSEMENTS[0]])
 
         response = self.client.get(self.url)
         self.assertOnPage(response, 'disbursements:pending_list')
 
         self.assertContains(response, 'Another colleague needs to confirm this payment')
 
-    @responses.activate
-    @override_nomis_settings
-    def test_pending_list_prisoner_moved(self):
+    @mock_pending_list
+    def test_pending_list_prisoner_moved(self, calls_mocker):
         self.login(credentials={'username': 'test-hmp-brixton-a', 'password': 'pass'})
-        self.pending_list(disbursements=[SAMPLE_DISBURSEMENTS[1]])
+        calls_mocker(disbursements=[SAMPLE_DISBURSEMENTS[1]])
 
         response = self.client.get(self.url)
         self.assertOnPage(response, 'disbursements:pending_list')
 
         self.assertContains(response, 'Prisoner no longer in  this prison')
 
-    @responses.activate
-    @override_nomis_settings
-    def test_pending_list_with_insufficient_funds(self):
+    @mock_pending_list
+    def test_pending_list_with_insufficient_funds(self, calls_mocker):
         self.login(credentials={'username': 'test-hmp-brixton-a', 'password': 'pass'})
-        self.pending_list(disbursements=[SAMPLE_DISBURSEMENTS[2]])
+        calls_mocker(disbursements=[SAMPLE_DISBURSEMENTS[2]])
 
         response = self.client.get(self.url)
         self.assertOnPage(response, 'disbursements:pending_list')
@@ -395,24 +408,22 @@ class PendingDetailDisbursementTestCase(PendingDisbursementTestCase):
     def url(self, pk):
         return reverse('disbursements:pending_detail', args=[pk])
 
-    @responses.activate
-    @override_nomis_settings
-    def test_valid_pending_disbursement(self):
+    @mock_pending_detail
+    def test_valid_pending_disbursement(self, calls_mocker):
         self.login(credentials={'username': 'test-hmp-brixton-a', 'password': 'pass'})
         disbursement = SAMPLE_DISBURSEMENTS[3]
-        self.pending_detail(disbursement=disbursement)
+        calls_mocker(disbursement)
 
         response = self.client.get(self.url(disbursement['id']))
         self.assertOnPage(response, 'disbursements:pending_detail')
         self.assertContains(response, 'Confirm payment')
         self.assertContains(response, 'PAYMENT FOR HOUSING')
 
-    @responses.activate
-    @override_nomis_settings
-    def test_insufficient_funds_pending_disbursement(self):
+    @mock_pending_detail
+    def test_insufficient_funds_pending_disbursement(self, calls_mocker):
         self.login(credentials={'username': 'test-hmp-brixton-a', 'password': 'pass'})
         disbursement = SAMPLE_DISBURSEMENTS[2]
-        self.pending_detail(disbursement=disbursement)
+        calls_mocker(disbursement)
 
         response = self.client.get(self.url(disbursement['id']))
         self.assertOnPage(response, 'disbursements:pending_detail')
@@ -428,14 +439,13 @@ class PendingDetailDisbursementTestCase(PendingDisbursementTestCase):
 
 class UpdatePendingDisbursementTestCase(PendingDisbursementTestCase):
 
-    @responses.activate
-    @override_nomis_settings
-    def test_update_prisoner(self):
+    @mock_pending_detail
+    def test_update_prisoner(self, calls_mocker):
         self.login(credentials={'username': 'test-hmp-brixton-a', 'password': 'pass'})
 
         # go to update page
         disbursement = SAMPLE_DISBURSEMENTS[3]
-        self.pending_detail(disbursement=disbursement)
+        calls_mocker(disbursement)
         responses.add(
             responses.GET,
             api_url('/prisoner_locations/{prisoner_number}/'.format(
@@ -481,7 +491,7 @@ class UpdatePendingDisbursementTestCase(PendingDisbursementTestCase):
         updated_disbursement = dict(**disbursement)
         updated_disbursement['prisoner_number'] = new_prisoner_number
         updated_disbursement['prisoner_name'] = 'JILLY HALL'
-        self.pending_detail(disbursement=updated_disbursement)
+        calls_mocker(updated_disbursement)
 
         response = self.client.post(
             reverse('disbursements:update_prisoner', args=[updated_disbursement['id']]),
@@ -490,14 +500,13 @@ class UpdatePendingDisbursementTestCase(PendingDisbursementTestCase):
         self.assertOnPage(response, 'disbursements:pending_detail')
         self.assertContains(response, new_prisoner_number)
 
-    @responses.activate
-    @override_nomis_settings
-    def test_update_person_to_company(self):
+    @mock_pending_detail
+    def test_update_person_to_company(self, calls_mocker):
         self.login(credentials={'username': 'test-hmp-brixton-a', 'password': 'pass'})
 
         # go to update page
         disbursement = SAMPLE_DISBURSEMENTS[3]
-        self.pending_detail(disbursement=disbursement)
+        calls_mocker(disbursement)
         responses.add(
             responses.GET,
             api_url('/prisoner_locations/{prisoner_number}/'.format(
@@ -544,7 +553,7 @@ class UpdatePendingDisbursementTestCase(PendingDisbursementTestCase):
 
         new_recipient_type = 'company'
         new_recipient_company_name = 'Boots'
-        self.pending_detail(disbursement=disbursement)
+        calls_mocker(disbursement)
 
         response = self.client.post(
             reverse('disbursements:update_recipient_contact', args=[disbursement['id']]),
@@ -572,14 +581,13 @@ class UpdatePendingDisbursementTestCase(PendingDisbursementTestCase):
             'recipient_last_name': new_recipient_company_name,
         })
 
-    @responses.activate
-    @override_nomis_settings
-    def test_update_company_to_person(self):
+    @mock_pending_detail
+    def test_update_company_to_person(self, calls_mocker):
         self.login(credentials={'username': 'test-hmp-brixton-a', 'password': 'pass'})
 
         # go to update page
         disbursement = SAMPLE_DISBURSEMENTS[5]
-        self.pending_detail(disbursement=disbursement)
+        calls_mocker(disbursement)
         responses.add(
             responses.GET,
             api_url('/prisoner_locations/{prisoner_number}/'.format(
@@ -626,7 +634,7 @@ class UpdatePendingDisbursementTestCase(PendingDisbursementTestCase):
         new_recipient_type = 'person'
         new_recipient_first_name = 'Joe'
         new_recipient_last_name = 'Smith'
-        self.pending_detail(disbursement=disbursement)
+        calls_mocker(disbursement)
 
         response = self.client.post(
             reverse('disbursements:update_recipient_contact', args=[disbursement['id']]),
@@ -653,14 +661,13 @@ class UpdatePendingDisbursementTestCase(PendingDisbursementTestCase):
             'recipient_last_name': new_recipient_last_name,
         })
 
-    @responses.activate
-    @override_nomis_settings
-    def test_update_remittance_description(self):
+    @mock_pending_detail
+    def test_update_remittance_description(self, calls_mocker):
         self.login(credentials={'username': 'test-hmp-brixton-a', 'password': 'pass'})
 
         # go to update page
         disbursement = SAMPLE_DISBURSEMENTS[3]
-        self.pending_detail(disbursement=disbursement)
+        calls_mocker(disbursement)
         self.prisoner_location_response(disbursement)
 
         response = self.client.get(
@@ -692,7 +699,7 @@ class UpdatePendingDisbursementTestCase(PendingDisbursementTestCase):
         )
 
         new_remittance_description = 'LEGAL FEES'
-        self.pending_detail(disbursement=disbursement)
+        calls_mocker(disbursement)
 
         response = self.client.post(
             reverse('disbursements:update_remittance_description', args=[disbursement['id']]),
@@ -710,14 +717,13 @@ class UpdatePendingDisbursementTestCase(PendingDisbursementTestCase):
             'remittance_description': new_remittance_description,
         })
 
-    @responses.activate
-    @override_nomis_settings
-    def test_update_remittance_description_to_default(self):
+    @mock_pending_detail
+    def test_update_remittance_description_to_default(self, calls_mocker):
         self.login(credentials={'username': 'test-hmp-brixton-a', 'password': 'pass'})
 
         # go to update page
         disbursement = SAMPLE_DISBURSEMENTS[3]
-        self.pending_detail(disbursement=disbursement)
+        calls_mocker(disbursement)
         responses.add(
             responses.GET,
             api_url('/prisoner_locations/{prisoner_number}/'.format(
@@ -761,7 +767,7 @@ class UpdatePendingDisbursementTestCase(PendingDisbursementTestCase):
         )
 
         # new_remittance_description = 'LEGAL FEES'
-        self.pending_detail(disbursement=disbursement)
+        calls_mocker(disbursement)
 
         response = self.client.post(
             reverse('disbursements:update_remittance_description', args=[disbursement['id']]),
@@ -778,14 +784,13 @@ class UpdatePendingDisbursementTestCase(PendingDisbursementTestCase):
             'remittance_description': 'Payment from TEST QUASH2',
         })
 
-    @responses.activate
-    @override_nomis_settings
-    def test_update_address(self):
+    @mock_pending_detail
+    def test_update_address(self, calls_mocker):
         self.login(credentials={'username': 'test-hmp-brixton-a', 'password': 'pass'})
 
         # go to update page
         disbursement = SAMPLE_DISBURSEMENTS[3]
-        self.pending_detail(disbursement=disbursement)
+        calls_mocker(disbursement)
         self.prisoner_location_response(disbursement)
 
         response = self.client.get(
@@ -813,7 +818,7 @@ class UpdatePendingDisbursementTestCase(PendingDisbursementTestCase):
         }
         updated_disbursement = dict(**disbursement)
         updated_disbursement.update(new_address)
-        self.pending_detail(disbursement=updated_disbursement)
+        calls_mocker(updated_disbursement)
         self.prisoner_location_response(disbursement)
 
         response = self.client.post(
@@ -827,14 +832,13 @@ class UpdatePendingDisbursementTestCase(PendingDisbursementTestCase):
         self.assertContains(response, new_address['city'])
         self.assertContains(response, new_address['postcode'])
 
-    @responses.activate
-    @override_nomis_settings
-    def test_change_sending_method_to_bank_transfer_requests_account_details(self):
+    @mock_pending_detail
+    def test_change_sending_method_to_bank_transfer_requests_account_details(self, calls_mocker):
         self.login(credentials={'username': 'test-hmp-brixton-a', 'password': 'pass'})
 
         # go to update sending method page
         disbursement = SAMPLE_DISBURSEMENTS[4]
-        self.pending_detail(disbursement=disbursement)
+        calls_mocker(disbursement)
 
         response = self.client.get(
             reverse('disbursements:update_sending_method', args=[disbursement['id']])
@@ -844,7 +848,7 @@ class UpdatePendingDisbursementTestCase(PendingDisbursementTestCase):
         responses.reset()
 
         # post sending method update
-        self.pending_detail(disbursement=disbursement)
+        calls_mocker(disbursement)
         responses.add(
             responses.GET,
             api_url('/prisoner_locations/{prisoner_number}/'.format(
@@ -867,7 +871,7 @@ class UpdatePendingDisbursementTestCase(PendingDisbursementTestCase):
         responses.reset()
 
         # post bank account details
-        self.pending_detail(disbursement=disbursement)
+        calls_mocker(disbursement)
         responses.add(
             responses.GET,
             api_url('/prisoner_locations/{prisoner_number}/'.format(
@@ -902,25 +906,19 @@ class ConfirmPendingDisbursementTestCase(PendingDisbursementTestCase):
     def url(self, pk):
         return reverse('disbursements:pending_detail', args=[pk])
 
-    @responses.activate
-    @override_nomis_settings
-    def test_confirm_disbursement(self):
+    @mock_pending_detail
+    @mock.patch(
+        'disbursements.views.nomis.create_transaction',
+        return_value={'id': '12345-1'},
+    )
+    def test_confirm_disbursement(self, calls_mocker, mock_nomis_create_transaction):
         self.login(credentials={'username': 'test-hmp-brixton-a', 'password': 'pass'})
 
         disbursement = SAMPLE_DISBURSEMENTS[4]
-        self.pending_detail(disbursement=disbursement)
+        calls_mocker(disbursement)
         responses.add(
             responses.POST,
             api_url('/disbursements/actions/preconfirm/'),
-            status=200
-        )
-        responses.add(
-            responses.POST,
-            nomis_url('/prison/{nomis_id}/offenders/{prisoner_number}/transactions/'.format(
-                nomis_id=disbursement['prison'],
-                prisoner_number=disbursement['prisoner_number']
-            )),
-            json={'id': '12345-1'},
             status=200
         )
         responses.add(
@@ -932,35 +930,31 @@ class ConfirmPendingDisbursementTestCase(PendingDisbursementTestCase):
         response = self.client.post(self.url(disbursement['id']), data={'confirmation': 'yes'}, follow=True)
         self.assertOnPage(response, 'disbursements:confirmed')
         self.assertContains(response, '12345-1')
-        nomis_call = responses.calls[-3]
-        nomis_request = json.loads(nomis_call.request.body.decode())
-        self.assertDictEqual(nomis_request, {
-            'type': 'RELA',
-            'description': 'Sent to Katy Hicks',
-            'amount': 3000,
-            'client_transaction_id': 'd660',
-            'client_unique_ref': 'd660',
-        })
 
-    @responses.activate
-    @override_nomis_settings
-    def test_confirm_disbursement_resets_on_failure(self):
+        mock_nomis_create_transaction.assert_called_once_with(
+            prison_id='BXI',
+            prisoner_number='A1448AE',
+            amount=3000,
+            record_id='d660',
+            description='Sent to Katy Hicks',
+            transaction_type='RELA',
+            retries=1,
+        )
+
+    @mock_pending_detail
+    @mock.patch(
+        'disbursements.views.nomis.create_transaction',
+        side_effect=HTTPError(response=mock.Mock(status_code=500)),
+    )
+    def test_confirm_disbursement_resets_on_failure(self, calls_mocker, _):
         self.login(credentials={'username': 'test-hmp-brixton-a', 'password': 'pass'})
 
         disbursement = SAMPLE_DISBURSEMENTS[4]
-        self.pending_detail(disbursement=disbursement)
+        calls_mocker(disbursement)
         responses.add(
             responses.POST,
             api_url('/disbursements/actions/preconfirm/'),
             status=200
-        )
-        responses.add(
-            responses.POST,
-            nomis_url('/prison/{nomis_id}/offenders/{prisoner_number}/transactions/'.format(
-                nomis_id=disbursement['prison'],
-                prisoner_number=disbursement['prisoner_number']
-            )),
-            status=500
         )
         responses.add(
             responses.POST,
@@ -979,9 +973,8 @@ class RejectPendingDisbursementTestCase(PendingDisbursementTestCase):
     def url(self, pk):
         return reverse('disbursements:pending_reject', args=[pk])
 
-    @responses.activate
-    @override_nomis_settings
-    def test_reject_disbursement(self):
+    @mock_pending_list
+    def test_reject_disbursement(self, calls_mocker):
         self.login(credentials={'username': 'test-hmp-brixton-a', 'password': 'pass'})
 
         disbursement = SAMPLE_DISBURSEMENTS[4]
@@ -995,7 +988,7 @@ class RejectPendingDisbursementTestCase(PendingDisbursementTestCase):
             api_url('/disbursements/actions/reject/'),
             status=200
         )
-        self.pending_list(disbursements=SAMPLE_DISBURSEMENTS[:3])
+        calls_mocker(disbursements=SAMPLE_DISBURSEMENTS[:3])
 
         response = self.client.post(
             self.url(disbursement['id']), data={'reason': 'bad one'}, follow=True
