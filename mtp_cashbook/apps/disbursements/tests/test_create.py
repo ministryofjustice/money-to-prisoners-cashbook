@@ -1,11 +1,12 @@
+from unittest import mock
+
 from django.test import override_settings
 from django.urls import reverse
+from requests.exceptions import HTTPError
 import responses
 from mtp_common.test_utils import silence_logger
 
-from cashbook.tests import (
-    MTPBaseTestCase, api_url, nomis_url, override_nomis_settings
-)
+from cashbook.tests import api_url, MTPBaseTestCase
 from ..forms import PrisonerForm, AmountForm, SENDING_METHOD
 from ..views import HandoverView
 
@@ -36,24 +37,19 @@ class CreateDisbursementFlowTestCase(MTPBaseTestCase):
         )
 
     def enter_amount(self, amount=10, cash=5000):
-        responses.add(
-            responses.GET,
-            nomis_url('/prison/{nomis_id}/offenders/{prisoner_number}/accounts/'.format(
-                nomis_id=self.nomis_id, prisoner_number=self.prisoner_number
-            )),
-            json={
+        with mock.patch(
+            'disbursements.views.nomis.get_account_balances',
+            return_value={
                 'cash': cash,
                 'spends': 2000,
-                'savings': 10000
+                'savings': 10000,
             },
-            status=200,
-        )
-
-        return self.client.post(
-            reverse('disbursements:amount'),
-            data={'amount': amount},
-            follow=True
-        )
+        ):
+            return self.client.post(
+                reverse('disbursements:amount'),
+                data={'amount': amount},
+                follow=True
+            )
 
     def choose_sending_method(self, method=SENDING_METHOD.BANK_TRANSFER):
         return self.client.post(
@@ -183,7 +179,6 @@ class AmountTestCase(CreateDisbursementFlowTestCase):
         return reverse('disbursements:amount')
 
     @responses.activate
-    @override_nomis_settings
     def test_valid_amount(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.CHEQUE)
@@ -193,7 +188,6 @@ class AmountTestCase(CreateDisbursementFlowTestCase):
         self.assertOnPage(response, 'disbursements:recipient_contact')
 
     @responses.activate
-    @override_nomis_settings
     def test_too_high_amount(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
@@ -204,8 +198,11 @@ class AmountTestCase(CreateDisbursementFlowTestCase):
         self.assertContains(response, AmountForm.error_messages['exceeds_funds'])
 
     @responses.activate
-    @override_nomis_settings
-    def test_nomis_unavailable(self):
+    @mock.patch(
+        'disbursements.views.nomis.get_account_balances',
+        side_effect=HTTPError(response=mock.Mock(status_code=500)),
+    )
+    def test_nomis_unavailable(self, _):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
         self.enter_prisoner_details()
@@ -218,7 +215,6 @@ class AmountTestCase(CreateDisbursementFlowTestCase):
 class SendingMethodTestCase(CreateDisbursementFlowTestCase):
 
     @responses.activate
-    @override_nomis_settings
     def test_cheque_sending_method_skips_bank_account(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.CHEQUE)
@@ -240,7 +236,6 @@ class SendingMethodTestCase(CreateDisbursementFlowTestCase):
         self.assertIn('JILLY', content)
 
     @responses.activate
-    @override_nomis_settings
     def test_cheque_sending_method_includes_bank_account(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
@@ -260,7 +255,6 @@ class RecipientContactTestCase(CreateDisbursementFlowTestCase):
         return reverse('disbursements:recipient_contact')
 
     @responses.activate
-    @override_nomis_settings
     def test_contact_details_required(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
@@ -281,7 +275,6 @@ class RecipientPostcodeTestCase(CreateDisbursementFlowTestCase):
         return reverse('disbursements:recipient_postcode')
 
     @responses.activate
-    @override_nomis_settings
     @override_settings(
         POSTCODE_LOOKUP_ENDPOINT='https://fakepostcodes.com/lookup',
         POSTCODE_LOOKUP_AUTH_TOKEN='auth618',
@@ -348,7 +341,6 @@ class RecipientPostcodeTestCase(CreateDisbursementFlowTestCase):
         self.assertContains(response, '36, WUMBERLEY ROAD, LONDON, X17 8VL')
 
     @responses.activate
-    @override_nomis_settings
     def test_full_postcode_required(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
@@ -366,7 +358,6 @@ class RecipientPostcodeTestCase(CreateDisbursementFlowTestCase):
         )
 
     @responses.activate
-    @override_nomis_settings
     def test_first_name_required(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
@@ -385,7 +376,6 @@ class RecipientPostcodeTestCase(CreateDisbursementFlowTestCase):
         self.assertFormError(response, 'form', 'recipient_first_name', 'This field is required')
 
     @responses.activate
-    @override_nomis_settings
     def test_last_name_required(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
@@ -404,7 +394,6 @@ class RecipientPostcodeTestCase(CreateDisbursementFlowTestCase):
         self.assertFormError(response, 'form', 'recipient_last_name', 'This field is required')
 
     @responses.activate
-    @override_nomis_settings
     def test_company_name_required(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
@@ -428,7 +417,6 @@ class RecipientBankAccountTestCase(CreateDisbursementFlowTestCase):
         return reverse('disbursements:recipient_bank_account')
 
     @responses.activate
-    @override_nomis_settings
     def test_account_details_required(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
@@ -443,7 +431,6 @@ class RecipientBankAccountTestCase(CreateDisbursementFlowTestCase):
         self.assertFormError(response, 'form', 'account_number', 'This field is required')
 
     @responses.activate
-    @override_nomis_settings
     def test_account_details_validity(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
@@ -461,7 +448,6 @@ class RecipientBankAccountTestCase(CreateDisbursementFlowTestCase):
         self.assertFormError(response, 'form', 'account_number', 'The account number should be 8 digits long')
 
     @responses.activate
-    @override_nomis_settings
     def test_building_society_account_detected(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
@@ -482,7 +468,6 @@ class RecipientBankAccountTestCase(CreateDisbursementFlowTestCase):
         )
 
     @responses.activate
-    @override_nomis_settings
     def test_non_building_society_account_detected(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
@@ -503,7 +488,6 @@ class RecipientBankAccountTestCase(CreateDisbursementFlowTestCase):
         )
 
     @responses.activate
-    @override_nomis_settings
     def test_building_society_roll_number_validation_failure(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
@@ -525,7 +509,6 @@ class RecipientBankAccountTestCase(CreateDisbursementFlowTestCase):
         )
 
     @responses.activate
-    @override_nomis_settings
     def test_building_society_roll_number_validation_success(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
@@ -548,7 +531,6 @@ class RemittanceDescriptionTestCase(CreateDisbursementFlowTestCase):
         return reverse('disbursements:remittance_description')
 
     @responses.activate
-    @override_nomis_settings
     def test_remittance_choice_required(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.CHEQUE)
@@ -563,7 +545,6 @@ class RemittanceDescriptionTestCase(CreateDisbursementFlowTestCase):
         self.assertContains(response, 'Please select ‘yes’ or ‘no’')
 
     @responses.activate
-    @override_nomis_settings
     def test_remittance_being_empty(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.CHEQUE)
@@ -577,7 +558,6 @@ class RemittanceDescriptionTestCase(CreateDisbursementFlowTestCase):
         self.assertContains(response, 'None given')
 
     @responses.activate
-    @override_nomis_settings
     def test_remittance_description(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.CHEQUE)
@@ -592,7 +572,6 @@ class RemittanceDescriptionTestCase(CreateDisbursementFlowTestCase):
         self.assertNotContains(response, 'None given')
 
     @responses.activate
-    @override_nomis_settings
     def test_remittance_default_description(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.CHEQUE)
@@ -614,7 +593,6 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
         return reverse('disbursements:prisoner')
 
     @responses.activate
-    @override_nomis_settings
     def test_create_valid_bank_transfer_disbursement(self):
         responses.add(
             responses.POST,
@@ -659,7 +637,6 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
         })
 
     @responses.activate
-    @override_nomis_settings
     def test_create_valid_cheque_disbursement(self):
         responses.add(
             responses.POST,
@@ -681,7 +658,6 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
         self.assertOnPage(response, 'disbursements:created')
 
     @responses.activate
-    @override_nomis_settings
     def test_create_edited_valid_company_cheque_disbursement(self):
         responses.add(
             responses.POST,
@@ -743,7 +719,6 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
         })
 
     @responses.activate
-    @override_nomis_settings
     def test_create_disbursement_service_unavailable(self):
         self.login()
         self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)

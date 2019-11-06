@@ -1,16 +1,19 @@
 import json
 from datetime import datetime
+from unittest import mock
 import logging
 
 from django.core import mail
 from django.test import override_settings
 from django.urls import reverse
 from mtp_common.test_utils import silence_logger
+from requests.exceptions import HTTPError
 import responses
 
 from cashbook.tests import (
-    MTPBaseTestCase, api_url, nomis_url, override_nomis_settings,
-    wrap_response_data
+    api_url,
+    MTPBaseTestCase,
+    wrap_response_data,
 )
 
 CREDIT_1 = {
@@ -63,7 +66,6 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
     def url(self):
         return reverse('new-credits')
 
-    @override_nomis_settings
     def test_new_credits_display(self):
         with responses.RequestsMock() as rsps:
             rsps.add(
@@ -94,8 +96,13 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             self.assertContains(response, '45.00')
 
     @override_settings(ENVIRONMENT='prod')  # because non-prod environments don't send to .local
-    @override_nomis_settings
-    def test_new_credits_submit(self):
+    @mock.patch(
+        'cashbook.tasks.nomis.create_transaction',
+
+        # return {'id' == '<prisoner-number>-1'}
+        side_effect=lambda **kwargs: {'id': f'{kwargs["prisoner_number"]}-1'},
+    )
+    def test_new_credits_submit(self, mock_create_transaction):
         with responses.RequestsMock() as rsps:
             # get new credits
             rsps.add(
@@ -119,23 +126,10 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
                 api_url('/credits/batches/'),
                 status=201,
             )
-            # credit credits to NOMIS and API
-            rsps.add(
-                rsps.POST,
-                nomis_url('/prison/BXI/offenders/A1234BC/transactions/'),
-                json={'id': '6244779-1'},
-                status=200,
-            )
             rsps.add(
                 rsps.POST,
                 api_url('/credits/actions/credit/'),
                 status=204,
-            )
-            rsps.add(
-                rsps.POST,
-                nomis_url('/prison/BXI/offenders/A1234GG/transactions/'),
-                json={'id': '6244780-1'},
-                status=200,
             )
             rsps.add(
                 rsps.POST,
@@ -197,12 +191,39 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             )
             self.assertEqual(response.status_code, 200)
             expected_calls = [
-                [{'id': 1, 'credited': True, 'nomis_transaction_id': '6244779-1'}],
-                [{'id': 2, 'credited': True, 'nomis_transaction_id': '6244780-1'}]
+                [{'id': 1, 'credited': True, 'nomis_transaction_id': 'A1234BC-1'}],
+                [{'id': 2, 'credited': True, 'nomis_transaction_id': 'A1234GG-1'}]
             ]
             self.assertTrue(
-                json.loads(rsps.calls[4].request.body.decode('utf-8')) in expected_calls and
-                json.loads(rsps.calls[6].request.body.decode('utf-8')) in expected_calls
+                json.loads(rsps.calls[3].request.body.decode('utf-8')) in expected_calls and
+                json.loads(rsps.calls[4].request.body.decode('utf-8')) in expected_calls
+            )
+
+            request_nomis_session_used = mock_create_transaction.call_args_list[0][1]['session']
+            mock_create_transaction.assert_has_calls(
+                [
+                    mock.call(
+                        amount=5200,
+                        description='Sent by Fred Smith',
+                        prison_id='BXI',
+                        prisoner_number='A1234BC',
+                        record_id='1',
+                        retries=1,
+                        session=request_nomis_session_used,
+                        transaction_type='MTDS',
+                    ),
+                    mock.call(
+                        amount=4500,
+                        description='Sent by Fred Jones',
+                        prison_id='BXI',
+                        prisoner_number='A1234GG',
+                        record_id='2',
+                        retries=1,
+                        session=request_nomis_session_used,
+                        transaction_type='MTDS',
+                    ),
+                ],
+                any_order=True,
             )
             self.assertContains(response, '2 credits sent to NOMIS')
             self.assertEqual(len(mail.outbox), 2)
@@ -212,8 +233,14 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             )
 
     @override_settings(ENVIRONMENT='prod')  # because non-prod environments don't send to .local
-    @override_nomis_settings
-    def test_new_credits_submit_with_conflict(self):
+    @mock.patch(
+        'cashbook.tasks.nomis.create_transaction',
+        side_effect=[
+            HTTPError(response=mock.Mock(status_code=409)),
+            {'id': 'A1234GG-1'},
+        ],
+    )
+    def test_new_credits_submit_with_conflict(self, _):
         with responses.RequestsMock() as rsps:
             # get new credits
             rsps.add(
@@ -237,22 +264,10 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
                 api_url('/credits/batches/'),
                 status=201,
             )
-            # credit credits to NOMIS and API
-            rsps.add(
-                rsps.POST,
-                nomis_url('/prison/BXI/offenders/A1234BC/transactions/'),
-                status=409,
-            )
             rsps.add(
                 rsps.POST,
                 api_url('/credits/actions/credit/'),
                 status=204,
-            )
-            rsps.add(
-                rsps.POST,
-                nomis_url('/prison/BXI/offenders/A1234GG/transactions/'),
-                json={'id': '6244780-1'},
-                status=200,
             )
             rsps.add(
                 rsps.POST,
@@ -318,8 +333,21 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             self.assertEqual(len(mail.outbox), 2)
 
     @override_settings(ENVIRONMENT='prod')  # because non-prod environments don't send to .local
-    @override_nomis_settings
-    def test_new_credits_submit_with_uncreditable(self):
+    @mock.patch(
+        'cashbook.tasks.nomis.create_transaction',
+        side_effect=[
+            HTTPError(response=mock.Mock(status_code=400)),
+            {'id': 'A1234GG-1'},
+        ],
+    )
+    @mock.patch(
+        'cashbook.tasks.nomis.get_location',
+        return_value={
+            'nomis_id': 'LEI',
+            'name': 'LEEDS (HMP)',
+        },
+    )
+    def test_new_credits_submit_with_uncreditable(self, *_):
         with responses.RequestsMock() as rsps:
             # get new credits
             rsps.add(
@@ -346,19 +374,8 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             # credit credits to NOMIS and API
             rsps.add(
                 rsps.POST,
-                nomis_url('/prison/BXI/offenders/A1234BC/transactions/'),
-                status=400,
-            )
-            rsps.add(
-                rsps.POST,
                 api_url('/credits/actions/setmanual/'),
                 status=204,
-            )
-            rsps.add(
-                rsps.POST,
-                nomis_url('/prison/BXI/offenders/A1234GG/transactions/'),
-                json={'id': '6244780-1'},
-                status=200,
             )
             rsps.add(
                 rsps.POST,
@@ -411,17 +428,6 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
                 status=200,
                 match_querystring=True,
             )
-            rsps.add(
-                rsps.GET,
-                nomis_url('/offenders/A1234BC/location/'),
-                json={
-                    'establishment': {
-                        'code': 'LEI',
-                        'desc': 'LEEDS (HMP)'
-                    }
-                },
-                status=200,
-            )
 
             self.login()
             with silence_logger(name='mtp', level=logging.CRITICAL):
@@ -436,8 +442,14 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             self.assertEqual(len(mail.outbox), 1)
 
     @override_settings(ENVIRONMENT='prod')  # because non-prod environments don't send to .local
-    @override_nomis_settings
-    def test_manual_credits_submit(self):
+    @mock.patch(
+        'cashbook.views.nomis.get_location',
+        return_value={
+            'nomis_id': 'LEI',
+            'name': 'LEEDS (HMP)',
+        },
+    )
+    def test_manual_credits_submit(self, _):
         with responses.RequestsMock() as rsps:
             # get new credits
             rsps.add(
@@ -500,13 +512,21 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             self.assertContains(response, '1 credit manually input by you into NOMIS')
 
 
+@mock.patch(
+    'cashbook.views.nomis.get_location',
+    mock.Mock(
+        return_value={
+            'nomis_id': 'LEI',
+            'name': 'LEEDS (HMP)',
+        },
+    ),
+)
 class ProcessingCreditsViewTestCase(MTPBaseTestCase):
 
     @property
     def url(self):
         return reverse('processing-credits')
 
-    @override_nomis_settings
     def test_new_credits_redirects_to_processing_when_batch_active(self):
         with responses.RequestsMock() as rsps:
             # get active batches
@@ -544,7 +564,6 @@ class ProcessingCreditsViewTestCase(MTPBaseTestCase):
             response = self.client.get(reverse('new-credits'), follow=True)
             self.assertRedirects(response, self.url)
 
-    @override_nomis_settings
     def test_processing_credits_displays_percentage(self):
         with responses.RequestsMock() as rsps:
             # get active batches
@@ -567,7 +586,6 @@ class ProcessingCreditsViewTestCase(MTPBaseTestCase):
             response = self.client.get(reverse('processing-credits'), follow=True)
             self.assertContains(response, '50%')
 
-    @override_nomis_settings
     def test_processing_credits_displays_continue_when_done(self):
         with responses.RequestsMock() as rsps:
             # get active batches
@@ -590,7 +608,6 @@ class ProcessingCreditsViewTestCase(MTPBaseTestCase):
             response = self.client.get(reverse('processing-credits'), follow=True)
             self.assertContains(response, 'Continue')
 
-    @override_nomis_settings
     def test_processing_credits_redirects_to_new_for_expired_batch(self):
         with responses.RequestsMock() as rsps:
             # get active batches
@@ -656,7 +673,6 @@ class ProcessedCreditsListViewTestCase(MTPBaseTestCase):
     def url(self):
         return reverse('processed-credits-list')
 
-    @override_nomis_settings
     def test_processed_credits_list_view(self):
         with responses.RequestsMock() as rsps:
             self.login()
@@ -704,7 +720,6 @@ class ProcessedCreditsListViewTestCase(MTPBaseTestCase):
             self.assertContains(response, text='4 credits')
             self.assertContains(response, text='5 credits')
 
-    @override_nomis_settings
     def test_processed_credits_list_view_no_results(self):
         with responses.RequestsMock() as rsps:
             self.login()
@@ -733,7 +748,6 @@ class ProcessedCreditsDetailViewTestCase(MTPBaseTestCase):
             kwargs={'date': '20170603', 'user_id': 1}
         )
 
-    @override_nomis_settings
     def test_processed_credits_detail_view(self):
         with responses.RequestsMock() as rsps:
             self.login()
@@ -788,7 +802,6 @@ class ProcessedCreditsDetailViewTestCase(MTPBaseTestCase):
             self.assertEqual(response.status_code, 200)
             self.assertContains(response, text='John Smith', count=2)
 
-    @override_nomis_settings
     def test_processed_credits_detail_view_no_results(self):
         with responses.RequestsMock() as rsps:
             self.login()
@@ -813,7 +826,6 @@ class ProcessedCreditsDetailViewTestCase(MTPBaseTestCase):
             self.assertContains(response, text='No credits')
 
 
-@override_nomis_settings
 class SearchViewTestCase(MTPBaseTestCase):
 
     @property
