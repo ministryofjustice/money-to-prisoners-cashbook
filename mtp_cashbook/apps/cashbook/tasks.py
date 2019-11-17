@@ -1,5 +1,6 @@
 import logging
 from threading import local
+from urllib.parse import urljoin
 
 from django.conf import settings
 from django.utils.translation import gettext as _
@@ -75,8 +76,8 @@ def credit_individual_credit_to_nomis(user, user_session, credit_id, credit):
                 'ref_number': credit.get('short_ref_number'),
                 'received_at': credit['received_at'],
                 'prisoner_name': credit.get('intended_recipient'),
-                'help_url': settings.CITIZEN_HELP_PAGE_URL,
-                'feedback_url': settings.CITIZEN_CONTACT_PAGE_URL,
+                'help_url': urljoin(settings.SEND_MONEY_URL, '/help/'),
+                'feedback_url': urljoin(settings.SEND_MONEY_URL, '/contact-us/'),
                 'site_url': settings.START_PAGE_URL,
             },
             html_template='cashbook/email/credited-confirmation.html',

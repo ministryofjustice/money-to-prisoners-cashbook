@@ -8,6 +8,7 @@ from functools import partial
 import os
 from os.path import abspath, dirname, join
 import sys
+from urllib.parse import urljoin
 
 BASE_DIR = dirname(dirname(abspath(__file__)))
 sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
@@ -25,17 +26,29 @@ DEBUG = True
 SECRET_KEY = 'CHANGE_ME'
 ALLOWED_HOSTS = []
 
-CITIZEN_HELP_PAGE_URL = os.environ.get(
-    'CITIZEN_HELP_PAGE_URL',
-    'https://send-money-to-prisoner.service.gov.uk/help/'
-)
-CITIZEN_CONTACT_PAGE_URL = os.environ.get(
-    'CITIZEN_CONTACT_PAGE_URL',
-    'https://send-money-to-prisoner.service.gov.uk/contact-us/'
-)
 START_PAGE_URL = os.environ.get('START_PAGE_URL', 'https://www.gov.uk/send-prisoner-money')
-SITE_URL = os.environ.get('SITE_URL', 'http://localhost:8001')
-NOMS_OPS_URL = os.environ.get('NOMS_OPS_URL', 'http://localhost:8003/')
+CASHBOOK_URL = (
+    f'https://{os.environ["PUBLIC_CASHBOOK_HOST"]}'
+    if os.environ.get('PUBLIC_CASHBOOK_HOST')
+    else 'http://localhost:8001'
+)
+BANK_ADMIN_URL = (
+    f'https://{os.environ["PUBLIC_BANK_ADMIN_HOST"]}'
+    if os.environ.get('PUBLIC_BANK_ADMIN_HOST')
+    else 'http://localhost:8002'
+)
+NOMS_OPS_URL = (
+    f'https://{os.environ["PUBLIC_NOMS_OPS_HOST"]}'
+    if os.environ.get('PUBLIC_NOMS_OPS_HOST')
+    else 'http://localhost:8003'
+)
+SEND_MONEY_URL = (
+    f'https://{os.environ["PUBLIC_SEND_MONEY_HOST"]}'
+    if os.environ.get('PUBLIC_SEND_MONEY_HOST')
+    else 'http://localhost:8004'
+)
+SITE_URL = CASHBOOK_URL
+
 
 # Application definition
 INSTALLED_APPS = (
@@ -117,6 +130,7 @@ STATICFILES_DIRS = [
     get_project_dir('assets'),
     get_project_dir('assets-static'),
 ]
+PUBLIC_STATIC_URL = urljoin(SEND_MONEY_URL, STATIC_URL)
 
 TEMPLATES = [
     {
