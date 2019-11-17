@@ -218,26 +218,9 @@ TEST_RUNNER = 'mtp_common.test_utils.runner.TestRunner'
 # authentication
 SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
-
 AUTHENTICATION_BACKENDS = (
     'mtp_common.auth.backends.MojBackend',
 )
-
-
-def find_api_url():
-    import socket
-    import subprocess
-
-    api_port = int(os.environ.get('API_PORT', '8000'))
-    try:
-        host_machine_ip = subprocess.check_output(['docker-machine', 'ip', 'default'],
-                                                  stderr=subprocess.DEVNULL)
-        host_machine_ip = host_machine_ip.decode('ascii').strip()
-        with socket.socket() as sock:
-            sock.connect((host_machine_ip, api_port))
-    except (subprocess.CalledProcessError, OSError):
-        host_machine_ip = 'localhost'
-    return 'http://%s:%s' % (host_machine_ip, api_port)
 
 
 # control the time a session exists for; should match api's access token expiry
@@ -247,7 +230,7 @@ SESSION_SAVE_EVERY_REQUEST = True
 
 API_CLIENT_ID = 'cashbook'
 API_CLIENT_SECRET = os.environ.get('API_CLIENT_SECRET', 'cashbook')
-API_URL = os.environ.get('API_URL', find_api_url())
+API_URL = os.environ.get('API_URL', 'http://localhost:8000')
 
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'home'
