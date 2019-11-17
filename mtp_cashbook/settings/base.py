@@ -1,9 +1,3 @@
-"""
-Django settings for mtp_cashbook project.
-
-For the full list of settings and their values, see
-https://docs.djangoproject.com/en/1.9/ref/settings/
-"""
 from functools import partial
 import os
 from os.path import abspath, dirname, join
