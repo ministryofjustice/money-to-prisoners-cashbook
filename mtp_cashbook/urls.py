@@ -9,6 +9,7 @@ from django.views.generic.base import RedirectView, TemplateView
 from django.views.i18n import JavaScriptCatalog
 from moj_irat.views import HealthcheckView, PingJsonView
 from mtp_common.auth import api_client
+from mtp_common.metrics.views import metrics_view
 
 
 class LandingView(TemplateView):
@@ -48,6 +49,7 @@ urlpatterns += [
         version_number_key='APP_BUILD_TAG',
     ), name='ping_json'),
     url(r'^healthcheck.json$', HealthcheckView.as_view(), name='healthcheck_json'),
+    url(r'^metrics.txt$', metrics_view, name='prometheus_metrics'),
 
     url(r'^favicon.ico$', RedirectView.as_view(url=settings.STATIC_URL + 'images/favicon.ico', permanent=True)),
     url(r'^robots.txt$', lambda request: HttpResponse('User-agent: *\nDisallow: /', content_type='text/plain')),
