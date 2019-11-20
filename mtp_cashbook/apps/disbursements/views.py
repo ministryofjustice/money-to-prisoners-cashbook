@@ -18,7 +18,7 @@ from mtp_common import nomis
 from requests.exceptions import HTTPError, RequestException
 
 from cashbook.templatetags.currency import currency
-from disbursements import forms as disbursement_forms
+from disbursements import forms as disbursement_forms, metrics
 from disbursements.utils import get_disbursement_viability, find_addresses
 from feedback.views import GetHelpView, GetHelpSuccessView
 
@@ -391,6 +391,7 @@ class CreatedView(BasePagedView):
             del disbursement_data['remittance']
         try:
             self.api_session.post('/disbursements/', json=disbursement_data)
+            metrics.entered_counter.inc()
         except RequestException:
             logger.exception('Failed to create disbursement')
             return redirect('%s?e=connection' % self.previous_view.url())
@@ -546,6 +547,7 @@ class PendingDetailView(BaseConfirmationView):
                 'disbursements/actions/confirm/',
                 json=[update]
             )
+            metrics.confirmed_counter.inc()
             return redirect(ConfirmedView.url() + url_suffix)
 
         self.api_session.post(
