@@ -1,8 +1,6 @@
-# Money to Prisoners Cashbook
+# Digital Cashbook
 
-
-The Cashbook UI for the Money to Prisoners Project
-
+Business hub staff facing site for Prisoner Money suite of apps.
 
 ## Running locally
 
@@ -13,34 +11,32 @@ Please call this `venv` and make sure it's in the root folder of this applicatio
 In order to run the application locally, it is necessary to have the API running.
 Please refer to the [money-to-prisoners-api](https://github.com/ministryofjustice/money-to-prisoners-api/) repository.
 
-Once the API is running locally, run
+Once the API has started locally, run
 
 ```
+./run.py serve
+# or
 ./run.py start
 ```
 
-This will build everything (which will initially take a while) and run
-the local server at [http://localhost:8001](http://localhost:8001).
+This will build everything and run the local server at [http://localhost:8001](http://localhost:8001).
+
+You should be able to login using following credentials: `test-prison-1` or `test-prison-2`
 
 ### Alternative: Docker
 
 In order to run a server that's exactly similar to the production machines,
-you need to have [Docker](https://www.docker.com/docker-toolbox) installed. Run
+you need to have [Docker](https://www.docker.com/products/developer-tools) installed. Run
 
 ```
 ./run.py local_docker
 ```
 
-and you should eventually be able to connect to the local server.
-
-### Log in to the application
-
-You should be able to log into the cash book app using following credentials:
-
-- *test-prison-1 / test-prison-1* for Prison 1
-- *test-prison-2 / test-prison-2* for Prison 2
+and you should be able to connect to the local server.
 
 ## Developing
+
+[![CircleCI](https://circleci.com/gh/ministryofjustice/money-to-prisoners-cashbook.svg?style=svg)](https://circleci.com/gh/ministryofjustice/money-to-prisoners-cashbook)
 
 With the `./run.py` command, you can run a browser-sync server, and get the assets
 to automatically recompile when changes are made, run `./run.py serve` instead of
@@ -63,9 +59,11 @@ python_dependencies --common-path [path]
 
 Update translation files with `./run.py make_messages` – you need to do this every time any translatable text is updated.
 
-Pull updates from Transifex with ``./run.py translations --pull``. You'll need to update translation files afterwards and manually check that the merges occurred correctly.
+Pull updates from Transifex with `./run.py translations --pull`.
+You'll need to update translation files afterwards and manually check that the merges occurred correctly.
 
-Push latest English to Transifex with ``./run.py translations --push``. NB: you should pull updates before pushing to merge correctly.
+Push latest English to Transifex with `./run.py translations --push`.
+NB: you should pull updates before pushing to merge correctly.
 
 ## Deploying
 
