@@ -1,6 +1,8 @@
 """
 Docker settings
 """
+from mtp_common.stack import get_current_pod
+
 from .base import *  # noqa
 from .base import os, ENVIRONMENT
 
@@ -12,11 +14,13 @@ DEBUG = os.environ.get('DEBUG') == 'True'
 
 ALLOWED_HOSTS = [
     'localhost',
-    '.dsd.io',
-    '.service.gov.uk',
     '.service.justice.gov.uk',
     '.svc.cluster.local',
 ]
+
+current_pod = get_current_pod()
+if current_pod and current_pod.status.pod_ip:
+    ALLOWED_HOSTS.append(current_pod.status.pod_ip)
 
 OAUTHLIB_INSECURE_TRANSPORT = os.environ.get('OAUTHLIB_INSECURE_TRANSPORT') == 'True'
 if not OAUTHLIB_INSECURE_TRANSPORT:
