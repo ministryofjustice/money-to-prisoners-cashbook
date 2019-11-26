@@ -12,6 +12,7 @@ get_project_dir = partial(join, BASE_DIR)
 APP = 'cashbook'
 ENVIRONMENT = os.environ.get('ENV', 'local')
 APP_BUILD_DATE = os.environ.get('APP_BUILD_DATE')
+APP_BUILD_TAG = os.environ.get('APP_BUILD_TAG')
 APP_GIT_COMMIT = os.environ.get('APP_GIT_COMMIT')
 MOJ_INTERNAL_SITE = True
 
