@@ -1,11 +1,9 @@
 import logging
 
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from django.http import Http404, JsonResponse
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
-from django.utils.decorators import method_decorator
 from django.utils.functional import cached_property
 from django.utils.http import is_safe_url
 from django.utils.translation import gettext_lazy as _
@@ -21,11 +19,12 @@ from cashbook.templatetags.currency import currency
 from disbursements import forms as disbursement_forms, metrics
 from disbursements.utils import get_disbursement_viability, find_addresses
 from feedback.views import GetHelpView, GetHelpSuccessView
+from mtp_cashbook.misc_views import BaseView
 
 logger = logging.getLogger('mtp')
 
 
-class DisbursementView(TemplateView):
+class DisbursementView(BaseView, TemplateView):
     """
     Base view for all disbursement views
     """
@@ -40,7 +39,6 @@ class DisbursementView(TemplateView):
     def api_session(self):
         return get_api_session(self.request)
 
-    @method_decorator(login_required)
     def dispatch(self, request, **kwargs):
         request.proposition_app = {
             'name': _('Digital disbursements'),

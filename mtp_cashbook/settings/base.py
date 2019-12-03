@@ -77,7 +77,7 @@ MIDDLEWARE = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'cashbook.utils.CashbookMiddleware',
+    'mtp_cashbook.middleware.CashbookMiddleware',
     'mtp_common.analytics.ReferrerPolicyMiddleware',
 )
 
