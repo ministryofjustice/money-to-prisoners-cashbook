@@ -25,7 +25,7 @@ from feedback.views import GetHelpView, GetHelpSuccessView
 logger = logging.getLogger('mtp')
 
 
-class BaseView(TemplateView):
+class DisbursementView(TemplateView):
     """
     Base view for all disbursement views
     """
@@ -68,7 +68,7 @@ class BaseView(TemplateView):
         return super().get_context_data(**kwargs)
 
 
-class BasePagedView(BaseView):
+class BasePagedView(DisbursementView):
     """
     Base template view used in multi-page flows
     """
@@ -149,7 +149,7 @@ class BasePagedFormView(BasePagedView, FormView):
         return super().form_valid(form)
 
 
-class BaseConfirmationView(BaseView, FormView):
+class BaseConfirmationView(DisbursementView, FormView):
     """
     Base form view for yes/no steps which store no information
     """
@@ -404,7 +404,7 @@ class CreatedView(BasePagedView):
 # confirmation flow
 
 
-class PendingListView(BaseView):
+class PendingListView(DisbursementView):
     title = _('Confirm payments')
     url_name = 'pending_list'
 
@@ -561,7 +561,7 @@ class PendingDetailView(BaseConfirmationView):
         return RejectPendingView.url(**self.kwargs)
 
 
-class ConfirmedView(BaseView):
+class ConfirmedView(DisbursementView):
     title = _('Payment confirmation')
     url_name = 'confirmed'
 
@@ -572,7 +572,7 @@ class ConfirmedView(BaseView):
         return super().get_context_data(**kwargs)
 
 
-class RejectPendingView(BaseView, FormView):
+class RejectPendingView(DisbursementView, FormView):
     url_name = 'pending_reject'
     form_class = disbursement_forms.RejectDisbursementForm
     success_url = reverse_lazy('disbursements:%s' % PendingListView.url_name)
@@ -732,7 +732,7 @@ class UpdateRemittanceDescriptionView(BaseEditFormView, RemittanceDescriptionVie
 # misc views
 
 
-class StartView(BaseView):
+class StartView(DisbursementView):
     url_name = 'start'
     get_success_url = reverse_lazy('disbursements:clear_disbursement')
 
@@ -746,11 +746,11 @@ class StartView(BaseView):
         return super().get_context_data(**kwargs)
 
 
-class PaperFormsView(BaseView):
+class PaperFormsView(DisbursementView):
     url_name = 'paper-forms'
 
 
-class SearchView(BaseView, FormView):
+class SearchView(DisbursementView, FormView):
     title = _('Payments made')
     url_name = 'search'
     form_class = disbursement_forms.SearchForm
@@ -778,11 +778,11 @@ class SearchView(BaseView, FormView):
     get = FormView.post
 
 
-class ProcessOverview(BaseView):
+class ProcessOverview(DisbursementView):
     url_name = 'process-overview'
 
 
-class TrackInvoice(BaseView):
+class TrackInvoice(DisbursementView):
     url_name = 'track-invoice'
 
     def get_context_data(self, **kwargs):
@@ -790,7 +790,7 @@ class TrackInvoice(BaseView):
         return super().get_context_data(**kwargs)
 
 
-class KioskInstructions(BaseView):
+class KioskInstructions(DisbursementView):
     url_name = 'kiosk-instructions'
 
     def get_context_data(self, **kwargs):
@@ -798,14 +798,14 @@ class KioskInstructions(BaseView):
         return super().get_context_data(**kwargs)
 
 
-class DisbursementGetHelpView(BaseView, GetHelpView):
+class DisbursementGetHelpView(DisbursementView, GetHelpView):
     url_name = 'submit_ticket'
     base_template_name = 'disbursements/base.html'
     template_name = 'disbursements/feedback/submit_feedback.html'
     success_url = reverse_lazy('disbursements:feedback_success')
 
 
-class DisbursementGetHelpSuccessView(BaseView, GetHelpSuccessView):
+class DisbursementGetHelpSuccessView(DisbursementView, GetHelpSuccessView):
     url_name = 'feedback_success'
     base_template_name = 'disbursements/base.html'
     template_name = 'disbursements/feedback/success.html'
