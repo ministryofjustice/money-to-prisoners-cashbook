@@ -1,9 +1,6 @@
 (function () {
   'use strict';
 
-  require('polyfills').Polyfills.init();
-  require('placeholder-polyfill').PlaceholderPolyfill.init();
-
   // common
   require('dialogue-box').DialogueBox.init();
   require('messages').Messages.init();
