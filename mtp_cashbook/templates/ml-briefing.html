@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block page_title %}{{ view.title }} – {{ block.super }}{% endblock %}
+
+{% block inner_content %}
+  <div class="grid-row">
+    <div class="column-two-thirds">
+      <header>
+        <h1 class="heading-xlarge">{{ view.title }}</h1>
+      </header>
+
+      <p>
+        {% trans 'Please ask your hub manager for a copy of the briefing and read it before you start work.' %}
+      </p>
+    </div>
+  </div>
+{% endblock %}

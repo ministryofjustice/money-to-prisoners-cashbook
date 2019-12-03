@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block page_title %}{{ view.title }} – {{ block.super }}{% endblock %}
+
+{% block inner_content %}
+  <div class="grid-row">
+    <div class="column-two-thirds">
+      <header>
+        <h1 class="heading-xlarge">{{ view.title }}</h1>
+      </header>
+
+      <p>
+        {% blocktrans trimmed with title='HMPPS, Money Laundering, the Illicit Economy and You' %}
+          Before you start work, you need to read ‘{{ title }}’.
+        {% endblocktrans %}
+      </p>
+
+      <form method="post">
+        {% csrf_token %}
+
+        {% include 'mtp_common/forms/error-summary.html' with form=form only %}
+
+        {% with field=form.read_briefing choices=form.read_briefing.field.choices %}
+          <fieldset>
+            <legend id="{{ field.id_for_label }}-label">
+              <strong aria-label="{{ field.label }}">
+                {% trans 'Have you read it?' %}
+              </strong>
+            </legend>
+            <br />
+            <div class="form-group {% if field.errors %}form-group-error{% endif %}">
+              <button type="submit" name="{{ field.html_name }}" value="{{ choices.0.0 }}" class="button">
+                {{ choices.0.1 }}
+              </button>
+              <button type="submit" name="{{ field.html_name }}" value="{{ choices.1.0 }}" class="button-secondary">
+                {{ choices.1.1 }}
+              </button>
+            </div>
+          </fieldset>
+        {% endwith %}
+      </form>
+
+    </div>
+  </div>
+
+{% endblock %}

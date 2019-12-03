@@ -2,13 +2,11 @@ from datetime import datetime
 import logging
 
 from django.conf import settings
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
-from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import FormView, TemplateView, View
+from django.views.generic import FormView, TemplateView
 from mtp_common.analytics import genericised_pageview
 from mtp_common.auth import api_client
 from mtp_common import nomis
@@ -20,12 +18,12 @@ from cashbook.forms import (
     SearchForm, MANUALLY_CREDITED_LOG_LEVEL,
 )
 from feedback.views import GetHelpView, GetHelpSuccessView
+from mtp_cashbook.misc_views import BaseView
 
 logger = logging.getLogger('mtp')
 
 
-class CashbookView(View):
-    @method_decorator(login_required)
+class CashbookView(BaseView):
     def dispatch(self, request, *args, **kwargs):
         request.proposition_app = {
             'name': _('Digital cashbook'),
