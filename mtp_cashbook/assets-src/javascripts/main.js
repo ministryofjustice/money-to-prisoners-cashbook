@@ -19,8 +19,8 @@
   require('character-count-warning').CharacterCountWarning.init();
   require('mailcheck-warning').MailcheckWarning.init(
     '.mtp-account-management input[type=email]',
-    ['hmps.gsi.gov.uk', 'noms.gsi.gov.uk', 'justice.gsi.gov.uk'],
-    ['gsi.gov.uk', 'gov.uk']
+    ['justice.gov.uk'],
+    ['gov.uk']
   );
   require('mailcheck-warning').MailcheckWarning.init(
     '.mtp-create-disbursement input[type=email]'
