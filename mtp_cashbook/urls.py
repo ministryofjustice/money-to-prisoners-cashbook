@@ -15,6 +15,9 @@ from mtp_cashbook import misc_views
 urlpatterns = i18n_patterns(
     url(r'^$', misc_views.LandingView.as_view(), name='home'),
 
+    url(r'^ml-briefing/$', misc_views.MLBriefingConfirmationView.as_view(), name='ml-briefing-confirmation'),
+    url(r'^ml-briefing/read/$', misc_views.MLBriefingView.as_view(), name='ml-briefing'),
+
     url(r'^', include('cashbook.urls')),
     url(r'^disbursements/', include('disbursements.urls', namespace='disbursements')),
 

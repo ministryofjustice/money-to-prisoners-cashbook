@@ -7,6 +7,8 @@ from django.urls import reverse
 from django.utils.functional import cached_property
 from mtp_common.auth.test_utils import generate_tokens
 
+from mtp_cashbook import READ_ML_BRIEFING_FLAG
+
 
 class MTPBaseTestCase(SimpleTestCase):
     def setUp(self):
@@ -53,6 +55,7 @@ class MTPBaseTestCase(SimpleTestCase):
                 'name': 'HMP Brixton',
                 'pre_approval_required': False
             }],
+            'flags': [READ_ML_BRIEFING_FLAG],
         }
 
         return {

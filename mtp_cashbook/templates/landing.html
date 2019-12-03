@@ -5,6 +5,8 @@
 {% block inner_content %}
   {% notifications_box request 'cashbook_dashboard' 'cashbook_all' %}
 
+  {% include 'mtp_common/includes/message_box.html' %}
+
   {% if user_request_count %}
     <div class="mtp-notification mtp-notification--info">
       <h1>
