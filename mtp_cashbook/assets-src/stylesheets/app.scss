@@ -31,7 +31,7 @@
 
 // app-specific styles
 %table-container {
-  @include media($max-width: $desktop-breakpoint, $ignore-for-ie: true) {
+  @include media($max-width: $desktop-breakpoint) {
     overflow-x: scroll;
 
     table {

@@ -38,7 +38,7 @@ $mtp-nav-breakpoint: 830px;
       color: $page-colour;
     }
 
-    @include media($max-width: $mtp-nav-breakpoint, $ignore-for-ie: true) {
+    @include media($max-width: $mtp-nav-breakpoint) {
       display: none;
     }
   }
@@ -70,7 +70,7 @@ $mtp-nav-breakpoint: 830px;
       border-color: $focus-colour;
     }
 
-    @include media($max-width: $mtp-nav-breakpoint, $ignore-for-ie: true) {
+    @include media($max-width: $mtp-nav-breakpoint) {
       display: block;
     }
   }
@@ -81,7 +81,7 @@ $mtp-nav-breakpoint: 830px;
   float: right;
   width: 50%;
 
-  @include media($max-width: $mtp-nav-breakpoint, $ignore-for-ie: true) {
+  @include media($max-width: $mtp-nav-breakpoint) {
     float: none;
     width: auto;
   }
@@ -90,7 +90,7 @@ $mtp-nav-breakpoint: 830px;
 .mtp-nav-search {
   position: relative;
 
-  @include media($max-width: $mtp-nav-breakpoint, $ignore-for-ie: true) {
+  @include media($max-width: $mtp-nav-breakpoint) {
     display: none;
     margin-bottom: 10px;
 
@@ -111,12 +111,8 @@ $mtp-nav-breakpoint: 830px;
     border-color: $page-colour;
     transition: width 0.2s;
 
-    @include media($max-width: $mtp-nav-breakpoint, $ignore-for-ie: true) {
+    @include media($max-width: $mtp-nav-breakpoint) {
       width: 100%;
-    }
-
-    @include ie-lte(8) {
-      width: 300px;
     }
 
     &:focus {
@@ -139,10 +135,6 @@ $mtp-nav-breakpoint: 830px;
     @include navigation-search-image;
     cursor: pointer;
     border-radius: 0;
-
-    @include ie-lte(8) {
-      padding-bottom: 5px;
-    }
   }
 }
 

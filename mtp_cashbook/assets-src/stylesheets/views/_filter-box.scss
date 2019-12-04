@@ -11,7 +11,7 @@
     }
   }
 
-  @include media($max-width: $desktop-breakpoint, $ignore-for-ie: true) {
+  @include media($max-width: $desktop-breakpoint) {
     #id_start-wrapper, #id_end-wrapper {
       width: 50%;
 
@@ -26,7 +26,7 @@
   display: inline-block;
   vertical-align: bottom;
 
-  @include media($max-width: $desktop-breakpoint, $ignore-for-ie: true) {
+  @include media($max-width: $desktop-breakpoint) {
     display: block;
     margin-top: 1em;
   }
