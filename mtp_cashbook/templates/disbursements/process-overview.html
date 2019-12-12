@@ -262,21 +262,23 @@
         {% trans 'This takes about 10 days.' %}
       </p>
       <h3 class="heading-small">
-        {% trans 'How to cancel or check the progress of a cheque' %}
+        {% trans 'How to cancel a cheque or see if it’s been cashed' %}
       </h3>
       <p>
-        {% trans 'Phone SSCL immediately to let them know you want to cancel it.' %}
         {% blocktrans trimmed with group_name='‘SOP P2P Accounts Payable’' type_name='‘MoJ payments - non staff’' %}
-          Then, raise a Service Request (SR) to the group {{ group_name }} with type {{ type_name }}.
+          To do both of these, you need to raise a Service Request (SR) to the group {{ group_name }} with type {{ type_name }}.
         {% endblocktrans %}
-        {% trans 'Try to do this within 24 hours of the disbursement being sent.' %}
-        {% trans 'SSCL has 5 working days to look into this SR but they can’t guarantee a cancellation.' %}
+      </p>
+      <p>
+        {% trans 'To cancel a cheque, tell SSCL immediately then raise the SR within 24 hours of the disbursement being sent.' %}
+        {% trans 'SSCL has 5 working days to look into this, but they can’t guarantee a cancellation.' %}
       </p>
       <p>
         {% trans 'Once the bank is notified, it takes up to 2 days for them to cancel a cheque up to which time the cheque can still be cashed.' %}
+        {% trans 'You need to credit the prisoner manually in NOMIS to return their money.' %}
       </p>
       <p>
-        {% trans 'You need to credit the prisoner manually in NOMIS to return their money.' %}
+        {% trans 'To see if a cheque has been cashed, raise the SR then ask SSCL if they can check with the bank.' %}
       </p>
       <h3 class="heading-small">
         {% trans 'Make security staff aware' %}
