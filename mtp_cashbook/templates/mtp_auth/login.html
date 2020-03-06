@@ -10,15 +10,15 @@
 
   <div class="mtp-login__header">
     <div class="mtp-login__content">
-      <div class="grid-row">
-        <div class="column-full">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
           {% language_switch %}
         </div>
       </div>
 
-      <div class="grid-row">
-        <header class="column-two-thirds">
-          <h1 class="heading-xlarge">
+      <div class="govuk-grid-row">
+        <header class="govuk-grid-column-two-thirds">
+          <h1 class="govuk-heading-xl">
             {% trans 'Process money in and out of your prison' %}
           </h1>
 
@@ -31,7 +31,7 @@
           </aside>
         </header>
 
-        <div class="column-one-third">
+        <div class="govuk-grid-column-one-third">
           <img alt="{% trans 'Digital cashbook' %}" src="{% static 'images/landing-cashbook.png' %}" srcset="{% static 'images/landing-cashbook@2x.png' %} 2x"/>
         </div>
       </div>
@@ -41,9 +41,9 @@
   <div class="mtp-login__content">
     {% notification_banners request 'cashbook_login' %}
 
-    <div class="grid-row">
-      <section class="column-half">
-        <h2 class="heading-medium">{% trans 'Need access?' %}</h2>
+    <div class="govuk-grid-row">
+      <section class="govuk-grid-column-one-half">
+        <h2 class="govuk-heading-m">{% trans 'Need access?' %}</h2>
         <p>
           {% trans 'If you’re a business hub staff member in a public prison in England or Wales, you can request access to the digital cashbook.' %}
         </p>
@@ -59,8 +59,8 @@
         </p>
       </section>
 
-      <section class="column-half">
-        <h2 class="heading-medium">{% trans 'Sign in' %}</h2>
+      <section class="govuk-grid-column-one-half">
+        <h2 class="govuk-heading-m">{% trans 'Sign in' %}</h2>
 
         {% include 'mtp_common/forms/error-summary.html' with form=form only %}
 

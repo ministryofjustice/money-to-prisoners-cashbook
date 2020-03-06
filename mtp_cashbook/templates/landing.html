@@ -5,7 +5,7 @@
 {% block content %}
   {% notification_banners request 'cashbook_dashboard' 'cashbook_all' %}
 
-  {% include 'mtp_common/includes/message_box.html' %}
+  {% include 'mtp_common/includes/message-banners.html' %}
 
   {% if user_request_count %}
     <div class="mtp-notification mtp-notification--info">
@@ -25,7 +25,7 @@
   {% endif %}
 
   <header>
-    <h1 class="heading-xlarge mtp-heading--compact">
+    <h1 class="govuk-heading-xl">
       {% blocktrans trimmed with name=request.user.get_full_name|default:request.user.username %}
         Welcome {{ name }}
       {% endblocktrans %}
@@ -35,8 +35,8 @@
     {% trans 'Use the tools below to manage prisoner money' %}
   </p>
 
-  <div class="grid-row">
-    <div class="column-third">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-third">
       <div class="mtp-box">
         <a href="{% url 'new-credits' %}" aria-labelledby="tool-1">{% trans 'Digital cashbook' %}</a>
         <p id="tool-1">
@@ -45,7 +45,7 @@
       </div>
     </div>
 
-    <div class="column-third">
+    <div class="govuk-grid-column-one-third">
       <div class="mtp-box">
         <a href="{% url 'disbursements:start' %}" aria-labelledby="tool-2">{% trans 'Digital disbursements' %}</a>
         <p id="tool-2">

@@ -12,7 +12,7 @@
   {{ block.super }}
 
   <header>
-    <h2 class="heading-xlarge mtp-heading--compact">
+    <h2 class="govuk-heading-xl">
       {% blocktrans trimmed with date=form.batch_date|date:'d/m/Y' count count=form.pagination.count %}
         {{ count }} credit processed on {{ date }}
       {% plural %}
@@ -22,7 +22,7 @@
     </h2>
   </header>
 
-  {% include 'mtp_common/includes/message_box.html' %}
+  {% include 'mtp_common/includes/message-banners.html' %}
 
   <form method="get" class="mtp-processed-credits-search" action="">
     {% include 'mtp_common/forms/error-summary.html' with form=form only %}
@@ -48,7 +48,7 @@
 
   <div class="mtp-batch">
     {% if object_list %}
-      <p><a href="#" class="print-hidden js-print-trigger">{% trans 'Print this page of credits' %}</a></p>
+      <p><a href="#" class="mtp-print-hidden js-print-trigger">{% trans 'Print this page of credits' %}</a></p>
 
       <table class="mtp-table">
         <caption class="visually-hidden">{{ view.title }}</caption>
@@ -62,7 +62,7 @@
         </tbody>
       </table>
 
-      <p><a href="#" class="print-hidden js-print-trigger">{% trans 'Print this page of credits' %}</a></p>
+      <p><a href="#" class="mtp-print-hidden js-print-trigger">{% trans 'Print this page of credits' %}</a></p>
 
     {% else %}
       <p><strong>{% trans 'No credits' %}</strong></p>

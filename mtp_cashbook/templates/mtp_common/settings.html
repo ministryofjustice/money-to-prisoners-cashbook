@@ -1,19 +1,19 @@
 {% extends 'mtp_common/settings.html' %}
 {% load i18n %}
 
-{% block page_title %}{% trans 'Settings' %} – {% trans 'Manage prisoner money' %}{% endblock %}
-
-{% block extra_settings %}
+{% block settings %}
   <div class="mtp-settings-item">
-    <h2 class="heading-large">
+    <h2 class="govuk-heading-l">
       {% trans 'Move prison' %}
     </h2>
     <p>{% trans 'You are currently at:' %}</p>
-    <ul class="list list-bullet">
+    <ul class="govuk-list govuk-list--bullet">
       {% for prison in request.user.user_data.prisons %}
         <li>{{ prison.name }}</li>
       {% endfor %}
     </ul>
-    <a class="button" href="{% url 'move-prison' %}">{% trans 'Move prison' %}</a>
+    <a class="govuk-button" href="{% url 'move-prison' %}">{% trans 'Move prison' %}</a>
   </div>
+
+  {{ block.super }}
 {% endblock %}

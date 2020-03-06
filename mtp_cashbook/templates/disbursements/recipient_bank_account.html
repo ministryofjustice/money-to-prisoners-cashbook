@@ -8,16 +8,16 @@
   {{ block.super }}
 
   <header>
-    <h1 class="heading-xlarge mtp-heading--compact">{{ view.title }}</h1>
-    <h2 class="heading-small">
+    <h1 class="govuk-heading-xl">{{ view.title }}</h1>
+    <h2 class="govuk-heading-s">
       {% trans 'Recipient' %}: {{ recipient_first_name }} {{ recipient_last_name }} {{ recipient_company_name }}
     </h2>
   </header>
 
   <br/>
 
-  <div class="grid-row">
-    <div class="column-two-thirds">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
       <form method="post">
         {% csrf_token %}
 
@@ -35,7 +35,7 @@
             <span></span>{% trans 'What if the prisoner gets the recipient’s bank details wrong?' %}
           </a>
         </p>
-        <div class="mtp-disclosure__contents panel panel-border-narrow print-hidden" id="mtp-{{ note_id }}">
+        <div class="mtp-disclosure__contents panel panel-border-narrow mtp-print-hidden" id="mtp-{{ note_id }}">
           {% trans 'In this case, SSCL will send out a cheque instead but it will delay payment.' %}
         </div>
 

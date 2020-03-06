@@ -17,9 +17,9 @@
     </h1>
   </div>
 
-  <div class="grid-row">
-    <div class="column-two-thirds">
-      <h2 class="heading-medium">{% trans 'What to do next' %}</h2>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h2 class="govuk-heading-m">{% trans 'What to do next' %}</h2>
       <p>
         {% trans 'Remind your colleague who has the paper form to check the payment.' %}
         {% trans 'The payment is only sent after they have both checked and confirmed it.' %}
@@ -29,7 +29,7 @@
       </p>
       <br>
 
-      <p class="print-hidden">
+      <p class="mtp-print-hidden">
         <a href="{% url 'disbursements:sending_method' %}" class="button button-secondary">{% trans 'Process another request' %}</a>
       </p>
     </div>

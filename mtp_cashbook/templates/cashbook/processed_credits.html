@@ -12,7 +12,7 @@
   {{ block.super }}
 
   <header>
-    <h1 class="heading-xlarge mtp-heading--compact">{{ view.title }}</h1>
+    <h1 class="govuk-heading-xl">{{ view.title }}</h1>
   </header>
 
   <p>{% trans 'A list of all processed credits you can filter.' %}</p>
@@ -25,7 +25,7 @@
     {% trans 'Just enter the date range of the credits you want to find.' %}
   </div>
 
-  <h3 class="heading-medium">{% trans 'Filter by' %}</h3>
+  <h3 class="govuk-heading-m">{% trans 'Filter by' %}</h3>
   <form method="get" class="mtp-processed-credits-search" action="">
     {% include 'mtp_common/forms/error-summary.html' with form=form only %}
 
@@ -59,7 +59,7 @@
             {% if request.pre_approval_required %}
               <th>{% trans 'Security notes' %}</th>
             {% endif %}
-            <th class="print-hidden">{% trans 'Options' %}</th>
+            <th class="mtp-print-hidden">{% trans 'Options' %}</th>
           </tr>
         </thead>
 
@@ -106,7 +106,7 @@
                   <td>{% trans 'No' %}</td>
                 {% endif %}
               {% endif %}
-              <td class="print-hidden"><a href="{% url 'processed-credits-detail' date=batch.logged_at|date:'Ymd' user_id=batch.owner %}" class="js-PrintBatch">{% trans 'Print' %}</a></td>
+              <td class="mtp-print-hidden"><a href="{% url 'processed-credits-detail' date=batch.logged_at|date:'Ymd' user_id=batch.owner %}" class="js-PrintBatch">{% trans 'Print' %}</a></td>
             </tr>
           {% endfor %}
         </tbody>

@@ -13,11 +13,11 @@
 {% block content %}
   {{ block.super }}
 
-  <div class="grid-row">
-    <div class="column-two-thirds mtp-track-invoice-help">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds mtp-track-invoice-help">
 
       <header>
-        <h1 class="heading-xlarge">
+        <h1 class="govuk-heading-xl">
           {% trans 'How to track digital disbursements in SOP' %}
         </h1>
       </header>
@@ -37,7 +37,7 @@
         {% trans 'The date parameters of the discoverer report must be for the whole month to ensure the disbursement transactions are included.' %}
       </p>
 
-      <h2 class="heading-medium">
+      <h2 class="govuk-heading-m">
         {% trans 'Set up SOP access, if needed' %}
       </h2>
       <p>
@@ -61,7 +61,7 @@
       </ul>
 
       <figure>
-        <figcaption class="heading-medium">
+        <figcaption class="govuk-heading-m">
           1.
           {% trans 'Log into SOP and open ‘NMS AP Enquiry (View Only)’' %}
         </figcaption>
@@ -69,7 +69,7 @@
       </figure>
 
       <figure>
-        <figcaption class="heading-medium">
+        <figcaption class="govuk-heading-m">
           2.
           {% trans 'Open ‘Invoices’' %}
         </figcaption>
@@ -77,7 +77,7 @@
       </figure>
 
       <figure>
-        <figcaption class="heading-medium">
+        <figcaption class="govuk-heading-m">
           3.
           {% trans 'Enter the reference number of the transaction in the ‘Invoice Number’ box and click on ‘Find’' %}
         </figcaption>
@@ -85,7 +85,7 @@
       </figure>
 
       <figure>
-        <figcaption class="heading-medium">
+        <figcaption class="govuk-heading-m">
           4.
           {% trans 'This screen shows an overview of the payment information.' %}
           {% trans 'To see further details, click on the ‘View Payments’ tab.' %}
@@ -94,7 +94,7 @@
       </figure>
 
       <figure>
-        <figcaption class="heading-medium">
+        <figcaption class="govuk-heading-m">
           5.
           {% trans 'This screen shows the payment method (bank transfer or cheque) and the date of the payment' %}
         </figcaption>
@@ -105,7 +105,7 @@
       </figure>
 
       <figure>
-        <figcaption class="heading-small">
+        <figcaption class="govuk-heading-s">
           {% trans 'Where the payment had been made via cheque, the payment method will list ‘Check’ instead of ‘Electronic’' %}
         </figcaption>
         <img src="{% static 'disbursements/track-invoice/6-cheque-details.png' %}" alt="{% trans 'SOP screenshot' %}" />
@@ -115,7 +115,7 @@
       </figure>
 
       <figure>
-        <figcaption class="heading-medium">
+        <figcaption class="govuk-heading-m">
           {% trans 'If the prisoner gets the recipient’s details wrong' %}
         </figcaption>
         <p>

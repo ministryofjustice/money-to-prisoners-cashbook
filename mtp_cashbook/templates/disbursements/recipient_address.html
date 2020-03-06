@@ -8,14 +8,14 @@
   {{ block.super }}
 
   <header>
-    <h1 class="heading-xlarge mtp-heading--compact">{{ view.title }}</h1>
+    <h1 class="govuk-heading-xl">{{ view.title }}</h1>
   </header>
 
   {% if address_picker %}
     <p>
       {% trans 'Postcode:' %}
       <strong>{{ postcode }}</strong>
-      <a href="{% url 'disbursements:recipient_postcode' %}?next={{ view.url }}" class="print-hidden">
+      <a href="{% url 'disbursements:recipient_postcode' %}?next={{ view.url }}" class="mtp-print-hidden">
         {% trans 'Change' %}
         <span class="visually-hidden">{% trans 'Postcode' %}</span>
       </a>
@@ -40,14 +40,14 @@
     </div>
   {% endif %}
 
-  <div class="grid-row">
-    <div class="column-two-thirds">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
       <form method="post">
         {% csrf_token %}
 
         <div id="manual-address-entry">
           {% if address_picker %}
-            <h3 class="heading-small">{% trans 'Or enter address manually' %}</h3>
+            <h3 class="govuk-heading-s">{% trans 'Or enter address manually' %}</h3>
             <br/>
           {% endif %}
 

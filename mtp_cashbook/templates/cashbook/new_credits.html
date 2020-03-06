@@ -13,17 +13,17 @@
   {{ block.super }}
 
   <header>
-    <h1 class="heading-xlarge mtp-heading--compact">{{ view.title }}</h1>
+    <h1 class="govuk-heading-xl">{{ view.title }}</h1>
   </header>
 
   <div class="print-only">
-    <h2 class="heading-small">
+    <h2 class="govuk-heading-s">
       {% trans 'CONFIDENTIAL: dispose of securely' %}
     </h2>
   </div>
 
   {% if credited_credits %}
-    <div class="mtp-message mtp-message--success print-hidden">
+    <div class="mtp-message mtp-message--success mtp-print-hidden">
       {% blocktrans trimmed count credited_credits=credited_credits %}
         {{ credited_credits }} credit sent to NOMIS
       {% plural %}
@@ -34,7 +34,7 @@
   {% endif %}
 
   {% if credited_manual_credits %}
-    <div class="mtp-message mtp-message--success print-hidden">
+    <div class="mtp-message mtp-message--success mtp-print-hidden">
       {% blocktrans trimmed count credited_manual_credits=credited_manual_credits %}
         {{ credited_manual_credits }} credit manually input by you into NOMIS
       {% plural %}
@@ -45,13 +45,13 @@
   {% endif %}
 
   {% if failed_credits %}
-    <div class="mtp-message mtp-message--error print-hidden">
+    <div class="mtp-message mtp-message--error mtp-print-hidden">
       {% blocktrans trimmed count failed_credits=failed_credits %}
         {{ failed_credits }} credit not processed due to technical error, try again soon
       {% plural %}
         {{ failed_credits }} credits not processed due to technical error, try again soon
       {% endblocktrans %}
-      <a href="#failed-credits-dialog" class="print-hidden js-dialogue-open mtp-end-link">{% trans 'Why?' %}</a>
+      <a href="#failed-credits-dialog" class="mtp-print-hidden js-dialogue-open mtp-end-link">{% trans 'Why?' %}</a>
     </div>
 
     {% dialoguebox title=_('Why didn’t it work?') html_id='failed-credits-dialog' %}
@@ -71,16 +71,16 @@
       {% include 'mtp_common/forms/error-summary.html' with form=form.manual only %}
 
       {% if owned_manual_credits %}
-        <div class="mtp-message mtp-message--warning print-hidden">
+        <div class="mtp-message mtp-message--warning mtp-print-hidden">
           {% blocktrans trimmed count manual_credits=owned_manual_credits %}
             {{ manual_credits }} credit needs your manual input in NOMIS
           {% plural %}
             {{ manual_credits }} credits need your manual input in NOMIS
           {% endblocktrans %}
-          <a href="#manual-credits-dialog" class="print-hidden js-dialogue-open mtp-end-link">{% trans 'How?' %}</a>
+          <a href="#manual-credits-dialog" class="mtp-print-hidden js-dialogue-open mtp-end-link">{% trans 'How?' %}</a>
         </div>
 
-        <div class="print-hidden"><p>{% trans 'These credits need your manual input to be processed.' %}</p></div>
+        <div class="mtp-print-hidden"><p>{% trans 'These credits need your manual input to be processed.' %}</p></div>
 
         {% dialoguebox title=_('These credits need further processing') html_id='manual-credits-dialog' %}
           <p>
@@ -95,7 +95,7 @@
 
 
       {% if unowned_manual_credits %}
-        <div class="print-hidden"><p>
+        <div class="mtp-print-hidden"><p>
           {% if unowned_oldest_date and unowned_oldest_date|dayssince > 0 %}
             {% blocktrans trimmed with owner=other_owners.0 count owners=other_owners|length %}
               {{ owner }} started to process these credits but may not have finished
@@ -156,12 +156,12 @@
     {% include 'mtp_common/forms/error-summary.html' with form=form.new only %}
 
     {% if new_object_list or not manual_credits %}
-    <div class="mtp-batch mtp-new-credits-batch {% if not new_object_list %}print-hidden{% endif %}">
+    <div class="mtp-batch mtp-new-credits-batch {% if not new_object_list %}mtp-print-hidden{% endif %}">
       {% if new_object_list %}
-        <div class="mtp-floating-header js-StickyHeader print-hidden">
-          <div class="grid-row">
-            <div class="column-two-thirds">
-              <p class="print-hidden">
+        <div class="mtp-floating-header js-StickyHeader mtp-print-hidden">
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+              <p class="mtp-print-hidden">
                 {% blocktrans trimmed count new_credits=new_credits %}
                   <strong>{{ new_credits }}</strong> new credit.
                 {% plural %}
@@ -173,7 +173,7 @@
               </p>
             </div>
 
-            <div class="column-one-third mtp-submit__button">
+            <div class="govuk-grid-column-one-third mtp-submit__button">
               {% if new_object_list %}
                 <button type="submit" name="submit_new" value="submit" class="button">{% trans 'Credit to NOMIS' %}</button>
               {% endif %}
@@ -184,7 +184,7 @@
         <div class="mtp-nomis-print-header print-only">
           <img src="{% static 'images/icon-important.png' %}"/>
           <div class="mtp-nomis-warning">
-            <h2 class="heading-medium">
+            <h2 class="govuk-heading-m">
               {% trans 'You don’t have to manually enter all credits into NOMIS any more' %}
             </h2>
             <div>
@@ -200,7 +200,7 @@
 
         <thead>
           {% if new_object_list %}
-            <tr class="print-hidden">
+            <tr class="mtp-print-hidden">
               <td colspan="{% if request.pre_approval_required %}5{% else %}4{% endif %}" class="mtp-compact-cell">
                 <p>
                   <a class="mtp-disclosure" href="#" aria-controls="mtp-help-box" aria-expanded="false" role="button" data-analytics="pageview,/-help_open/{{ request.resolver_match.view_name }}/">
@@ -242,7 +242,7 @@
             {% if request.pre_approval_required %}
               <th>{% trans 'Security' %}</th>
             {% endif %}
-            <th class="mtp-check-col mtp-compact-cell print-hidden">{% trans 'Select' %}</th>
+            <th class="mtp-check-col mtp-compact-cell mtp-print-hidden">{% trans 'Select' %}</th>
           </tr>
         </thead>
 
@@ -285,7 +285,7 @@
                     {% endif %}
                   </td>
                 {% endif %}
-                <td class="mtp-check-cell print-hidden">
+                <td class="mtp-check-cell mtp-print-hidden">
                   <input
                     type="checkbox"
                     name="{{ form.new.credits.html_name }}"
@@ -316,7 +316,7 @@
           </tbody>
 
           <tfoot>
-            <tr class="print-hidden">
+            <tr class="mtp-print-hidden">
               <td colspan="{% if request.pre_approval_required %}5{% else %}4{% endif %}" class="mtp-compact-cell"></td>
               <td class="mtp-check-all mtp-compact-cell">
                 <input type="checkbox" id="select-all-footer" class="Checkbox Checkbox--left js-SelectAll" data-name="{{ form.new.credits.html_name }}">
@@ -330,7 +330,7 @@
           <tbody>
             <tr>
               <td class="mtp-no-credits" colspan="{% if request.pre_approval_required %}6{% else %}5{% endif %}">
-                <p class="heading-large">{% trans 'Thank you' %}</p>
+                <p class="govuk-heading-l">{% trans 'Thank you' %}</p>
                 <p>{% trans 'All credits have been processed' %}</p>
               </td>
             </tr>

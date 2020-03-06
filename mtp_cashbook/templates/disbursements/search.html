@@ -12,12 +12,12 @@
   {{ block.super }}
 
   <header>
-    <h1 class="heading-xlarge mtp-heading--compact">{% trans 'Payments made' %}</h1>
+    <h1 class="govuk-heading-xl">{% trans 'Payments made' %}</h1>
   </header>
 
   <p class="lede">{{ form.search_description.description }}</p>
 
-  <form method="get" class="print-hidden">
+  <form method="get" class="mtp-print-hidden">
     <p><a href="{% url 'disbursements:process-overview' %}#section-track">{% trans 'How to trace a payment' %}</a></p>
 
     {{ form.ordering.as_hidden }}
@@ -26,46 +26,46 @@
 
     {% tabbedpanel cookie_name='disbursement-search' tab_label=_('Filter by') %}
       {% paneltab name='prisoner' title=_('Prisoner') %}
-        <div class="grid-row">
-          <div class="column-third">
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-one-third">
             {% include 'mtp_common/forms/field.html' with field=form.prisoner_name input_classes='form-control-3-4' %}
           </div>
-          <div class="column-third">
+          <div class="govuk-grid-column-one-third">
             {% include 'mtp_common/forms/field.html' with field=form.prisoner_number input_classes='form-control-2-3' %}
           </div>
         </div>
       {% endpaneltab %}
 
       {% paneltab name='recipient' title=_('Recipient') %}
-        <div class="grid-row">
-          <div class="column-two-thirds">
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-two-thirds">
             {% include 'mtp_common/forms/field.html' with field=form.recipient_name %}
           </div>
         </div>
       {% endpaneltab %}
 
       {% paneltab name='invoice_number' title=_('Invoice number') %}
-        <div class="grid-row">
-          <div class="column-two-thirds">
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-two-thirds">
             {% include 'mtp_common/forms/field.html' with field=form.invoice_number %}
           </div>
         </div>
       {% endpaneltab %}
 
       {% paneltab name='status' title=_('Status') %}
-        <div class="grid-row">
-          <div class="column-third">
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-one-third">
             {% include 'mtp_common/forms/select-field.html' with field=form.resolution %}
           </div>
-          <div class="column-third">
+          <div class="govuk-grid-column-one-third">
             {% include 'mtp_common/forms/field.html' with field=form.nomis_transaction_id input_classes='form-control-2-3' %}
           </div>
         </div>
       {% endpaneltab %}
 
       {% paneltab name='date' title=_('Date') %}
-        <div class="grid-row">
-          <div class="column-one-third">
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-one-third">
             {% with field=form.date_filter %}
               <div class="form-group {% if field.errors %}form-group-error{% endif %}">
                 {% include 'mtp_common/forms/field-errors.html' with field=field only %}
@@ -78,10 +78,10 @@
               </div>
             {% endwith %}
           </div>
-          <div class="column-one-third">
+          <div class="govuk-grid-column-one-third">
             {% include 'mtp_common/forms/field.html' with field=form.date__gte %}
           </div>
-          <div class="column-one-third">
+          <div class="govuk-grid-column-one-third">
             {% include 'mtp_common/forms/field.html' with field=form.date__lt %}
           </div>
         </div>
