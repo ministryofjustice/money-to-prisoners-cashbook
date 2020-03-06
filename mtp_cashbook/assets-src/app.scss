@@ -1,5 +1,12 @@
-@import 'mtp-internal';
+// mtp-common base components
+@import 'mtp/base';
 
+// mtp-common extra components
+@import 'mtp/components/mailcheck-warning';
+
+// app components
+
+/*
 @import 'elements/tabbed-panel';
 @import 'elements/character-count-warning';
 @import 'elements/mailcheck-warning';
@@ -78,3 +85,4 @@ address {
     background-size: 15px 15px;
   }
 }
+*/
