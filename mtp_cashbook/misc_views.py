@@ -19,9 +19,14 @@ class BaseView(View):
     - forces login
     - ensures "read ML briefing" flag is set or redirects to ML briefing confirmation screen
     """
+    proposition_app = {
+        'sub_app': None,
+        'name': _('Manage prisoner money'),
+    }
 
     @method_decorator(login_required)
     def dispatch(self, request, **kwargs):
+        request.proposition_app = self.proposition_app
         if not request.read_ml_briefing and getattr(self, 'requires_reading_ml_briefing', True):
             return redirect('ml-briefing-confirmation')
         return super().dispatch(request, **kwargs)

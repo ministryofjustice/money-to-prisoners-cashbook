@@ -28,6 +28,11 @@ class DisbursementView(BaseView, TemplateView):
     """
     Base view for all disbursement views
     """
+    proposition_app = {
+        'sub_app': 'disbursements',
+        'name': _('Digital disbursements'),
+    }
+
     title = None
     url_name = None
 
@@ -38,14 +43,6 @@ class DisbursementView(BaseView, TemplateView):
     @cached_property
     def api_session(self):
         return get_api_session(self.request)
-
-    def dispatch(self, request, **kwargs):
-        request.proposition_app = {
-            'name': _('Digital disbursements'),
-            'url': StartView.url(),
-            'help_url': DisbursementGetHelpView.url(),
-        }
-        return super().dispatch(request, **kwargs)
 
     def get_template_names(self):
         if self.template_name:

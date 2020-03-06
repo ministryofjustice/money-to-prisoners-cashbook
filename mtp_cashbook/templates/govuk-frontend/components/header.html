@@ -1,4 +1,10 @@
 {% extends 'govuk-frontend/components/header.html' %}
 {% load i18n %}
 
-{% block proposition %}{% trans 'Manage prisoner money' %}{% endblock %}
+{% block proposition %}
+  {% if request.proposition_app %}
+    {{ request.proposition_app.name }}
+  {% else %}
+    {% trans 'Manage prisoner money' %}
+  {% endif %}
+{% endblock %}

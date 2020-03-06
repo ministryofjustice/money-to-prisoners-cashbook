@@ -1,1 +1,35 @@
 {% extends 'mtp_common/header/app-links.html' %}
+
+{% block app_links %}
+  {% if request.proposition_app.sub_app == 'cashbook' %}
+    <ul>
+      <li>
+        {% include 'mtp_common/header/app-link.html' with view_name='new-credits' link_text=_('New credits') %}
+      </li>
+      <li>
+        {% include 'mtp_common/header/app-link.html' with view_name='processed-credits-list' subview_names='processed-credits-detail' link_text=_('Processed credits') %}
+      </li>
+      <li>
+        {% include 'mtp_common/header/app-link.html' with view_name='cashbook_submit_ticket' subview_names='cashbook_feedback_success' link_text=_('Get help') %}
+      </li>
+    </ul>
+  {% elif request.proposition_app.sub_app == 'disbursements' %}
+    <ul>
+      <li>
+        {% include 'mtp_common/header/app-link.html' with view_name='disbursements:start' subview_names='disbursements:prisoner disbursements:prisoner_check disbursements:amount disbursements:sending_method disbursements:recipient_contact disbursements:recipient_bank_account disbursements:details_check disbursements:created' link_text=_('Disbursements') %}
+      </li>
+      <li>
+        {% include 'mtp_common/header/app-link.html' with view_name='disbursements:pending_list' subview_names='disbursements:pending_detail disbursements:confirmed disbursements:update_sending_method disbursements:update_prisoner disbursements:update_amount disbursements:update_recipient_contact disbursements:update_recipient_bank_account' link_text=_('Confirm payments') suffix=confirm_tab_suffix %}
+      </li>
+      <li>
+        {% include 'mtp_common/header/app-link.html' with view_name='disbursements:search' link_text=_('Payments made') %}
+      </li>
+      <li>
+        {% include 'mtp_common/header/app-link.html' with view_name='disbursements:paper-forms' link_text=_('Paper forms') %}
+      </li>
+      <li>
+        {% include 'mtp_common/header/app-link.html' with view_name='disbursements:process-overview' subview_names='disbursements:track-invoice disbursements:submit_ticket disbursements:feedback_success' link_text=_('Get help') %}
+      </li>
+    </ul>
+  {% endif %}
+{% endblock %}
