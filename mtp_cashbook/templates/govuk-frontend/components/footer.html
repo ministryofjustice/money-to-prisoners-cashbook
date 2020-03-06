@@ -1,0 +1,21 @@
+{% extends 'govuk-frontend/components/footer.html' %}
+{% load i18n %}
+
+{% block footer_support_links %}
+  <h2 class="govuk-visually-hidden">
+    {% trans 'Support links' %}
+  </h2>
+  <ul class="govuk-footer__inline-list">
+    <li class="govuk-footer__inline-list-item">
+      <a class="govuk-footer__link" href="{% url 'submit_ticket' %}">
+        {% trans 'Get help' %}
+      </a>
+    </li>
+    <li class="govuk-footer__inline-list-item">
+      {% trans 'Built by' %}
+      <a class="govuk-footer__link" href="https://mojdigital.blog.gov.uk/">
+        <abbr title="{% trans 'Ministry of Justice' %}">MOJ</abbr> Digital
+      </a>
+    </li>
+  </ul>
+{% endblock %}

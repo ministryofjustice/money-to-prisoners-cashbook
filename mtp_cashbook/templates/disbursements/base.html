@@ -19,6 +19,6 @@
   </nav>
 {% endblock %}
 
-{% block inner_content %}
-  {% notifications_box request 'cashbook_disbursements' 'cashbook_all' %}
+{% block content %}
+  {% notification_banners request 'cashbook_disbursements' 'cashbook_all' %}
 {% endblock %}
