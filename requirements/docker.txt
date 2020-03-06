@@ -1,6 +1,6 @@
 # Place docker dependencies here
 -r base.txt
 
-money-to-prisoners-common[monitoring]>=9.16,<9.17
+money-to-prisoners-common[monitoring]>=10.0,<10.1
 
 uWSGI==2.0.18
