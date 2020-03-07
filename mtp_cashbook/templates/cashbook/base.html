@@ -7,8 +7,8 @@
 {% block proposition_extra %}
   <nav id="mtp-proposition-extra" class="govuk-grid-column-full mtp-print-hidden">
     <form class="mtp-proposition-tab-column mtp-nav-search" method="get" action="{% url 'search' %}">
-      <div class="form-group">
-        <label class="visually-hidden" for="id_search">{% trans 'Search all credits' %}</label>
+      <div class="govuk-form-group">
+        <label class="govuk-visually-hidden" for="id_search">{% trans 'Search all credits' %}</label>
         <input id="id_search" class="form-control" name="search" value="{{ search_field.value|default_if_none:'' }}" placeholder="{% trans 'Search all credits, for example, by prisoner number' %}" required/>
         <button type="submit">{% trans 'Search' %}</button>
       </div>
@@ -16,7 +16,7 @@
 
     {% spaceless %}
       <ul id="mtp-proposition-tabs" class="mtp-proposition-tab-column">
-        <li class="mtp-nav-search__trigger"><a href="#"><span class="visually-hidden">{% trans 'Search all credits' %}</span></a></li>
+        <li class="mtp-nav-search__trigger"><a href="#"><span class="govuk-visually-hidden">{% trans 'Search all credits' %}</span></a></li>
       </ul>
     {% endspaceless %}
   </nav>

@@ -19,29 +19,32 @@
 
         {% include 'mtp_common/forms/error-summary.html' with form=form only %}
 
-        <fieldset class="mtp-sending-method-choice">
-          <legend id="{{ form.method.id_for_label }}-label" class="visually-hidden">{% trans 'Method by which to send money' %}</legend>
+        <fieldset class="govuk-fieldset">
+          <legend id="{{ form.method.id_for_label }}-label" class="govuk-visually-hidden">{% trans 'Method by which to send money' %}</legend>
 
-          {% for method in form.method.field.choices %}
-            <div class="multiple-choice">
-              <input id="id_{{ method.0 }}" type="radio" name="{{ form.method.html_name }}" value="{{ method.0 }}"
-                     {% if form.method.value == method.0 %}checked{% endif %}>
-              <label for="id_{{ method.0 }}">
-                <strong>{{ method.1 }}</strong>
-                <br/>
-                {% for key, value in form.method.field.help_text.items %}
-                  {% if key == method.0 %}
-                    {{ value }}
-                  {% endif %}
-                {% endfor %}
-              </label>
-            </div>
-          {% endfor %}
+          <div class="govuk-radios">
+            {% for method in form.method.field.choices %}
+              <div class="govuk-radios__item">
+                <input id="id_{{ method.0 }}" class="govuk-radios__input" type="radio" name="{{ form.method.html_name }}" value="{{ method.0 }}"
+                       {% if form.method.value == method.0 %}checked{% endif %}>
+                <label for="id_{{ method.0 }}" class="govuk-label govuk-label--s govuk-radios__label">
+                  {{ method.1 }}
+                </label>
+                <span id="id_{{ method.0 }}-hint" class="govuk-hint govuk-radios__hint">
+                  {% for key, value in form.method.field.help_text.items %}
+                    {% if key == method.0 %}
+                      {{ value }}
+                    {% endif %}
+                  {% endfor %}
+                </span>
+              </div>
+            {% endfor %}
+          </div>
         </fieldset>
-        <br>
+        <br />
         <p>{% trans 'Both methods are free to the prisoner and recipient' %}</p>
 
-        <button type="submit" class="button mtp-next-button">{% trans 'Next' %}</button>
+        <button type="submit" class="govuk-button mtp-next-button">{% trans 'Next' %}</button>
       </form>
 
     </div>

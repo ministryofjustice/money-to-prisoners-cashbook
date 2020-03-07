@@ -28,35 +28,38 @@
         {% include 'mtp_common/forms/error-summary.html' with form=form only %}
 
         {% with field=form.confirmation choices=form.confirmation.field.choices %}
-          <fieldset>
-            <legend id="{{ field.id_for_label }}-label">
-              <strong>{{ field.label }}</strong>
+          <fieldset class="govuk-fieldset">
+            <legend id="{{ field.id_for_label }}-label" class="govuk-fieldset__legend govuk-fieldset__legend--s">
+              {{ field.label }}
             </legend>
 
-            <div class="form-group {% if field.errors %}form-group-error{% endif %}">
-              <div class="multiple-choice">
-                <input id="js-choice-{{ choices.0.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.0.0 }}" data-reveal=".js-choice-yes">
-                <label for="js-choice-{{ choices.0.0 }}">{{ choices.0.1 }}</label>
-              </div>
+            <div class="govuk-form-group {% if field.errors %}govuk-form-group--error{% endif %}">
+              <div class="govuk-radios">
+                <div class="govuk-radios__item">
+                  <input id="js-choice-{{ choices.0.0 }}" class="govuk-radios__input mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.0.0 }}" data-reveal=".js-choice-yes">
+                  <label for="js-choice-{{ choices.0.0 }}" class="govuk-label govuk-radios__label">{{ choices.0.1 }}</label>
+                </div>
 
-              <div class="multiple-choice">
-                <input id="js-choice-{{ choices.1.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.1.0 }}" data-reveal=".js-choice-no">
-                <label for="js-choice-{{ choices.1.0 }}">{{ choices.1.1 }}</label>
-              </div>
-              <div class="panel panel-border-narrow mtp-button-panel js-hidden js-choice-no">
-                <p>
-                  {% trans 'Check with the prisoner they have entered their correct details on the paper form, then process it as a new request.' %}
-                </p>
+                <div class="govuk-radios__item">
+                  <input id="js-choice-{{ choices.1.0 }}" class="govuk-radios__input mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.1.0 }}" data-reveal=".js-choice-no">
+                  <label for="js-choice-{{ choices.1.0 }}" class="govuk-label govuk-radios__label">{{ choices.1.1 }}</label>
+                </div>
+
+                <div class="govuk-inset-text mtp-button-panel js-hidden js-choice-no">
+                  <p>
+                    {% trans 'Check with the prisoner they have entered their correct details on the paper form, then process it as a new request.' %}
+                  </p>
+                </div>
               </div>
             </div>
           </fieldset>
         {% endwith %}
 
         <div class="js-choice-yes">
-          <button type="submit" class="button mtp-next-button">{% trans 'Next' %}</button>
+          <button type="submit" class="govuk-button mtp-next-button">{% trans 'Next' %}</button>
         </div>
         <div class="hidden js-choice-no">
-          <a href="{{ view.alternate_success_url }}" class="button button-secondary">{% trans 'Process another request' %}</a>
+          <a href="{{ view.alternate_success_url }}" class="govuk-button govuk-button--secondary">{% trans 'Process another request' %}</a>
         </div>
       </form>
 

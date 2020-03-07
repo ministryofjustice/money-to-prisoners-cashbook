@@ -283,7 +283,7 @@ class RecipientPostcodeForm(DisbursementForm):
 
 
 class RecipientAddressForm(RecipientPostcodeForm):
-    address_line1 = forms.CharField(label=_('Their address'))
+    address_line1 = forms.CharField(label=_('Address line 1'))
     address_line2 = forms.CharField(label=_('Address line 2'), required=False)
     city = forms.CharField(label=_('Town or city'))
 

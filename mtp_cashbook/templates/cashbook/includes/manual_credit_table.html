@@ -3,9 +3,9 @@
 {% load credits %}
 {% load mtp_common %}
 
-<div class="mtp-batch mtp-manual-credits-batch">
+<div class="mtp-table__container mtp-batch mtp-manual-credits-batch">
   <table class="mtp-table">
-    <caption class="visually-hidden">
+    <caption class="govuk-visually-hidden">
       {% blocktrans trimmed count manual_credits=manual_object_list|length %}
         {{ manual_credits }} credit needs your manual input in NOMIS
       {% plural %}
@@ -22,7 +22,7 @@
       <tr>
         <th>{% trans 'Date sent' %}</th>
         <th>{% trans 'Prisoner' %}</th>
-        <th class="numeric">{% trans 'Amount' %}</th>
+        <th class="govuk-table__header--numeric">{% trans 'Amount' %}</th>
         <th>{% trans 'Sender' %}</th>
         {% if pre_approval_required %}
           <th>{% trans 'Security' %}</th>
@@ -37,7 +37,7 @@
           <td>
             <div>{{ credit.received_at.date|date:'d/m/Y' }}</div>
             {% with days=credit.received_at.date|dayssince %}
-            <div class="sub {% if days >= 7 %}old{% endif %}">
+            <div class="govuk-body-s {% if days >= 7 %}old{% endif %}">
               {% if days == 0 %}
                 {% trans 'Today' %}
               {% else %}
@@ -52,9 +52,9 @@
           </td>
           <td>
             <div>{{ credit.prisoner_number }}</div>
-            <div class="sub">{{ credit.prisoner_name }}</div>
+            <div class="govuk-body-s">{{ credit.prisoner_name }}</div>
           </td>
-          <td class="numeric">£{{ credit.amount|currency }}</td>
+          <td class="govuk-table__cell--numeric">£{{ credit.amount|currency }}</td>
           <td>{{ credit.sender_name }}</td>
           {% if pre_approval_required %}
             <td>
@@ -117,7 +117,7 @@
             </div>
           </td>
           <td class="mtp-manual-action mtp-print-hidden">
-            <button type="submit" name="submit_manual_{{ credit_pk }}" value="submit" class="button" data-credit-id="{{ credit_pk }}">{% trans 'Done' %}</button>
+            <button type="submit" name="submit_manual_{{ credit_pk }}" value="submit" class="govuk-button" data-credit-id="{{ credit_pk }}">{% trans 'Done' %}</button>
             {% dialoguebox html_id=credit_pk|prefixed_slug:'manual-confirm-dialog-' %}
               <table class="mtp-dialog-info-table">
                 <caption class="govuk-heading-m">{% trans 'Have you entered this credit into NOMIS?' %}</caption>
@@ -140,10 +140,10 @@
                   </tr>
                 </tbody>
               </table>
-              <button type="submit" name="submit_manual_{{ credit_pk }}" class="button" value="override">
+              <button type="submit" name="submit_manual_{{ credit_pk }}" class="govuk-button" value="override">
                 {% trans 'Yes' %}
               </button>
-              <a href="#" class="{{ dialogue_close_class }} mtp-dialog-info-table__close" role="button">
+              <a href="#" class="{{ dialogue_close_class }} mtp-link--form-cancel" role="button">
                 {% trans 'No, I’ll do that now' %}
               </a>
             {% enddialoguebox %}

@@ -22,7 +22,7 @@
       </p>
       <img src="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-filled.jpg' %}" srcset="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-filled@2x.jpg' %} 2x" alt={% trans '“Send money by bank transfer or cheque” form' %}/>
       <p>
-        <a href="{{ view.get_success_url }}" class="button button-start" role="button">{% trans 'Start now' %}</a>
+        <a href="{{ view.get_success_url }}" class="govuk-button govuk-button--start" role="button">{% trans 'Start now' %}</a>
       </p>
     </div>
   </div>
@@ -31,25 +31,31 @@
     <div class="govuk-grid-column-one-third">
       <h2 class="govuk-heading-m">{% trans 'Confirm payments' %}</h2>
       {% if pending_disbursement_count %}
-        {% blocktrans trimmed count count=pending_disbursement_count %}
-          There is <strong>{{ count }} payment request</strong> needing confirmation.
-        {% plural %}
-          There are <strong>{{ count }} payment requests</strong> needing confirmation.
-        {% endblocktrans %}
+        <p>
+          {% blocktrans trimmed count count=pending_disbursement_count %}
+            There is <strong>{{ count }} payment request</strong> needing confirmation.
+          {% plural %}
+            There are <strong>{{ count }} payment requests</strong> needing confirmation.
+          {% endblocktrans %}
+        </p>
         <p><a href="{% url 'disbursements:pending_list' %}">{% trans 'View all' %}</a></p>
       {% else %}
-        {% trans 'There are no payment requests needing confirmation.' %}
+        <p>
+          {% trans 'There are no payment requests needing confirmation.' %}
+        </p>
       {% endif %}
     </div>
 
     <div class="govuk-grid-column-one-third">
       <h2 class="govuk-heading-m">{% trans 'Payments made' %}</h2>
       {% if confirmed_disbursement_count %}
-        {% blocktrans trimmed count count=confirmed_disbursement_count %}
-          Your prison has made <strong>{{ count }} digital disbursement</strong>.
-        {% plural %}
-          Your prison has made <strong>{{ count }} digital disbursements</strong>.
-        {% endblocktrans %}
+        <p>
+          {% blocktrans trimmed count count=confirmed_disbursement_count %}
+            Your prison has made <strong>{{ count }} digital disbursement</strong>.
+          {% plural %}
+            Your prison has made <strong>{{ count }} digital disbursements</strong>.
+          {% endblocktrans %}
+        </p>
         <p>
           <a href="{% url 'disbursements:search' %}">
             {% blocktrans trimmed count count=confirmed_disbursement_count %}
@@ -60,13 +66,17 @@
           </a>
         </p>
       {% else %}
-        {% trans 'Your prison has not yet made any digital disbursements.' %}
+        <p>
+          {% trans 'Your prison has not yet made any digital disbursements.' %}
+        </p>
       {% endif %}
     </div>
 
     <div class="govuk-grid-column-one-third">
       <h2 class="govuk-heading-m">{% trans 'Get help' %}</h2>
-      {% trans 'Find out how the process works.' %}
+      <p>
+        {% trans 'Find out how the process works.' %}
+      </p>
       <p><a href="{% url 'disbursements:process-overview' %}">{% trans 'View help' %}</a></p>
     </div>
   </div>

@@ -21,8 +21,8 @@
 
     {% include 'mtp_common/forms/error-summary.html' with form=form only %}
 
-    <table class="mtp-accounts-table">
-      <caption class="visually-hidden">{% trans 'Prisoner’s balances in NOMIS' %}</caption>
+    <table class="govuk-table mtp-accounts-table">
+      <caption class="govuk-visually-hidden">{% trans 'Prisoner’s balances in NOMIS' %}</caption>
       <tbody>
         <tr>
           <th>{% trans 'Account' %}</th>
@@ -32,13 +32,15 @@
 
         <tr class="mtp-private-row">
           <td>{% trans 'Private' %}</td>
-          <td class="numeric" data-balance="cash">{{ form.nomis_balances.cash|currency:'£'|default:_('Unknown') }}</td>
+          <td class="govuk-table__cell--numeric" data-balance="cash">{{ form.nomis_balances.cash|currency:'£'|default:_('Unknown') }}</td>
           <td>
+            {% include 'mtp_common/forms/amount-field.html' with field=form.amount only %}
+            {% comment %}
             {% with field=form.amount %}
-              <label id="{{ field.id_for_label }}-label" for="{{ field.id_for_label }}" class="visually-hidden">
+              <label id="{{ field.id_for_label }}-label" for="{{ field.id_for_label }}" class="govuk-visually-hidden">
                 {% trans 'Please enter the amount in pounds' %}
               </label>
-              <div id="{{ field.id_for_label }}-wrapper" class="mtp-money-amount {% if field.errors %}form-group-error{% endif %}">
+              <div id="{{ field.id_for_label }}-wrapper" class="mtp-money-amount {% if field.errors %}govuk-form-group--error{% endif %}">
                 <div class="mtp-money-box">
                   <span class="form-control mtp-currency-sign">
                     £
@@ -52,18 +54,19 @@
                 </div>
               </div>
             {% endwith %}
+            {% endcomment %}
           </td>
         </tr>
 
         <tr>
           <td>{% trans 'Spends' %}</td>
-          <td class="numeric" data-balance="spends">{{ form.nomis_balances.spends|currency:'£'|default:_('Unknown') }}</td>
+          <td class="govuk-table__cell--numeric" data-balance="spends">{{ form.nomis_balances.spends|currency:'£'|default:_('Unknown') }}</td>
           <td>{% trans 'Can’t be used for sending money out' %}</td>
         </tr>
 
         <tr>
           <td>{% trans 'Saving' %}</td>
-          <td class="numeric" data-balance="savings">{{ form.nomis_balances.savings|currency:'£'|default:_('Unknown') }}</td>
+          <td class="govuk-table__cell--numeric" data-balance="savings">{{ form.nomis_balances.savings|currency:'£'|default:_('Unknown') }}</td>
           <td>{% trans 'Can’t be used for sending money out' %}</td>
         </tr>
 
@@ -75,6 +78,6 @@
       </tbody>
     </table>
 
-    <button type="submit" class="button mtp-next-button">{% trans 'Next' %}</button>
+    <button type="submit" class="govuk-button mtp-next-button">{% trans 'Next' %}</button>
   </form>
 {% endblock %}

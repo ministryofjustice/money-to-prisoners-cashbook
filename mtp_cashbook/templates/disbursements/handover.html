@@ -18,7 +18,7 @@
       </h2>
       <ul class="error-summary-list">
         {% for error in errors %}
-          <li class="non-field-error">{{ error }}<span class="visually-hidden">.</span></li>
+          <li class="non-field-error">{{ error }}<span class="govuk-visually-hidden">.</span></li>
         {% endfor %}
       </ul>
     </div>
@@ -38,21 +38,22 @@
         {% trans 'Anyone on your team who has an account on ‘Manage prisoner money’ can confirm the payment.' %}
       </p>
 
-      {% random_string as note_id %}
-      <p>
-        <a class="mtp-disclosure" href="#" aria-controls="mtp-{{ note_id }}" aria-expanded="false" role="button" data-analytics="pageview,/-help_open/{{ request.resolver_match.view_name }}/">
-          <span></span>{% trans 'What if my colleague doesn’t have an account?' %}
-        </a>
-      </p>
-      <div id="mtp-{{ note_id }}" class="mtp-disclosure__contents panel panel-border-narrow">
-        <p>
-          {% trans 'Ask your business hub manager to set one up.' %}
-        </p>
-      </div>
+      <details class="govuk-details" data-module="govuk-details">
+        <summary class="govuk-details__summary" data-analytics="pageview,/-help_open/{{ request.resolver_match.view_name }}/">
+          <span class="govuk-details__summary-text">
+            {% trans 'What if my colleague doesn’t have an account?' %}
+          </span>
+        </summary>
+        <div class="govuk-details__text">
+          <p>
+            {% trans 'Ask your business hub manager to set one up.' %}
+          </p>
+        </div>
+      </details>
 
       <form action="{{ view.get_success_url }}" method="post">
         {% csrf_token %}
-        <input type="submit" class="button mtp-next-button" value="{% trans 'I will hand over the paper form' %}" />
+        <input type="submit" class="govuk-button mtp-next-button" value="{% trans 'I will hand over the paper form' %}" />
       </form>
 
     </div>

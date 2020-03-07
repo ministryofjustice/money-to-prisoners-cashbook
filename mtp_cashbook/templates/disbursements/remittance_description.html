@@ -38,19 +38,19 @@
               <strong>{{ field.label }}</strong>
             </legend>
 
-            <div class="form-group {% if field.errors %}form-group-error{% endif %}">
+            <div class="govuk-form-group {% if field.errors %}govuk-form-group--error{% endif %}">
               <div class="multiple-choice">
                 <input id="js-choice-{{ choices.0.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.0.0 }}" data-reveal=".js-choice-yes" {% if form.remittance.value == 'yes' %}checked{% endif %}>
                 <label for="js-choice-{{ choices.0.0 }}">{{ choices.0.1 }}</label>
               </div>
-              <div class="panel panel-border-narrow js-hidden js-choice-yes">
+              <div class="govuk-inset-text js-hidden js-choice-yes">
                 {% with field=form.remittance_description rows=2 input_classes='js-character-count' attrs=remittance_description_attrs %}
-                  <div id="{{ field.id_for_label }}-wrapper" class="form-group {% if field.errors %}form-group-error{% endif %}">
+                  <div id="{{ field.id_for_label }}-wrapper" class="govuk-form-group {% if field.errors %}govuk-form-group--error{% endif %}">
                     <label for="{{ field.id_for_label }}" id="{{ field.id_for_label }}-label" class="form-label">
                       {% include 'mtp_common/forms/field-help-text.html' with field=field only %}
                     </label>
                     {% include 'mtp_common/forms/field-errors.html' with field=field only %}
-                    <textarea id="{{ field.id_for_label }}" class="form-control {% if field.errors %}form-control-error{% endif %} {{ input_classes }}" name="{{ field.html_name }}" rows="{{ rows|default:4 }}" cols="{{ cols|default:50 }}" {% for attr, attr_val in attrs.items %}{{ attr }}="{{ attr_val }}"{% endfor %}>{{ value|default:field.value|default_if_none:'' }}</textarea>
+                    <textarea id="{{ field.id_for_label }}" class="govuk-input {% if field.errors %}govuk-input--error{% endif %} {{ input_classes }}" name="{{ field.html_name }}" rows="{{ rows|default:4 }}" cols="{{ cols|default:50 }}" {% for attr, attr_val in attrs.items %}{{ attr }}="{{ attr_val }}"{% endfor %}>{{ value|default:field.value|default_if_none:'' }}</textarea>
                   </div>
                 {% endwith %}
               </div>
@@ -66,7 +66,7 @@
           </fieldset>
         {% endwith %}
 
-        <button type="submit" class="button mtp-next-button">{% trans 'Next' %}</button>
+        <button type="submit" class="govuk-button mtp-next-button">{% trans 'Next' %}</button>
       </form>
     </div>
   </div>

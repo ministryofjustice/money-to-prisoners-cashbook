@@ -5,7 +5,7 @@
 <tr>
   {% sortable_cell _('Date sent') form.cleaned_data 'received_at' %}
   {% sortable_cell _('Prisoner') form.cleaned_data 'prisoner_number' %}
-  {% sortable_cell _('Amount') form.cleaned_data 'amount' cell_classes='numeric' %}
+  {% sortable_cell _('Amount') form.cleaned_data 'amount' cell_classes='govuk-table__header--numeric' %}
   <th>{% trans 'Sender' %}</th>
   {% if pre_approval_required %}
     <th>{% trans 'Security check' %}</th>

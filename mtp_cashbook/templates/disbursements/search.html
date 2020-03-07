@@ -15,7 +15,7 @@
     <h1 class="govuk-heading-xl">{% trans 'Payments made' %}</h1>
   </header>
 
-  <p class="lede">{{ form.search_description.description }}</p>
+  <p class="govuk-body-l">{{ form.search_description.description }}</p>
 
   <form method="get" class="mtp-print-hidden">
     <p><a href="{% url 'disbursements:process-overview' %}#section-track">{% trans 'How to trace a payment' %}</a></p>
@@ -28,10 +28,10 @@
       {% paneltab name='prisoner' title=_('Prisoner') %}
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-one-third">
-            {% include 'mtp_common/forms/field.html' with field=form.prisoner_name input_classes='form-control-3-4' %}
+            {% include 'mtp_common/forms/field.html' with field=form.prisoner_name input_classes='govuk-input--width-20' %}
           </div>
           <div class="govuk-grid-column-one-third">
-            {% include 'mtp_common/forms/field.html' with field=form.prisoner_number input_classes='form-control-2-3' %}
+            {% include 'mtp_common/forms/field.html' with field=form.prisoner_number input_classes='govuk-input--width-10' %}
           </div>
         </div>
       {% endpaneltab %}
@@ -58,7 +58,7 @@
             {% include 'mtp_common/forms/select-field.html' with field=form.resolution %}
           </div>
           <div class="govuk-grid-column-one-third">
-            {% include 'mtp_common/forms/field.html' with field=form.nomis_transaction_id input_classes='form-control-2-3' %}
+            {% include 'mtp_common/forms/field.html' with field=form.nomis_transaction_id input_classes='govuk-input--width-10' %}
           </div>
         </div>
       {% endpaneltab %}
@@ -67,7 +67,7 @@
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-one-third">
             {% with field=form.date_filter %}
-              <div class="form-group {% if field.errors %}form-group-error{% endif %}">
+              <div class="govuk-form-group {% if field.errors %}govuk-form-group--error{% endif %}">
                 {% include 'mtp_common/forms/field-errors.html' with field=field only %}
                 {% for choice_value, choice_label in field.field.choices %}
                   <div class="multiple-choice">
@@ -88,7 +88,7 @@
       {% endpaneltab %}
 
       <div class="mtp-tab-container__footer">
-        <button type="submit" class="button">{% trans 'Filter list' %}</button>
+        <button type="submit" class="govuk-button">{% trans 'Filter list' %}</button>
         {% if form.search_description.has_filters %}
           <a href="?{% if form.ordering.value %}ordering={{ form.ordering.value }}{% endif %}" role="button">
             {% trans 'Clear filters' %}
@@ -102,9 +102,9 @@
   <br/>
 
   {% if form.is_valid %}
-    <div class="mtp-batch">
+    <div class="mtp-table__container mtp-batch">
       <table class="mtp-table">
-        <caption class="visually-hidden">{{ form.search_description.description }}</caption>
+        <caption class="govuk-visually-hidden">{{ form.search_description.description }}</caption>
         <thead>
           <tr>
             {% sortable_cell _('Sender') form.cleaned_data 'prisoner_name' %}
@@ -119,11 +119,11 @@
             <tr>
               <!-- {{ disbursement.id }} -->
               <td class="mtp-sender">
-                <span class="visually-hidden">{% trans 'Prisoner' %}:</span>
+                <span class="govuk-visually-hidden">{% trans 'Prisoner' %}:</span>
                 {{ disbursement.prisoner_name }}
                 <br/>
                 <br/>
-                <span class="visually-hidden">{% trans 'Prisoner number' %}:</span>
+                <span class="govuk-visually-hidden">{% trans 'Prisoner number' %}:</span>
                 <small>{{ disbursement.prisoner_number }}</small>
               </td>
 
@@ -161,7 +161,7 @@
                 {{ disbursement.recipient_first_name }} {{ disbursement.recipient_last_name }}
                 <br/>
                 <br/>
-                <span class="visually-hidden">{% trans 'Recipient address' %}:</span>
+                <span class="govuk-visually-hidden">{% trans 'Recipient address' %}:</span>
                 <address>
                   <small>
                     {{ disbursement.address_line1 }}<br/>
@@ -175,7 +175,7 @@
                   </small>
                 </address>
                 {% if disbursement.recipient_email %}<br/>
-                  <span class="visually-hidden">{% trans 'Recipient email' %}:</span>
+                  <span class="govuk-visually-hidden">{% trans 'Recipient email' %}:</span>
                   <small>{{ disbursement.recipient_email }}</small>
                 {% endif %}
               </td>

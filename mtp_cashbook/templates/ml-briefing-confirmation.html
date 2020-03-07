@@ -22,18 +22,16 @@
         {% include 'mtp_common/forms/error-summary.html' with form=form only %}
 
         {% with field=form.read_briefing choices=form.read_briefing.field.choices %}
-          <fieldset>
-            <legend id="{{ field.id_for_label }}-label">
-              <strong aria-label="{{ field.label }}">
-                {% trans 'Have you read it?' %}
-              </strong>
+          <fieldset class="govuk-fieldset">
+            <legend id="{{ field.id_for_label }}-label" class="govuk-fieldset__legend govuk-fieldset__legend--m">
+              {% trans 'Have you read it?' %}
             </legend>
             <br />
-            <div class="form-group {% if field.errors %}form-group-error{% endif %}">
-              <button type="submit" name="{{ field.html_name }}" value="{{ choices.0.0 }}" class="button">
+            <div class="govuk-form-group {% if field.errors %}govuk-form-group--error{% endif %}" aria-label="{{ field.label }}">
+              <button type="submit" name="{{ field.html_name }}" value="{{ choices.0.0 }}" class="govuk-button">
                 {{ choices.0.1 }}
               </button>
-              <button type="submit" name="{{ field.html_name }}" value="{{ choices.1.0 }}" class="button-secondary">
+              <button type="submit" name="{{ field.html_name }}" value="{{ choices.1.0 }}" class="govuk-button govuk-button--secondary">
                 {{ choices.1.1 }}
               </button>
             </div>

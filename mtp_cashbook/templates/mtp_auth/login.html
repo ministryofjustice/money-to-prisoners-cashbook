@@ -24,7 +24,7 @@
 
           <aside>
             {% trans 'These tools will help you manage prisoner money' %}:
-            <ul class="list list-bullet">
+            <ul class="govuk-list govuk-list--bullet">
               <li>{% trans 'digital cashbook' %}</li>
               <li>{% trans 'digital disbursements' %}</li>
             </ul>
@@ -68,12 +68,12 @@
           {% csrf_token %}
           <input type="hidden" name="next" value="{{ next }}">
 
-          {% include 'mtp_common/forms/field.html' with field=form.username input_classes='form-control-3-4' only %}
-          {% include 'mtp_common/forms/field.html' with field=form.password input_classes='form-control-3-4' only %}
+          {% include 'mtp_common/forms/field.html' with field=form.username input_classes='govuk-input--width-10' only %}
+          {% include 'mtp_common/forms/field.html' with field=form.password input_classes='govuk-input--width-10' only %}
 
-          <div class="form-group">
-            <button type="submit" class="button" name="signin">{% trans 'Sign in' %}</button>
-          </div>
+          <p>
+            <button type="submit" class="govuk-button" name="signin">{% trans 'Sign in' %}</button>
+          </p>
         </form>
 
         {% if ENVIRONMENT != 'test' %}

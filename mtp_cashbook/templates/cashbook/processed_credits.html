@@ -16,45 +16,49 @@
   </header>
 
   <p>{% trans 'A list of all processed credits you can filter.' %}</p>
-  <a class="mtp-disclosure" aria-controls="help-box-contents" aria-expanded="false" role="heading" href="#">
-    <span></span>{% trans 'What do I do here?' %}
-  </a>
-  <div class="panel panel-border-narrow mtp-disclosure__contents" id="help-box-contents">
-    {% trans 'These credits have already been processed in NOMIS and batched accordingly.' %}
-    {% trans 'You can filter this list by date range.' %}
-    {% trans 'Just enter the date range of the credits you want to find.' %}
-  </div>
+  <details class="govuk-details" data-module="govuk-details">
+    <summary class="govuk-details__summary">
+      <span class="govuk-details__summary-text">
+        {% trans 'What do I do here?' %}
+      </span>
+    </summary>
+    <div class="govuk-details__text">
+      {% trans 'These credits have already been processed in NOMIS and batched accordingly.' %}
+      {% trans 'You can filter this list by date range.' %}
+      {% trans 'Just enter the date range of the credits you want to find.' %}
+    </div>
+  </details>
 
   <h3 class="govuk-heading-m">{% trans 'Filter by' %}</h3>
   <form method="get" class="mtp-processed-credits-search" action="">
     {% include 'mtp_common/forms/error-summary.html' with form=form only %}
 
-    <div class="mtp-processed-credits-search__date-start">
-      {% include 'mtp_common/forms/field.html' with field=form.start value=form.start.value|date:'d/m/Y'|default:form.start.value|default_if_none:'' only %}
-    </div>
-    <div class="mtp-processed-credits-search__date-end">
-      {% include 'mtp_common/forms/field.html' with field=form.end value=form.end.value|date:'d/m/Y'|default:form.end.value|default_if_none:'' only %}
-    </div>
-    <div class="mtp-processed-credits-search__submit">
-      <div class="form-group">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-third">
+        {% include 'mtp_common/forms/field.html' with field=form.start value=form.start.value|date:'d/m/Y'|default:form.start.value|default_if_none:'' input_classes='govuk-input--width-10' only %}
+      </div>
+      <div class="govuk-grid-column-one-third">
+        {% include 'mtp_common/forms/field.html' with field=form.end value=form.end.value|date:'d/m/Y'|default:form.end.value|default_if_none:'' input_classes='govuk-input--width-10' only %}
+      </div>
+      <div class="govuk-grid-column-one-third">
         {# always forces a search to start on page 1 #}
         <input type="hidden" name="{{ form.page.html_name }}" value="1">
-        <input class="button" type="submit" value="{% trans 'Filter list' %}">
+        <input class="govuk-button" type="submit" value="{% trans 'Filter list' %}">
       </div>
     </div>
   </form>
 
-  <div class="mtp-batch">
+  <div class="mtp-table__container mtp-batch">
     {% if object_list %}
 
       <table class="mtp-table">
-        <caption class="visually-hidden">{{ view.title }}</caption>
+        <caption class="govuk-visually-hidden">{{ view.title }}</caption>
 
         <thead>
           <tr>
             <th>{% trans 'Date credited' %}</th>
             <th>{% trans 'Number of credits' %}</th>
-            <th class="numeric">{% trans 'Total' %}</th>
+            <th class="govuk-table__header--numeric">{% trans 'Total' %}</th>
             <th>{% trans 'Credited by' %}</th>
             {% if request.pre_approval_required %}
               <th>{% trans 'Security notes' %}</th>
@@ -69,7 +73,7 @@
               <td>
                 {{ batch.logged_at|date:'d/m/Y' }}
                 {% with days=batch.logged_at|dayssince %}
-                  <div class="sub">
+                  <div class="govuk-body-s">
                     {% if days == 0 %}
                       {% trans 'Today' %}
                     {% else %}
@@ -91,7 +95,7 @@
                   {% endblocktrans %}
                 </a>
               </td>
-              <td class="numeric">£{{ batch.total|currency }}</td>
+              <td class="govuk-table__cell--numeric">£{{ batch.total|currency }}</td>
               <td>{{ batch.owner_name }}</td>
               {% if request.pre_approval_required %}
                 {% if batch.comment_count %}

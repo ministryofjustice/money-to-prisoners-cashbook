@@ -116,7 +116,7 @@
       <p>
         {% trans 'Print out and use whichever of the four forms suit your prison procedures' %}:
       </p>
-      <ul class="list list-bullet">
+      <ul class="govuk-list govuk-list--bullet">
         <li>
           {% trans 'digital disbursements (bank transfer and cheques)' %}
         </li>
@@ -173,7 +173,7 @@
       <p>
         {% trans 'A payment can’t be confirmed by the person who' %}:
       </p>
-      <ul class="list list-bullet">
+      <ul class="govuk-list govuk-list--bullet">
         <li>
           {% trans '‘entered’ the payment request' %} –
           {% trans 'the process needs a different member of staff to check the details' %}
@@ -194,14 +194,16 @@
         {% trans 'It names the prisoner who sent the money and how much they sent.' %}
         {% trans 'There’s a ‘recipient email’ box on the form for the prisoner to fill in.' %}
       </p>
-      <p>
-        <a class="mtp-disclosure" href="#" aria-controls="mtp-remittance-sample" aria-expanded="false" role="button" data-analytics="pageview,/-help_open/remittance-sample/">
-          <span></span>{% trans 'Sample remittance advice' %}
-        </a>
-      </p>
-      <div id="mtp-remittance-sample" class="mtp-disclosure__contents panel panel-border-narrow">
-        <img src="{% static 'disbursements/remittance-sample.jpg' %}" alt="{% trans 'Sample remittance advice' %}" />
-      </div>
+      <details class="govuk-details" data-module="govuk-details" data-analytics="pageview,/-help_open/remittance-sample/">
+        <summary class="govuk-details__summary">
+          <span class="govuk-details__summary-text">
+            {% trans 'Sample remittance advice' %}
+          </span>
+        </summary>
+        <div class="govuk-details__text">
+          <img src="{% static 'disbursements/remittance-sample.jpg' %}" alt="{% trans 'Sample remittance advice' %}" />
+        </div>
+      </details>
       <p>
         {% trans 'In 5-7 working days, either the payment is put directly into the recipient’s account by bank transfer or a cheque is received.' %}
         {% trans 'There’s no postage or processing charge to the prison, the prisoner or the recipient.' %}

@@ -8,8 +8,8 @@
 {% block content %}
   {{ block.super }}
 
-  <div class="govuk-box-highlight">
-    <h1 class="bold-medium">
+  <div class="govuk-panel govuk-panel--confirmation">
+    <h1 class="govuk-panel__title">
       {% url 'disbursements:pending_list' as link %}
       {% blocktrans trimmed %}
         This request is ready for your colleague to check in <a href="{{ link }}">‘Confirm payments’</a>
@@ -27,10 +27,10 @@
       <p>
         {% trans 'No more action from you is necessary.' %}
       </p>
-      <br>
+      <br />
 
       <p class="mtp-print-hidden">
-        <a href="{% url 'disbursements:sending_method' %}" class="button button-secondary">{% trans 'Process another request' %}</a>
+        <a href="{% url 'disbursements:sending_method' %}" class="govuk-button govuk-button--secondary">{% trans 'Process another request' %}</a>
       </p>
     </div>
   </div>

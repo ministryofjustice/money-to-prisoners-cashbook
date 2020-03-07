@@ -39,19 +39,19 @@
     <div class="mtp-processed-credits-search__field">
       {% include 'mtp_common/forms/field.html' with field=form.prisoner_number value=form.prisoner_number.value|default_if_none:'' only %}
     </div>
-    <div class="form-group">
+    <div class="govuk-form-group">
       {# always forces a search to start on page 1 #}
       <input type="hidden" name="{{ form.page.html_name }}" value="1">
-      <input class="button" type="submit" value="{% trans 'Filter list' %}">
+      <input class="govuk-button" type="submit" value="{% trans 'Filter list' %}">
     </div>
   </form>
 
-  <div class="mtp-batch">
+  <div class="mtp-table__container mtp-batch">
     {% if object_list %}
       <p><a href="#" class="mtp-print-hidden js-print-trigger">{% trans 'Print this page of credits' %}</a></p>
 
       <table class="mtp-table">
-        <caption class="visually-hidden">{{ view.title }}</caption>
+        <caption class="govuk-visually-hidden">{{ view.title }}</caption>
         <thead>
           {% include 'cashbook/includes/credits-header-row.html' with form=form include_status=True pre_approval_required=request.pre_approval_required only %}
         </thead>

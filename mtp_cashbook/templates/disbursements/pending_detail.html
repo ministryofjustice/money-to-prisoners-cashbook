@@ -60,7 +60,7 @@
   {% endif %}
 
   <table class="mtp-confirm-table">
-    <caption class="visually-hidden">{% trans 'Disbursement details' %}</caption>
+    <caption class="govuk-visually-hidden">{% trans 'Disbursement details' %}</caption>
     <tbody class="mtp-confirm-table__details">
       <tr class="mtp-confirm-table__section">
         <th rowspan="3"><h2 class="govuk-heading-s">{% trans 'Send' %}</h2></th>
@@ -70,7 +70,7 @@
           {% if editable %}
             <a href="{% url 'disbursements:update_sending_method' pk=disbursement.id %}" class="mtp-print-hidden">
               {% trans 'Change' %}
-              <span class="visually-hidden">{% trans 'Sending method' %}</span>
+              <span class="govuk-visually-hidden">{% trans 'Sending method' %}</span>
             </a>
           {% endif %}
         </td>
@@ -82,7 +82,7 @@
           {% if editable %}
             <a href="{% url 'disbursements:update_amount' pk=disbursement.id %}" class="mtp-print-hidden">
               {% trans 'Change' %}
-              <span class="visually-hidden">{% trans 'Amount' %}</span>
+              <span class="govuk-visually-hidden">{% trans 'Amount' %}</span>
             </a>
           {% endif %}
         </td>
@@ -100,7 +100,7 @@
           {% if editable %}
             <a href="{% url 'disbursements:update_remittance_description' pk=disbursement.id %}" class="mtp-print-hidden">
               {% trans 'Change' %}
-              <span class="visually-hidden">{% trans 'Description' %}</span>
+              <span class="govuk-visually-hidden">{% trans 'Description' %}</span>
             </a>
           {% endif %}
         </td>
@@ -120,7 +120,7 @@
           {% if editable %}
             <a href="{% url 'disbursements:update_recipient_contact' pk=disbursement.id %}" class="mtp-print-hidden">
               {% trans 'Change' %}
-              <span class="visually-hidden">{% trans 'Recipient contact' %}</span>
+              <span class="govuk-visually-hidden">{% trans 'Recipient contact' %}</span>
             </a>
           {% endif %}
         </td>
@@ -130,8 +130,8 @@
         <th>{% trans 'Address' %}:</th>
         <td>
           <address>
-            {{ disbursement.address_line1 }}<br>
-            {% if disbursement.address_line2 %}{{ disbursement.address_line2 }}<br>{% endif %}
+            {{ disbursement.address_line1 }}<br />
+            {% if disbursement.address_line2 %}{{ disbursement.address_line2 }}<br />{% endif %}
             {{ disbursement.city }}
           </address>
         </td>
@@ -139,7 +139,7 @@
           {% if editable %}
             <a href="{% url 'disbursements:update_recipient_address' pk=disbursement.id %}" class="mtp-print-hidden">
               {% trans 'Change' %}
-              <span class="visually-hidden">{% trans 'Recipient address' %}</span>
+              <span class="govuk-visually-hidden">{% trans 'Recipient address' %}</span>
             </a>
           {% endif %}
         </td>
@@ -159,7 +159,7 @@
             {% if editable %}
               <a href="{% url 'disbursements:update_recipient_contact' pk=disbursement.id %}" class="mtp-print-hidden">
                 {% trans 'Change' %}
-                <span class="visually-hidden">{% trans 'Recipient email' %}</span>
+                <span class="govuk-visually-hidden">{% trans 'Recipient email' %}</span>
               </a>
             {% endif %}
           </td>
@@ -174,7 +174,7 @@
             {% if editable %}
               <a href="{% url 'disbursements:update_recipient_bank_account' pk=disbursement.id %}" class="mtp-print-hidden">
                 {% trans 'Change' %}
-                <span class="visually-hidden">{% trans 'Recipient bank account details' %}</span>
+                <span class="govuk-visually-hidden">{% trans 'Recipient bank account details' %}</span>
               </a>
             {% endif %}
           </td>
@@ -203,7 +203,7 @@
           {% if editable %}
             <a href="{% url 'disbursements:update_prisoner' pk=disbursement.id %}" class="mtp-print-hidden">
               {% trans 'Change' %}
-              <span class="visually-hidden">{% trans 'Prisoner details' %}</span>
+              <span class="govuk-visually-hidden">{% trans 'Prisoner details' %}</span>
             </a>
           {% endif %}
         </td>
@@ -252,12 +252,12 @@
             <strong>{{ field.label }}</strong>
           </legend>
 
-          <div class="form-group {% if field.errors %}form-group-error{% endif %}">
+          <div class="govuk-form-group {% if field.errors %}govuk-form-group--error{% endif %}">
             <div class="multiple-choice">
               <input id="js-choice-{{ choices.0.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.0.0 }}" data-reveal=".js-choice-yes">
               <label for="js-choice-{{ choices.0.0 }}">{{ choices.0.1 }}</label>
             </div>
-            <div class="panel panel-border-narrow mtp-button-panel js-hidden js-choice-yes">
+            <div class="govuk-inset-text mtp-button-panel js-hidden js-choice-yes">
               <p>{% trans 'Sign the bottom of the paper form under ‘Staff’.' %}</p>
               <img class="mtp-filled-form-sample" src="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-signed-2.jpg' %}" srcset="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-signed-2@2x.jpg' %} 2x" alt="{% trans 'Sign the bottom of the paper form under ‘Staff’.' %}" />
             </div>
@@ -266,7 +266,7 @@
               <input id="js-choice-{{ choices.1.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.1.0 }}" data-reveal=".js-choice-no">
               <label for="js-choice-{{ choices.1.0 }}">{{ choices.1.1 }}</label>
             </div>
-            <div class="panel panel-border-narrow js-hidden js-choice-no">
+            <div class="govuk-inset-text js-hidden js-choice-no">
               {% trans 'Use ‘Change’ above to make sure the details match those on the paper form.' %}
               {% trans 'Someone else will need to confirm this payment later.' %}
             </div>
@@ -275,7 +275,7 @@
       {% endwith %}
 
       <div class="js-choice-yes">
-        <button type="submit" class="button mtp-next-button">{% trans 'Confirm payment' %}</button>
+        <button type="submit" class="govuk-button mtp-next-button">{% trans 'Confirm payment' %}</button>
       </div>
     </form>
 
@@ -294,10 +294,10 @@
       <form action="{{ view.get_reject_url }}" method="post">
         {% csrf_token %}
 
-        {% include 'mtp_common/forms/textarea.html' with field=reject_form.reason input_classes='form-control-3-4' only %}
+        {% include 'mtp_common/forms/textarea.html' with field=reject_form.reason only %}
 
-        <input type="submit" class="button" value="{% trans 'Cancel payment' %}" />
-        <button type="button" class="button button-secondary {{ dialogue_close_class }}">{% trans 'Go back' %}</button>
+        <input type="submit" class="govuk-button" value="{% trans 'Cancel payment' %}" />
+        <button type="button" class="govuk-button govuk-button--secondary {{ dialogue_close_class }}">{% trans 'Go back' %}</button>
       </form>
     {% enddialoguebox %}
   {% endif %}

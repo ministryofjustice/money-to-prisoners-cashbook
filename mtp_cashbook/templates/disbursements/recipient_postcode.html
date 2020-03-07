@@ -18,13 +18,15 @@
 
         {% include 'mtp_common/forms/error-summary.html' with form=form only %}
 
-        {% include 'mtp_common/forms/field.html' with field=form.postcode input_classes='form-control-1-4' only %}
+        {% include 'mtp_common/forms/field.html' with field=form.postcode input_classes='govuk-input--width-10' only %}
 
-        <button type="submit" class="button mtp-next-button">{% trans 'Find address' %}</button>
+        <button type="submit" class="govuk-button mtp-next-button">{% trans 'Find address' %}</button>
       </form>
 
       <br />
-      <a href='{{ view.get_success_url }}'>{% trans 'Enter address manually' %}</a>
+      <p>
+        <a href='{{ view.get_success_url }}'>{% trans 'Enter address manually' %}</a>
+      </p>
     </div>
   </div>
 {% endblock %}

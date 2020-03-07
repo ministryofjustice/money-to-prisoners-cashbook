@@ -19,31 +19,31 @@
         {% include 'mtp_common/forms/error-summary.html' with form=form only %}
 
         {% with field=form.recipient_type choices=form.recipient_type.field.choices %}
-          <fieldset>
-            <div class="form-group {% if field.errors %}form-group-error{% endif %}">
-              <div class="multiple-choice">
-                <input id="js-choice-{{ choices.0.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.0.0 }}" data-reveal=".js-choice-person" {% if field.value != choices.1.0 %}checked{% endif %}>
-                <label for="js-choice-{{ choices.0.0 }}">{{ choices.0.1 }}</label>
+          <div class="govuk-form-group {% if field.errors %}govuk-form-group--error{% endif %}">
+            <div class="govuk-radios govuk-radios--conditional" data-module="govuk-radios">
+              <div class="govuk-radios__item">
+                <input id="js-choice-{{ choices.0.0 }}" class="govuk-radios__input" type="radio" name="{{ field.html_name }}" value="{{ choices.0.0 }}" data-aria-controls="js-choice-{{ choices.0.0 }}-conditional" {% if field.value != choices.1.0 %}checked{% endif %}>
+                <label for="js-choice-{{ choices.0.0 }}" class="govuk-label govuk-radios__label">{{ choices.0.1 }}</label>
               </div>
-              <div class="panel panel-border-narrow js-hidden js-choice-person">
-                {% include 'mtp_common/forms/field.html' with field=form.recipient_first_name input_classes='form-control-1-2' only %}
-                {% include 'mtp_common/forms/field.html' with field=form.recipient_last_name input_classes='form-control-1-2' only %}
+              <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="js-choice-{{ choices.0.0 }}-conditional">
+                {% include 'mtp_common/forms/field.html' with field=form.recipient_first_name input_classes='govuk-input--width-10' only %}
+                {% include 'mtp_common/forms/field.html' with field=form.recipient_last_name input_classes='govuk-input--width-10' only %}
               </div>
 
-              <div class="multiple-choice">
-                <input id="js-choice-{{ choices.1.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.1.0 }}" data-reveal=".js-choice-company" {% if field.value == choices.1.0 %}checked{% endif %}>
-                <label for="js-choice-{{ choices.1.0 }}">{{ choices.1.1 }}</label>
+              <div class="govuk-radios__item">
+                <input id="js-choice-{{ choices.1.0 }}" class="govuk-radios__input" type="radio" name="{{ field.html_name }}" value="{{ choices.1.0 }}" data-aria-controls="js-choice-{{ choices.1.0 }}-conditional" {% if field.value == choices.1.0 %}checked{% endif %}>
+                <label for="js-choice-{{ choices.1.0 }}" class="govuk-label govuk-radios__label">{{ choices.1.1 }}</label>
               </div>
-              <div class="panel panel-border-narrow js-hidden js-choice-company">
-                {% include 'mtp_common/forms/field.html' with field=form.recipient_company_name input_classes='form-control-1-2' only %}
+              <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="js-choice-{{ choices.1.0 }}-conditional">
+                {% include 'mtp_common/forms/field.html' with field=form.recipient_company_name input_classes='govuk-input--width-10' only %}
               </div>
             </div>
-          </fieldset>
+          </div>
         {% endwith %}
 
-        {% include 'mtp_common/forms/field.html' with field=form.recipient_email input_classes='form-control-3-4' only %}
+        {% include 'mtp_common/forms/field.html' with field=form.recipient_email input_classes='govuk-input--width-10' only %}
 
-        <button type="submit" class="button mtp-next-button">{% trans 'Next' %}</button>
+        <button type="submit" class="govuk-button mtp-next-button">{% trans 'Next' %}</button>
       </form>
     </div>
   </div>

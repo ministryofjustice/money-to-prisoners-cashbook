@@ -23,10 +23,10 @@
     {% endfor %}
     {% include 'mtp_common/forms/select-field.html' with field=form.prison only %}
 
-    <div class="form-group">
-      <button type="submit" class="button">
+    <p>
+      <button type="submit" class="govuk-button">
         {% trans 'Submit request' %}
       </button>
-    </div>
+    </p>
   </form>
 {% endblock %}
