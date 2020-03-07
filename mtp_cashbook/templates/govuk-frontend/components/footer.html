@@ -1,6 +1,39 @@
 {% extends 'govuk-frontend/components/footer.html' %}
 {% load i18n %}
 
+{% block footer_top %}
+  {% if request.user.is_authenticated %}
+    <div class="govuk-footer__navigation mtp-print-hidden">
+      <div class="govuk-footer__section">
+        <h2 class="govuk-footer__heading govuk-heading-m">{% trans 'Manage prisoner money' %}</h2>
+        <ul class="govuk-footer__list">
+          <li class="govuk-footer__list-item">
+            <a class="govuk-footer__link" href="{% url 'new-credits' %}">
+              {% trans 'Digital cashbook' %}
+            </a>
+          </li>
+          <li class="govuk-footer__list-item">
+            <a class="govuk-footer__link" href="{% url 'disbursements:start' %}">
+              {% trans 'Digital disbursements' %}
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="govuk-footer__section">
+        <h2 class="govuk-footer__heading govuk-heading-m">{% trans 'Other related tools' %}</h2>
+        <ul class="govuk-footer__list">
+          <li class="govuk-footer__list-item">
+            <a class="govuk-footer__link" href="{{ noms_ops_url }}" title="{% trans 'For security staff' %}">
+              {% trans 'Prisoner money intelligence' %}
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <hr class="govuk-footer__section-break mtp-print-hidden" />
+  {% endif %}
+{% endblock %}
+
 {% block footer_support_links %}
   <h2 class="govuk-visually-hidden">
     {% trans 'Support links' %}
