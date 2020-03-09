@@ -26,10 +26,14 @@
         {% include 'mtp_common/forms/field.html' with field=form.account_number input_classes='govuk-input--width-20' only %}
         {% include 'mtp_common/forms/field.html' with field=form.roll_number input_classes='govuk-input--width-20' only %}
 
+        {% captureoutput as body %}
+          {% trans 'In this case, we will notify you by email.' %}
+          {% trans 'SSCL will cancel the payment and return the money to your prison, but you will need to refund the prisoner manually in NOMIS.' %}
+        {% endcaptureoutput %}
         {% captureoutput as analytics %}{% stripwhitespace %}
           pageview,/-help_open/{{ request.resolver_match.view_name }}/
         {% endstripwhitespace %}{% endcaptureoutput %}
-        {% include 'govuk-frontend/components/details.html' with summary=_('What if the prisoner gets the recipient’s bank details wrong?') body=_('In this case, SSCL will send out a cheque instead but it will delay payment.') analytics=analytics only %}
+        {% include 'govuk-frontend/components/details.html' with summary=_('What if the prisoner gets the recipient’s bank details wrong?') body=body analytics=analytics only %}
 
         <button type="submit" class="govuk-button" data-module="govuk-button">{% trans 'Next' %}</button>
       </form>
