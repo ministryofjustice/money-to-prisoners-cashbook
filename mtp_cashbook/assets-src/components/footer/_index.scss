@@ -1,0 +1,20 @@
+@media print {
+  .govuk-footer__navigation {
+    display: none;
+  }
+
+  .govuk-footer__licence-description {
+    display: block;
+    text-align: center;
+  }
+
+  .mtp-footer__official-sensitive {
+    padding: 5pt;
+    border: 2px solid #000;
+  }
+
+  .govuk-footer__copyright-logo {
+    padding-top: 0;
+    background: none;
+  }
+}

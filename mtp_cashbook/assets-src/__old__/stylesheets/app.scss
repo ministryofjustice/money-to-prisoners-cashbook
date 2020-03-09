@@ -11,19 +11,3 @@
 @import 'views/processed_credits';
 @import 'views/progress_bar';
 @import 'views/filter-box';
-
-// mtp-common overrides
-.without-footer-padding #footer .footer-wrapper {
-  padding-top: 2em;
-}
-
-// app-specific styles
-.mtp-inactive__form {
-  .form-label {
-    color: $grey-2;
-  }
-
-  .form-control {
-    border: 2px solid $grey-2;
-  }
-}
