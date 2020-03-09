@@ -576,7 +576,7 @@ class RejectPendingView(DisbursementView, FormView):
     def form_valid(self, form):
         try:
             form.reject(self.request, self.kwargs['pk'])
-            messages.info(self.request, _('Payment request cancelled.'))
+            messages.success(self.request, _('Payment request cancelled.'))
         except RequestException:
             logger.exception('Could not reject disbursement')
             messages.error(self.request, _('Unable to cancel payment request.'))

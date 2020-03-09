@@ -7,10 +7,14 @@ initAll();
 // mtp-common
 import {Analytics} from 'mtp/components/analytics';
 import {Banner} from 'mtp/components/banner';
+import {DialogueBox} from 'mtp/components/dialogue-box';
+import {HiddenLongText} from 'mtp/components/hidden-long-text';
 import {MailcheckWarning} from 'mtp/components/mailcheck-warning';
 
 Analytics.init();
 Banner.init();
+DialogueBox.init();
+HiddenLongText.init();
 MailcheckWarning.init(
   '.mtp-account-management input[type=email]',
   ['justice.gov.uk'],
@@ -29,13 +33,11 @@ MailcheckWarning.init(
 
 /*
 // common
-require('dialogue-box').DialogueBox.init();
 require('print').Print.init();
 require('select-all').SelectAll.init();
 require('unload').Unload.init();
 require('track-printing').TrackPrinting.init();
 require('tabbed-panel').TabbedPanel.init();
-require('hide-long-text').HideLongText.init();
 require('character-count-warning').CharacterCountWarning.init();
 
 // cashbook

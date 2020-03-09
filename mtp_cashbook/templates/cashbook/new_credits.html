@@ -21,35 +21,44 @@
   </p>
 
   {% if credited_credits %}
-    <div class="mtp-message mtp-message--success mtp-print-hidden">
-      {% blocktrans trimmed count credited_credits=credited_credits %}
-        {{ credited_credits }} credit sent to NOMIS
-      {% plural %}
-        {{ credited_credits }} credits sent to NOMIS
-      {% endblocktrans %}
-      <a href="{% url 'processed-credits-list' %}" class="mtp-end-link">{% trans 'View' %}</a>
+    <div class="mtp-banner mtp-banner--success mtp-print-hidden">
+      {% include 'mtp_common/icons/success.svg' with class_names='mtp-banner__icon' %}
+      <p class="mtp-banner__title">
+        {% blocktrans trimmed count credited_credits=credited_credits %}
+          {{ credited_credits }} credit sent to NOMIS
+        {% plural %}
+          {{ credited_credits }} credits sent to NOMIS
+        {% endblocktrans %}
+        <a href="{% url 'processed-credits-list' %}" class="mtp-end-link">{% trans 'View' %}</a>
+      </p>
     </div>
   {% endif %}
 
   {% if credited_manual_credits %}
-    <div class="mtp-message mtp-message--success mtp-print-hidden">
-      {% blocktrans trimmed count credited_manual_credits=credited_manual_credits %}
-        {{ credited_manual_credits }} credit manually input by you into NOMIS
-      {% plural %}
-        {{ credited_manual_credits }} credits manually input by you into NOMIS
-      {% endblocktrans %}
-      <a href="{% url 'processed-credits-list' %}" class="mtp-end-link">{% trans 'View' %}</a>
+    <div class="mtp-banner mtp-banner--success mtp-print-hidden">
+      {% include 'mtp_common/icons/success.svg' with class_names='mtp-banner__icon' %}
+      <p class="mtp-banner__title">
+        {% blocktrans trimmed count credited_manual_credits=credited_manual_credits %}
+          {{ credited_manual_credits }} credit manually input by you into NOMIS
+        {% plural %}
+          {{ credited_manual_credits }} credits manually input by you into NOMIS
+        {% endblocktrans %}
+        <a href="{% url 'processed-credits-list' %}" class="mtp-end-link">{% trans 'View' %}</a>
+      </p>
     </div>
   {% endif %}
 
   {% if failed_credits %}
-    <div class="mtp-message mtp-message--error mtp-print-hidden">
-      {% blocktrans trimmed count failed_credits=failed_credits %}
-        {{ failed_credits }} credit not processed due to technical error, try again soon
-      {% plural %}
-        {{ failed_credits }} credits not processed due to technical error, try again soon
-      {% endblocktrans %}
-      <a href="#failed-credits-dialog" class="mtp-print-hidden js-dialogue-open mtp-end-link">{% trans 'Why?' %}</a>
+    <div class="mtp-banner mtp-banner--error mtp-print-hidden">
+      {% include 'mtp_common/icons/error.svg' with class_names='mtp-banner__icon' %}
+      <p class="mtp-banner__title">
+        {% blocktrans trimmed count failed_credits=failed_credits %}
+          {{ failed_credits }} credit not processed due to technical error, try again soon
+        {% plural %}
+          {{ failed_credits }} credits not processed due to technical error, try again soon
+        {% endblocktrans %}
+        <a href="#failed-credits-dialog" class="mtp-print-hidden js-dialogue-open mtp-end-link">{% trans 'Why?' %}</a>
+      </p>
     </div>
 
     {% dialoguebox title=_('Why didn’t it work?') html_id='failed-credits-dialog' %}
@@ -69,13 +78,16 @@
       {% include 'mtp_common/forms/error-summary.html' with form=form.manual only %}
 
       {% if owned_manual_credits %}
-        <div class="mtp-message mtp-message--warning mtp-print-hidden">
-          {% blocktrans trimmed count manual_credits=owned_manual_credits %}
-            {{ manual_credits }} credit needs your manual input in NOMIS
-          {% plural %}
-            {{ manual_credits }} credits need your manual input in NOMIS
-          {% endblocktrans %}
-          <a href="#manual-credits-dialog" class="mtp-print-hidden js-dialogue-open mtp-end-link">{% trans 'How?' %}</a>
+        <div class="mtp-banner mtp-banner--warning mtp-print-hidden">
+          {% include 'mtp_common/icons/warning.svg' with class_names='mtp-banner__icon' %}
+          <p class="mtp-banner__title">
+            {% blocktrans trimmed count manual_credits=owned_manual_credits %}
+              {{ manual_credits }} credit needs your manual input in NOMIS
+            {% plural %}
+              {{ manual_credits }} credits need your manual input in NOMIS
+            {% endblocktrans %}
+            <a href="#manual-credits-dialog" class="mtp-print-hidden js-dialogue-open mtp-end-link">{% trans 'How?' %}</a>
+          </p>
         </div>
 
         <div class="mtp-print-hidden"><p>{% trans 'These credits need your manual input to be processed.' %}</p></div>

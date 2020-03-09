@@ -16,42 +16,57 @@
   </header>
 
   {% if disbursement.resolution == 'rejected' %}
-    <div class="mtp-message mtp-message--info">
-      {% trans 'This payment request has been cancelled.' %}
-      <br/>
-      {% trans 'All cancelled payments can be found in ‘Payments made’.' %}
+    <div class="mtp-banner mtp-banner--info" role="alert">
+      {% include 'mtp_common/icons/info.svg' with class_names='mtp-banner__icon' %}
+      <p class="mtp-banner__title">
+        {% trans 'This payment request has been cancelled.' %}
+        <br/>
+        {% trans 'All cancelled payments can be found in ‘Payments made’.' %}
+      </p>
     </div>
     <br/>
   {% elif disbursement.resolution == 'confirmed' or disbursement.resolution == 'sent' %}
-    <div class="mtp-message mtp-message--info">
-      {% trans 'This payment request has already been confirmed.' %}
-      <br/>
-      {% trans 'All confirmed payments can be found in ‘Payments made’.' %}
+    <div class="mtp-banner mtp-banner--info" role="alert">
+      {% include 'mtp_common/icons/info.svg' with class_names='mtp-banner__icon' %}
+      <p class="mtp-banner__title">
+        {% trans 'This payment request has already been confirmed.' %}
+        <br/>
+        {% trans 'All confirmed payments can be found in ‘Payments made’.' %}
+      </p>
     </div>
     <br/>
   {% else %}
     {% if not editable %}
-      <div class="mtp-message mtp-message--info">
-        {% trans 'Someone has already attempted to confirm this payment request.' %}
-        {% trans 'It can no longer be changed or deleted, but you can attempt to confirm it again.' %}
-        {% trans 'This will not result in a duplication of the payment.' %}
-        <br/>
-        {% trans 'If there is a problem, use ‘Get help’ to contact us.' %}
+      <div class="mtp-banner mtp-banner--info">
+        {% include 'mtp_common/icons/info.svg' with class_names='mtp-banner__icon' %}
+        <p class="mtp-banner__title">
+          {% trans 'Someone has already attempted to confirm this payment request.' %}
+          {% trans 'It can no longer be changed or deleted, but you can attempt to confirm it again.' %}
+          {% trans 'This will not result in a duplication of the payment.' %}
+          <br/>
+          {% trans 'If there is a problem, use ‘Get help’ to contact us.' %}
+        </p>
       </div>
       <br/>
     {% endif %}
 
 
     {% if prisoner_moved %}
-      <div class="mtp-message mtp-message--warning">
-        {% trans 'The prisoner has moved or been released, please check NOMIS.' %}
+      <div class="mtp-banner mtp-banner--warning">
+        {% include 'mtp_common/icons/warning.svg' with class_names='mtp-banner__icon' %}
+        <p class="mtp-banner__title">
+          {% trans 'The prisoner has moved or been released, please check NOMIS.' %}
+        </p>
       </div>
       <br/>
     {% elif insufficient_funds %}
-      <div class="mtp-message mtp-message--warning">
-        {% trans 'There is not enough money in the prisoner’s private account.' %}
-        <br/>
-        <a href="{% url 'disbursements:update_amount' pk=disbursement.id %}">{% trans 'View NOMIS balances' %}</a>
+      <div class="mtp-banner mtp-banner--warning">
+        {% include 'mtp_common/icons/warning.svg' with class_names='mtp-banner__icon' %}
+        <p class="mtp-banner__title">
+          {% trans 'There is not enough money in the prisoner’s private account.' %}
+          <br/>
+          <a href="{% url 'disbursements:update_amount' pk=disbursement.id %}">{% trans 'View NOMIS balances' %}</a>
+        </p>
       </div>
       <br/>
     {% endif %}
