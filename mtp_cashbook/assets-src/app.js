@@ -7,12 +7,15 @@ initAll();
 // mtp-common
 import {Analytics} from 'mtp/components/analytics';
 import {Banner} from 'mtp/components/banner';
+import {DatePicker} from 'mtp/components/date-picker-field';
 import {DialogueBox} from 'mtp/components/dialogue-box';
 import {HiddenLongText} from 'mtp/components/hidden-long-text';
 import {MailcheckWarning} from 'mtp/components/mailcheck-warning';
+import {TabbedPanel} from 'mtp/components/tabbed-panel';
 
 Analytics.init();
 Banner.init();
+DatePicker.init();
 DialogueBox.init();
 HiddenLongText.init();
 MailcheckWarning.init(
@@ -30,6 +33,7 @@ MailcheckWarning.init(
 MailcheckWarning.init(
   '.mtp-create-disbursement input[type=email]'
 );
+TabbedPanel.init();
 
 /*
 // common
