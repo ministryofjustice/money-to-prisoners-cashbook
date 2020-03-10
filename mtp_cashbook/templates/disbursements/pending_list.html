@@ -53,9 +53,31 @@
                   {% if disbursement.self_own %}
                     <br />
                     {% trans 'Another colleague needs to confirm this payment' %}
-                    <a href="#" class="mtp-question-button">
-                      {% trans 'Why can’t I confirm this payment?' %}
-                    </a>
+                    <details class="govuk-details" data-module="govuk-details">
+                      <summary class="govuk-details__summary">
+                        <span class="govuk-details__summary-text">
+                          {% trans 'Why can’t I confirm this payment?' %}
+                        </span>
+                      </summary>
+                      <div class="govuk-details__text">
+                        <strong>
+                          {% trans 'A payment can’t be confirmed by the person who' %}:
+                        </strong>
+                        <ul class="govuk-list govuk-list--bullet">
+                          <li>
+                            {% trans '‘entered’ the payment request' %}
+                            –
+                            {% trans 'the process still needs a different member of staff to check the details' %}
+                          </li>
+                          <li>
+                            {% trans 'made a ‘change’ or ‘edit’ to the request' %}
+                          </li>
+                        </ul>
+                        <a href="{% url 'disbursements:process-overview' %}">
+                          {% trans 'Read more about how the disbursement process works' %}
+                        </a>
+                      </div>
+                    </details>
                   {% endif %}
                 {% endif %}
               </td>
@@ -67,31 +89,6 @@
                 {% endif %}
               </td>
             </tr>
-            {% if disbursement.confirmable_by_other %}
-              <tr class="js-hidden">
-                <td colspan="3"></td>
-                <td colspan="2">
-                  <div class="panel panel-border-narrow">
-                    <strong>
-                      {% trans 'A payment can’t be confirmed by the person who' %}:
-                    </strong>
-                    <ul class="govuk-list govuk-list--bullet">
-                      <li>
-                        {% trans '‘entered’ the payment request' %}
-                        –
-                        {% trans 'the process still needs a different member of staff to check the details' %}
-                      </li>
-                      <li>
-                        {% trans 'made a ‘change’ or ‘edit’ to the request' %}
-                      </li>
-                    </ul>
-                    <a href="{% url 'disbursements:process-overview' %}">
-                      {% trans 'Read more about how the disbursement process works' %}
-                    </a>
-                  </div>
-                </td>
-              </tr>
-            {% endif %}
           {% endfor %}
         </tbody>
       </table>
