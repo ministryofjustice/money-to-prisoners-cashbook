@@ -3,27 +3,28 @@
 {% load static %}
 {% load mtp_common %}
 
-{% block body_classes %}{{ block.super }} mtp-login{% endblock %}
+{% block body_classes %}{{ block.super }} mtp-page-with-masthead{% endblock %}
 {% block page_title %}{% trans 'Sign in' %} – {{ block.super }}{% endblock %}
 
-{% block content %}
+{% block breadcrumb_bar %}{% endblock %}
 
-  <div class="mtp-login__header">
-    <div class="mtp-login__content">
+{% block header %}
+  {{ block.super }}
+
+  <div class="mtp-masthead">
+    <div class="govuk-width-container">
       <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full">
-          {% language_switch %}
-        </div>
+        {% language_switch %}
       </div>
-
-      <div class="govuk-grid-row">
+      <div class="govuk-grid-row mtp-masthead__content">
         <header class="govuk-grid-column-two-thirds">
           <h1 class="govuk-heading-xl">
             {% trans 'Process money in and out of your prison' %}
           </h1>
-
           <aside>
-            {% trans 'These tools will help you manage prisoner money' %}:
+            <p>
+              {% trans 'These tools will help you manage prisoner money' %}:
+            </p>
             <ul class="govuk-list govuk-list--bullet">
               <li>{% trans 'digital cashbook' %}</li>
               <li>{% trans 'digital disbursements' %}</li>
@@ -37,7 +38,9 @@
       </div>
     </div>
   </div>
+{% endblock %}
 
+{% block content %}
   <div class="mtp-login__content">
     {% notification_banners request 'cashbook_login' %}
 
