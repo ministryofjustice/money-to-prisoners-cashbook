@@ -5,7 +5,7 @@
 
 {% block page_title %}{% trans 'How it works' %} – {{ block.super }}{% endblock %}
 
-{% block sub_nav %}
+{% block breadcrumb_bar %}
   {% include 'disbursements/get-help-tabs.html' with page=2 only %}
   {{ block.super }}
 {% endblock %}
