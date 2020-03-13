@@ -1,18 +1,20 @@
 {% load i18n %}
 
-<nav class="mtp-page-tabs mtp-print-hidden">
-  <ul>
-    <li>
-      <a href="{% url 'disbursements:process-overview' %}" {% if page == 2 %}class="active"{% endif %}>
-        {% trans 'How it works' %}
-        {% if page == 2 %}<span class="govuk-visually-hidden">{% trans '(current page)' %}</span>{% endif %}
-      </a>
-    </li>
-    <li>
-      <a href="{% url 'disbursements:submit_ticket' %}" {% if page == 1 %}class="active"{% endif %}>
-        {% trans 'Contact us' %}
-        {% if page == 1 %}<span class="govuk-visually-hidden">{% trans '(current page)' %}</span>{% endif %}
-      </a>
-    </li>
-  </ul>
-</nav>
+<div class="mtp-sub-navigation__container mtp-print-hidden">
+  <nav class="mtp-sub-navigation govuk-clearfix">
+    <ul class="mtp-sub-navigation__list">
+      <li class="mtp-sub-navigation__list-item {% if page == 2 %}mtp-sub-navigation__list-item--current{% endif %}">
+        <a href="{% url 'disbursements:process-overview' %}" class="mtp-sub-navigation__link">
+          {% trans 'How it works' %}
+          {% if page == 2 %}<span class="govuk-visually-hidden">{% trans '(current page)' %}</span>{% endif %}
+        </a>
+      </li>
+      <li class="mtp-sub-navigation__list-item {% if page == 1 %}mtp-sub-navigation__list-item--current{% endif %}">
+        <a href="{% url 'disbursements:submit_ticket' %}" class="mtp-sub-navigation__link">
+          {% trans 'Contact us' %}
+          {% if page == 1 %}<span class="govuk-visually-hidden">{% trans '(current page)' %}</span>{% endif %}
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>
