@@ -47,7 +47,7 @@
 
     <div class="govuk-grid-column-one-third">
       {% if credits_returned %}
-        <p style="text-align:right"><a href="#" class="mtp-print-hidden js-print-trigger">{% trans 'Print this page of credits' %}</a></p>
+        <p style="text-align:right"><a href="#" class="mtp-print-trigger">{% trans 'Print this page of credits' %}</a></p>
       {% endif %}
     </div>
   </div>
@@ -56,7 +56,7 @@
     <div class="mtp-table__container mtp-batch">
       {% if new_credit_list %}
         <h2 class="govuk-heading-m">{% trans 'New credits' %}</h2>
-        <table class="mtp-table">
+        <table class="mtp-table govuk-!-margin-bottom-9">
           <caption class="govuk-visually-hidden">{% trans 'New credits' %}</caption>
 
           <thead>

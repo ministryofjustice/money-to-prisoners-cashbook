@@ -11,6 +11,7 @@ import {DatePicker} from 'mtp/components/date-picker-field';
 import {DialogueBox} from 'mtp/components/dialogue-box';
 import {HiddenLongText} from 'mtp/components/hidden-long-text';
 import {MailcheckWarning} from 'mtp/components/mailcheck-warning';
+import {PrintTrigger} from 'mtp/components/print-trigger';
 import {TabbedPanel} from 'mtp/components/tabbed-panel';
 
 Analytics.init();
@@ -33,11 +34,11 @@ MailcheckWarning.init(
 MailcheckWarning.init(
   '.mtp-create-disbursement input[type=email]'
 );
+PrintTrigger.init();
 TabbedPanel.init();
 
 /*
 // common
-require('print').Print.init();
 require('select-all').SelectAll.init();
 require('unload').Unload.init();
 require('track-printing').TrackPrinting.init();
