@@ -8,19 +8,22 @@
   {% include 'mtp_common/includes/message-banners.html' %}
 
   {% if user_request_count %}
-    <div class="mtp-notification mtp-notification--info">
-      <h1>
-        <a href="{% url 'list-users' %}" class="mtp-notification__headline">
+    <div class="mtp-banner mtp-banner--info">
+      {% include 'mtp_common/icons/info.svg' with class_names='mtp-banner__icon' %}
+      <h1 class="mtp-banner__title">
+        <a href="#mtp-banner-requests" data-module="govuk-button">
           {% blocktrans trimmed count count=user_request_count %}
             You have {{ count }} new user request
           {% plural %}
             You have {{ count }} new user requests
           {% endblocktrans %}
-          <span>
-            {% trans 'View' %}
-          </span>
         </a>
       </h1>
+      <div id="mtp-banner-requests" class="mtp-banner__body">
+        <a href="{% url 'list-users' %}">
+          {% trans 'View requests' %}
+        </a>
+      </div>
     </div>
   {% endif %}
 
