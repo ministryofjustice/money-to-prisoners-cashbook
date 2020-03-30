@@ -9,7 +9,7 @@ from feedback.forms import PrisonTicketForm
 class GetHelpView(BaseGetHelpView):
     form_class = PrisonTicketForm
     success_url = reverse_lazy('feedback_success')
-    ticket_subject = 'MTP Cashbook Feedback'
+    ticket_subject = 'MTP for digital team - Digital Cashbook'
     ticket_tags = ['feedback', 'mtp', 'cashbook', settings.ENVIRONMENT]
 
     def get_context_data(self, **kwargs):
