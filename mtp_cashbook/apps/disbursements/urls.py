@@ -2,6 +2,7 @@ from django.conf.urls import url
 
 from . import views
 
+app_name = 'disbursements'
 urlpatterns = [
     url(r'^$', views.StartView.as_view(),
         name=views.StartView.url_name),
