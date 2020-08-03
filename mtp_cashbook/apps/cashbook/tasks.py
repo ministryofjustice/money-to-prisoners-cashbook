@@ -30,6 +30,14 @@ def credit_selected_credits_to_nomis(*, user, user_session, selected_credit_ids,
             logger.warning('Credit %s is no longer available' % credit_id)
     metrics.credited_summary.observe(credited)
 
+    if settings.PRISONER_CAPPING_ENABLED:
+        prisoner_locations = set(
+            (credit['prison'], credit['prisoner_number'])
+            for credit in credits.values()
+        )
+        for prison, prisoner_number in prisoner_locations:
+            check_balance_is_below_cap(prison, prisoner_number)
+
 
 @spoolable()
 def credit_individual_credit_to_nomis(user, user_session, credit_id, credit):
@@ -87,3 +95,26 @@ def credit_individual_credit_to_nomis(user, user_session, credit_id, credit):
             html_template='cashbook/email/credited-confirmation.html',
             anymail_tags=['credited'],
         )
+
+
+NOMIS_ACCOUNTS = {'cash', 'spends', 'savings'}
+
+
+@spoolable()
+def check_balance_is_below_cap(prison, prisoner_number):
+    # NB: balances are not known in private estate currently, but cashbook is not used in there
+    try:
+        nomis_account_balances = nomis.get_account_balances(prison, prisoner_number)
+        assert set(nomis_account_balances.keys()) == NOMIS_ACCOUNTS, 'response keys differ from expected'
+        assert all(
+            isinstance(nomis_account_balances[account], int) and nomis_account_balances[account] >= 0
+            for account in NOMIS_ACCOUNTS
+        ), 'not all response values are natural ints'
+    except AssertionError as e:
+        logger.exception(f'NOMIS balances for {prisoner_number} is malformed: {e}')
+    except requests.RequestException:
+        logger.exception(f'Cannot lookup NOMIS balances for {prisoner_number}')
+    else:
+        prisoner_account_balance = sum(nomis_account_balances[account] for account in NOMIS_ACCOUNTS)
+        if prisoner_account_balance > settings.PRISONER_CAPPING_THRESHOLD_IN_POUNDS * 100:
+            logger.error(f'NOMIS account balance for {prisoner_number} exceeds cap')
