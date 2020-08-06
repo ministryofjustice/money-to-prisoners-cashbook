@@ -60,6 +60,7 @@ EXPIRED_PROCESSING_BATCH = {
 }
 
 
+@override_settings(PRISONER_CAPPING_ENABLED=False)
 class NewCreditsViewTestCase(MTPBaseTestCase):
 
     @property
@@ -231,6 +232,127 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
                 '£52.00' in mail.outbox[0].body and '£45.00' in mail.outbox[1].body or
                 '£52.00' in mail.outbox[1].body and '£45.00' in mail.outbox[0].body
             )
+
+    @override_settings(
+        ENVIRONMENT='prod',  # because non-prod environments don't send to .local
+        PRISONER_CAPPING_ENABLED=True,
+        PRISONER_CAPPING_THRESHOLD_IN_POUNDS=100,
+    )
+    @mock.patch('cashbook.tasks.logger')
+    @mock.patch('cashbook.tasks.nomis')
+    def test_balance_check_after_credit(self, mock_nomis, mock_logger):
+        balances = {
+            # credit 1 – £52 – within cap
+            'A1234BC': {'cash': 800, 'spends': 0, 'savings': 4000},
+            # credit 2 – £45 – exceeds cap
+            'A1234GG': {'cash': 1000, 'spends': 200, 'savings': 5500},
+        }
+
+        def create_transaction(**kwargs):
+            prisoner_number = kwargs['prisoner_number']
+            amount = kwargs['amount']
+            balances[prisoner_number]['cash'] += amount
+            return {'id': f'{prisoner_number}-1'}
+
+        def get_account_balances(prison, prisoner_number):
+            self.assertEqual(prison, 'BXI', msg='Unexpected test data')
+            return balances[prisoner_number]
+
+        mock_nomis.create_transaction = create_transaction
+        mock_nomis.get_account_balances = get_account_balances
+
+        with responses.RequestsMock() as rsps:
+            # get new credits
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/?ordering=-received_at&offset=0&limit=100&status=credit_pending&resolution=pending'),
+                json=wrap_response_data(CREDIT_1, CREDIT_2),
+                status=200,
+                match_querystring=True,
+            )
+            # get manual credits
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/?resolution=manual&status=credit_pending&offset=0&limit=100&ordering=-received_at'),
+                json=wrap_response_data(),
+                status=200,
+                match_querystring=True,
+            )
+            # create batch
+            rsps.add(
+                rsps.POST,
+                api_url('/credits/batches/'),
+                status=201,
+            )
+            rsps.add(
+                rsps.POST,
+                api_url('/credits/actions/credit/'),
+                status=204,
+            )
+            rsps.add(
+                rsps.POST,
+                api_url('/credits/actions/credit/'),
+                status=204,
+            )
+            # REDIRECT after success
+            # get active batches
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/batches/'),
+                json=wrap_response_data(PROCESSING_BATCH),
+                status=200,
+            )
+            # get incomplete credits
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/?resolution=pending&pk=1&pk=2'),
+                json=wrap_response_data(),
+                status=200,
+                match_querystring=True,
+            )
+            # get complete credits
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/?resolution=credited&pk=1&pk=2'),
+                json=wrap_response_data(CREDIT_1, CREDIT_2),
+                status=200,
+                match_querystring=True,
+            )
+            # delete completed batch
+            rsps.add(
+                rsps.DELETE,
+                api_url('/credits/batches/%s/' % PROCESSING_BATCH['id']),
+                status=200,
+            )
+            # get new credits
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/?ordering=-received_at&offset=0&limit=100&status=credit_pending&resolution=pending'),
+                json=wrap_response_data(),
+                status=200,
+                match_querystring=True,
+            )
+            # get manual credits
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/?resolution=manual&status=credit_pending&offset=0&limit=100&ordering=-received_at'),
+                json=wrap_response_data(),
+                status=200,
+                match_querystring=True,
+            )
+
+            self.login()
+            response = self.client.post(
+                self.url,
+                data={'credits': [1, 2], 'submit_new': None},
+                follow=True
+            )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, '2 credits sent to NOMIS')
+        logger_error_messages = [call[0][0] for call in mock_logger.error.call_args_list]
+        self.assertEqual(len(logger_error_messages), 1)
+        self.assertEqual(logger_error_messages[0], 'NOMIS account balance for A1234GG exceeds cap')
 
     @override_settings(ENVIRONMENT='prod')  # because non-prod environments don't send to .local
     @mock.patch(
