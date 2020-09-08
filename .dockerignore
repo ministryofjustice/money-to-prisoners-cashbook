@@ -22,7 +22,6 @@ package.json
 package-lock.json
 webpack.config.js
 mtp_cashbook/assets/
-mtp_cashbook/settings/local.py
 mtp_cashbook/templates/govuk_template
 static/
 media/
