@@ -11,6 +11,8 @@
 {% block inner_content %}
   {{ block.super }}
 
+  {% include '../policy-change-warning-credits.html' %}
+
   <header>
     <h1 class="heading-xlarge mtp-heading--compact">{{ view.title }}</h1>
   </header>

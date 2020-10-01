@@ -9,6 +9,12 @@
   {{ block.super }}
 
   <div class="grid-row">
+    <div class="column-full">
+      {% include '../policy-change-warning-disbursements.html' %}
+    </div>
+  </div>
+
+  <div class="grid-row">
     <div class="column-half">
       <header>
         <h1 class="heading-xlarge">{% trans 'Disbursements' %}</h1>
