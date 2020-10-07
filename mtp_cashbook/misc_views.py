@@ -95,5 +95,13 @@ class MLBriefingView(BaseView, TemplateView):
 
 
 class PolicyChangeInfo(BaseView, TemplateView):
-    title = _('How Nov 2nd policy changes will affect you')
-    template_name = 'policy-change-warning.html'
+    if settings.BANK_TRANSFERS_ENABLED:
+        title = _('How Nov 2nd policy changes will affect you')
+    else:
+        title = _('Policy changes made on Nov 2nd 2020 that may affect your work')
+
+    def get_template_names(self):
+        if settings.BANK_TRANSFERS_ENABLED:
+            return ['policy-change-warning.html']
+        else:
+            return ['policy-change-info.html']
