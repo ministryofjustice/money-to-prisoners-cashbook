@@ -75,3 +75,14 @@ class MLBriefingTestCase(MTPBaseTestCase):
             follow=True,
         )
         self.assertOnPage(response, 'ml-briefing')
+
+
+class PolicyUpdateTestCase(MTPBaseTestCase):
+    def test_requires_login(self):
+        response = self.client.get(reverse('home'), follow=True)
+        self.assertOnPage(response, 'login')
+
+    def test_displays_policy_update_page(self):
+        self.login()
+        response = self.client.get(reverse('policy-change'), follow=True)
+        self.assertOnPage(response, 'policy-change-warning')
