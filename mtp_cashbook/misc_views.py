@@ -92,3 +92,8 @@ class MLBriefingView(BaseView, TemplateView):
         if request.read_ml_briefing:
             return redirect(MLBriefingConfirmationView.success_url)
         return super().dispatch(request, **kwargs)
+
+
+class PolicyChangeInfo(BaseView, TemplateView):
+    title = _('How Nov 2nd policy changes will affect you')
+    template_name = 'policy-change-warning.html'
