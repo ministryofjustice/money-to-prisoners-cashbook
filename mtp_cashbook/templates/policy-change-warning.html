@@ -3,6 +3,8 @@
 {% load mtp_common %}
 {% load static %}
 
+{% block page_title %}{{ view.title }} – {{ block.super }}{% endblock %}
+
 {% block inner_content %}
 
   {% static 'downloads/apply-to-send-out-more-than-50.pdf' as form_link %}

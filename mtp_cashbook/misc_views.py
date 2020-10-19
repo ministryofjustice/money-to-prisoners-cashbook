@@ -34,8 +34,10 @@ class LandingView(BaseView, TemplateView):
         if self.request.user.has_perm('auth.change_user'):
             response = api_client.get_api_session(self.request).get('requests/', params={'page_size': 1})
             kwargs['user_request_count'] = response.json().get('count')
+
         return super().get_context_data(
             start_page_url=settings.START_PAGE_URL,
+            bank_transfers_enabled=settings.BANK_TRANSFERS_ENABLED,
             **kwargs
         )
 
@@ -95,5 +97,13 @@ class MLBriefingView(BaseView, TemplateView):
 
 
 class PolicyChangeInfo(BaseView, TemplateView):
-    title = _('How Nov 2nd policy changes will affect you')
-    template_name = 'policy-change-warning.html'
+    if settings.BANK_TRANSFERS_ENABLED:
+        title = _('How Nov 2nd policy changes will affect you')
+    else:
+        title = _('Policy changes made on Nov 2nd 2020 that may affect your work')
+
+    def get_template_names(self):
+        if settings.BANK_TRANSFERS_ENABLED:
+            return ['policy-change-warning.html']
+        else:
+            return ['policy-change-info.html']

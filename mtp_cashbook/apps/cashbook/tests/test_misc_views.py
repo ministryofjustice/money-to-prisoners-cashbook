@@ -1,6 +1,7 @@
 import copy
 
 from django.urls import reverse, reverse_lazy
+from django.test import override_settings
 import responses
 
 from cashbook.tests import MTPBaseTestCase, api_url
@@ -11,6 +12,18 @@ class LandingPageTestCase(MTPBaseTestCase):
     def test_requires_login(self):
         response = self.client.get(reverse('home'), follow=True)
         self.assertOnPage(response, 'login')
+
+    @override_settings(BANK_TRANSFERS_ENABLED=True)
+    def test_displays_policy_change_warning_pre_launch(self):
+        self.login()
+        response = self.client.get(reverse('home'), follow=True)
+        self.assertOnPage(response, 'policy-change-warning-landing')
+
+    @override_settings(BANK_TRANSFERS_ENABLED=False)
+    def test_displays_policy_change_notice_post_launch(self):
+        self.login()
+        response = self.client.get(reverse('home'), follow=True)
+        self.assertOnPage(response, 'policy-change-notice')
 
 
 class MLBriefingTestCase(MTPBaseTestCase):
@@ -82,7 +95,14 @@ class PolicyUpdateTestCase(MTPBaseTestCase):
         response = self.client.get(reverse('home'), follow=True)
         self.assertOnPage(response, 'login')
 
-    def test_displays_policy_update_page(self):
+    @override_settings(BANK_TRANSFERS_ENABLED=True)
+    def test_displays_policy_warning_page_before_policy_change(self):
         self.login()
         response = self.client.get(reverse('policy-change'), follow=True)
         self.assertOnPage(response, 'policy-change-warning')
+
+    @override_settings(BANK_TRANSFERS_ENABLED=False)
+    def test_displays_policy_update_page_after_policy_change(self):
+        self.login()
+        response = self.client.get(reverse('policy-change'), follow=True)
+        self.assertOnPage(response, 'policy-change-info')

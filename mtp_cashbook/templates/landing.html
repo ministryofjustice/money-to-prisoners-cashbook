@@ -7,7 +7,11 @@
 
   {% include 'mtp_common/includes/message_box.html' %}
 
-  {% include 'policy-change-warning-landing.html' %}
+  {% if bank_transfers_enabled %}
+    {% include 'policy-change-warning-landing.html' %}
+  {% else %}
+    {% include './policy-change-notice.html' %}
+  {% endif %}
 
   {% if user_request_count %}
     <div class="mtp-notification mtp-notification--info">
