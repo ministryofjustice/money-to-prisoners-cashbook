@@ -103,7 +103,7 @@ class BasePagedView(DisbursementView):
             elif view.is_form_required(self.valid_form_data):
                 return redirect(view.url(**kwargs))
         next_url = request.GET.get('next')
-        if is_safe_url(next_url, host=request.get_host()):
+        if is_safe_url(next_url, allowed_hosts={request.get_host()}):
             self.redirect_success_url = next_url
         return super().dispatch(request, **kwargs)
 

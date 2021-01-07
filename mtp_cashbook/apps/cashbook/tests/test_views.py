@@ -187,7 +187,7 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             self.login()
             response = self.client.post(
                 self.url,
-                data={'credits': [1, 2], 'submit_new': None},
+                data={'credits': [1, 2], 'submit_new': 'submit'},
                 follow=True
             )
             self.assertEqual(response.status_code, 200)
@@ -344,7 +344,7 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             self.login()
             response = self.client.post(
                 self.url,
-                data={'credits': [1, 2], 'submit_new': None},
+                data={'credits': [1, 2], 'submit_new': 'submit'},
                 follow=True
             )
 
@@ -447,7 +447,7 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             with silence_logger(name='mtp', level=logging.ERROR):
                 response = self.client.post(
                     self.url,
-                    data={'credits': [1, 2], 'submit_new': None},
+                    data={'credits': [1, 2], 'submit_new': 'submit'},
                     follow=True
                 )
             self.assertEqual(response.status_code, 200)
@@ -555,7 +555,7 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             with silence_logger(name='mtp', level=logging.CRITICAL):
                 response = self.client.post(
                     self.url,
-                    data={'credits': [1, 2], 'submit_new': None},
+                    data={'credits': [1, 2], 'submit_new': 'submit'},
                     follow=True
                 )
             self.assertEqual(response.status_code, 200)
@@ -623,7 +623,7 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             self.login()
             response = self.client.post(
                 self.url,
-                data={'submit_manual_1': None},
+                data={'submit_manual_1': ''},
                 follow=True
             )
             self.assertEqual(
