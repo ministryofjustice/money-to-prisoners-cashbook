@@ -1,4 +1,5 @@
-# Place development dependencies here
--r base.txt
+# Place development and testing dependencies here
 
-money-to-prisoners-common[testing]>=10.0.0,<10.1.0
+money-to-prisoners-common[testing]~=10.1.0
+
+-r base.txt
