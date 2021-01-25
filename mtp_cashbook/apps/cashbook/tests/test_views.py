@@ -24,7 +24,7 @@ CREDIT_1 = {
     'amount': 5200,
     'sender_name': 'Fred Smith',
     'sender_email': 'fred.smith@mail.local',
-    'short_ref_number': '89AF76GH',
+    'short_payment_ref': '319900D4',
     'received_at': '2017-01-25T12:00:00Z',
     'owner': 100,
     'owner_name': 'Staff 1',
@@ -38,7 +38,7 @@ CREDIT_2 = {
     'amount': 4500,
     'sender_name': 'Fred Jones',
     'sender_email': 'fred.jones@mail.local',
-    'short_ref_number': '98KI32SA',
+    'short_payment_ref': 'BAAB65F6',
     'received_at': '2017-01-25T12:00:00Z',
     'owner': 100,
     'owner_name': 'Staff 1',
@@ -231,6 +231,10 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             self.assertTrue(
                 '£52.00' in mail.outbox[0].body and '£45.00' in mail.outbox[1].body or
                 '£52.00' in mail.outbox[1].body and '£45.00' in mail.outbox[0].body
+            )
+            self.assertTrue(
+                'BAAB65F6' in mail.outbox[0].body or
+                'BAAB65F6' in mail.outbox[1].body
             )
 
     @override_settings(
