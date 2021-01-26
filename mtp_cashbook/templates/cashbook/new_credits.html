@@ -12,8 +12,8 @@
 {% block content %}
   {{ block.super }}
 
-  {%  if bank_transfers_enabled %}
-    {% include '../policy-change-warning-credits.html' %}
+  {% if bank_transfers_enabled %}
+    {% include 'policy-change-warning-credits.html' %}
   {% endif %}
 
   <header>

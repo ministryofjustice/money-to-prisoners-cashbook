@@ -8,24 +8,20 @@
   {% if bank_transfers_enabled %}
     {% include 'policy-change-warning-landing.html' %}
   {% else %}
-    {% include './policy-change-notice.html' %}
+    {% include 'policy-change-notice.html' %}
   {% endif %}
 
   {% if user_request_count %}
-    <div class="mtp-notification mtp-notification--info">
-      <h1>
-        <a href="{% url 'list-users' %}" class="mtp-notification__headline">
-          {% blocktrans trimmed count count=user_request_count %}
-            You have {{ count }} new user request
-          {% plural %}
-            You have {{ count }} new user requests
-          {% endblocktrans %}
-          <span>
-            {% trans 'View' %}
-          </span>
-        </a>
-      </h1>
-    </div>
+    {% captureoutput as banner_heading %}
+      <a href="{% url 'list-users' %}">
+        {% blocktrans trimmed count count=user_request_count %}
+          You have {{ count }} new user request
+        {% plural %}
+          You have {{ count }} new user requests
+        {% endblocktrans %}
+      </a>
+    {% endcaptureoutput %}
+    {% include 'mtp_common/components/notification-banner.html' with banner_level='info' banner_title='info'|notification_level banner_heading=banner_heading only %}
   {% endif %}
 
   <header>

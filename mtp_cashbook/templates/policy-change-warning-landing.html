@@ -1,19 +1,20 @@
 {% load i18n %}
+{% load mtp_common %}
 
-<!--[policy-change-warning-landing]-->
-<div class="mtp-notification mtp-notification--info mtp-notification--open">
-  <h2 class="mtp-notification__headline">
-    {% trans 'How Nov 2nd policy changes will affect you' %}
-  </h2>
-  <div class="mtp-notification__message">
+{% captureoutput as banner_heading %}
+  {% trans 'How Nov 2nd policy changes will affect you' %}
+{% endcaptureoutput %}
+{% captureoutput as banner_message %}{% spaceless %}
+  <!--[policy-change-warning-landing]-->
+  <h3 class="govuk-heading-m">{% trans 'Credits' %}</h3>
 
-    <h3 class="govuk-heading-m">{% trans 'Credits' %}</h3>
-    <p>{% trans 'Senders will no longer be able to send money by bank transfer.' %}</p>
+  {% trans 'Senders will no longer be able to send money by bank transfer.' %}
 
-    <h3 class="govuk-heading-m">{% trans 'Disbursements' %}</h3>
-    <p>{% trans 'There will be a cap on how much money can be sent out of prison.' %}</p>
-    <p>{% trans 'The cap will be a maximum of £50 a week sent out to each person (with a maximum of 5 people).' %}</p>
+  <h3 class="govuk-heading-m">{% trans 'Disbursements' %}</h3>
 
-    <p><a href="{% url 'policy-change' %}">{% trans 'More details about Credit and Disbursement changes' %}</a></p>
-  </div>
-</div>
+  {% trans 'There will be a cap on how much money can be sent out of prison.' %}
+  {% trans 'The cap will be a maximum of £50 a week sent out to each person (with a maximum of 5 people).' %}
+
+  <a href="{% url 'policy-change' %}">{% trans 'More details about Credit and Disbursement changes' %}</a>
+{% endspaceless %}{% endcaptureoutput %}
+{% include 'mtp_common/components/notification-banner.html' with banner_level='info' banner_title='info'|notification_level banner_heading=banner_heading banner_message=banner_message only %}
