@@ -11,13 +11,6 @@
     <h1 class="govuk-heading-xl">{{ view.title }} ({{ pending_count }})</h1>
   </header>
 
-  {% for message in messages %}
-    <div class="mtp-message mtp-message--{{ message.level_tag }}">
-      {{ message }}
-    </div>
-    <br/>
-  {% endfor %}
-
   {% if disbursements %}
     <p>{% trans 'Have the completed form in front of you and choose the payment details you want to check.' %}</p>
 

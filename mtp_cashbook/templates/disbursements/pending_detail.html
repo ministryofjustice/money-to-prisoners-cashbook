@@ -16,44 +16,26 @@
   </header>
 
   {% if disbursement.resolution == 'rejected' %}
-    <div class="mtp-message mtp-message--info">
-      {% trans 'This payment request has been cancelled.' %}
-      <br/>
-      {% trans 'All cancelled payments can be found in ‘Payments made’.' %}
-    </div>
-    <br/>
+    {% include 'mtp_common/components/notification-banner.html' with banner_level='success' banner_title='success'|notification_level banner_heading=_('This payment request has been cancelled.') banner_message=_('All cancelled payments can be found in ‘Payments made’.') only %}
   {% elif disbursement.resolution == 'confirmed' or disbursement.resolution == 'sent' %}
-    <div class="mtp-message mtp-message--info">
-      {% trans 'This payment request has already been confirmed.' %}
-      <br/>
-      {% trans 'All confirmed payments can be found in ‘Payments made’.' %}
-    </div>
-    <br/>
+    {% include 'mtp_common/components/notification-banner.html' with banner_level='info' banner_title='info'|notification_level banner_heading=_('This payment request has already been confirmed.') banner_message=_('All confirmed payments can be found in ‘Payments made’.') only %}
   {% else %}
     {% if not editable %}
-      <div class="mtp-message mtp-message--info">
-        {% trans 'Someone has already attempted to confirm this payment request.' %}
+      {% captureoutput as banner_message %}
         {% trans 'It can no longer be changed or deleted, but you can attempt to confirm it again.' %}
         {% trans 'This will not result in a duplication of the payment.' %}
-        <br/>
         {% trans 'If there is a problem, use ‘Get help’ to contact us.' %}
-      </div>
-      <br/>
+      {% endcaptureoutput %}
+      {% include 'mtp_common/components/notification-banner.html' with banner_level='info' banner_title='info'|notification_level banner_heading=_('Someone has already attempted to confirm this payment request.') banner_message=banner_message only %}
     {% endif %}
 
-
     {% if prisoner_moved %}
-      <div class="mtp-message mtp-message--warning">
-        {% trans 'The prisoner has moved or been released, please check NOMIS.' %}
-      </div>
-      <br/>
+      {% include 'mtp_common/components/notification-banner.html' with banner_level='warning' banner_title='warning'|notification_level banner_heading=_('The prisoner has moved or been released, please check NOMIS.') only %}
     {% elif insufficient_funds %}
-      <div class="mtp-message mtp-message--warning">
-        {% trans 'There is not enough money in the prisoner’s private account.' %}
-        <br/>
+      {% captureoutput as banner_message %}
         <a href="{% url 'disbursements:update_amount' pk=disbursement.id %}">{% trans 'View NOMIS balances' %}</a>
-      </div>
-      <br/>
+      {% endcaptureoutput %}
+      {% include 'mtp_common/components/notification-banner.html' with banner_level='warning' banner_title='warning'|notification_level banner_heading=_('There is not enough money in the prisoner’s private account.') banner_message=banner_message only %}
     {% endif %}
 
     <p>{% trans 'Double-check these payment details match those on the paper form.' %}</p>
