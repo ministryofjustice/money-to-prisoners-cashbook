@@ -3,25 +3,13 @@
 
   // common
   require('dialogue-box').DialogueBox.init();
-  require('messages').Messages.init();
-  require('notifications').Notifications.init();
   require('print').Print.init();
   require('select-all').SelectAll.init();
   require('unload').Unload.init();
-  require('disclosure').Disclosure.init();
-  require('analytics').Analytics.init();
   require('track-printing').TrackPrinting.init();
   require('tabbed-panel').TabbedPanel.init();
   require('hide-long-text').HideLongText.init();
   require('character-count-warning').CharacterCountWarning.init();
-  require('mailcheck-warning').MailcheckWarning.init(
-    '.mtp-account-management input[type=email]',
-    ['justice.gov.uk'],
-    ['gov.uk']
-  );
-  require('mailcheck-warning').MailcheckWarning.init(
-    '.mtp-create-disbursement input[type=email]'
-  );
 
   // cashbook
   require('sign-up').SignUpChoices.init();

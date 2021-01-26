@@ -1,8 +1,6 @@
 @import 'mtp-internal';
 
 @import 'elements/tabbed-panel';
-@import 'elements/character-count-warning';
-@import 'elements/mailcheck-warning';
 
 // Page specific styles
 @import 'views/login';
@@ -56,10 +54,6 @@
 
 .govuk-box-highlight a {
   color: $page-colour;
-}
-
-address {
-  font-style: normal;
 }
 
 .mtp-question-button {
