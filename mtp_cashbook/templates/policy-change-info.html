@@ -28,10 +28,12 @@
       <p>{% trans 'There is a cap on how much money can be sent out of prison.' %}</p>
       <p>{% trans 'Only £50 a week can be sent out to each person (with a maximum of 5 people).' %}</p>
       <p>{% trans 'Example: They can send up to £250 a week, if it’s to 5 different people.' %}</p>
-
-      <p>{% trans 'A resident must apply for approval from the governor if they need to send out more than £50 to a person in a week. In exceptional circumstances, this might be granted.' %}</p>
       <p>
-        {% blocktrans %}
+        {% trans 'A resident must apply for approval from the governor if they need to send out more than £50 to a person in a week.' %}
+        {% trans 'In exceptional circumstances, this might be granted.' %}
+      </p>
+      <p>
+        {% blocktrans trimmed %}
           It must be applied for each time by filling in a <a href="{{ form_link }}">form</a> which they attach to their disbursement before handing in.
         {% endblocktrans %}
       </p>
@@ -41,11 +43,11 @@
       <p>{% trans 'If it is not approved, send the application form back with a reason why.' %}</p>
       <p>{% trans 'Exceptional circumstances could be:' %}</p>
       <ul class="list list-bullet">
-        <li>paying off debts if you have no external bank account</li>
-        <li>sending financial support to family</li>
-        <li>paying for a legitimate service, e.g. legal fees, dentistry</li>
-        <li>operating a business, if unconvicted</li>
-        <li>transferring your money from prison to a new or existing bank account</li>
+        <li>{% trans 'paying off debts if you have no external bank account' %}</li>
+        <li>{% trans 'sending financial support to family' %}</li>
+        <li>{% trans 'paying for a legitimate service, e.g. legal fees, dentistry' %}</li>
+        <li>{% trans 'operating a business, if unconvicted' %}</li>
+        <li>{% trans 'transferring your money from prison to a new or existing bank account' %}</li>
       </ul>
 
       <h2 class="govuk-heading-l">{% trans 'Cap on prisoner bank accounts' %}</h2>

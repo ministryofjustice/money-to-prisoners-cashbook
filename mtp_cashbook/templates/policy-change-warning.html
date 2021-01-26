@@ -31,8 +31,10 @@
 
       <h3 class="govuk-heading-m">{% trans 'If they want to send out more' %}</h3>
       <p>
-        {% blocktrans %}
-          A resident must apply for approval from the governor if they need to send out more than £50 to a person in a week. In exceptional circumstances, this might be granted. It must be applied for each time by filling in a <a href="{{ form_link }}">form</a> which is attached to their disbursement before handing in.
+        {% trans 'A resident must apply for approval from the governor if they need to send out more than £50 to a person in a week.' %}
+        {% trans 'In exceptional circumstances, this might be granted.' %}
+        {% blocktrans trimmed %}
+          It must be applied for each time by filling in a <a href="{{ form_link }}">form</a> which is attached to their disbursement before handing in.
         {% endblocktrans %}
       </p>
 
