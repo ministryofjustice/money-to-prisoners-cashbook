@@ -9,7 +9,7 @@
       {% trans 'Move prison' %}
     </h2>
     <p>{% trans 'You are currently at:' %}</p>
-    <ul class="list list-bullet">
+    <ul class="govuk-list govuk-list--bullet">
       {% for prison in request.user.user_data.prisons %}
         <li>{{ prison.name }}</li>
       {% endfor %}
