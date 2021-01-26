@@ -27,7 +27,7 @@
 
       <div class="mtp-search-box mtp-disclosure__contents panel panel-border-narrow print-hidden" id="mtp-search-box">
         <form method="get" action="">
-          {% include 'mtp_common/forms/error-summary.html' with form=form only %}
+          {% include 'govuk-frontend/components/error-summary.html' with form=form only %}
 
           {% include 'mtp_common/forms/field.html' with field=form.start value=form.start.value|date:'d/m/Y'|default:form.start.value|default_if_none:'' only %}
           {% include 'mtp_common/forms/field.html' with field=form.end value=form.end.value|date:'d/m/Y'|default:form.end.value|default_if_none:'' only %}

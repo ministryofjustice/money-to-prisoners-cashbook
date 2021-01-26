@@ -30,7 +30,7 @@
       <form method="post">
         {% csrf_token %}
 
-        {% include 'mtp_common/forms/error-summary.html' with form=form only %}
+        {% include 'govuk-frontend/components/error-summary.html' with form=form only %}
 
         {% with field=form.remittance choices=form.remittance.field.choices %}
           <fieldset>

@@ -23,7 +23,7 @@
   </header>
 
   <form method="get" class="mtp-processed-credits-search" action="">
-    {% include 'mtp_common/forms/error-summary.html' with form=form only %}
+    {% include 'govuk-frontend/components/error-summary.html' with form=form only %}
 
     <div class="mtp-processed-credits-search__date-start">
       {% include 'mtp_common/forms/field.html' with field=form.start value=form.start.value|date:'d/m/Y'|default:form.start.value|default_if_none:'' only %}

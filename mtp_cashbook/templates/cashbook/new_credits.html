@@ -72,7 +72,7 @@
     <form class="js-ConfirmManual" method="post" action="?manually_credited={{ credited_manual_credits }}" data-credits-name="{{ form.manual.credits.html_name }}">
       {% csrf_token %}
 
-      {% include 'mtp_common/forms/error-summary.html' with form=form.manual only %}
+      {% include 'govuk-frontend/components/error-summary.html' with form=form.manual only %}
 
       {% if owned_manual_credits %}
         <div class="mtp-message mtp-message--warning print-hidden">
@@ -157,7 +157,7 @@
     data-credits-name="{{ form.new.credits.html_name }}">
     {% csrf_token %}
 
-    {% include 'mtp_common/forms/error-summary.html' with form=form.new only %}
+    {% include 'govuk-frontend/components/error-summary.html' with form=form.new only %}
 
     {% if new_object_list or not manual_credits %}
     <div class="mtp-batch mtp-new-credits-batch {% if not new_object_list %}print-hidden{% endif %}">

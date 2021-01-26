@@ -22,7 +22,7 @@
 
     {{ form.ordering.as_hidden }}
 
-    {% include 'mtp_common/forms/error-summary.html' with form=form only %}
+    {% include 'govuk-frontend/components/error-summary.html' with form=form only %}
 
     {% tabbedpanel cookie_name='disbursement-search' tab_label=_('Filter by') %}
       {% paneltab name='prisoner' title=_('Prisoner') %}
