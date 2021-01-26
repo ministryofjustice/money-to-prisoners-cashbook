@@ -17,11 +17,11 @@
   {% endif %}
 
   <header>
-    <h1 class="heading-xlarge mtp-heading--compact">{{ view.title }}</h1>
+    <h1 class="govuk-heading-xl">{{ view.title }}</h1>
   </header>
 
   <div class="print-only">
-    <h2 class="heading-small">
+    <h2 class="govuk-heading-s">
       {% trans 'CONFIDENTIAL: dispose of securely' %}
     </h2>
   </div>
@@ -188,7 +188,7 @@
         <div class="mtp-nomis-print-header print-only">
           <img src="{% static 'images/icon-important.png' %}"/>
           <div class="mtp-nomis-warning">
-            <h2 class="heading-medium">
+            <h2 class="govuk-heading-m">
               {% trans 'You don’t have to manually enter all credits into NOMIS any more' %}
             </h2>
             <div>
@@ -334,7 +334,7 @@
           <tbody>
             <tr>
               <td class="mtp-no-credits" colspan="{% if request.pre_approval_required %}6{% else %}5{% endif %}">
-                <p class="heading-large">{% trans 'Thank you' %}</p>
+                <p class="govuk-heading-l">{% trans 'Thank you' %}</p>
                 <p>{% trans 'All credits have been processed' %}</p>
               </td>
             </tr>

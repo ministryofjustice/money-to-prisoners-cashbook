@@ -120,7 +120,7 @@
             <button type="submit" name="submit_manual_{{ credit_pk }}" value="submit" class="button" data-credit-id="{{ credit_pk }}">{% trans 'Done' %}</button>
             {% dialoguebox html_id=credit_pk|prefixed_slug:'manual-confirm-dialog-' %}
               <table class="mtp-dialog-info-table">
-                <caption class="heading-medium">{% trans 'Have you entered this credit into NOMIS?' %}</caption>
+                <caption class="govuk-heading-m">{% trans 'Have you entered this credit into NOMIS?' %}</caption>
                 <tbody>
                   <tr>
                     <th>{% trans 'Date sent:' %}</th>

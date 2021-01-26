@@ -8,12 +8,12 @@
   {{ block.super }}
 
   <header>
-    <h1 class="heading-xlarge">{{ view.title }}</h1>
+    <h1 class="govuk-heading-xl">{{ view.title }}</h1>
   </header>
 
   {% if errors %}
     <div class="error-summary" aria-labelledby="error-summary-heading" tabindex="-1" role="alert">
-      <h2 class="heading-small error-summary-heading" id="error-summary-heading">
+      <h2 class="govuk-heading-s error-summary-heading" id="error-summary-heading">
         {% trans 'There was a problem' %}
       </h2>
       <ul class="error-summary-list">

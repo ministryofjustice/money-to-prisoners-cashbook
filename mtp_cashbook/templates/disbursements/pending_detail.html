@@ -12,7 +12,7 @@
   {{ block.super }}
 
   <header>
-    <h1 class="heading-xlarge mtp-heading--compact">{{ view.title }}</h1>
+    <h1 class="govuk-heading-xl">{{ view.title }}</h1>
   </header>
 
   {% if disbursement.resolution == 'rejected' %}
@@ -63,7 +63,7 @@
     <caption class="visually-hidden">{% trans 'Disbursement details' %}</caption>
     <tbody class="mtp-confirm-table__details">
       <tr class="mtp-confirm-table__section">
-        <th rowspan="3"><h2 class="heading-small">{% trans 'Send' %}</h2></th>
+        <th rowspan="3"><h2 class="govuk-heading-s">{% trans 'Send' %}</h2></th>
         <th>{% trans 'Send by' %}:</th>
         <td>{{ disbursement.method|sendingmethod }}</td>
         <td>
@@ -107,7 +107,7 @@
       </tr>
 
       <tr class="mtp-confirm-table__section">
-        <th><h2 class="heading-small">{% trans 'To' %}</h2></th>
+        <th><h2 class="govuk-heading-s">{% trans 'To' %}</h2></th>
         <th>
           {% if disbursement.recipient_is_company %}
             {% trans 'Company' %}:
@@ -196,7 +196,7 @@
       {% endif %}
 
       <tr class="mtp-confirm-table__section">
-        <th rowspan="2"><h2 class="heading-small">{% trans 'From' %}</h2></th>
+        <th rowspan="2"><h2 class="govuk-heading-s">{% trans 'From' %}</h2></th>
         <th>{% trans 'Name' %}:</th>
         <td>{{ disbursement.prisoner_name }}</td>
         <td>
@@ -217,7 +217,7 @@
 
     <tbody class="mtp-confirm-table__history">
       <tr>
-        <th><h2 class="heading-small">{% trans 'History' %}</h2></th>
+        <th><h2 class="govuk-heading-s">{% trans 'History' %}</h2></th>
         <th colspan="2">
           {% for log in disbursement.log_set|parse_date_fields %}
             {{ log.created|date:'d/m/Y H:m' }} – {{ log.action|format_disbursement_action }} {% trans 'by' %} {{ log.user.first_name }} {{ log.user.last_name }}<br/>

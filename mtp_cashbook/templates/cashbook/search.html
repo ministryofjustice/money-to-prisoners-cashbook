@@ -10,7 +10,7 @@
   {{ block.super }}
 
   <header>
-    <h1 class="heading-xlarge mtp-heading--compact">{{ view.title }}</h1>
+    <h1 class="govuk-heading-xl">{{ view.title }}</h1>
   </header>
 
   {% if form.is_valid %}
@@ -52,7 +52,7 @@
   {% if credits_returned %}
     <div class="mtp-batch">
       {% if new_credit_list %}
-        <h2 class="heading-medium">{% trans 'New credits' %}</h2>
+        <h2 class="govuk-heading-m">{% trans 'New credits' %}</h2>
         <table class="mtp-table">
           <caption class="visually-hidden">{% trans 'New credits' %}</caption>
 
@@ -69,7 +69,7 @@
       {% endif %}
 
       {% if old_credit_list %}
-        <h2 class="heading-medium">{% trans 'Processed credits' %}</h2>
+        <h2 class="govuk-heading-m">{% trans 'Processed credits' %}</h2>
         <table class="mtp-table">
           <caption class="visually-hidden">{% trans 'Processed credits' %}</caption>
 

@@ -16,7 +16,7 @@
   <div class="grid-row">
     <div class="column-two-thirds">
       <header>
-        <h1 class="heading-xlarge">
+        <h1 class="govuk-heading-xl">
           {% trans 'How to use the new digital disbursement service' %}
         </h1>
       </header>
@@ -71,11 +71,11 @@
         {% trans 'To start using this service, go to ‘manage prisoner money’, use your digital cashbook login and click on ‘digital disbursements’.' %}
       </p>
 
-      <h1 class="heading-large">
+      <h1 class="govuk-heading-l">
         {% trans 'How it works' %}
       </h1>
 
-      <h2 id="section-fill-form" class="heading-medium">
+      <h2 id="section-fill-form" class="govuk-heading-m">
         1. {% trans 'Prisoner fills in the paper form and has their identity confirmed' %}
       </h2>
       <p>
@@ -93,7 +93,7 @@
         <a href="{% url 'disbursements:kiosk-instructions' %}">{% trans 'How to set up the new ‘digital disbursement survey’ on kiosks' %}</a>
       </p>
 
-      <h3 class="heading-small">
+      <h3 class="govuk-heading-s">
         {% trans 'Follow normal security procedures' %}
       </h3>
       <p>
@@ -104,7 +104,7 @@
         {% trans 'If forms need to be checked by security staff, before or after going to the business hub, this process should stay the same.' %}
       </p>
 
-      <h3 class="heading-small">
+      <h3 class="govuk-heading-s">
         {% trans 'Paper forms' %}
       </h3>
       <p>
@@ -131,7 +131,7 @@
         </li>
       </ul>
 
-      <h2 id="section-enter" class="heading-medium">
+      <h2 id="section-enter" class="govuk-heading-m">
         2. {% trans 'Hub staff #1 enters paper form details into the new disbursement tool' %}
       </h2>
       <p>
@@ -146,7 +146,7 @@
         {% trans 'But, as before, money can be manually moved in NOMIS by hub staff, to a private account from spends or savings, then sent out.' %}
       </p>
 
-      <h2 id="section-confirm" class="heading-medium">
+      <h2 id="section-confirm" class="govuk-heading-m">
         3. {% trans 'Hub staff #2 double-checks and confirms the details on the paper form and the details in the digital tool are the same' %}
       </h2>
       <p>
@@ -167,7 +167,7 @@
         {% trans 'The confirmed request automatically goes to SSCL for processing.' %}
       </p>
 
-      <h3 class="heading-small">
+      <h3 class="govuk-heading-s">
         {% trans 'Who can’t confirm payment' %}
       </h3>
       <p>
@@ -183,7 +183,7 @@
         </li>
       </ul>
 
-      <h2 id="section-sent" class="heading-medium">
+      <h2 id="section-sent" class="govuk-heading-m">
         4. {% trans 'Payment request is automatically deducted from NOMIS then goes to SSCL which sends out payment and remittance advice' %}
       </h2>
       <p>
@@ -207,20 +207,20 @@
         {% trans 'There’s no postage or processing charge to the prison, the prisoner or the recipient.' %}
       </p>
 
-      <h2 id="section-more-info" class="heading-medium">
+      <h2 id="section-more-info" class="govuk-heading-m">
         {% trans 'Further information' %}
       </h2>
       <p>
         <a href="{% url 'disbursements:track-invoice' %}">{% trans 'How to find things on SOP' %}</a>
       </p>
-      <h3 class="heading-small">
+      <h3 class="govuk-heading-s">
         {% trans 'No more cheques to send out' %}
       </h3>
       <p>
         {% trans 'The business hub no longer needs to send out cheques.' %}
         {% trans 'When you’ve digitally processed a cheque payment using the disbursement tool, SSCL will write and post out the cheques.' %}
       </p>
-      <h3 class="heading-small">
+      <h3 class="govuk-heading-s">
         {% trans 'Notify the prisoner' %}
       </h3>
       <p>
@@ -230,7 +230,7 @@
           <a href="{{ link }}">Contact us</a> if you don’t already get these notifications.
         {% endblocktrans %}
       </p>
-      <h3 class="heading-small">
+      <h3 class="govuk-heading-s">
         {% trans 'Use cash and postal orders' %}
       </h3>
       <p>
@@ -238,7 +238,7 @@
         {% trans 'If you do offer them, the process is the same as before.' %}
         {% trans 'In the disbursement tool, you can only digitally process bank transfers and cheque payments.' %}
       </p>
-      <h3 class="heading-small">
+      <h3 class="govuk-heading-s">
         {% trans 'Track payment progress' %}
       </h3>
       <p>
@@ -251,7 +251,7 @@
           Once you have the invoice number, enter it into <a href="{{ link }}">SOP (into ‘accounts payable’)</a> to see when the bank transfer has been made or the cheque sent out.
         {% endblocktrans %}
       </p>
-      <h3 class="heading-small">
+      <h3 class="govuk-heading-s">
         {% trans 'If the prisoner gets the recipient’s bank details wrong' %}
       </h3>
       <p>
@@ -261,7 +261,7 @@
         {% trans 'If the bank transfer gets rejected by the bank, then SSCL cancels it and emails the prison.' %}
         {% trans 'This takes about 10 days.' %}
       </p>
-      <h3 class="heading-small">
+      <h3 class="govuk-heading-s">
         {% trans 'How to cancel a cheque or see if it’s been cashed' %}
       </h3>
       <p>
@@ -280,7 +280,7 @@
       <p>
         {% trans 'To see if a cheque has been cashed, raise the SR then ask SSCL if they can check with the bank.' %}
       </p>
-      <h3 class="heading-small">
+      <h3 class="govuk-heading-s">
         {% trans 'Make security staff aware' %}
       </h3>
       <p>

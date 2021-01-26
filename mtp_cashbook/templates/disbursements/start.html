@@ -17,10 +17,10 @@
   <div class="grid-row">
     <div class="column-half">
       <header>
-        <h1 class="heading-xlarge">{% trans 'Disbursements' %}</h1>
+        <h1 class="govuk-heading-xl">{% trans 'Disbursements' %}</h1>
       </header>
 
-      <h2 class="heading-medium">{% trans 'Enter a payment request' %}</h2>
+      <h2 class="govuk-heading-m">{% trans 'Enter a payment request' %}</h2>
       <p>
         {% blocktrans trimmed %}
           Before you start, have the completed <strong>bank transfer or cheque</strong> form in front of you.
@@ -35,7 +35,7 @@
 
   <div class="grid-row">
     <div class="column-third">
-      <h2 class="heading-medium">{% trans 'Confirm payments' %}</h2>
+      <h2 class="govuk-heading-m">{% trans 'Confirm payments' %}</h2>
       {% if pending_disbursement_count %}
         {% blocktrans trimmed count count=pending_disbursement_count %}
           There is <strong>{{ count }} payment request</strong> needing confirmation.
@@ -49,7 +49,7 @@
     </div>
 
     <div class="column-third">
-      <h2 class="heading-medium">{% trans 'Payments made' %}</h2>
+      <h2 class="govuk-heading-m">{% trans 'Payments made' %}</h2>
       {% if confirmed_disbursement_count %}
         {% blocktrans trimmed count count=confirmed_disbursement_count %}
           Your prison has made <strong>{{ count }} digital disbursement</strong>.
@@ -71,7 +71,7 @@
     </div>
 
     <div class="column-third">
-      <h2 class="heading-medium">{% trans 'Get help' %}</h2>
+      <h2 class="govuk-heading-m">{% trans 'Get help' %}</h2>
       {% trans 'Find out how the process works.' %}
       <p><a href="{% url 'disbursements:process-overview' %}">{% trans 'View help' %}</a></p>
     </div>

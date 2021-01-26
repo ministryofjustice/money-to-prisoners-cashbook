@@ -12,14 +12,14 @@
   {{ block.super }}
 
   <header>
-    <h2 class="heading-xlarge mtp-heading--compact">
+    <h1 class="govuk-heading-xl">
       {% blocktrans trimmed with date=form.batch_date|date:'d/m/Y' count count=form.pagination.count %}
         {{ count }} credit processed on {{ date }}
       {% plural %}
         {{ count }} credits processed on {{ date }}
       {% endblocktrans %}
-      <span class="heading-secondary">{% trans 'Total:' %} £{{ total|currency }}</span>
-    </h2>
+      <span class="govuk-caption-xl">{% trans 'Total:' %} £{{ total|currency }}</span>
+    </h1>
   </header>
 
   <form method="get" class="mtp-processed-credits-search" action="">
