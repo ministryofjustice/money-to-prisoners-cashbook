@@ -6,6 +6,7 @@
 {% block proposition %}{% trans 'Digital cashbook' %}{% endblock %}
 
 {% block proposition_extra %}
+  {# TODO: block is non-functional #}
   <nav id="mtp-proposition-extra" class="column-full print-hidden">
     <form class="mtp-proposition-tab-column mtp-nav-search" method="get" action="{% url 'search' %}">
       <div class="form-group">
@@ -26,6 +27,6 @@
   </nav>
 {% endblock %}
 
-{% block inner_content %}
+{% block content %}
   {% notifications_box request 'cashbook_cashbook' 'cashbook_all' %}
 {% endblock %}

@@ -6,6 +6,7 @@
 {% block proposition %}{% trans 'Digital disbursements' %}{% endblock %}
 
 {% block proposition_extra %}
+  {# TODO: block is non-functional #}
   <nav id="mtp-proposition-extra" class="column-full print-hidden">
     {% spaceless %}
       <ul id="mtp-proposition-tabs">
@@ -19,6 +20,6 @@
   </nav>
 {% endblock %}
 
-{% block inner_content %}
+{% block content %}
   {% notifications_box request 'cashbook_disbursements' 'cashbook_all' %}
 {% endblock %}
