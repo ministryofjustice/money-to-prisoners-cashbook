@@ -76,9 +76,7 @@
           </div>
         </form>
 
-        {% if ENVIRONMENT != 'test' %}
-          <p><a href="{% url 'reset_password' %}">{% trans 'Forgotten your password?' %}</a></p>
-        {% endif %}
+        <p><a href="{% url 'reset_password' %}">{% trans 'Forgotten your password?' %}</a></p>
 
       </section>
     </div>
