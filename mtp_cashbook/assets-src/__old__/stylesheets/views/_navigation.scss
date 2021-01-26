@@ -141,7 +141,7 @@ $mtp-nav-breakpoint: 830px;
 .footer-categories {
   margin-bottom: $gutter;
 
-  .column-third {
+  .govuk-grid-column-one-third {
     @include media(tablet) {
       min-width: 300px;
     }

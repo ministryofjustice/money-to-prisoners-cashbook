@@ -163,8 +163,8 @@
     <div class="mtp-batch mtp-new-credits-batch {% if not new_object_list %}print-hidden{% endif %}">
       {% if new_object_list %}
         <div class="mtp-floating-header js-StickyHeader print-hidden">
-          <div class="grid-row">
-            <div class="column-two-thirds">
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
               <p class="print-hidden">
                 {% blocktrans trimmed count new_credits=new_credits %}
                   <strong>{{ new_credits }}</strong> new credit.
@@ -177,7 +177,7 @@
               </p>
             </div>
 
-            <div class="column-one-third mtp-submit__button">
+            <div class="govuk-grid-column-one-third mtp-submit__button">
               {% if new_object_list %}
                 <button type="submit" name="submit_new" value="submit" class="button">{% trans 'Credit to NOMIS' %}</button>
               {% endif %}

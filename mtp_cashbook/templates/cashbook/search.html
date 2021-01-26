@@ -17,8 +17,8 @@
     <p>{{ form.get_search_description }}</p>
   {% endif %}
 
-  <div class="grid-row print-hidden">
-    <div class="column-two-thirds">
+  <div class="govuk-grid-row print-hidden">
+    <div class="govuk-grid-column-two-thirds">
       <p>
         <a class="mtp-disclosure" href="#" aria-controls="mtp-search-box" aria-expanded="{% if form.is_valid %}false{% else %}true{% endif %}" role="button" data-analytics="pageview,/-help_open/{{ request.resolver_match.view_name }}/">
           <span></span>{% trans 'Filter these credits' %}
@@ -42,7 +42,7 @@
       </div>
     </div>
 
-    <div class="column-one-third">
+    <div class="govuk-grid-column-one-third">
       {% if credits_returned %}
         <p style="text-align:right"><a href="#" class="print-hidden js-print-trigger">{% trans 'Print this page of credits' %}</a></p>
       {% endif %}
