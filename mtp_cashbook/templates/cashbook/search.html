@@ -31,7 +31,7 @@
             {# forces a search to start on page 1, copy search terms from header #}
             <input type="hidden" name="{{ form.page.html_name }}" value="1">
             <input type="hidden" name="{{ form.search.html_name }}" value="{{ form.search.value|default_if_none:'' }}">
-            <input class="button" type="submit" value="{% trans 'Filter list' %}">
+            <input class="govuk-button" data-module="govuk-button" type="submit" value="{% trans 'Filter list' %}">
           </div>
         </form>
       {% endcaptureoutput %}

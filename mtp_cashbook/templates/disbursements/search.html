@@ -88,7 +88,7 @@
       {% endpaneltab %}
 
       <div class="mtp-tab-container__footer">
-        <button type="submit" class="button">{% trans 'Filter list' %}</button>
+        <button type="submit" class="govuk-button" data-module="govuk-button">{% trans 'Filter list' %}</button>
         {% if form.search_description.has_filters %}
           <a href="?{% if form.ordering.value %}ordering={{ form.ordering.value }}{% endif %}" role="button">
             {% trans 'Clear filters' %}

@@ -53,10 +53,10 @@
         {% endwith %}
 
         <div class="js-choice-yes">
-          <button type="submit" class="button mtp-next-button">{% trans 'Next' %}</button>
+          <button type="submit" class="govuk-button mtp-next-button" data-module="govuk-button">{% trans 'Next' %}</button>
         </div>
         <div class="hidden js-choice-no">
-          <a href="{{ view.alternate_success_url }}" class="button button-secondary">{% trans 'Process another request' %}</a>
+          <a href="{{ view.alternate_success_url }}" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button">{% trans 'Process another request' %}</a>
         </div>
       </form>
 

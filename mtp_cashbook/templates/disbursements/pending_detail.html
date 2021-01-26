@@ -257,7 +257,7 @@
       {% endwith %}
 
       <div class="js-choice-yes">
-        <button type="submit" class="button mtp-next-button">{% trans 'Confirm payment' %}</button>
+        <button type="submit" class="govuk-button mtp-next-button" data-module="govuk-button">{% trans 'Confirm payment' %}</button>
       </div>
     </form>
 
@@ -278,8 +278,8 @@
 
         {% include 'mtp_common/forms/textarea.html' with field=reject_form.reason input_classes='form-control-3-4' only %}
 
-        <input type="submit" class="button" value="{% trans 'Cancel payment' %}" />
-        <button type="button" class="button button-secondary {{ dialogue_close_class }}">{% trans 'Go back' %}</button>
+        <input type="submit" class="govuk-button" value="{% trans 'Cancel payment' %}" />
+        <button type="button" class="govuk-button govuk-button--secondary {{ dialogue_close_class }}">{% trans 'Go back' %}</button>
       </form>
     {% enddialoguebox %}
   {% endif %}

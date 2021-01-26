@@ -14,6 +14,6 @@
         <li>{{ prison.name }}</li>
       {% endfor %}
     </ul>
-    <a class="button" href="{% url 'move-prison' %}">{% trans 'Move prison' %}</a>
+    <a class="govuk-button" data-module="govuk-button" role="button" href="{% url 'move-prison' %}">{% trans 'Move prison' %}</a>
   </div>
 {% endblock %}

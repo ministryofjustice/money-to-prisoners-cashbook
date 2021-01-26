@@ -117,7 +117,7 @@
             </div>
           </td>
           <td class="mtp-manual-action print-hidden">
-            <button type="submit" name="submit_manual_{{ credit_pk }}" value="submit" class="button" data-credit-id="{{ credit_pk }}">{% trans 'Done' %}</button>
+            <button type="submit" name="submit_manual_{{ credit_pk }}" value="submit" class="govuk-button" data-credit-id="{{ credit_pk }}">{% trans 'Done' %}</button>
             {% dialoguebox html_id=credit_pk|prefixed_slug:'manual-confirm-dialog-' %}
               <table class="mtp-dialog-info-table">
                 <caption class="govuk-heading-m">{% trans 'Have you entered this credit into NOMIS?' %}</caption>
@@ -140,7 +140,7 @@
                   </tr>
                 </tbody>
               </table>
-              <button type="submit" name="submit_manual_{{ credit_pk }}" class="button" value="override">
+              <button type="submit" name="submit_manual_{{ credit_pk }}" class="govuk-button" value="override">
                 {% trans 'Yes' %}
               </button>
               <a href="#" class="{{ dialogue_close_class }} mtp-dialog-info-table__close" role="button">

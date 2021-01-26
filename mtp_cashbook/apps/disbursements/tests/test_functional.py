@@ -9,7 +9,7 @@ class DisbursementTestCase(CashbookTestCase):
         self.click_logout()
 
     def click_button(self, text=None):
-        buttons = self.driver.find_elements_by_class_name('button')
+        buttons = self.driver.find_elements_by_class_name('govuk-button')
         if text:
             button = None
             for button in buttons:
@@ -142,7 +142,7 @@ class DisbursementTestCase(CashbookTestCase):
         self.assertInSource(contact_form['id_recipient_last_name'])
         self.driver.find_element_by_xpath(
             '//*[text()[contains(.,"' + contact_form['id_recipient_first_name'] + '")]]/..'
-        ).find_element_by_class_name('button').click()
+        ).find_element_by_class_name('govuk-button').click()
 
         self.assertShowingView('disbursements:pending_detail')
         self.assertInSource(contact_form['id_recipient_first_name'])
@@ -276,7 +276,7 @@ class DisbursementTestCase(CashbookTestCase):
         self.click_button('Next')
 
         self.assertShowingView('disbursements:handover')
-        self.get_element('.button').click()
+        self.get_element('.govuk-button').click()
 
         self.assertShowingView('disbursements:created')
         self.assertInSource('request is ready for your colleague')
@@ -295,7 +295,7 @@ class DisbursementTestCase(CashbookTestCase):
         self.assertInSource(contact_form['id_recipient_last_name'])
         self.driver.find_element_by_xpath(
             '//*[text()[contains(.,"' + contact_form['id_recipient_first_name'] + '")]]/..'
-        ).find_element_by_class_name('button').click()
+        ).find_element_by_class_name('govuk-button').click()
 
         self.assertShowingView('disbursements:pending_detail')
         self.assertInSource(contact_form['id_recipient_first_name'])

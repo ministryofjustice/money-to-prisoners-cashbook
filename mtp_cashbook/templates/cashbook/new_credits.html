@@ -70,7 +70,7 @@
         {% trans 'We’re sorry but sometimes a fault in our system stops credits from being processed.' %}
         {% trans 'Please wait a few minutes then send to NOMIS again.' %}
       </p>
-      <button type="button" class="button {{ dialogue_close_class }}">{% trans 'OK' %}</button>
+      <button type="button" class="govuk-button {{ dialogue_close_class }}">{% trans 'OK' %}</button>
     {% enddialoguebox %}
 
   {% endif %}
@@ -101,7 +101,7 @@
             {% trans 'The prisoner may be in transit, may have moved prisons or may have been released.' %}
             {% trans 'Please enter these credits into NOMIS manually, then click ‘Done’.' %}
           </p>
-          <button type="button" class="button {{ dialogue_close_class }}">{% trans 'OK' %}</button>
+          <button type="button" class="govuk-button {{ dialogue_close_class }}">{% trans 'OK' %}</button>
         {% enddialoguebox %}
 
         {% include 'cashbook/includes/manual_credit_table.html' with manual_object_list=owned_manual_object_list owned=True pre_approval_required=request.pre_approval_required only %}
@@ -188,7 +188,7 @@
 
             <div class="govuk-grid-column-one-third mtp-submit__button">
               {% if new_object_list %}
-                <button type="submit" name="submit_new" value="submit" class="button">{% trans 'Credit to NOMIS' %}</button>
+                <button type="submit" name="submit_new" value="submit" class="govuk-button" data-module="govuk-button">{% trans 'Credit to NOMIS' %}</button>
               {% endif %}
             </div>
           </div>
@@ -359,10 +359,10 @@
     {% dialoguebox html_id='incomplete-batch-dialog' title=_('Do you want to submit only the selected credits?') %}
       <button type="submit"
               name="submit_new"
-              class="button"
+              class="govuk-button"
               value="override">{% trans 'Yes' %}</button>
       <button type="button"
-              class="button button-secondary {{ dialogue_close_class }}"
+              class="govuk-button govuk-button--secondary {{ dialogue_close_class }}"
               data-analytics="pageview,/batch/-dialog_close/">{% trans 'No, continue processing' %}</button>
     {% enddialoguebox %}
   </form>
