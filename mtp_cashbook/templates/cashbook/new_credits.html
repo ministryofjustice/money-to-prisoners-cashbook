@@ -115,12 +115,7 @@
           {% endif %}
         </p></div>
 
-        <p>
-          <a class="mtp-disclosure" href="#" aria-controls="mtp-finish-manual" aria-expanded="false" role="button" data-analytics="pageview,/-help_open/{{ request.resolver_match.view_name }}/">
-            <span></span>{% trans 'How to finish processing' %}
-          </a>
-        </p>
-        <div id="mtp-finish-manual" class="mtp-disclosure__contents panel panel-border-narrow">
+        {% captureoutput as body %}
           <p>
             {% blocktrans trimmed with owner=other_owners.0 count owners=other_owners|length %}
               Your colleague, {{ owner }}, started processing these credits yesterday.
@@ -143,7 +138,11 @@
               If they have not been entered, please manually enter these credits youself, click ‘Done’ and tell your colleagues you’ve processed these credits for them.
             {% endblocktrans %}
           </p>
-        </div>
+        {% endcaptureoutput %}
+        {% captureoutput as analytics %}{% stripwhitespace %}
+          pageview,/-help_open/{{ request.resolver_match.view_name }}/
+        {% endstripwhitespace %}{% endcaptureoutput %}
+        {% include 'govuk-frontend/components/details.html' with summary=_('How to finish processing') body=body analytics=analytics %}
 
         {% include 'cashbook/includes/manual_credit_table.html' with manual_object_list=unowned_manual_object_list owned=False pre_approval_required=request.pre_approval_required only %}
       {% endif %}
@@ -206,12 +205,8 @@
           {% if new_object_list %}
             <tr class="print-hidden">
               <td colspan="{% if request.pre_approval_required %}5{% else %}4{% endif %}" class="mtp-compact-cell">
-                <p>
-                  <a class="mtp-disclosure" href="#" aria-controls="mtp-help-box" aria-expanded="false" role="button" data-analytics="pageview,/-help_open/{{ request.resolver_match.view_name }}/">
-                    <span></span>{% trans 'What do I do here?' %}
-                  </a>
-                </p>
-                <div id="mtp-help-box" class="mtp-disclosure__contents panel panel-border-narrow">
+
+                {% captureoutput as body %}
                   <p>
                     {% blocktrans trimmed %}
                       The credits on this page are from the <a href="{{ start_page_url }}">Send money to someone in prison</a> service.
@@ -229,7 +224,12 @@
                     <li>{% trans 'Place any suspicious credits on hold in NOMIS' %}</li>
                   </ol>
                   <p>{% trans 'There is no longer any need to print records.' %}</p>
-                </div>
+                {% endcaptureoutput %}
+                {% captureoutput as analytics %}{% stripwhitespace %}
+                  pageview,/-help_open/{{ request.resolver_match.view_name }}/
+                {% endstripwhitespace %}{% endcaptureoutput %}
+                {% include 'govuk-frontend/components/details.html' with summary=_('What do I do here?') body=body analytics=analytics %}
+
               </td>
               <td class="mtp-check-all mtp-compact-cell">
                 <input type="checkbox" id="select-all-header" class="Checkbox Checkbox--left js-SelectAll" data-name="{{ form.new.credits.html_name }}">

@@ -194,14 +194,10 @@
         {% trans 'It names the prisoner who sent the money and how much they sent.' %}
         {% trans 'There’s a ‘recipient email’ box on the form for the prisoner to fill in.' %}
       </p>
-      <p>
-        <a class="mtp-disclosure" href="#" aria-controls="mtp-remittance-sample" aria-expanded="false" role="button" data-analytics="pageview,/-help_open/remittance-sample/">
-          <span></span>{% trans 'Sample remittance advice' %}
-        </a>
-      </p>
-      <div id="mtp-remittance-sample" class="mtp-disclosure__contents panel panel-border-narrow">
+      {% captureoutput as body %}
         <img src="{% static 'disbursements/remittance-sample.jpg' %}" alt="{% trans 'Sample remittance advice' %}" />
-      </div>
+      {% endcaptureoutput %}
+      {% include 'govuk-frontend/components/details.html' with id='mtp-remittance-sample' summary=_('Sample remittance advice') body=body analytics='pageview,/-help_open/remittance-sample/' only %}
       <p>
         {% trans 'In 5-7 working days, either the payment is put directly into the recipient’s account by bank transfer or a cheque is received.' %}
         {% trans 'There’s no postage or processing charge to the prison, the prisoner or the recipient.' %}

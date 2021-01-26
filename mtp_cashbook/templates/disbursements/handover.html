@@ -43,17 +43,10 @@
         {% trans 'Anyone on your team who has an account on ‘Manage prisoner money’ can confirm the payment.' %}
       </p>
 
-      {% random_string as note_id %}
-      <p>
-        <a class="mtp-disclosure" href="#" aria-controls="mtp-{{ note_id }}" aria-expanded="false" role="button" data-analytics="pageview,/-help_open/{{ request.resolver_match.view_name }}/">
-          <span></span>{% trans 'What if my colleague doesn’t have an account?' %}
-        </a>
-      </p>
-      <div id="mtp-{{ note_id }}" class="mtp-disclosure__contents panel panel-border-narrow">
-        <p>
-          {% trans 'Ask your business hub manager to set one up.' %}
-        </p>
-      </div>
+      {% captureoutput as analytics %}{% stripwhitespace %}
+        pageview,/-help_open/{{ request.resolver_match.view_name }}/
+      {% endstripwhitespace %}{% endcaptureoutput %}
+      {% include 'govuk-frontend/components/details.html' with summary=_('What if my colleague doesn’t have an account?') body=_('Ask your business hub manager to set one up.') analytics=analytics only %}
 
       <form action="{{ view.get_success_url }}" method="post">
         {% csrf_token %}

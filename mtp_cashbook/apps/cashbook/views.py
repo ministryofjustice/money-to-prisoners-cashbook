@@ -321,6 +321,7 @@ class SearchView(CashbookView, FormView):
             'new_credit_list': new_credit_list,
             'old_credit_list': old_credit_list,
             'credits_returned': form.is_valid() and (new_credit_list or old_credit_list),
+            'form_has_errors': not form.is_valid(),
             'object_count': object_count,
             'current_page': current_page,
             'page_count': page_count,

@@ -19,13 +19,8 @@
 
   <div class="govuk-grid-row print-hidden">
     <div class="govuk-grid-column-two-thirds">
-      <p>
-        <a class="mtp-disclosure" href="#" aria-controls="mtp-search-box" aria-expanded="{% if form.is_valid %}false{% else %}true{% endif %}" role="button" data-analytics="pageview,/-help_open/{{ request.resolver_match.view_name }}/">
-          <span></span>{% trans 'Filter these credits' %}
-        </a>
-      </p>
 
-      <div class="mtp-search-box mtp-disclosure__contents panel panel-border-narrow print-hidden" id="mtp-search-box">
+      {% captureoutput as body %}
         <form method="get" action="">
           {% include 'govuk-frontend/components/error-summary.html' with form=form only %}
 
@@ -39,7 +34,12 @@
             <input class="button" type="submit" value="{% trans 'Filter list' %}">
           </div>
         </form>
-      </div>
+      {% endcaptureoutput %}
+      {% captureoutput as analytics %}{% stripwhitespace %}
+        pageview,/-help_open/{{ request.resolver_match.view_name }}/
+      {% endstripwhitespace %}{% endcaptureoutput %}
+      {% include 'govuk-frontend/components/details.html' with id='mtp-search-box' summary=_('Filter these credits') body=body analytics=analytics open=form_has_errors only %}
+
     </div>
 
     <div class="govuk-grid-column-one-third">

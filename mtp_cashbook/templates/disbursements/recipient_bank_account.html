@@ -29,15 +29,10 @@
 
         {% include 'mtp_common/forms/field.html' with field=form.roll_number input_classes='form-control-1-2' only %}
 
-        {% random_string as note_id %}
-        <p>
-          <a class="mtp-disclosure" href="#" aria-controls="mtp-{{ note_id }}" aria-expanded="false" role="button" data-analytics="pageview,/-help_open/{{ request.resolver_match.view_name }}/">
-            <span></span>{% trans 'What if the prisoner gets the recipient’s bank details wrong?' %}
-          </a>
-        </p>
-        <div class="mtp-disclosure__contents panel panel-border-narrow print-hidden" id="mtp-{{ note_id }}">
-          {% trans 'In this case, SSCL will send out a cheque instead but it will delay payment.' %}
-        </div>
+        {% captureoutput as analytics %}{% stripwhitespace %}
+          pageview,/-help_open/{{ request.resolver_match.view_name }}/
+        {% endstripwhitespace %}{% endcaptureoutput %}
+        {% include 'govuk-frontend/components/details.html' with summary=_('What if the prisoner gets the recipient’s bank details wrong?') body=_('In this case, SSCL will send out a cheque instead but it will delay payment.') analytics=analytics only %}
 
         <button type="submit" class="button mtp-next-button">{% trans 'Next' %}</button>
       </form>
