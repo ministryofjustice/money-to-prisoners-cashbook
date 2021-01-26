@@ -3,9 +3,7 @@
 {% load mtp_common %}
 
 {% block content %}
-  {% notifications_box request 'cashbook_dashboard' 'cashbook_all' %}
-
-  {% include 'mtp_common/includes/message_box.html' %}
+  {% notification_banners request 'cashbook_dashboard' 'cashbook_all' %}
 
   {% if bank_transfers_enabled %}
     {% include 'policy-change-warning-landing.html' %}

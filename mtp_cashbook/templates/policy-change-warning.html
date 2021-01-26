@@ -9,9 +9,7 @@
 
   {% static 'downloads/apply-to-send-out-more-than-50.pdf' as form_link %}
 
-  {% notifications_box request 'cashbook_dashboard' 'cashbook_all' %}
-
-  {% include 'mtp_common/includes/message_box.html' %}
+  {% notification_banners request 'cashbook_dashboard' 'cashbook_all' %}
 
   <!--[policy-change-warning]-->
   <header>
