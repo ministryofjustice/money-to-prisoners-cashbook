@@ -85,7 +85,7 @@ def credit_individual_credit_to_nomis(user, user_session, credit_id, credit):
             _('Send money to someone in prison: the prisoner’s account has been credited'),
             context={
                 'amount': credit['amount'],
-                'ref_number': credit.get('short_ref_number'),
+                'ref_number': credit.get('short_payment_ref'),
                 'received_at': credit['received_at'],
                 'prisoner_name': credit.get('intended_recipient'),
                 'help_url': urljoin(settings.SEND_MONEY_URL, '/help/'),
