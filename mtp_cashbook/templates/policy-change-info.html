@@ -6,18 +6,14 @@
 {% block page_title %}{{ view.title }} – {{ block.super }}{% endblock %}
 
 {% block content %}
-
-  {% static 'downloads/apply-to-send-out-more-than-50.pdf' as form_link %}
-
-  {% notification_banners request 'cashbook_dashboard' 'cashbook_all' %}
-
-  <!--[policy-change-info]-->
-  <header>
-    <h1 class="govuk-heading-xl">{% trans 'Policy changes made on Nov 2nd 2020 that may affect your work' %}</h1>
-  </header>
-
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
+
+      <!--[policy-change-info]-->
+      {% static 'downloads/apply-to-send-out-more-than-50.pdf' as form_link %}
+      <header>
+        <h1 class="govuk-heading-xl">{% trans 'Policy changes made on Nov 2nd 2020 that may affect your work' %}</h1>
+      </header>
 
       <h2 class="govuk-heading-l">{% trans 'Credits' %}</h2>
       <p>{% trans 'Senders can no longer send money by bank transfer, cash, cheque or postal order.' %}</p>
