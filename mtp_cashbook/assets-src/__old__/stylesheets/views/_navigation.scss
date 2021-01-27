@@ -137,38 +137,3 @@ $mtp-nav-breakpoint: 830px;
     border-radius: 0;
   }
 }
-
-.footer-categories {
-  margin-bottom: $gutter;
-
-  .govuk-grid-column-one-third {
-    @include media(tablet) {
-      min-width: 300px;
-    }
-  }
-
-  h2 {
-    padding: 10px 0 0;
-    border-bottom: 1px solid $border-colour;
-
-    @include media(tablet) {
-      padding: 0 0 20px;
-    }
-  }
-
-  ul {
-    margin: $gutter-half 0 0 0;
-
-    @include media(mobile) {
-      margin-bottom: $gutter;
-    }
-  }
-
-  li {
-    padding: 10px 0 0;
-
-    @include media(tablet) {
-      padding: 20px 0 0;
-    }
-  }
-}

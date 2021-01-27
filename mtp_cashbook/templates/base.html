@@ -7,28 +7,6 @@
 {% block proposition %}{% trans 'Manage prisoner money' %}{% endblock %}
 
 
-{% block footer_top %}
-  {# TODO: block is non-functional #}
-  {% if request.user.is_authenticated %}
-    <div class="footer-categories govuk-grid-row">
-      <div class="govuk-grid-column-one-third">
-        <h2>{% trans 'Manage prisoner money' %}</h2>
-        <ul>
-          <li><a href="{% url 'new-credits' %}">{% trans 'Digital cashbook' %}</a></li>
-          <li><a href="{% url 'disbursements:start' %}">{% trans 'Digital disbursements' %}</a></li>
-        </ul>
-      </div>
-      <div class="govuk-grid-column-one-third">
-        <h2>{% trans 'Other related tools' %}</h2>
-        <ul>
-          <li><a href="{{ noms_ops_url }}" title="{% trans 'For security staff' %}">{% trans 'Prisoner money intelligence' %}</a></li>
-        </ul>
-      </div>
-    </div>
-  {% endif %}
-{% endblock %}
-
-
 {% block body_end %}
   <script src="{% url 'js-i18n' %}?{{ APP_GIT_COMMIT_SHORT }}"></script>
   {{ block.super }}
