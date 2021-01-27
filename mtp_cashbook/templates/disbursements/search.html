@@ -104,7 +104,7 @@
   {% if form.is_valid %}
     <div class="mtp-batch">
       <table class="mtp-table">
-        <caption class="visually-hidden">{{ form.search_description.description }}</caption>
+        <caption class="govuk-visually-hidden">{{ form.search_description.description }}</caption>
         <thead>
           <tr>
             {% sortable_cell _('Sender') form.cleaned_data 'prisoner_name' %}
@@ -119,11 +119,11 @@
             <tr>
               <!-- {{ disbursement.id }} -->
               <td class="mtp-sender">
-                <span class="visually-hidden">{% trans 'Prisoner' %}:</span>
+                <span class="govuk-visually-hidden">{% trans 'Prisoner' %}:</span>
                 {{ disbursement.prisoner_name }}
                 <br/>
                 <br/>
-                <span class="visually-hidden">{% trans 'Prisoner number' %}:</span>
+                <span class="govuk-visually-hidden">{% trans 'Prisoner number' %}:</span>
                 <small class="govuk-body-s">{{ disbursement.prisoner_number }}</small>
               </td>
 
@@ -161,7 +161,7 @@
                 {{ disbursement.recipient_first_name }} {{ disbursement.recipient_last_name }}
                 <br/>
                 <br/>
-                <span class="visually-hidden">{% trans 'Recipient address' %}:</span>
+                <span class="govuk-visually-hidden">{% trans 'Recipient address' %}:</span>
                 <address>
                   <small class="govuk-body-s">
                     {{ disbursement.address_line1 }}<br/>
@@ -175,7 +175,7 @@
                   </small>
                 </address>
                 {% if disbursement.recipient_email %}<br/>
-                  <span class="visually-hidden">{% trans 'Recipient email' %}:</span>
+                  <span class="govuk-visually-hidden">{% trans 'Recipient email' %}:</span>
                   <small class="govuk-body-s">{{ disbursement.recipient_email }}</small>
                 {% endif %}
               </td>

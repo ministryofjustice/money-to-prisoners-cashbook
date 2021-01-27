@@ -49,7 +49,7 @@
       <p><a href="#" class="print-hidden js-print-trigger">{% trans 'Print this page of credits' %}</a></p>
 
       <table class="mtp-table">
-        <caption class="visually-hidden">{{ view.title }}</caption>
+        <caption class="govuk-visually-hidden">{{ view.title }}</caption>
         <thead>
           {% include 'cashbook/includes/credits-header-row.html' with form=form include_status=True pre_approval_required=request.pre_approval_required only %}
         </thead>

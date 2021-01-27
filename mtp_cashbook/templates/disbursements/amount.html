@@ -22,7 +22,7 @@
     {% include 'govuk-frontend/components/error-summary.html' with form=form only %}
 
     <table class="mtp-accounts-table">
-      <caption class="visually-hidden">{% trans 'Prisoner’s balances in NOMIS' %}</caption>
+      <caption class="govuk-visually-hidden">{% trans 'Prisoner’s balances in NOMIS' %}</caption>
       <tbody>
         <tr>
           <th>{% trans 'Account' %}</th>
@@ -35,7 +35,7 @@
           <td class="numeric" data-balance="cash">{{ form.nomis_balances.cash|currency:'£'|default:_('Unknown') }}</td>
           <td>
             {% with field=form.amount %}
-              <label id="{{ field.id_for_label }}-label" for="{{ field.id_for_label }}" class="visually-hidden">
+              <label id="{{ field.id_for_label }}-label" for="{{ field.id_for_label }}" class="govuk-visually-hidden">
                 {% trans 'Please enter the amount in pounds' %}
               </label>
               <div id="{{ field.id_for_label }}-wrapper" class="mtp-money-amount {% if field.errors %}form-group-error{% endif %}">

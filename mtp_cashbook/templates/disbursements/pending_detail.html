@@ -42,7 +42,7 @@
   {% endif %}
 
   <table class="mtp-confirm-table">
-    <caption class="visually-hidden">{% trans 'Disbursement details' %}</caption>
+    <caption class="govuk-visually-hidden">{% trans 'Disbursement details' %}</caption>
     <tbody class="mtp-confirm-table__details">
       <tr class="mtp-confirm-table__section">
         <th rowspan="3"><h2 class="govuk-heading-s">{% trans 'Send' %}</h2></th>
@@ -52,7 +52,7 @@
           {% if editable %}
             <a href="{% url 'disbursements:update_sending_method' pk=disbursement.id %}" class="print-hidden">
               {% trans 'Change' %}
-              <span class="visually-hidden">{% trans 'Sending method' %}</span>
+              <span class="govuk-visually-hidden">{% trans 'Sending method' %}</span>
             </a>
           {% endif %}
         </td>
@@ -64,7 +64,7 @@
           {% if editable %}
             <a href="{% url 'disbursements:update_amount' pk=disbursement.id %}" class="print-hidden">
               {% trans 'Change' %}
-              <span class="visually-hidden">{% trans 'Amount' %}</span>
+              <span class="govuk-visually-hidden">{% trans 'Amount' %}</span>
             </a>
           {% endif %}
         </td>
@@ -82,7 +82,7 @@
           {% if editable %}
             <a href="{% url 'disbursements:update_remittance_description' pk=disbursement.id %}" class="print-hidden">
               {% trans 'Change' %}
-              <span class="visually-hidden">{% trans 'Description' %}</span>
+              <span class="govuk-visually-hidden">{% trans 'Description' %}</span>
             </a>
           {% endif %}
         </td>
@@ -102,7 +102,7 @@
           {% if editable %}
             <a href="{% url 'disbursements:update_recipient_contact' pk=disbursement.id %}" class="print-hidden">
               {% trans 'Change' %}
-              <span class="visually-hidden">{% trans 'Recipient contact' %}</span>
+              <span class="govuk-visually-hidden">{% trans 'Recipient contact' %}</span>
             </a>
           {% endif %}
         </td>
@@ -121,7 +121,7 @@
           {% if editable %}
             <a href="{% url 'disbursements:update_recipient_address' pk=disbursement.id %}" class="print-hidden">
               {% trans 'Change' %}
-              <span class="visually-hidden">{% trans 'Recipient address' %}</span>
+              <span class="govuk-visually-hidden">{% trans 'Recipient address' %}</span>
             </a>
           {% endif %}
         </td>
@@ -141,7 +141,7 @@
             {% if editable %}
               <a href="{% url 'disbursements:update_recipient_contact' pk=disbursement.id %}" class="print-hidden">
                 {% trans 'Change' %}
-                <span class="visually-hidden">{% trans 'Recipient email' %}</span>
+                <span class="govuk-visually-hidden">{% trans 'Recipient email' %}</span>
               </a>
             {% endif %}
           </td>
@@ -156,7 +156,7 @@
             {% if editable %}
               <a href="{% url 'disbursements:update_recipient_bank_account' pk=disbursement.id %}" class="print-hidden">
                 {% trans 'Change' %}
-                <span class="visually-hidden">{% trans 'Recipient bank account details' %}</span>
+                <span class="govuk-visually-hidden">{% trans 'Recipient bank account details' %}</span>
               </a>
             {% endif %}
           </td>
@@ -185,7 +185,7 @@
           {% if editable %}
             <a href="{% url 'disbursements:update_prisoner' pk=disbursement.id %}" class="print-hidden">
               {% trans 'Change' %}
-              <span class="visually-hidden">{% trans 'Prisoner details' %}</span>
+              <span class="govuk-visually-hidden">{% trans 'Prisoner details' %}</span>
             </a>
           {% endif %}
         </td>

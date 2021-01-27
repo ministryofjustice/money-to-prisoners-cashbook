@@ -20,7 +20,7 @@
         {% include 'govuk-frontend/components/error-summary.html' with form=form only %}
 
         <fieldset class="mtp-sending-method-choice">
-          <legend id="{{ form.method.id_for_label }}-label" class="visually-hidden">{% trans 'Method by which to send money' %}</legend>
+          <legend id="{{ form.method.id_for_label }}-label" class="govuk-visually-hidden">{% trans 'Method by which to send money' %}</legend>
 
           {% for method in form.method.field.choices %}
             <div class="multiple-choice">

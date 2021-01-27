@@ -54,7 +54,7 @@
       {% if new_credit_list %}
         <h2 class="govuk-heading-m">{% trans 'New credits' %}</h2>
         <table class="mtp-table">
-          <caption class="visually-hidden">{% trans 'New credits' %}</caption>
+          <caption class="govuk-visually-hidden">{% trans 'New credits' %}</caption>
 
           <thead>
             {% include 'cashbook/includes/credits-header-row.html' with form=form include_status=False pre_approval_required=request.pre_approval_required only %}
@@ -71,7 +71,7 @@
       {% if old_credit_list %}
         <h2 class="govuk-heading-m">{% trans 'Processed credits' %}</h2>
         <table class="mtp-table">
-          <caption class="visually-hidden">{% trans 'Processed credits' %}</caption>
+          <caption class="govuk-visually-hidden">{% trans 'Processed credits' %}</caption>
 
           <thead>
             {% include 'cashbook/includes/credits-header-row.html' with form=form include_status=True pre_approval_required=request.pre_approval_required only %}

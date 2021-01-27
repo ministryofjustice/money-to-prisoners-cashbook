@@ -20,7 +20,7 @@
   </header>
 
   <table class="mtp-confirm-table">
-    <caption class="visually-hidden">{% trans 'Disbursement details' %}</caption>
+    <caption class="govuk-visually-hidden">{% trans 'Disbursement details' %}</caption>
     <tbody class="mtp-confirm-table__details">
       <tr class="mtp-confirm-table__section">
         <th rowspan="3"><h2 class="govuk-heading-s">{% trans 'Send' %}</h2></th>
@@ -29,7 +29,7 @@
         <td>
           <a href="{% url 'disbursements:sending_method' %}?next={{ view.url }}" class="print-hidden">
             {% trans 'Change' %}
-            <span class="visually-hidden">{% trans 'Sending method' %}</span>
+            <span class="govuk-visually-hidden">{% trans 'Sending method' %}</span>
           </a>
         </td>
       </tr>
@@ -39,7 +39,7 @@
         <td>
           <a href="{% url 'disbursements:amount' %}?next={{ view.url }}" class="print-hidden">
             {% trans 'Change' %}
-            <span class="visually-hidden">{% trans 'Amount' %}</span>
+            <span class="govuk-visually-hidden">{% trans 'Amount' %}</span>
           </a>
         </td>
       </tr>
@@ -55,7 +55,7 @@
         <td>
           <a href="{% url 'disbursements:remittance_description' %}?next={{ view.url }}" class="print-hidden">
             {% trans 'Change' %}
-            <span class="visually-hidden">{% trans 'Description' %}</span>
+            <span class="govuk-visually-hidden">{% trans 'Description' %}</span>
           </a>
         </td>
       </tr>
@@ -73,7 +73,7 @@
         <td>
           <a href="{% url 'disbursements:recipient_contact' %}?next={{ view.url }}" class="print-hidden">
             {% trans 'Change' %}
-            <span class="visually-hidden">{% trans 'Recipient name' %}</span>
+            <span class="govuk-visually-hidden">{% trans 'Recipient name' %}</span>
           </a>
         </td>
       </tr>
@@ -90,7 +90,7 @@
         <td>
           <a href="{% url 'disbursements:recipient_address' %}?next={{ view.url }}" class="print-hidden">
             {% trans 'Change' %}
-            <span class="visually-hidden">{% trans 'Recipient address' %}</span>
+            <span class="govuk-visually-hidden">{% trans 'Recipient address' %}</span>
           </a>
         </td>
       </tr>
@@ -108,7 +108,7 @@
           <td>
             <a href="{% url 'disbursements:recipient_contact' %}?next={{ view.url }}" class="print-hidden">
               {% trans 'Change' %}
-              <span class="visually-hidden">{% trans 'Recipient email' %}</span>
+              <span class="govuk-visually-hidden">{% trans 'Recipient email' %}</span>
             </a>
           </td>
         </tr>
@@ -121,7 +121,7 @@
           <td>
             <a href="{% url 'disbursements:recipient_bank_account' %}?next={{ view.url }}" class="print-hidden">
               {% trans 'Change' %}
-              <span class="visually-hidden">{% trans 'Recipient bank account details' %}</span>
+              <span class="govuk-visually-hidden">{% trans 'Recipient bank account details' %}</span>
             </a>
           </td>
         </tr>
@@ -148,7 +148,7 @@
         <td>
           <a href="{% url 'disbursements:prisoner' %}?next={{ view.url }}" class="print-hidden">
             {% trans 'Change' %}
-            <span class="visually-hidden">{% trans 'Prisoner details' %}</span>
+            <span class="govuk-visually-hidden">{% trans 'Prisoner details' %}</span>
           </a>
         </td>
       </tr>
