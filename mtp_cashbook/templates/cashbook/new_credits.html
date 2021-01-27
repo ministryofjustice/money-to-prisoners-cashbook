@@ -251,7 +251,7 @@
           <tr>
             {% sortable_cell _('Date sent') request_params 'received_at' %}
             {% sortable_cell _('Prisoner') request_params 'prisoner_number' %}
-            {% sortable_cell _('Amount') request_params 'amount' cell_classes='numeric' %}
+            {% sortable_cell _('Amount') request_params 'amount' cell_classes='govuk-table__header--numeric' %}
             <th scope="col">{% trans 'Sender' %}</th>
             {% if request.pre_approval_required %}
               <th scope="col">{% trans 'Security' %}</th>
@@ -284,7 +284,7 @@
                   <div>{{ credit.prisoner_number }}</div>
                   <div class="govuk-body-s--secondary">{{ credit.prisoner_name }}</div>
                 </td>
-                <td class="numeric">
+                <td class="govuk-table__cell--numeric">
                   <span class="mtp-sortable-cell--pad">
                     £{{ credit.amount|currency }}
                   </span>

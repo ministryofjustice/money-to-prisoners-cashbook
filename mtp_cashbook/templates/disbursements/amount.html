@@ -26,13 +26,13 @@
       <tbody>
         <tr>
           <th scope="col">{% trans 'Account' %}</th>
-          <th scope="col">{% trans 'Balance on NOMIS' %}</th>
+          <th class="govuk-table__header--numeric" scope="col">{% trans 'Balance on NOMIS' %}</th>
           <th scope="col">{% trans 'Amount to send' %}</th>
         </tr>
 
         <tr class="mtp-private-row">
           <td>{% trans 'Private' %}</td>
-          <td class="numeric" data-balance="cash">{{ form.nomis_balances.cash|currency:'£'|default:_('Unknown') }}</td>
+          <td class="govuk-table__cell--numeric" data-balance="cash">{{ form.nomis_balances.cash|currency:'£'|default:_('Unknown') }}</td>
           <td>
             {% with field=form.amount %}
               <label id="{{ field.id_for_label }}-label" for="{{ field.id_for_label }}" class="govuk-visually-hidden">
@@ -57,19 +57,19 @@
 
         <tr>
           <td>{% trans 'Spends' %}</td>
-          <td class="numeric" data-balance="spends">{{ form.nomis_balances.spends|currency:'£'|default:_('Unknown') }}</td>
+          <td class="govuk-table__cell--numeric" data-balance="spends">{{ form.nomis_balances.spends|currency:'£'|default:_('Unknown') }}</td>
           <td>{% trans 'Can’t be used for sending money out' %}</td>
         </tr>
 
         <tr>
           <td>{% trans 'Saving' %}</td>
-          <td class="numeric" data-balance="savings">{{ form.nomis_balances.savings|currency:'£'|default:_('Unknown') }}</td>
+          <td class="govuk-table__cell--numeric" data-balance="savings">{{ form.nomis_balances.savings|currency:'£'|default:_('Unknown') }}</td>
           <td>{% trans 'Can’t be used for sending money out' %}</td>
         </tr>
 
         <tr class="mtp-refresh-row">
           <td></td>
-          <td><a href=".">{% trans 'Update balances' %}</a></td>
+          <td class="govuk-table__cell--numeric"><a href=".">{% trans 'Update balances' %}</a></td>
           <td></td>
         </tr>
       </tbody>

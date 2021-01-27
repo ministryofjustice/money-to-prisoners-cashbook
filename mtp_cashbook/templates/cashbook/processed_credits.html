@@ -56,7 +56,7 @@
           <tr>
             <th scope="col">{% trans 'Date credited' %}</th>
             <th scope="col">{% trans 'Number of credits' %}</th>
-            <th class="numeric" scope="col">{% trans 'Total' %}</th>
+            <th class="govuk-table__header--numeric" scope="col">{% trans 'Total' %}</th>
             <th scope="col">{% trans 'Credited by' %}</th>
             {% if request.pre_approval_required %}
               <th scope="col">{% trans 'Security notes' %}</th>
@@ -93,7 +93,7 @@
                   {% endblocktrans %}
                 </a>
               </td>
-              <td class="numeric">£{{ batch.total|currency }}</td>
+              <td class="govuk-table__cell--numeric">£{{ batch.total|currency }}</td>
               <td>{{ batch.owner_name }}</td>
               {% if request.pre_approval_required %}
                 {% if batch.comment_count %}

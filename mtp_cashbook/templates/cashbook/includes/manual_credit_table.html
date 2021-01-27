@@ -22,7 +22,7 @@
       <tr>
         <th scope="col">{% trans 'Date sent' %}</th>
         <th scope="col">{% trans 'Prisoner' %}</th>
-        <th class="numeric" scope="col">{% trans 'Amount' %}</th>
+        <th class="govuk-table__header--numeric" scope="col">{% trans 'Amount' %}</th>
         <th scope="col">{% trans 'Sender' %}</th>
         {% if pre_approval_required %}
           <th scope="col">{% trans 'Security' %}</th>
@@ -54,7 +54,7 @@
             <div>{{ credit.prisoner_number }}</div>
             <div class="govuk-body-s--secondary">{{ credit.prisoner_name }}</div>
           </td>
-          <td class="numeric">£{{ credit.amount|currency }}</td>
+          <td class="govuk-table__cell--numeric">£{{ credit.amount|currency }}</td>
           <td>{{ credit.sender_name }}</td>
           {% if pre_approval_required %}
             <td>
