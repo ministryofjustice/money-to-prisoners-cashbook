@@ -41,6 +41,7 @@ class DisbursementView(BaseView, TemplateView):
 
     def dispatch(self, request, **kwargs):
         request.proposition_app = {
+            'sub_app': 'disbursements',
             'name': _('Digital disbursements'),
             'url': StartView.url(),
             'help_url': DisbursementGetHelpView.url(),

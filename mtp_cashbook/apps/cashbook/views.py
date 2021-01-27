@@ -26,6 +26,7 @@ logger = logging.getLogger('mtp')
 class CashbookView(BaseView):
     def dispatch(self, request, *args, **kwargs):
         request.proposition_app = {
+            'sub_app': 'cashbook',
             'name': _('Digital cashbook'),
             'url': reverse('new-credits'),
             'help_url': reverse('cashbook_submit_ticket'),
