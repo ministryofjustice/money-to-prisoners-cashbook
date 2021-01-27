@@ -43,7 +43,7 @@
                 <input id="js-choice-{{ choices.0.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.0.0 }}" data-reveal=".js-choice-yes" {% if form.remittance.value == 'yes' %}checked{% endif %}>
                 <label for="js-choice-{{ choices.0.0 }}">{{ choices.0.1 }}</label>
               </div>
-              <div class="panel panel-border-narrow js-hidden js-choice-yes">
+              <div class="govuk-inset-text js-hidden js-choice-yes">
                 {% with field=form.remittance_description rows=2 input_classes='js-character-count' attrs=remittance_description_attrs %}
                   <div id="{{ field.id_for_label }}-wrapper" class="form-group {% if field.errors %}form-group-error{% endif %}">
                     <label for="{{ field.id_for_label }}" id="{{ field.id_for_label }}-label" class="form-label">

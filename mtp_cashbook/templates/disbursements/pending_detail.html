@@ -239,7 +239,7 @@
               <input id="js-choice-{{ choices.0.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.0.0 }}" data-reveal=".js-choice-yes">
               <label for="js-choice-{{ choices.0.0 }}">{{ choices.0.1 }}</label>
             </div>
-            <div class="panel panel-border-narrow mtp-button-panel js-hidden js-choice-yes">
+            <div class="govuk-inset-text mtp-button-panel js-hidden js-choice-yes">
               <p>{% trans 'Sign the bottom of the paper form under ‘Staff’.' %}</p>
               <img class="mtp-filled-form-sample" src="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-signed-2.jpg' %}" srcset="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-signed-2@2x.jpg' %} 2x" alt="{% trans 'Sign the bottom of the paper form under ‘Staff’.' %}" />
             </div>
@@ -248,7 +248,7 @@
               <input id="js-choice-{{ choices.1.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.1.0 }}" data-reveal=".js-choice-no">
               <label for="js-choice-{{ choices.1.0 }}">{{ choices.1.1 }}</label>
             </div>
-            <div class="panel panel-border-narrow js-hidden js-choice-no">
+            <div class="govuk-inset-text js-hidden js-choice-no">
               {% trans 'Use ‘Change’ above to make sure the details match those on the paper form.' %}
               {% trans 'Someone else will need to confirm this payment later.' %}
             </div>
