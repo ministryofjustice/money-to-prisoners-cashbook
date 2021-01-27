@@ -12,16 +12,18 @@
 {% block content %}
   {{ block.super }}
 
-  <div class="govuk-box-highlight">
-    <h1 class="bold-medium">
+  <div class="govuk-panel govuk-panel--confirmation">
+    <h1 class="govuk-panel__title">
       {% trans 'Payment request sent to SSCL' %}
     </h1>
-    {% if nomis_transaction_id %}
-      <br/>
-      {% blocktrans trimmed %}
-        The NOMIS reference is {{ nomis_transaction_id }}
-      {% endblocktrans %}
-    {% endif %}
+    <div class="govuk-panel__body">
+      {% if nomis_transaction_id %}
+        <br />
+        {% blocktrans trimmed %}
+          The NOMIS reference is {{ nomis_transaction_id }}
+        {% endblocktrans %}
+      {% endif %}
+    </div>
   </div>
 
   <p>
