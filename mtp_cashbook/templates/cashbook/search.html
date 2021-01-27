@@ -53,36 +53,40 @@
     <div class="mtp-batch">
       {% if new_credit_list %}
         <h2 class="govuk-heading-m">{% trans 'New credits' %}</h2>
-        <table class="mtp-table">
-          <caption class="govuk-visually-hidden">{% trans 'New credits' %}</caption>
+        <div class="mtp-table__container">
+          <table class="mtp-table">
+            <caption class="govuk-visually-hidden">{% trans 'New credits' %}</caption>
 
-          <thead>
-            {% include 'cashbook/includes/credits-header-row.html' with form=form include_status=False pre_approval_required=request.pre_approval_required only %}
-          </thead>
+            <thead>
+              {% include 'cashbook/includes/credits-header-row.html' with form=form include_status=False pre_approval_required=request.pre_approval_required only %}
+            </thead>
 
-          <tbody>
-            {% for credit in new_credit_list %}
-              {% include 'cashbook/includes/credit-row.html' with credit=credit include_status=False pre_approval_required=request.pre_approval_required only %}
-            {% endfor %}
-          </tbody>
-        </table>
+            <tbody>
+              {% for credit in new_credit_list %}
+                {% include 'cashbook/includes/credit-row.html' with credit=credit include_status=False pre_approval_required=request.pre_approval_required only %}
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       {% endif %}
 
       {% if old_credit_list %}
         <h2 class="govuk-heading-m">{% trans 'Processed credits' %}</h2>
-        <table class="mtp-table">
-          <caption class="govuk-visually-hidden">{% trans 'Processed credits' %}</caption>
+        <div class="mtp-table__container">
+          <table class="mtp-table">
+            <caption class="govuk-visually-hidden">{% trans 'Processed credits' %}</caption>
 
-          <thead>
-            {% include 'cashbook/includes/credits-header-row.html' with form=form include_status=True pre_approval_required=request.pre_approval_required only %}
-          </thead>
+            <thead>
+              {% include 'cashbook/includes/credits-header-row.html' with form=form include_status=True pre_approval_required=request.pre_approval_required only %}
+            </thead>
 
-          <tbody>
-            {% for credit in old_credit_list %}
-              {% include 'cashbook/includes/credit-row.html' with credit=credit include_status=True pre_approval_required=request.pre_approval_required only %}
-            {% endfor %}
-          </tbody>
-        </table>
+            <tbody>
+              {% for credit in old_credit_list %}
+                {% include 'cashbook/includes/credit-row.html' with credit=credit include_status=True pre_approval_required=request.pre_approval_required only %}
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       {% endif %}
     </div>
 

@@ -1,9 +1,5 @@
 .mtp-confirm-disbursements-list {
-  @extend %table-container;
-
   table {
-    width: 100%;
-
     tr {
       td.mtp-button-column {
         width: 10em;

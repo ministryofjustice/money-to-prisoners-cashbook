@@ -73,11 +73,9 @@
 
 
 .mtp-batch {
-  @extend %table-container;
   margin: 0;
 
   table {
-    width: 100%;
     margin-bottom: 2em;
 
     td, th {

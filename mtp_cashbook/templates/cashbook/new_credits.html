@@ -207,151 +207,152 @@
         </div>
       {% endif %}
 
+      <div class="mtp-table__container">
+        <table class="mtp-table">
+          <caption class="govuk-visually-hidden">{{ view.title }}</caption>
 
-      <table class="mtp-table">
-        <caption class="govuk-visually-hidden">{{ view.title }}</caption>
+          <thead>
+            {% if new_object_list %}
+              <tr class="govuk-!-display-none-print">
+                <td colspan="{% if request.pre_approval_required %}5{% else %}4{% endif %}" class="mtp-compact-cell">
 
-        <thead>
-          {% if new_object_list %}
-            <tr class="govuk-!-display-none-print">
-              <td colspan="{% if request.pre_approval_required %}5{% else %}4{% endif %}" class="mtp-compact-cell">
-
-                {% captureoutput as body %}
-                  <p>
-                    {% blocktrans trimmed %}
-                      The credits on this page are from the <a href="{{ start_page_url }}">Send money to someone in prison</a> service.
-                    {% endblocktrans %}
-                  </p>
-                  <p>{% trans 'Use this page to credit to NOMIS automatically, you no longer need to manually enter these credits.' %}</p>
-                  <p>
-                    {% trans 'All credits are from known senders and should be credited - if there is any concern or suspicion about a credit, it should be placed on hold after crediting and passed to security.' %}
-                  </p>
-                  <p><strong>{% trans 'How to credit' %}</strong></p>
-                  <ol class="govuk-list govuk-list--number">
-                    <li>{% trans 'Review all credits for suspicious activity' %}</li>
-                    <li>{% trans 'Tick all credits' %}</li>
-                    <li>{% trans 'Click the green ‘Credit to NOMIS’ button' %}</li>
-                    <li>{% trans 'Place any suspicious credits on hold in NOMIS' %}</li>
-                  </ol>
-                  <p>{% trans 'There is no longer any need to print records.' %}</p>
-                {% endcaptureoutput %}
-                {% captureoutput as analytics %}{% stripwhitespace %}
-                  pageview,/-help_open/{{ request.resolver_match.view_name }}/
-                {% endstripwhitespace %}{% endcaptureoutput %}
-                {% include 'govuk-frontend/components/details.html' with summary=_('What do I do here?') body=body analytics=analytics %}
-
-              </td>
-              <td class="mtp-check-all mtp-compact-cell">
-                <input type="checkbox" id="select-all-header" class="Checkbox Checkbox--left js-SelectAll" data-name="{{ form.new.credits.html_name }}">
-                <label data-analytics="event,select-all,header" for="select-all-header">{% trans 'Select all' %}</label>
-              </td>
-            </tr>
-          {% endif %}
-
-          <tr>
-            {% sortable_cell _('Date sent') request_params 'received_at' %}
-            {% sortable_cell _('Prisoner') request_params 'prisoner_number' %}
-            {% sortable_cell _('Amount') request_params 'amount' cell_classes='govuk-table__header--numeric' %}
-            <th scope="col">{% trans 'Sender' %}</th>
-            {% if request.pre_approval_required %}
-              <th scope="col">{% trans 'Security' %}</th>
-            {% endif %}
-            <th class="mtp-check-col mtp-compact-cell govuk-!-display-none-print" scope="col">{% trans 'Select' %}</th>
-          </tr>
-        </thead>
-
-        {% if new_object_list %}
-          <tbody>
-            {% for credit_pk, credit in new_object_list %}
-              <tr>
-                <td>
-                  <div>{{ credit.received_at.date|date:'d/m/Y' }}</div>
-                  {% with days=credit.received_at.date|dayssince %}
-                  <div class="govuk-body-s--secondary {% if days >= 7 %}old{% endif %}">
-                    {% if days == 0 %}
-                      {% trans 'Today' %}
-                    {% else %}
-                      {% blocktrans trimmed count days=days %}
-                        {{ days }} day ago
-                      {% plural %}
-                        {{ days }} days ago
+                  {% captureoutput as body %}
+                    <p>
+                      {% blocktrans trimmed %}
+                        The credits on this page are from the <a href="{{ start_page_url }}">Send money to someone in prison</a> service.
                       {% endblocktrans %}
-                    {% endif %}
-                  </div>
-                  {% endwith %}
+                    </p>
+                    <p>{% trans 'Use this page to credit to NOMIS automatically, you no longer need to manually enter these credits.' %}</p>
+                    <p>
+                      {% trans 'All credits are from known senders and should be credited - if there is any concern or suspicion about a credit, it should be placed on hold after crediting and passed to security.' %}
+                    </p>
+                    <p><strong>{% trans 'How to credit' %}</strong></p>
+                    <ol class="govuk-list govuk-list--number">
+                      <li>{% trans 'Review all credits for suspicious activity' %}</li>
+                      <li>{% trans 'Tick all credits' %}</li>
+                      <li>{% trans 'Click the green ‘Credit to NOMIS’ button' %}</li>
+                      <li>{% trans 'Place any suspicious credits on hold in NOMIS' %}</li>
+                    </ol>
+                    <p>{% trans 'There is no longer any need to print records.' %}</p>
+                  {% endcaptureoutput %}
+                  {% captureoutput as analytics %}{% stripwhitespace %}
+                    pageview,/-help_open/{{ request.resolver_match.view_name }}/
+                  {% endstripwhitespace %}{% endcaptureoutput %}
+                  {% include 'govuk-frontend/components/details.html' with summary=_('What do I do here?') body=body analytics=analytics %}
+
                 </td>
-                <td>
-                  <div>{{ credit.prisoner_number }}</div>
-                  <div class="govuk-body-s--secondary">{{ credit.prisoner_name }}</div>
-                </td>
-                <td class="govuk-table__cell--numeric">
-                  <span class="mtp-sortable-cell--pad">
-                    £{{ credit.amount|currency }}
-                  </span>
-                </td>
-                <td>{{ credit.sender_name }}</td>
-                {% if request.pre_approval_required %}
-                  <td>
-                    {% if credit.reviewed %}
-                      {% trans 'Checked' %}
-                    {% else %}
-                      {% trans 'Not checked' %}
-                    {% endif %}
-                  </td>
-                {% endif %}
-                <td class="mtp-check-cell govuk-!-display-none-print">
-                  <input
-                    type="checkbox"
-                    name="{{ form.new.credits.html_name }}"
-                    value="{{ credit_pk }}"
-                    id="check-{{ credit.id }}"
-                    {% if credit_pk|to_string in form.new.credits.value %}checked{% endif %}
-                    class="js-SelectionCount-item Checkbox"
-                    data-amount="{{ credit.amount|currency }}">
-                  <label for="check-{{ credit.id }}">
-                    {% blocktrans trimmed with amount=credit.amount|currency prisoner_name=credit.prisoner_name %}
-                      Credit £{{ amount }} to {{ prisoner_name }}
-                    {% endblocktrans %}
-                  </label>
+                <td class="mtp-check-all mtp-compact-cell">
+                  <input type="checkbox" id="select-all-header" class="Checkbox Checkbox--left js-SelectAll" data-name="{{ form.new.credits.html_name }}">
+                  <label data-analytics="event,select-all,header" for="select-all-header">{% trans 'Select all' %}</label>
                 </td>
               </tr>
-              {% if credit.comments %}
+            {% endif %}
+
+            <tr>
+              {% sortable_cell _('Date sent') request_params 'received_at' %}
+              {% sortable_cell _('Prisoner') request_params 'prisoner_number' %}
+              {% sortable_cell _('Amount') request_params 'amount' cell_classes='govuk-table__header--numeric' %}
+              <th scope="col">{% trans 'Sender' %}</th>
+              {% if request.pre_approval_required %}
+                <th scope="col">{% trans 'Security' %}</th>
+              {% endif %}
+              <th class="mtp-check-col mtp-compact-cell govuk-!-display-none-print" scope="col">{% trans 'Select' %}</th>
+            </tr>
+          </thead>
+
+          {% if new_object_list %}
+            <tbody>
+              {% for credit_pk, credit in new_object_list %}
                 <tr>
-                  <td class="mtp-security" colspan="{% if request.pre_approval_required %}6{% else %}5{% endif %}">
-                    {% for comment in credit.comments %}
-                      <div class="mtp-security__comment">
-                        {{ comment.comment|linebreaks }}
-                      </div>
-                    {% endfor %}
+                  <td>
+                    <div>{{ credit.received_at.date|date:'d/m/Y' }}</div>
+                    {% with days=credit.received_at.date|dayssince %}
+                    <div class="govuk-body-s--secondary {% if days >= 7 %}old{% endif %}">
+                      {% if days == 0 %}
+                        {% trans 'Today' %}
+                      {% else %}
+                        {% blocktrans trimmed count days=days %}
+                          {{ days }} day ago
+                        {% plural %}
+                          {{ days }} days ago
+                        {% endblocktrans %}
+                      {% endif %}
+                    </div>
+                    {% endwith %}
+                  </td>
+                  <td>
+                    <div>{{ credit.prisoner_number }}</div>
+                    <div class="govuk-body-s--secondary">{{ credit.prisoner_name }}</div>
+                  </td>
+                  <td class="govuk-table__cell--numeric">
+                    <span class="mtp-sortable-cell--pad">
+                      £{{ credit.amount|currency }}
+                    </span>
+                  </td>
+                  <td>{{ credit.sender_name }}</td>
+                  {% if request.pre_approval_required %}
+                    <td>
+                      {% if credit.reviewed %}
+                        {% trans 'Checked' %}
+                      {% else %}
+                        {% trans 'Not checked' %}
+                      {% endif %}
+                    </td>
+                  {% endif %}
+                  <td class="mtp-check-cell govuk-!-display-none-print">
+                    <input
+                      type="checkbox"
+                      name="{{ form.new.credits.html_name }}"
+                      value="{{ credit_pk }}"
+                      id="check-{{ credit.id }}"
+                      {% if credit_pk|to_string in form.new.credits.value %}checked{% endif %}
+                      class="js-SelectionCount-item Checkbox"
+                      data-amount="{{ credit.amount|currency }}">
+                    <label for="check-{{ credit.id }}">
+                      {% blocktrans trimmed with amount=credit.amount|currency prisoner_name=credit.prisoner_name %}
+                        Credit £{{ amount }} to {{ prisoner_name }}
+                      {% endblocktrans %}
+                    </label>
                   </td>
                 </tr>
-              {% endif %}
-            {% endfor %}
-          </tbody>
+                {% if credit.comments %}
+                  <tr>
+                    <td class="mtp-security" colspan="{% if request.pre_approval_required %}6{% else %}5{% endif %}">
+                      {% for comment in credit.comments %}
+                        <div class="mtp-security__comment">
+                          {{ comment.comment|linebreaks }}
+                        </div>
+                      {% endfor %}
+                    </td>
+                  </tr>
+                {% endif %}
+              {% endfor %}
+            </tbody>
 
-          <tfoot>
-            <tr class="govuk-!-display-none-print">
-              <td colspan="{% if request.pre_approval_required %}5{% else %}4{% endif %}" class="mtp-compact-cell"></td>
-              <td class="mtp-check-all mtp-compact-cell">
-                <input type="checkbox" id="select-all-footer" class="Checkbox Checkbox--left js-SelectAll" data-name="{{ form.new.credits.html_name }}">
-                <label data-analytics="event,select-all,footer" for="select-all-footer">{% trans 'Select all' %}</label>
-              </td>
-            </tr>
-          </tfoot>
+            <tfoot>
+              <tr class="govuk-!-display-none-print">
+                <td colspan="{% if request.pre_approval_required %}5{% else %}4{% endif %}" class="mtp-compact-cell"></td>
+                <td class="mtp-check-all mtp-compact-cell">
+                  <input type="checkbox" id="select-all-footer" class="Checkbox Checkbox--left js-SelectAll" data-name="{{ form.new.credits.html_name }}">
+                  <label data-analytics="event,select-all,footer" for="select-all-footer">{% trans 'Select all' %}</label>
+                </td>
+              </tr>
+            </tfoot>
 
-        {% else %}
+          {% else %}
 
-          <tbody>
-            <tr>
-              <td class="mtp-no-credits" colspan="{% if request.pre_approval_required %}6{% else %}5{% endif %}">
-                <p class="govuk-heading-l">{% trans 'Thank you' %}</p>
-                <p>{% trans 'All credits have been processed' %}</p>
-              </td>
-            </tr>
-          </tbody>
+            <tbody>
+              <tr>
+                <td class="mtp-no-credits" colspan="{% if request.pre_approval_required %}6{% else %}5{% endif %}">
+                  <p class="govuk-heading-l">{% trans 'Thank you' %}</p>
+                  <p>{% trans 'All credits have been processed' %}</p>
+                </td>
+              </tr>
+            </tbody>
 
-        {% endif %}
-      </table>
+          {% endif %}
+        </table>
+      </div>
 
     </div>
     {% endif %}

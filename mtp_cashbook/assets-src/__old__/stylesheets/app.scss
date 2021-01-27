@@ -27,16 +27,6 @@
 }
 
 // app-specific styles
-%table-container {
-  @include media($max-width: $desktop-breakpoint) {
-    overflow-x: scroll;
-
-    table {
-      min-width: 900px;
-    }
-  }
-}
-
 .mtp-inactive__form {
   .form-label {
     color: $grey-2;
