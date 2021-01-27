@@ -17,7 +17,7 @@
 
   <p class="govuk-body-l">{{ form.search_description.description }}</p>
 
-  <form method="get" class="print-hidden">
+  <form method="get" class="govuk-!-display-none-print">
     <p><a href="{% url 'disbursements:process-overview' %}#section-track">{% trans 'How to trace a payment' %}</a></p>
 
     {{ form.ordering.as_hidden }}

@@ -46,7 +46,7 @@
 
   <div class="mtp-batch">
     {% if object_list %}
-      <p><a href="#" class="print-hidden js-print-trigger">{% trans 'Print this page of credits' %}</a></p>
+      <p><a href="#" class="govuk-!-display-none-print js-print-trigger">{% trans 'Print this page of credits' %}</a></p>
 
       <table class="mtp-table">
         <caption class="govuk-visually-hidden">{{ view.title }}</caption>
@@ -60,7 +60,7 @@
         </tbody>
       </table>
 
-      <p><a href="#" class="print-hidden js-print-trigger">{% trans 'Print this page of credits' %}</a></p>
+      <p><a href="#" class="govuk-!-display-none-print js-print-trigger">{% trans 'Print this page of credits' %}</a></p>
 
     {% else %}
       <p><strong>{% trans 'No credits' %}</strong></p>

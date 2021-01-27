@@ -61,7 +61,7 @@
             {% if request.pre_approval_required %}
               <th>{% trans 'Security notes' %}</th>
             {% endif %}
-            <th class="print-hidden">{% trans 'Options' %}</th>
+            <th class="govuk-!-display-none-print">{% trans 'Options' %}</th>
           </tr>
         </thead>
 
@@ -108,7 +108,7 @@
                   <td>{% trans 'No' %}</td>
                 {% endif %}
               {% endif %}
-              <td class="print-hidden"><a href="{% url 'processed-credits-detail' date=batch.logged_at|date:'Ymd' user_id=batch.owner %}" class="js-PrintBatch">{% trans 'Print' %}</a></td>
+              <td class="govuk-!-display-none-print"><a href="{% url 'processed-credits-detail' date=batch.logged_at|date:'Ymd' user_id=batch.owner %}" class="js-PrintBatch">{% trans 'Print' %}</a></td>
             </tr>
           {% endfor %}
         </tbody>

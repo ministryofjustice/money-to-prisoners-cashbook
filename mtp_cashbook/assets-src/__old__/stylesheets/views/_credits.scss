@@ -1,17 +1,11 @@
 .mtp-credits {
-  .print-only {
-    display: none;
-  }
-
   @media print {
 
     .phase-banner {
       display: none;
     }
 
-    .print-only {
-      display: block;
-
+    .mtp-\!-display-print-only {
       .print-checkbox {
         float: right;
         margin-right: 108px;
@@ -63,7 +57,7 @@
       }
     }
 
-    h2.print-only {
+    h2.mtp-\!-display-print-only {
       padding-top: 1em;
     }
 
@@ -92,7 +86,7 @@
       }
     }
 
-    .print-hidden {
+    .govuk-\!-display-none-print {
       td {
         border-top: 0;
       }

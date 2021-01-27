@@ -15,7 +15,7 @@
     <p>
       {% trans 'Postcode:' %}
       <strong>{{ postcode }}</strong>
-      <a href="{% url 'disbursements:recipient_postcode' %}?next={{ view.url }}" class="print-hidden">
+      <a href="{% url 'disbursements:recipient_postcode' %}?next={{ view.url }}" class="govuk-!-display-none-print">
         {% trans 'Change' %}
         <span class="govuk-visually-hidden">{% trans 'Postcode' %}</span>
       </a>

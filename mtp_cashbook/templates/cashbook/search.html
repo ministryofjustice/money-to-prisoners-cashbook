@@ -17,7 +17,7 @@
     <p>{{ form.get_search_description }}</p>
   {% endif %}
 
-  <div class="govuk-grid-row print-hidden">
+  <div class="govuk-grid-row govuk-!-display-none-print">
     <div class="govuk-grid-column-two-thirds">
 
       {% captureoutput as body %}
@@ -44,7 +44,7 @@
 
     <div class="govuk-grid-column-one-third">
       {% if credits_returned %}
-        <p style="text-align:right"><a href="#" class="print-hidden js-print-trigger">{% trans 'Print this page of credits' %}</a></p>
+        <p style="text-align:right"><a href="#" class="govuk-!-display-none-print js-print-trigger">{% trans 'Print this page of credits' %}</a></p>
       {% endif %}
     </div>
   </div>

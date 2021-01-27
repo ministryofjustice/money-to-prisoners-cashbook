@@ -7,7 +7,7 @@
 
 {% block proposition_extra %}
   {# TODO: block is non-functional #}
-  <nav id="mtp-proposition-extra" class="govuk-grid-column-full print-hidden">
+  <nav id="mtp-proposition-extra" class="govuk-grid-column-full govuk-!-display-none-print">
     <form class="mtp-proposition-tab-column mtp-nav-search" method="get" action="{% url 'search' %}">
       <div class="form-group">
         <label class="govuk-visually-hidden" for="id_search">{% trans 'Search all credits' %}</label>

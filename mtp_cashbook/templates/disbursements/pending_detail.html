@@ -50,7 +50,7 @@
         <td>{{ disbursement.method|sendingmethod }}</td>
         <td>
           {% if editable %}
-            <a href="{% url 'disbursements:update_sending_method' pk=disbursement.id %}" class="print-hidden">
+            <a href="{% url 'disbursements:update_sending_method' pk=disbursement.id %}" class="govuk-!-display-none-print">
               {% trans 'Change' %}
               <span class="govuk-visually-hidden">{% trans 'Sending method' %}</span>
             </a>
@@ -62,7 +62,7 @@
         <td>£{{ disbursement.amount|currency }}</td>
         <td>
           {% if editable %}
-            <a href="{% url 'disbursements:update_amount' pk=disbursement.id %}" class="print-hidden">
+            <a href="{% url 'disbursements:update_amount' pk=disbursement.id %}" class="govuk-!-display-none-print">
               {% trans 'Change' %}
               <span class="govuk-visually-hidden">{% trans 'Amount' %}</span>
             </a>
@@ -80,7 +80,7 @@
         </td>
         <td>
           {% if editable %}
-            <a href="{% url 'disbursements:update_remittance_description' pk=disbursement.id %}" class="print-hidden">
+            <a href="{% url 'disbursements:update_remittance_description' pk=disbursement.id %}" class="govuk-!-display-none-print">
               {% trans 'Change' %}
               <span class="govuk-visually-hidden">{% trans 'Description' %}</span>
             </a>
@@ -100,7 +100,7 @@
         <td>{{ disbursement.recipient_first_name }} {{ disbursement.recipient_last_name }} {{ disbursement.recipient_company_name }}</td>
         <td>
           {% if editable %}
-            <a href="{% url 'disbursements:update_recipient_contact' pk=disbursement.id %}" class="print-hidden">
+            <a href="{% url 'disbursements:update_recipient_contact' pk=disbursement.id %}" class="govuk-!-display-none-print">
               {% trans 'Change' %}
               <span class="govuk-visually-hidden">{% trans 'Recipient contact' %}</span>
             </a>
@@ -119,7 +119,7 @@
         </td>
         <td>
           {% if editable %}
-            <a href="{% url 'disbursements:update_recipient_address' pk=disbursement.id %}" class="print-hidden">
+            <a href="{% url 'disbursements:update_recipient_address' pk=disbursement.id %}" class="govuk-!-display-none-print">
               {% trans 'Change' %}
               <span class="govuk-visually-hidden">{% trans 'Recipient address' %}</span>
             </a>
@@ -139,7 +139,7 @@
           <td>{{ disbursement.recipient_email }}</td>
           <td>
             {% if editable %}
-              <a href="{% url 'disbursements:update_recipient_contact' pk=disbursement.id %}" class="print-hidden">
+              <a href="{% url 'disbursements:update_recipient_contact' pk=disbursement.id %}" class="govuk-!-display-none-print">
                 {% trans 'Change' %}
                 <span class="govuk-visually-hidden">{% trans 'Recipient email' %}</span>
               </a>
@@ -154,7 +154,7 @@
           <td>{{ disbursement.sort_code|format_sortcode }}</td>
           <td>
             {% if editable %}
-              <a href="{% url 'disbursements:update_recipient_bank_account' pk=disbursement.id %}" class="print-hidden">
+              <a href="{% url 'disbursements:update_recipient_bank_account' pk=disbursement.id %}" class="govuk-!-display-none-print">
                 {% trans 'Change' %}
                 <span class="govuk-visually-hidden">{% trans 'Recipient bank account details' %}</span>
               </a>
@@ -183,7 +183,7 @@
         <td>{{ disbursement.prisoner_name }}</td>
         <td>
           {% if editable %}
-            <a href="{% url 'disbursements:update_prisoner' pk=disbursement.id %}" class="print-hidden">
+            <a href="{% url 'disbursements:update_prisoner' pk=disbursement.id %}" class="govuk-!-display-none-print">
               {% trans 'Change' %}
               <span class="govuk-visually-hidden">{% trans 'Prisoner details' %}</span>
             </a>

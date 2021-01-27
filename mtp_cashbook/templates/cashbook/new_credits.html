@@ -20,7 +20,7 @@
     <h1 class="govuk-heading-xl">{{ view.title }}</h1>
   </header>
 
-  <div class="print-only">
+  <div class="mtp-!-display-print-only">
     <h2 class="govuk-heading-s">
       {% trans 'CONFIDENTIAL: dispose of securely' %}
     </h2>
@@ -36,7 +36,7 @@
         {% endblocktrans %}
       </a>
     {% endcaptureoutput %}
-    {% include 'mtp_common/components/notification-banner.html' with banner_level='success' banner_title='success'|notification_level banner_heading=banner_heading classes='print-hidden' only %}
+    {% include 'mtp_common/components/notification-banner.html' with banner_level='success' banner_title='success'|notification_level banner_heading=banner_heading classes='govuk-!-display-none-print' only %}
   {% endif %}
 
   {% if credited_manual_credits %}
@@ -49,12 +49,12 @@
         {% endblocktrans %}
       </a>
     {% endcaptureoutput %}
-    {% include 'mtp_common/components/notification-banner.html' with banner_level='success' banner_title='success'|notification_level banner_heading=banner_heading classes='print-hidden' only %}
+    {% include 'mtp_common/components/notification-banner.html' with banner_level='success' banner_title='success'|notification_level banner_heading=banner_heading classes='govuk-!-display-none-print' only %}
   {% endif %}
 
   {% if failed_credits %}
     {% captureoutput as banner_heading %}
-      <a href="#failed-credits-dialog" class="print-hidden js-dialogue-open">
+      <a href="#failed-credits-dialog" class="govuk-!-display-none-print js-dialogue-open">
         {% blocktrans trimmed count failed_credits=failed_credits %}
           {{ failed_credits }} credit not processed due to technical error, try again soon.
         {% plural %}
@@ -63,7 +63,7 @@
         {% trans 'Why?' %}
       </a>
     {% endcaptureoutput %}
-    {% include 'mtp_common/components/notification-banner.html' with banner_level='error' banner_title='error'|notification_level banner_heading=banner_heading classes='print-hidden' only %}
+    {% include 'mtp_common/components/notification-banner.html' with banner_level='error' banner_title='error'|notification_level banner_heading=banner_heading classes='govuk-!-display-none-print' only %}
 
     {% dialoguebox title=_('Why didn’t it work?') html_id='failed-credits-dialog' %}
       <p>
@@ -83,7 +83,7 @@
 
       {% if owned_manual_credits %}
         {% captureoutput as banner_heading %}
-          <a href="#manual-credits-dialog" class="print-hidden js-dialogue-open">
+          <a href="#manual-credits-dialog" class="govuk-!-display-none-print js-dialogue-open">
             {% blocktrans trimmed count manual_credits=owned_manual_credits %}
               {{ manual_credits }} credit needs your manual input in NOMIS.
             {% plural %}
@@ -92,9 +92,9 @@
             {% trans 'How?' %}
           </a>
         {% endcaptureoutput %}
-        {% include 'mtp_common/components/notification-banner.html' with banner_level='warning' banner_title='warning'|notification_level banner_heading=banner_heading classes='print-hidden' only %}
+        {% include 'mtp_common/components/notification-banner.html' with banner_level='warning' banner_title='warning'|notification_level banner_heading=banner_heading classes='govuk-!-display-none-print' only %}
 
-        <div class="print-hidden"><p>{% trans 'These credits need your manual input to be processed.' %}</p></div>
+        <div class="govuk-!-display-none-print"><p>{% trans 'These credits need your manual input to be processed.' %}</p></div>
 
         {% dialoguebox title=_('These credits need further processing') html_id='manual-credits-dialog' %}
           <p>
@@ -109,7 +109,7 @@
 
 
       {% if unowned_manual_credits %}
-        <div class="print-hidden"><p>
+        <div class="govuk-!-display-none-print"><p>
           {% if unowned_oldest_date and unowned_oldest_date|dayssince > 0 %}
             {% blocktrans trimmed with owner=other_owners.0 count owners=other_owners|length %}
               {{ owner }} started to process these credits but may not have finished
@@ -169,12 +169,12 @@
     {% include 'govuk-frontend/components/error-summary.html' with form=form.new only %}
 
     {% if new_object_list or not manual_credits %}
-    <div class="mtp-batch mtp-new-credits-batch {% if not new_object_list %}print-hidden{% endif %}">
+    <div class="mtp-batch mtp-new-credits-batch {% if not new_object_list %}govuk-!-display-none-print{% endif %}">
       {% if new_object_list %}
-        <div class="mtp-floating-header js-StickyHeader print-hidden">
+        <div class="mtp-floating-header js-StickyHeader govuk-!-display-none-print">
           <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
-              <p class="print-hidden">
+              <p class="govuk-!-display-none-print">
                 {% blocktrans trimmed count new_credits=new_credits %}
                   <strong>{{ new_credits }}</strong> new credit.
                 {% plural %}
@@ -194,7 +194,7 @@
           </div>
         </div>
 
-        <div class="mtp-nomis-print-header print-only">
+        <div class="mtp-nomis-print-header mtp-!-display-print-only">
           <img src="{% static 'images/icon-important.png' %}"/>
           <div class="mtp-nomis-warning">
             <h2 class="govuk-heading-m">
@@ -213,7 +213,7 @@
 
         <thead>
           {% if new_object_list %}
-            <tr class="print-hidden">
+            <tr class="govuk-!-display-none-print">
               <td colspan="{% if request.pre_approval_required %}5{% else %}4{% endif %}" class="mtp-compact-cell">
 
                 {% captureoutput as body %}
@@ -256,7 +256,7 @@
             {% if request.pre_approval_required %}
               <th>{% trans 'Security' %}</th>
             {% endif %}
-            <th class="mtp-check-col mtp-compact-cell print-hidden">{% trans 'Select' %}</th>
+            <th class="mtp-check-col mtp-compact-cell govuk-!-display-none-print">{% trans 'Select' %}</th>
           </tr>
         </thead>
 
@@ -299,7 +299,7 @@
                     {% endif %}
                   </td>
                 {% endif %}
-                <td class="mtp-check-cell print-hidden">
+                <td class="mtp-check-cell govuk-!-display-none-print">
                   <input
                     type="checkbox"
                     name="{{ form.new.credits.html_name }}"
@@ -330,7 +330,7 @@
           </tbody>
 
           <tfoot>
-            <tr class="print-hidden">
+            <tr class="govuk-!-display-none-print">
               <td colspan="{% if request.pre_approval_required %}5{% else %}4{% endif %}" class="mtp-compact-cell"></td>
               <td class="mtp-check-all mtp-compact-cell">
                 <input type="checkbox" id="select-all-footer" class="Checkbox Checkbox--left js-SelectAll" data-name="{{ form.new.credits.html_name }}">

@@ -14,7 +14,7 @@
     </caption>
 
     <thead>
-      <tr class="print-hidden">
+      <tr class="govuk-!-display-none-print">
         <td colspan="{% if pre_approval_required %}6{% else %}5{% endif %}" class="mtp-compact-cell">
           <a href="#" class="js-print-trigger" data-do-not-print=".mtp-new-credits-batch">{% trans 'Print these credits' %}</a>
         </td>
@@ -27,7 +27,7 @@
         {% if pre_approval_required %}
           <th>{% trans 'Security' %}</th>
         {% endif %}
-        <th class="print-hidden"></th>
+        <th class="govuk-!-display-none-print"></th>
       </tr>
     </thead>
 
@@ -116,7 +116,7 @@
               {% endif %}
             </div>
           </td>
-          <td class="mtp-manual-action print-hidden">
+          <td class="mtp-manual-action govuk-!-display-none-print">
             <button type="submit" name="submit_manual_{{ credit_pk }}" value="submit" class="govuk-button" data-credit-id="{{ credit_pk }}">{% trans 'Done' %}</button>
             {% dialoguebox html_id=credit_pk|prefixed_slug:'manual-confirm-dialog-' %}
               <table class="mtp-dialog-info-table">
