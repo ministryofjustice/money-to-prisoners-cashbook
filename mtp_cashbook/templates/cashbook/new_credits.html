@@ -267,7 +267,7 @@
                 <td>
                   <div>{{ credit.received_at.date|date:'d/m/Y' }}</div>
                   {% with days=credit.received_at.date|dayssince %}
-                  <div class="sub {% if days >= 7 %}old{% endif %}">
+                  <div class="govuk-body-s--secondary {% if days >= 7 %}old{% endif %}">
                     {% if days == 0 %}
                       {% trans 'Today' %}
                     {% else %}
@@ -282,7 +282,7 @@
                 </td>
                 <td>
                   <div>{{ credit.prisoner_number }}</div>
-                  <div class="sub">{{ credit.prisoner_name }}</div>
+                  <div class="govuk-body-s--secondary">{{ credit.prisoner_name }}</div>
                 </td>
                 <td class="numeric">
                   <span class="mtp-sortable-cell--pad">

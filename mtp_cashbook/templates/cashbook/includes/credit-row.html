@@ -7,7 +7,7 @@
     {{ credit.received_at.date|date:'d/m/Y' }}
     {% if credit.resolution != 'credited' %}
       {% with days=credit.received_at.date|dayssince %}
-        <div class="sub {% if days >= 7 %}old{% endif %}">
+        <div class="govuk-body-s--secondary {% if days >= 7 %}old{% endif %}">
           {% if days == 0 %}
             {% trans 'Today' %}
           {% else %}
@@ -23,7 +23,7 @@
   </td>
   <td>
     {{ credit.prisoner_number }}
-    <div class="sub">{{ credit.prisoner_name }}</div>
+    <div class="govuk-body-s--secondary">{{ credit.prisoner_name }}</div>
   </td>
   <td class="numeric">
     <span class="mtp-sortable-cell--pad">
@@ -33,7 +33,7 @@
   <td>
     {% if credit.anonymous %}
       {% trans 'Anonymous sender' %}
-      <div class="sub">
+      <div class="govuk-body-s--secondary">
         {% trans 'Will not be credited' %}
       </div>
     {% else %}
@@ -54,19 +54,19 @@
     <td>
       {% if credit.resolution == 'credited' %}
         {{ credit.credited_at.date }}
-        <div class="sub">
+        <div class="govuk-body-s--secondary">
           {% blocktrans trimmed with name_of_clerk=credit.owner_name|default:'—' %}
             by {{ name_of_clerk }}
           {% endblocktrans %}
         </div>
       {% elif credit.resolution == 'refunded' %}
         {% trans 'Refunded' %}
-        <div class="sub">
+        <div class="govuk-body-s--secondary">
           {{ credit.refunded_at.date }}
         </div>
       {% elif credit.anonymous %}
         {% trans 'Anonymous sender' %}
-        <div class="sub">
+        <div class="govuk-body-s--secondary">
           {% trans 'Will not be credited' %}
         </div>
       {% else %}

@@ -15,7 +15,7 @@
     <h1 class="govuk-heading-xl">{% trans 'Payments made' %}</h1>
   </header>
 
-  <p class="lede">{{ form.search_description.description }}</p>
+  <p class="govuk-body-l">{{ form.search_description.description }}</p>
 
   <form method="get" class="print-hidden">
     <p><a href="{% url 'disbursements:process-overview' %}#section-track">{% trans 'How to trace a payment' %}</a></p>
@@ -124,7 +124,7 @@
                 <br/>
                 <br/>
                 <span class="visually-hidden">{% trans 'Prisoner number' %}:</span>
-                <small>{{ disbursement.prisoner_number }}</small>
+                <small class="govuk-body-s">{{ disbursement.prisoner_number }}</small>
               </td>
 
               <td class="mtp-amount">
@@ -132,7 +132,7 @@
                 <br/>
                 <br/>
                 {% if disbursement.method == 'bank_transfer' %}
-                  <small>
+                  <small class="govuk-body-s">
                     {% blocktrans trimmed with account_number=disbursement.account_number %}
                       Account {{ account_number }}<br/>
                     {% endblocktrans %}
@@ -143,16 +143,16 @@
                   <br/>
                   <br/>
                 {% else %}
-                  <small>{% trans 'Cheque' %}</small>
+                  <small class="govuk-body-s">{% trans 'Cheque' %}</small>
                   <br/>
                   <br/>
                 {% endif %}
-                <small class="mtp-description">
+                <small class="govuk-body-s mtp-description">
                   <div>{% trans 'Description' %}:</div>
                   {% if disbursement.remittance_description %}
                     {{ disbursement.remittance_description|hide_long_text }}
                   {% else %}
-                    <span class="text-secondary">({% trans 'None given' %})</span>
+                    <span class="govuk-body-s--secondary">({% trans 'None given' %})</span>
                   {% endif %}
                 </small>
               </td>
@@ -163,7 +163,7 @@
                 <br/>
                 <span class="visually-hidden">{% trans 'Recipient address' %}:</span>
                 <address>
-                  <small>
+                  <small class="govuk-body-s">
                     {{ disbursement.address_line1 }}<br/>
                     {% if disbursement.address_line2 %}{{ disbursement.address_line2 }}<br/>{% endif %}
                       {{ disbursement.city }}<br/>
@@ -176,7 +176,7 @@
                 </address>
                 {% if disbursement.recipient_email %}<br/>
                   <span class="visually-hidden">{% trans 'Recipient email' %}:</span>
-                  <small>{{ disbursement.recipient_email }}</small>
+                  <small class="govuk-body-s">{{ disbursement.recipient_email }}</small>
                 {% endif %}
               </td>
 
@@ -188,7 +188,7 @@
                 {% for log_item in disbursement.log_set %}
                   {% if log_item.action == 'created' %}
                     {% trans 'Entered' %} {{ log_item.created|date:'d/m/Y' }}<br />
-                    <small>
+                    <small class="govuk-body-s">
                       {% blocktrans trimmed with staff_name=log_item.staff_name %}
                         by {{ staff_name }}
                       {% endblocktrans %}
@@ -196,7 +196,7 @@
 
                   {% elif log_item.action == 'edited' %}
                     {% trans 'Edited' %} {{ log_item.created|date:'d/m/Y' }}<br />
-                    <small>
+                    <small class="govuk-body-s">
                       {% blocktrans trimmed with staff_name=log_item.staff_name %}
                         by {{ staff_name }}
                       {% endblocktrans %}
@@ -204,20 +204,20 @@
 
                   {% elif log_item.action == 'confirmed' %}
                     {% trans 'Confirmed' %} {{ log_item.created|date:'d/m/Y' }}<br />
-                    <small>
+                    <small class="govuk-body-s">
                       {% blocktrans trimmed with staff_name=log_item.staff_name %}
                         by {{ staff_name }}
                       {% endblocktrans %}
                     </small>
                     <br/>
-                    <small>
+                    <small class="govuk-body-s">
                       {% trans 'NOMIS ref' %}:
                       {{ disbursement.nomis_transaction_id|default:'—' }}
                     </small>
 
                   {% elif log_item.action == 'sent' %}
                     {% trans 'Sent to SSCL' %} {{ log_item.created|date:'d/m/Y' }}<br/>
-                    <small>
+                    <small class="govuk-body-s">
                       {% trans 'Invoice' %}: {{ disbursement.invoice_number }}
                     </small>
 

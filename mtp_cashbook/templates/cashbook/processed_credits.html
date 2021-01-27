@@ -71,7 +71,7 @@
               <td>
                 {{ batch.logged_at|date:'d/m/Y' }}
                 {% with days=batch.logged_at|dayssince %}
-                  <div class="sub">
+                  <div class="govuk-body-s--secondary">
                     {% if days == 0 %}
                       {% trans 'Today' %}
                     {% else %}
