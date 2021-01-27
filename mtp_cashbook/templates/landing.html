@@ -35,23 +35,8 @@
     {% trans 'Use the tools below to manage prisoner money' %}
   </p>
 
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-third">
-      <div class="mtp-box">
-        <a href="{% url 'new-credits' %}" aria-labelledby="tool-1">{% trans 'Digital cashbook' %}</a>
-        <p id="tool-1">
-          {% trans 'Credit money into a prisoner’s account' %}
-        </p>
-      </div>
-    </div>
+  {% card_group cards %}
 
-    <div class="govuk-grid-column-one-third">
-      <div class="mtp-box">
-        <a href="{% url 'disbursements:start' %}" aria-labelledby="tool-2">{% trans 'Digital disbursements' %}</a>
-        <p id="tool-2">
-          {% trans 'Send money out of a prisoner’s account by bank transfer or cheque' %}
-        </p>
-      </div>
-    </div>
-  </div>
+  {% include 'govuk-frontend/components/section-break.html' with size='l' %}
+
 {% endblock %}
