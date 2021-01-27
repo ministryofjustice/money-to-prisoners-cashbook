@@ -6,12 +6,12 @@
   {% sortable_cell _('Date sent') form.cleaned_data 'received_at' %}
   {% sortable_cell _('Prisoner') form.cleaned_data 'prisoner_number' %}
   {% sortable_cell _('Amount') form.cleaned_data 'amount' cell_classes='numeric' %}
-  <th>{% trans 'Sender' %}</th>
+  <th scope="col">{% trans 'Sender' %}</th>
   {% if pre_approval_required %}
-    <th>{% trans 'Security check' %}</th>
+    <th scope="col">{% trans 'Security check' %}</th>
   {% endif %}
   {% if include_status %}
-    <th>{% trans 'NOMIS reference' %}</th>
-    <th>{% trans 'Status' %}</th>
+    <th scope="col">{% trans 'NOMIS reference' %}</th>
+    <th scope="col">{% trans 'Status' %}</th>
   {% endif %}
 </tr>

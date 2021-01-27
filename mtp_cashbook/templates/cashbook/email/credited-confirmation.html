@@ -18,16 +18,16 @@
   <table cellspacing="10" style="font-family: sans-serif;">
     {% if prisoner_name %}
     <tr>
-      <th valign="top" align="left">{% trans 'Payment to:' %}</th>
+      <th valign="top" align="left" scope="row">{% trans 'Payment to:' %}</th>
       <td>{{ prisoner_name }}</td>
     </tr>
     {% endif %}
     <tr>
-      <th valign="top" align="left">{% trans 'Amount paid:' %}</th>
+      <th valign="top" align="left" scope="row">{% trans 'Amount paid:' %}</th>
       <td>£{{ amount|currency }}</td>
     </tr>
     <tr>
-      <th valign="top" align="left">{% trans 'Date payment made:' %}</th>
+      <th valign="top" align="left" scope="row">{% trans 'Date payment made:' %}</th>
       <td>{{ received_at|date:'d/m/Y' }}</td>
     </tr>
   </table>

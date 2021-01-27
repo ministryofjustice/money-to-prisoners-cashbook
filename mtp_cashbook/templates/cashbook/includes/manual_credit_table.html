@@ -20,14 +20,14 @@
         </td>
       </tr>
       <tr>
-        <th>{% trans 'Date sent' %}</th>
-        <th>{% trans 'Prisoner' %}</th>
-        <th class="numeric">{% trans 'Amount' %}</th>
-        <th>{% trans 'Sender' %}</th>
+        <th scope="col">{% trans 'Date sent' %}</th>
+        <th scope="col">{% trans 'Prisoner' %}</th>
+        <th class="numeric" scope="col">{% trans 'Amount' %}</th>
+        <th scope="col">{% trans 'Sender' %}</th>
         {% if pre_approval_required %}
-          <th>{% trans 'Security' %}</th>
+          <th scope="col">{% trans 'Security' %}</th>
         {% endif %}
-        <th class="govuk-!-display-none-print"></th>
+        <th class="govuk-!-display-none-print" scope="col"></th>
       </tr>
     </thead>
 
@@ -123,19 +123,19 @@
                 <caption class="govuk-heading-m">{% trans 'Have you entered this credit into NOMIS?' %}</caption>
                 <tbody>
                   <tr>
-                    <th>{% trans 'Date sent:' %}</th>
+                    <th scope="row">{% trans 'Date sent:' %}</th>
                     <td>{{ credit.received_at.date|date:'d/m/Y' }}</td>
                   </tr>
                   <tr>
-                    <th>{% trans 'Prisoner:' %}</th>
+                    <th scope="row">{% trans 'Prisoner:' %}</th>
                     <td>{{ credit.prisoner_number }} &nbsp; {{ credit.prisoner_name }}</td>
                   </tr>
                   <tr>
-                    <th>{% trans 'Amount:' %}</th>
+                    <th scope="row">{% trans 'Amount:' %}</th>
                     <td>£{{ credit.amount|currency }}</td>
                   </tr>
                   <tr>
-                    <th>{% trans 'Sender:' %}</th>
+                    <th scope="row">{% trans 'Sender:' %}</th>
                     <td>{{ credit.sender_name }}</td>
                   </tr>
                 </tbody>

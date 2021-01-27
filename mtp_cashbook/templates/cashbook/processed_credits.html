@@ -54,14 +54,14 @@
 
         <thead>
           <tr>
-            <th>{% trans 'Date credited' %}</th>
-            <th>{% trans 'Number of credits' %}</th>
-            <th class="numeric">{% trans 'Total' %}</th>
-            <th>{% trans 'Credited by' %}</th>
+            <th scope="col">{% trans 'Date credited' %}</th>
+            <th scope="col">{% trans 'Number of credits' %}</th>
+            <th class="numeric" scope="col">{% trans 'Total' %}</th>
+            <th scope="col">{% trans 'Credited by' %}</th>
             {% if request.pre_approval_required %}
-              <th>{% trans 'Security notes' %}</th>
+              <th scope="col">{% trans 'Security notes' %}</th>
             {% endif %}
-            <th class="govuk-!-display-none-print">{% trans 'Options' %}</th>
+            <th class="govuk-!-display-none-print" scope="col">{% trans 'Options' %}</th>
           </tr>
         </thead>
 

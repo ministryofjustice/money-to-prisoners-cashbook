@@ -252,11 +252,11 @@
             {% sortable_cell _('Date sent') request_params 'received_at' %}
             {% sortable_cell _('Prisoner') request_params 'prisoner_number' %}
             {% sortable_cell _('Amount') request_params 'amount' cell_classes='numeric' %}
-            <th>{% trans 'Sender' %}</th>
+            <th scope="col">{% trans 'Sender' %}</th>
             {% if request.pre_approval_required %}
-              <th>{% trans 'Security' %}</th>
+              <th scope="col">{% trans 'Security' %}</th>
             {% endif %}
-            <th class="mtp-check-col mtp-compact-cell govuk-!-display-none-print">{% trans 'Select' %}</th>
+            <th class="mtp-check-col mtp-compact-cell govuk-!-display-none-print" scope="col">{% trans 'Select' %}</th>
           </tr>
         </thead>
 

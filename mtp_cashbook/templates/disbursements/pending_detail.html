@@ -45,8 +45,8 @@
     <caption class="govuk-visually-hidden">{% trans 'Disbursement details' %}</caption>
     <tbody class="mtp-confirm-table__details">
       <tr class="mtp-confirm-table__section">
-        <th rowspan="3"><h2 class="govuk-heading-s">{% trans 'Send' %}</h2></th>
-        <th>{% trans 'Send by' %}:</th>
+        <th rowspan="3" scope="rowgroup"><h2 class="govuk-heading-s">{% trans 'Send' %}</h2></th>
+        <th scope="row">{% trans 'Send by' %}:</th>
         <td>{{ disbursement.method|sendingmethod }}</td>
         <td>
           {% if editable %}
@@ -58,7 +58,7 @@
         </td>
       </tr>
       <tr>
-        <th>{% trans 'Amount' %}:</th>
+        <th scope="row">{% trans 'Amount' %}:</th>
         <td>£{{ disbursement.amount|currency }}</td>
         <td>
           {% if editable %}
@@ -70,7 +70,7 @@
         </td>
       </tr>
       <tr>
-        <th>{% trans 'Description' %}:</th>
+        <th scope="row">{% trans 'Description' %}:</th>
         <td>
           {% if disbursement.remittance_description %}
             {{ disbursement.remittance_description }}
@@ -89,8 +89,8 @@
       </tr>
 
       <tr class="mtp-confirm-table__section">
-        <th><h2 class="govuk-heading-s">{% trans 'To' %}</h2></th>
-        <th>
+        <th scope="rowgroup"><h2 class="govuk-heading-s">{% trans 'To' %}</h2></th>
+        <th scope="row">
           {% if disbursement.recipient_is_company %}
             {% trans 'Company' %}:
           {% else %}
@@ -109,7 +109,7 @@
       </tr>
       <tr>
         <td></td>
-        <th>{% trans 'Address' %}:</th>
+        <th scope="row">{% trans 'Address' %}:</th>
         <td>
           <address>
             {{ disbursement.address_line1 }}<br>
@@ -128,14 +128,14 @@
       </tr>
       <tr>
         <td></td>
-        <th>{% trans 'Postcode' %}:</th>
+        <th scope="row">{% trans 'Postcode' %}:</th>
         <td>{{ disbursement.postcode }}</td>
         <td></td>
       </tr>
       {% if disbursement.recipient_email %}
         <tr>
-        <td></td>
-          <th>{% trans 'Email' %}:</th>
+          <td></td>
+          <th scope="row">{% trans 'Email' %}:</th>
           <td>{{ disbursement.recipient_email }}</td>
           <td>
             {% if editable %}
@@ -150,7 +150,7 @@
       {% if disbursement.method == 'bank_transfer' %}
         <tr>
           <td></td>
-          <th>{% trans 'Sort code' %}:</th>
+          <th scope="row">{% trans 'Sort code' %}:</th>
           <td>{{ disbursement.sort_code|format_sortcode }}</td>
           <td>
             {% if editable %}
@@ -163,14 +163,14 @@
         </tr>
         <tr>
           <td></td>
-          <th>{% trans 'Account number' %}:</th>
+          <th scope="row">{% trans 'Account number' %}:</th>
           <td>{{ disbursement.account_number }}</td>
           <td></td>
         </tr>
         {% if disbursement.roll_number %}
           <tr>
             <td></td>
-            <th>{% trans 'Roll number' %}:</th>
+            <th scope="row">{% trans 'Roll number' %}:</th>
             <td>{{ disbursement.roll_number }}</td>
             <td></td>
           </tr>
@@ -178,8 +178,8 @@
       {% endif %}
 
       <tr class="mtp-confirm-table__section">
-        <th rowspan="2"><h2 class="govuk-heading-s">{% trans 'From' %}</h2></th>
-        <th>{% trans 'Name' %}:</th>
+        <th rowspan="2" scope="rowgroup"><h2 class="govuk-heading-s">{% trans 'From' %}</h2></th>
+        <th scope="row">{% trans 'Name' %}:</th>
         <td>{{ disbursement.prisoner_name }}</td>
         <td>
           {% if editable %}
@@ -191,7 +191,7 @@
         </td>
       </tr>
       <tr>
-        <th>{% trans 'Prisoner number' %}:</th>
+        <th scope="row">{% trans 'Prisoner number' %}:</th>
         <td>{{ disbursement.prisoner_number }}</td>
         <td></td>
       </tr>
@@ -199,24 +199,24 @@
 
     <tbody class="mtp-confirm-table__history">
       <tr>
-        <th><h2 class="govuk-heading-s">{% trans 'History' %}</h2></th>
-        <th colspan="2">
+        <th scope="row"><h2 class="govuk-heading-s">{% trans 'History' %}</h2></th>
+        <td colspan="2">
           {% for log in disbursement.log_set|parse_date_fields %}
             {{ log.created|date:'d/m/Y H:m' }} – {{ log.action|format_disbursement_action }} {% trans 'by' %} {{ log.user.first_name }} {{ log.user.last_name }}<br/>
           {% endfor %}
-        </th>
-        <th></th>
+        </td>
+        <td></td>
       </tr>
       {% if self_own %}
-      <tr>
-        <td colspan="4">
-          <strong>
-          {% trans 'You can’t confirm this payment because you were the last person to edit it.' %}<br/>
-          {% trans 'Ask another colleague to check and confirm it.' %}
-          {% trans 'Make sure they have the paper form of this request.' %}
-          </strong>
-        </td>
-      </tr>
+        <tr>
+          <td colspan="4">
+            <strong>
+            {% trans 'You can’t confirm this payment because you were the last person to edit it.' %}<br/>
+            {% trans 'Ask another colleague to check and confirm it.' %}
+            {% trans 'Make sure they have the paper form of this request.' %}
+            </strong>
+          </td>
+        </tr>
       {% endif %}
     </tbody>
   </table>
