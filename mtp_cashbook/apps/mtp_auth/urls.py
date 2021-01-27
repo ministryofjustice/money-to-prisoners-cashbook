@@ -1,8 +1,8 @@
 from django.conf import settings
 from django.conf.urls import url
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView
 from mtp_common.auth import views
+from mtp_common.views import SettingsView
 
 from mtp_auth.views import CashbookSignUpView, CashbookAcceptRequestView, MovePrisonView
 
@@ -24,7 +24,7 @@ urlpatterns = [
 
     url(
         r'^settings/$',
-        TemplateView.as_view(template_name='mtp_auth/settings.html'),
+        SettingsView.as_view(),
         name='settings'
     ),
     url(
