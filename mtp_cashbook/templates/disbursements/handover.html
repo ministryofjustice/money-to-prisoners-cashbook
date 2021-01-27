@@ -50,7 +50,7 @@
 
       <form action="{{ view.get_success_url }}" method="post">
         {% csrf_token %}
-        <input type="submit" class="govuk-button mtp-next-button" data-module="govuk-button" value="{% trans 'I will hand over the paper form' %}" />
+        <input type="submit" class="govuk-button mtp-next-button" data-module="govuk-button" data-prevent-double-click="true" value="{% trans 'I will hand over the paper form' %}" />
       </form>
 
     </div>
