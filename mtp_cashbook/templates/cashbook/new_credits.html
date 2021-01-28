@@ -242,8 +242,14 @@
 
                 </td>
                 <td class="mtp-check-all mtp-compact-cell">
-                  <input type="checkbox" id="select-all-header" class="Checkbox Checkbox--left js-SelectAll" data-name="{{ form.new.credits.html_name }}">
-                  <label data-analytics="event,select-all,header" for="select-all-header">{% trans 'Select all' %}</label>
+                  <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                    <div class="govuk-checkboxes__item">
+                      <input id="select-all-header" class="govuk-checkboxes__input js-SelectAll" type="checkbox" data-name="{{ form.new.credits.html_name }}" />
+                      <label for="select-all-header" class="govuk-label govuk-checkboxes__label" data-analytics="event,select-all,header">
+                        {% trans 'Select all' %}
+                      </label>
+                    </div>
+                  </div>
                 </td>
               </tr>
             {% endif %}
@@ -300,19 +306,20 @@
                     </td>
                   {% endif %}
                   <td class="mtp-check-cell govuk-!-display-none-print">
-                    <input
-                      type="checkbox"
-                      name="{{ form.new.credits.html_name }}"
-                      value="{{ credit_pk }}"
-                      id="check-{{ credit.id }}"
-                      {% if credit_pk|to_string in form.new.credits.value %}checked{% endif %}
-                      class="js-SelectionCount-item Checkbox"
-                      data-amount="{{ credit.amount|currency }}">
-                    <label for="check-{{ credit.id }}">
-                      {% blocktrans trimmed with amount=credit.amount|currency prisoner_name=credit.prisoner_name %}
-                        Credit £{{ amount }} to {{ prisoner_name }}
-                      {% endblocktrans %}
-                    </label>
+
+                    <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                      <div class="govuk-checkboxes__item">
+                        <input id="check-{{ credit.id }}" class="govuk-checkboxes__input js-SelectionCount-item" name="{{ form.new.credits.html_name }}" value="{{ credit_pk }}" data-amount="{{ credit.amount|currency }}" type="checkbox" {% if credit_pk|to_string in form.new.credits.value %}checked{% endif %} />
+                        <label for="check-{{ credit.id }}" class="govuk-label govuk-checkboxes__label">
+                          <span class="govuk-visually-hidden">
+                            {% blocktrans trimmed with amount=credit.amount|currency prisoner_name=credit.prisoner_name %}
+                              Credit £{{ amount }} to {{ prisoner_name }}
+                            {% endblocktrans %}
+                          </span>
+                        </label>
+                      </div>
+                    </div>
+
                   </td>
                 </tr>
                 {% if credit.comments %}
@@ -333,8 +340,14 @@
               <tr class="govuk-!-display-none-print">
                 <td colspan="{% if request.pre_approval_required %}5{% else %}4{% endif %}" class="mtp-compact-cell"></td>
                 <td class="mtp-check-all mtp-compact-cell">
-                  <input type="checkbox" id="select-all-footer" class="Checkbox Checkbox--left js-SelectAll" data-name="{{ form.new.credits.html_name }}">
-                  <label data-analytics="event,select-all,footer" for="select-all-footer">{% trans 'Select all' %}</label>
+                  <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                    <div class="govuk-checkboxes__item">
+                      <input id="select-all-footer" class="govuk-checkboxes__input js-SelectAll" type="checkbox" data-name="{{ form.new.credits.html_name }}" />
+                      <label for="select-all-footer" class="govuk-label govuk-checkboxes__label" data-analytics="event,select-all,footer">
+                        {% trans 'Select all' %}
+                      </label>
+                    </div>
+                  </div>
                 </td>
               </tr>
             </tfoot>
