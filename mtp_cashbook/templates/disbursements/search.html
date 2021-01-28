@@ -28,10 +28,10 @@
       {% paneltab name='prisoner' title=_('Prisoner') %}
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-one-third">
-            {% include 'mtp_common/forms/field.html' with field=form.prisoner_name input_classes='form-control-3-4' %}
+            {% include 'mtp_common/forms/field.html' with field=form.prisoner_name input_classes='govuk-input--width-10' %}
           </div>
           <div class="govuk-grid-column-one-third">
-            {% include 'mtp_common/forms/field.html' with field=form.prisoner_number input_classes='form-control-2-3' %}
+            {% include 'mtp_common/forms/field.html' with field=form.prisoner_number input_classes='govuk-input--width-10' %}
           </div>
         </div>
       {% endpaneltab %}
@@ -39,7 +39,7 @@
       {% paneltab name='recipient' title=_('Recipient') %}
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-two-thirds">
-            {% include 'mtp_common/forms/field.html' with field=form.recipient_name %}
+            {% include 'mtp_common/forms/field.html' with field=form.recipient_name input_classes='govuk-input--width-10' %}
           </div>
         </div>
       {% endpaneltab %}
@@ -47,7 +47,7 @@
       {% paneltab name='invoice_number' title=_('Invoice number') %}
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-two-thirds">
-            {% include 'mtp_common/forms/field.html' with field=form.invoice_number %}
+            {% include 'mtp_common/forms/field.html' with field=form.invoice_number input_classes='govuk-input--width-10' %}
           </div>
         </div>
       {% endpaneltab %}
@@ -58,7 +58,7 @@
             {% include 'mtp_common/forms/select-field.html' with field=form.resolution %}
           </div>
           <div class="govuk-grid-column-one-third">
-            {% include 'mtp_common/forms/field.html' with field=form.nomis_transaction_id input_classes='form-control-2-3' %}
+            {% include 'mtp_common/forms/field.html' with field=form.nomis_transaction_id input_classes='govuk-input--width-10' %}
           </div>
         </div>
       {% endpaneltab %}
@@ -79,10 +79,10 @@
             {% endwith %}
           </div>
           <div class="govuk-grid-column-one-third">
-            {% include 'mtp_common/forms/field.html' with field=form.date__gte %}
+            {% include 'mtp_common/forms/field.html' with field=form.date__gte input_classes='govuk-input--width-10' %}
           </div>
           <div class="govuk-grid-column-one-third">
-            {% include 'mtp_common/forms/field.html' with field=form.date__lt %}
+            {% include 'mtp_common/forms/field.html' with field=form.date__lt input_classes='govuk-input--width-10' %}
           </div>
         </div>
       {% endpaneltab %}

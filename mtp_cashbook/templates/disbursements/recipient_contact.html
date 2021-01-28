@@ -26,8 +26,8 @@
                 <label for="js-choice-{{ choices.0.0 }}">{{ choices.0.1 }}</label>
               </div>
               <div class="govuk-inset-text js-hidden js-choice-person">
-                {% include 'mtp_common/forms/field.html' with field=form.recipient_first_name input_classes='form-control-1-2' only %}
-                {% include 'mtp_common/forms/field.html' with field=form.recipient_last_name input_classes='form-control-1-2' only %}
+                {% include 'mtp_common/forms/field.html' with field=form.recipient_first_name input_classes='govuk-input--width-10' only %}
+                {% include 'mtp_common/forms/field.html' with field=form.recipient_last_name input_classes='govuk-input--width-10' only %}
               </div>
 
               <div class="multiple-choice">
@@ -35,13 +35,13 @@
                 <label for="js-choice-{{ choices.1.0 }}">{{ choices.1.1 }}</label>
               </div>
               <div class="govuk-inset-text js-hidden js-choice-company">
-                {% include 'mtp_common/forms/field.html' with field=form.recipient_company_name input_classes='form-control-1-2' only %}
+                {% include 'mtp_common/forms/field.html' with field=form.recipient_company_name input_classes='govuk-input--width-10' only %}
               </div>
             </div>
           </fieldset>
         {% endwith %}
 
-        {% include 'mtp_common/forms/field.html' with field=form.recipient_email input_classes='form-control-3-4' only %}
+        {% include 'mtp_common/forms/field.html' with field=form.recipient_email input_classes='govuk-input--width-20' only %}
 
         <button type="submit" class="govuk-button mtp-next-button" data-module="govuk-button">{% trans 'Next' %}</button>
       </form>

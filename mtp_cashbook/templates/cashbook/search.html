@@ -24,8 +24,8 @@
         <form method="get" action="">
           {% include 'govuk-frontend/components/error-summary.html' with form=form only %}
 
-          {% include 'mtp_common/forms/field.html' with field=form.start value=form.start.value|date:'d/m/Y'|default:form.start.value|default_if_none:'' only %}
-          {% include 'mtp_common/forms/field.html' with field=form.end value=form.end.value|date:'d/m/Y'|default:form.end.value|default_if_none:'' only %}
+          {% include 'mtp_common/forms/field.html' with field=form.start input_classes='govuk-input--width-10' value=form.start.value|date:'d/m/Y'|default:form.start.value|default_if_none:'' only %}
+          {% include 'mtp_common/forms/field.html' with field=form.end input_classes='govuk-input--width-10' value=form.end.value|date:'d/m/Y'|default:form.end.value|default_if_none:'' only %}
 
           <div class="govuk-form-group mtp-search-box__submit">
             {# forces a search to start on page 1, copy search terms from header #}
