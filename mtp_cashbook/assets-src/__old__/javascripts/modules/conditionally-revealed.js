@@ -13,9 +13,9 @@ exports.ConditionallyRevealed = {
         if (revealSet.hasOwnProperty(i)) {
           var group = revealSet[i];
           if (group.$input.prop('checked')) {
-            group.$target.removeClass('js-hidden hidden');
+            group.$target.removeClass('mtp-!-display-none-js-enabled-only govuk-!-display-none');
           } else {
-            group.$target.addClass('js-hidden');
+            group.$target.addClass('mtp-!-display-none-js-enabled-only');
           }
         }
       }

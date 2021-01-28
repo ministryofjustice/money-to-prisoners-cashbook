@@ -28,10 +28,10 @@ exports.Disbursements = {
       var $infoRow = $row.next();
       if ($row.hasClass('mtp-pending-cannot-confirm-row')) {
         $row.removeClass('mtp-pending-cannot-confirm-row');
-        $infoRow.addClass('js-hidden');
+        $infoRow.addClass('mtp-!-display-none-js-enabled-only');
       } else {
         $row.addClass('mtp-pending-cannot-confirm-row');
-        $infoRow.removeClass('js-hidden');
+        $infoRow.removeClass('mtp-!-display-none-js-enabled-only');
       }
     });
 
