@@ -1,0 +1,39 @@
+// disbursement search - tabbed panels / filters
+.mtp-tab-container__footer {
+  .mtp-tab-container--collapsed & {
+    margin-top: 0;
+
+    button {
+      display: none;
+    }
+
+    .mtp-link--form-cancel {
+      margin: 0;
+    }
+  }
+}
+
+// disbursement search - results list
+.mtp-disbursement-search-results__sender {
+  width: 10%;
+}
+
+.mtp-disbursement-search-results__amount {
+  width: 30%;
+}
+
+.mtp-disbursement-search-results__recipient {
+  width: 20%;
+}
+
+.mtp-disbursement-search-results__status {
+  width: 5%;
+}
+
+.mtp-disbursement-search-results__status--sent, .mtp-disbursement-search-results__status--confirmed {
+  color: govuk-colour('green');
+}
+
+.mtp-disbursement-search-results__history {
+  width: 35%;
+}
