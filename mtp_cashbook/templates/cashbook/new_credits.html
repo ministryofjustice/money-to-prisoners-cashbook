@@ -214,7 +214,7 @@
           <thead>
             {% if new_object_list %}
               <tr class="govuk-!-display-none-print">
-                <td colspan="{% if request.pre_approval_required %}5{% else %}4{% endif %}" class="mtp-compact-cell">
+                <td colspan="{% if request.pre_approval_required %}5{% else %}4{% endif %}" class="mtp-table__cell--compact">
 
                   {% captureoutput as body %}
                     <p>
@@ -241,7 +241,7 @@
                   {% include 'govuk-frontend/components/details.html' with summary=_('What do I do here?') body=body analytics=analytics %}
 
                 </td>
-                <td class="mtp-check-all mtp-compact-cell">
+                <td class="mtp-check-all mtp-table__cell--compact">
                   <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
                     <div class="govuk-checkboxes__item">
                       <input id="select-all-header" class="govuk-checkboxes__input js-SelectAll" type="checkbox" data-name="{{ form.new.credits.html_name }}" />
@@ -262,7 +262,7 @@
               {% if request.pre_approval_required %}
                 <th scope="col">{% trans 'Security' %}</th>
               {% endif %}
-              <th class="mtp-check-col mtp-compact-cell govuk-!-display-none-print" scope="col">{% trans 'Select' %}</th>
+              <th class="mtp-check-col mtp-table__header--compact govuk-!-display-none-print" scope="col">{% trans 'Select' %}</th>
             </tr>
           </thead>
 
@@ -338,8 +338,8 @@
 
             <tfoot>
               <tr class="govuk-!-display-none-print">
-                <td colspan="{% if request.pre_approval_required %}5{% else %}4{% endif %}" class="mtp-compact-cell"></td>
-                <td class="mtp-check-all mtp-compact-cell">
+                <td colspan="{% if request.pre_approval_required %}5{% else %}4{% endif %}" class="mtp-table__cell--compact"></td>
+                <td class="mtp-check-all mtp-table__cell--compact">
                   <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
                     <div class="govuk-checkboxes__item">
                       <input id="select-all-footer" class="govuk-checkboxes__input js-SelectAll" type="checkbox" data-name="{{ form.new.credits.html_name }}" />
