@@ -22,7 +22,7 @@
           Before you start, have the completed <strong>bank transfer or cheque</strong> form in front of you.
         {% endblocktrans %}
       </p>
-      <img src="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-filled.jpg' %}" srcset="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-filled@2x.jpg' %} 2x" alt={% trans '“Send money by bank transfer or cheque” form' %}/>
+      <img src="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-filled.jpg' %}" srcset="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-filled@2x.jpg' %} 2x" style="max-width:100%" alt={% trans '“Send money by bank transfer or cheque” form' %}/>
       <p>
         <a href="{{ view.get_success_url }}" class="govuk-button govuk-button--start" data-module="govuk-button" role="button">
           {% trans 'Start now' %}
@@ -34,30 +34,36 @@
     </div>
   </div>
 
-  <div class="govuk-grid-row">
+  {% include 'govuk-frontend/components/section-break.html' with size='m' %}
+
+  <div class="govuk-grid-row govuk-!-margin-bottom-6">
     <div class="govuk-grid-column-one-third">
       <h2 class="govuk-heading-m">{% trans 'Confirm payments' %}</h2>
-      {% if pending_disbursement_count %}
-        {% blocktrans trimmed count count=pending_disbursement_count %}
-          There is <strong>{{ count }} payment request</strong> needing confirmation.
-        {% plural %}
-          There are <strong>{{ count }} payment requests</strong> needing confirmation.
-        {% endblocktrans %}
-        <p><a href="{% url 'disbursements:pending_list' %}">{% trans 'View all' %}</a></p>
-      {% else %}
-        {% trans 'There are no payment requests needing confirmation.' %}
-      {% endif %}
+      <p>
+        {% if pending_disbursement_count %}
+          {% blocktrans trimmed count count=pending_disbursement_count %}
+            There is <strong>{{ count }} payment request</strong> needing confirmation.
+          {% plural %}
+            There are <strong>{{ count }} payment requests</strong> needing confirmation.
+          {% endblocktrans %}
+          <br />
+          <a href="{% url 'disbursements:pending_list' %}">{% trans 'View all' %}</a>
+        {% else %}
+          {% trans 'There are no payment requests needing confirmation.' %}
+        {% endif %}
+      </p>
     </div>
 
     <div class="govuk-grid-column-one-third">
       <h2 class="govuk-heading-m">{% trans 'Payments made' %}</h2>
-      {% if confirmed_disbursement_count %}
-        {% blocktrans trimmed count count=confirmed_disbursement_count %}
-          Your prison has made <strong>{{ count }} digital disbursement</strong>.
-        {% plural %}
-          Your prison has made <strong>{{ count }} digital disbursements</strong>.
-        {% endblocktrans %}
-        <p>
+      <p>
+        {% if confirmed_disbursement_count %}
+          {% blocktrans trimmed count count=confirmed_disbursement_count %}
+            Your prison has made <strong>{{ count }} digital disbursement</strong>.
+          {% plural %}
+            Your prison has made <strong>{{ count }} digital disbursements</strong>.
+          {% endblocktrans %}
+          <br />
           <a href="{% url 'disbursements:search' %}">
             {% blocktrans trimmed count count=confirmed_disbursement_count %}
               Track it here
@@ -65,16 +71,19 @@
               Track them here
             {% endblocktrans %}
           </a>
-        </p>
-      {% else %}
-        {% trans 'Your prison has not yet made any digital disbursements.' %}
-      {% endif %}
+        {% else %}
+          {% trans 'Your prison has not yet made any digital disbursements.' %}
+        {% endif %}
+      </p>
     </div>
 
     <div class="govuk-grid-column-one-third">
       <h2 class="govuk-heading-m">{% trans 'Get help' %}</h2>
-      {% trans 'Find out how the process works.' %}
-      <p><a href="{% url 'disbursements:process-overview' %}">{% trans 'View help' %}</a></p>
+      <p>
+        {% trans 'Find out how the process works.' %}
+        <br />
+        <a href="{% url 'disbursements:process-overview' %}">{% trans 'View help' %}</a>
+      </p>
     </div>
   </div>
 
