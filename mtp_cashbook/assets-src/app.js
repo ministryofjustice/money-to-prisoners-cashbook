@@ -8,10 +8,12 @@ initAll();
 import {initDefaults} from 'mtp_common';
 import {initStaffDefaults} from 'mtp_common/staff-app';
 import {Card} from 'mtp_common/components/card';
+import {DialogueBox} from 'mtp_common/components/dialogue-box';
 import {MailcheckWarning} from 'mtp_common/components/mailcheck-warning';
 initDefaults();
 initStaffDefaults();
 Card.init();
+DialogueBox.init();
 MailcheckWarning.init(
   '.mtp-account-management input[type=email]',
   ['justice.gov.uk'],

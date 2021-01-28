@@ -2,7 +2,6 @@
   'use strict';
 
   // common
-  require('dialogue-box').DialogueBox.init();
   require('print').Print.init();
   require('select-all').SelectAll.init();
   require('unload').Unload.init();
