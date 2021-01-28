@@ -25,7 +25,7 @@
       <label for="address-select" id="address-select-label" class="form-label">
         {% trans 'Choose address' %}
       </label>
-      <select id="address-select" class="form-control mtp-address-picker">
+      <select id="address-select" class="govuk-select mtp-address-picker">
         <option value="">
           {% blocktrans trimmed with count=addresses|length %}
             {{ count }} addresses found
