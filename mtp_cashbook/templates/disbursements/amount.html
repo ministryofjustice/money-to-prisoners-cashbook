@@ -38,7 +38,7 @@
               <label id="{{ field.id_for_label }}-label" for="{{ field.id_for_label }}" class="govuk-visually-hidden">
                 {% trans 'Please enter the amount in pounds' %}
               </label>
-              <div id="{{ field.id_for_label }}-wrapper" class="mtp-money-amount {% if field.errors %}form-group-error{% endif %}">
+              <div id="{{ field.id_for_label }}-wrapper" class="mtp-money-amount {% if field.errors %}govuk-form-group--error{% endif %}">
                 <div class="mtp-money-box">
                   <span class="form-control mtp-currency-sign">
                     £

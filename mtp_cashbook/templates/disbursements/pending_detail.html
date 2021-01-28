@@ -234,7 +234,7 @@
             {{ field.label }}
           </legend>
 
-          <div class="form-group {% if field.errors %}form-group-error{% endif %}">
+          <div class="govuk-form-group {% if field.errors %}govuk-form-group--error{% endif %}">
             <div class="multiple-choice">
               <input id="js-choice-{{ choices.0.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.0.0 }}" data-reveal=".js-choice-yes">
               <label for="js-choice-{{ choices.0.0 }}">{{ choices.0.1 }}</label>

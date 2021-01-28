@@ -21,7 +21,7 @@
       </a>
     </p>
 
-    <div class="form-group">
+    <div class="govuk-form-group">
       <label for="address-select" id="address-select-label" class="form-label">
         {% trans 'Choose address' %}
       </label>
@@ -54,7 +54,7 @@
           {% include 'govuk-frontend/components/error-summary.html' with form=form only %}
 
           <fieldset class="govuk-fieldset">
-            <div class="form-group {% if field.errors %}form-group-error{% endif %}">
+            <div class="govuk-form-group {% if field.errors %}govuk-form-group--error{% endif %}">
               {% include 'mtp_common/forms/field-label.html' with field=form.address_line1 only %}
 
               {% with field=form.address_line1 %}

@@ -20,7 +20,7 @@
 
         {% with field=form.recipient_type choices=form.recipient_type.field.choices %}
           <fieldset class="govuk-fieldset">
-            <div class="form-group {% if field.errors %}form-group-error{% endif %}">
+            <div class="govuk-form-group {% if field.errors %}govuk-form-group--error{% endif %}">
               <div class="multiple-choice">
                 <input id="js-choice-{{ choices.0.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.0.0 }}" data-reveal=".js-choice-person" {% if field.value != choices.1.0 %}checked{% endif %}>
                 <label for="js-choice-{{ choices.0.0 }}">{{ choices.0.1 }}</label>
