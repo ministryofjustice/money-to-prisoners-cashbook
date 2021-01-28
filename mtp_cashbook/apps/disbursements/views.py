@@ -316,9 +316,7 @@ class RemittanceDescriptionView(BasePagedFormView):
             context['prisoner_name'] = form_data['prisoner_name']
 
         field = disbursement_forms.RemittanceDescriptionForm.base_fields['remittance_description']
-        context['remittance_description_attrs'] = {
-            'maxlength': field.max_length,
-        }
+        context['remittance_description_character_count'] = field.max_length
         return context
 
 

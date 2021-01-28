@@ -44,15 +44,7 @@
                 <label for="js-choice-{{ choices.0.0 }}">{{ choices.0.1 }}</label>
               </div>
               <div class="govuk-inset-text js-hidden js-choice-yes">
-                {% with field=form.remittance_description rows=2 input_classes='js-character-count' attrs=remittance_description_attrs %}
-                  <div id="{{ field.id_for_label }}-wrapper" class="govuk-form-group {% if field.errors %}govuk-form-group--error{% endif %}">
-                    <label for="{{ field.id_for_label }}" id="{{ field.id_for_label }}-label" class="form-label">
-                      {% include 'mtp_common/forms/field-help-text.html' with field=field only %}
-                    </label>
-                    {% include 'mtp_common/forms/field-errors.html' with field=field only %}
-                    <textarea id="{{ field.id_for_label }}" class="form-control {% if field.errors %}form-control-error{% endif %} {{ input_classes }}" name="{{ field.html_name }}" rows="{{ rows|default:4 }}" cols="{{ cols|default:50 }}" {% for attr, attr_val in attrs.items %}{{ attr }}="{{ attr_val }}"{% endfor %}>{{ value|default:field.value|default_if_none:'' }}</textarea>
-                  </div>
-                {% endwith %}
+                {% include 'mtp_common/forms/textarea.html' with field=form.remittance_description character_count=remittance_description_character_count rows=2 only %}
               </div>
 
               <div class="multiple-choice">

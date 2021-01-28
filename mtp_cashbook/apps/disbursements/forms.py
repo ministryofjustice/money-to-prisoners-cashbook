@@ -377,7 +377,6 @@ class RemittanceDescriptionForm(DisbursementForm):
         })
     remittance_description = forms.CharField(
         label=_('Payment description'),
-        help_text=_('Limited to 60 characters'),
         max_length=60, required=False,
     )
 

@@ -276,7 +276,7 @@
       <form action="{{ view.get_reject_url }}" method="post">
         {% csrf_token %}
 
-        {% include 'mtp_common/forms/textarea.html' with field=reject_form.reason input_classes='form-control-3-4' only %}
+        {% include 'mtp_common/forms/textarea.html' with field=reject_form.reason only %}
 
         <input type="submit" class="govuk-button govuk-!-margin-right-2" value="{% trans 'Cancel payment' %}" />
         <button type="button" class="govuk-button govuk-button--secondary {{ dialogue_close_class }}">{% trans 'Go back' %}</button>

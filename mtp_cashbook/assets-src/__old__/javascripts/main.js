@@ -9,7 +9,6 @@
   require('track-printing').TrackPrinting.init();
   require('tabbed-panel').TabbedPanel.init();
   require('hide-long-text').HideLongText.init();
-  require('character-count-warning').CharacterCountWarning.init();
 
   // cashbook
   require('sign-up').SignUpChoices.init();
