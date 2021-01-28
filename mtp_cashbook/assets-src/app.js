@@ -35,3 +35,7 @@ MailcheckWarning.init(
 );
 PrintTrigger.init();
 TabbedPanel.init();
+
+// app components
+import {PrintLinkTarget} from './components/print-link-target';
+PrintLinkTarget.init();
