@@ -35,7 +35,7 @@
       {% include 'mtp_common/forms/field.html' with field=form.names input_classes='govuk-input--width-10' value=form.names.value|default_if_none:'' only %}
     </div>
     <div class="mtp-processed-credits-search__field">
-      {% include 'mtp_common/forms/field.html' with field=form.prisoner_number input_classes='govuk-input--width-10' value=form.prisoner_number.value|default_if_none:'' only %}
+      {% include 'mtp_common/forms/field.html' with field=form.prisoner_number input_classes='govuk-input--width-10 mtp-input--prisoner-number' value=form.prisoner_number.value|default_if_none:'' only %}
     </div>
     <div class="govuk-form-group">
       {# always forces a search to start on page 1 #}
