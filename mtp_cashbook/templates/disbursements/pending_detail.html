@@ -278,7 +278,7 @@
 
         {% include 'mtp_common/forms/textarea.html' with field=reject_form.reason input_classes='form-control-3-4' only %}
 
-        <input type="submit" class="govuk-button" value="{% trans 'Cancel payment' %}" />
+        <input type="submit" class="govuk-button govuk-!-margin-right-2" value="{% trans 'Cancel payment' %}" />
         <button type="button" class="govuk-button govuk-button--secondary {{ dialogue_close_class }}">{% trans 'Go back' %}</button>
       </form>
     {% enddialoguebox %}
