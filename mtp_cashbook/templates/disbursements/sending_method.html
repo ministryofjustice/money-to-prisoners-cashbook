@@ -1,6 +1,7 @@
 {% extends 'disbursements/base.html' %}
 {% load i18n %}
 {% load mtp_common %}
+{% load disbursements %}
 
 {% block body_classes %}{{ block.super }} mtp-create-disbursement{% endblock %}
 
@@ -21,22 +22,7 @@
 
         <fieldset class="govuk-fieldset">
           <legend id="{{ form.method.id_for_label }}-label" class="govuk-visually-hidden">{% trans 'Method by which to send money' %}</legend>
-
-          {% for method in form.method.field.choices %}
-            <div class="multiple-choice">
-              <input id="id_{{ method.0 }}" type="radio" name="{{ form.method.html_name }}" value="{{ method.0 }}"
-                     {% if form.method.value == method.0 %}checked{% endif %}>
-              <label for="id_{{ method.0 }}">
-                <strong>{{ method.1 }}</strong>
-                <br/>
-                {% for key, value in form.method.field.help_text.items %}
-                  {% if key == method.0 %}
-                    {{ value }}
-                  {% endif %}
-                {% endfor %}
-              </label>
-            </div>
-          {% endfor %}
+          {% include 'mtp_common/forms/radio-field.html' with field=form.method label_classes='govuk-visually-hidden' choices_help_text=form.method_choices_help_text only %}
         </fieldset>
         <br>
         <p>{% trans 'Both methods are free to the prisoner and recipient' %}</p>

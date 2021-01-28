@@ -185,15 +185,11 @@ class SendingMethodForm(DisbursementForm):
         label=_('Sending method'),
         choices=SENDING_METHOD,
         widget=forms.RadioSelect(),
-        help_text={
-            SENDING_METHOD.BANK_TRANSFER: _(
-                'The recipient’s bank account is directly credited in 5-7 working days'
-            ),
-            SENDING_METHOD.CHEQUE: _(
-                'The recipient gets a cheque in the post from SSCL in 5-7 working days'
-            )
-        }
     )
+    method_choices_help_text = [
+        _('The recipient’s bank account is directly credited in 5-7 working days'),
+        _('The recipient gets a cheque in the post from SSCL in 5-7 working days'),
+    ]
 
 
 class RecipientContactForm(DisbursementForm):
