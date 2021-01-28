@@ -151,7 +151,6 @@ class AmountField(forms.DecimalField):
 class AmountForm(DisbursementForm):
     amount = AmountField(
         label=_('Amount to send'),
-        help_text=_('For example, 10.00'),
         min_value=Decimal('0.01'),
         decimal_places=2,
         error_messages={

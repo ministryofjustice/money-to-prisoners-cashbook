@@ -35,25 +35,3 @@
     text-align: right;
   }
 }
-
-.mtp-currency-sign {
-  background-color: $highlight-colour;
-  border-right: 0;
-  font-weight: 900;
-  line-height: 1.16;
-  min-width: 1.8em;
-  text-align: center;
-  width: 1.8em;
-}
-
-.mtp-charges-amount {
-  width: 5em;
-}
-
-.mtp-money-box {
-  * {
-    display: inline-block;
-    height: 34px;
-    vertical-align: bottom;
-  }
-}
