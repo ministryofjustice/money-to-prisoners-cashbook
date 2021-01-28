@@ -195,15 +195,7 @@
         </div>
 
         <div class="mtp-nomis-print-header mtp-!-display-print-only">
-          <img src="{% static 'images/icon-important.png' %}"/>
-          <div class="mtp-nomis-warning">
-            <h2 class="govuk-heading-m">
-              {% trans 'You don’t have to manually enter all credits into NOMIS any more' %}
-            </h2>
-            <div>
-              {% trans 'Now when you ‘confirm’ credits, they’ll be sent digitally to NOMIS' %}
-            </div>
-          </div>
+          {% include 'govuk-frontend/components/warning-text.html' with text=_('You don’t have to manually enter all credits into NOMIS any more') extra_text=_('Now when you ‘confirm’ credits, they’ll be sent digitally to NOMIS') only %}
         </div>
       {% endif %}
 

@@ -23,24 +23,6 @@
 
     .mtp-nomis-print-header {
       page-break-before: always;
-      margin-bottom: 2em;
-      border: 2px solid $text-colour;
-
-      img {
-        margin-left: 35px;
-        margin-top: 18px;
-        float: left;
-      }
-
-      div.mtp-nomis-warning {
-        padding-left: 100px;
-        padding-bottom: 1em;
-
-        h2.govuk-heading-m {
-          text-align: left;
-          margin-bottom: 0;
-        }
-      }
     }
 
     .print-box {
