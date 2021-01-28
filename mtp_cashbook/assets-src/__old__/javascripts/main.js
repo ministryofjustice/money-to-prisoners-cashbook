@@ -6,7 +6,6 @@
   require('unload').Unload.init();
   require('track-printing').TrackPrinting.init();
   require('tabbed-panel').TabbedPanel.init();
-  require('hide-long-text').HideLongText.init();
 
   // cashbook
   require('sign-up').SignUpChoices.init();

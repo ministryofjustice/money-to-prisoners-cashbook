@@ -9,12 +9,14 @@ import {initDefaults} from 'mtp_common';
 import {initStaffDefaults} from 'mtp_common/staff-app';
 import {Card} from 'mtp_common/components/card';
 import {DialogueBox} from 'mtp_common/components/dialogue-box';
+import {HiddenLongText} from 'mtp_common/components/hidden-long-text';
 import {MailcheckWarning} from 'mtp_common/components/mailcheck-warning';
 import {PrintTrigger} from 'mtp_common/components/print-trigger';
 initDefaults();
 initStaffDefaults();
 Card.init();
 DialogueBox.init();
+HiddenLongText.init();
 MailcheckWarning.init(
   '.mtp-account-management input[type=email]',
   ['justice.gov.uk'],
