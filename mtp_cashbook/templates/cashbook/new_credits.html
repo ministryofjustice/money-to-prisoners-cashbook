@@ -54,7 +54,7 @@
 
   {% if failed_credits %}
     {% captureoutput as banner_heading %}
-      <a href="#failed-credits-dialog" class="govuk-!-display-none-print mtp-dialogue__open-trigger-link">
+      <a href="#failed-credits-dialog" class="mtp-dialogue__open-trigger-link">
         {% blocktrans trimmed count failed_credits=failed_credits %}
           {{ failed_credits }} credit not processed due to technical error, try again soon.
         {% plural %}
@@ -83,7 +83,7 @@
 
       {% if owned_manual_credits %}
         {% captureoutput as banner_heading %}
-          <a href="#manual-credits-dialog" class="govuk-!-display-none-print mtp-dialogue__open-trigger-link">
+          <a href="#manual-credits-dialog" class="mtp-dialogue__open-trigger-link">
             {% blocktrans trimmed count manual_credits=owned_manual_credits %}
               {{ manual_credits }} credit needs your manual input in NOMIS.
             {% plural %}
