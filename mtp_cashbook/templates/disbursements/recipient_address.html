@@ -53,7 +53,7 @@
 
           {% include 'govuk-frontend/components/error-summary.html' with form=form only %}
 
-          <fieldset>
+          <fieldset class="govuk-fieldset">
             <div class="form-group {% if field.errors %}form-group-error{% endif %}">
               {% include 'mtp_common/forms/field-label.html' with field=form.address_line1 only %}
 

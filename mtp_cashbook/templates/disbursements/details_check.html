@@ -167,9 +167,9 @@
     {% include 'govuk-frontend/components/error-summary.html' with form=form only %}
 
     {% with field=form.confirmation choices=form.confirmation.field.choices %}
-      <fieldset>
-        <legend id="{{ field.id_for_label }}-label">
-          <strong>{{ field.label }}</strong>
+      <fieldset class="govuk-fieldset">
+        <legend id="{{ field.id_for_label }}-label" class="govuk-fieldset__legend govuk-fieldset__legend--m">
+          {{ field.label }}
         </legend>
 
         <div class="form-group {% if field.errors %}form-group-error{% endif %}">

@@ -22,11 +22,11 @@
         {% include 'govuk-frontend/components/error-summary.html' with form=form only %}
 
         {% with field=form.read_briefing choices=form.read_briefing.field.choices %}
-          <fieldset>
-            <legend id="{{ field.id_for_label }}-label">
-              <strong aria-label="{{ field.label }}">
+          <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+              <span aria-label="{{ field.label }}">
                 {% trans 'Have you read it?' %}
-              </strong>
+              </span>
             </legend>
             <br />
             <div class="form-group {% if field.errors %}form-group-error{% endif %}">
