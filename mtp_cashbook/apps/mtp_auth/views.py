@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 from mtp_common.user_admin.views import SignUpView, AcceptRequestView, ensure_compatible_admin
 
@@ -28,6 +29,7 @@ class CashbookAcceptRequestView(AcceptRequestView):
 @method_decorator(login_required, name='dispatch')
 @method_decorator(ensure_compatible_admin, name='dispatch')
 class MovePrisonView(FormView):
+    title = _('Move prison')
     template_name = 'mtp_auth/move-prison.html'
     form_class = CashbookSignUpForm
     success_url = reverse_lazy(settings.LOGIN_REDIRECT_URL)
@@ -49,7 +51,11 @@ class MovePrisonView(FormView):
         return form_kwargs
 
     def get_context_data(self, **kwargs):
-        kwargs['breadcrumbs_back'] = self.success_url
+        kwargs['breadcrumbs'] = [
+            {'name': _('Home'), 'url': '/'},
+            {'name': _('Settings'), 'url': reverse_lazy('settings')},
+            {'name': self.title},
+        ]
         context_data = super().get_context_data(**kwargs)
         form = context_data['form']
         context_data['hidden_fields'] = [
