@@ -5,7 +5,6 @@
   require('select-all').SelectAll.init();
   require('unload').Unload.init();
   require('track-printing').TrackPrinting.init();
-  require('tabbed-panel').TabbedPanel.init();
 
   // cashbook
   require('sign-up').SignUpChoices.init();
