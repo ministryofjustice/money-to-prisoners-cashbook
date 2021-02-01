@@ -34,7 +34,7 @@
         {% endstripwhitespace %}{% endcaptureoutput %}
         {% include 'govuk-frontend/components/details.html' with summary=_('What if the prisoner gets the recipient’s bank details wrong?') body=_('In this case, SSCL will send out a cheque instead but it will delay payment.') analytics=analytics only %}
 
-        <button type="submit" class="govuk-button mtp-next-button" data-module="govuk-button">{% trans 'Next' %}</button>
+        <button type="submit" class="govuk-button" data-module="govuk-button">{% trans 'Next' %}</button>
       </form>
     </div>
   </div>

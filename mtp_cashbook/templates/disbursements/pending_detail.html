@@ -239,7 +239,7 @@
               <input id="js-choice-{{ choices.0.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.0.0 }}" data-reveal=".js-choice-yes">
               <label for="js-choice-{{ choices.0.0 }}">{{ choices.0.1 }}</label>
             </div>
-            <div class="govuk-inset-text mtp-button-panel mtp-!-display-none-js-enabled-only js-choice-yes">
+            <div class="govuk-inset-text mtp-!-display-none-js-enabled-only js-choice-yes">
               <p>{% trans 'Sign the bottom of the paper form under ‘Staff’.' %}</p>
               <img class="mtp-filled-form-sample" src="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-signed-2.jpg' %}" srcset="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-signed-2@2x.jpg' %} 2x" alt="{% trans 'Sign the bottom of the paper form under ‘Staff’.' %}" />
             </div>
@@ -257,7 +257,7 @@
       {% endwith %}
 
       <div class="js-choice-yes">
-        <button type="submit" class="govuk-button mtp-next-button" data-module="govuk-button" data-prevent-double-click="true">{% trans 'Confirm payment' %}</button>
+        <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">{% trans 'Confirm payment' %}</button>
       </div>
     </form>
 
