@@ -195,9 +195,9 @@
         {% trans 'There’s a ‘recipient email’ box on the form for the prisoner to fill in.' %}
       </p>
       {% captureoutput as body %}
-        <img src="{% static 'disbursements/remittance-sample.jpg' %}" alt="{% trans 'Sample remittance advice' %}" />
+        <img src="{% static 'disbursements/remittance-sample.jpg' %}" class="mtp-img--fit-width" alt="{% trans 'Sample remittance advice' %}" />
       {% endcaptureoutput %}
-      {% include 'govuk-frontend/components/details.html' with id='mtp-remittance-sample' summary=_('Sample remittance advice') body=body analytics='pageview,/-help_open/remittance-sample/' only %}
+      {% include 'govuk-frontend/components/details.html' with summary=_('Sample remittance advice') body=body analytics='pageview,/-help_open/remittance-sample/' only %}
       <p>
         {% trans 'In 5-7 working days, either the payment is put directly into the recipient’s account by bank transfer or a cheque is received.' %}
         {% trans 'There’s no postage or processing charge to the prison, the prisoner or the recipient.' %}

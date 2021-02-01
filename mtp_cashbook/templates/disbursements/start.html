@@ -22,7 +22,7 @@
           Before you start, have the completed <strong>bank transfer or cheque</strong> form in front of you.
         {% endblocktrans %}
       </p>
-      <img src="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-filled.jpg' %}" srcset="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-filled@2x.jpg' %} 2x" style="max-width:100%" alt={% trans '“Send money by bank transfer or cheque” form' %}/>
+      <img src="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-filled.jpg' %}" srcset="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-filled@2x.jpg' %} 2x" class="mtp-img--fit-width" alt={% trans '“Send money by bank transfer or cheque” form' %}/>
       <p>
         <a href="{{ view.get_success_url }}" class="govuk-button govuk-button--start" data-module="govuk-button" role="button">
           {% trans 'Start now' %}
