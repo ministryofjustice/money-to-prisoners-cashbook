@@ -45,3 +45,10 @@
   margin-bottom: $govuk-gutter;
   border: 1px solid $govuk-border-colour;
 }
+
+// track invoice figures
+.mtp-track-invoice-figure {
+  margin: 0;
+  page-break-before: always;
+  break-before: page;
+}
