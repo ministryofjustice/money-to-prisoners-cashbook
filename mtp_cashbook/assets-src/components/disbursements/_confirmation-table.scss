@@ -1,9 +1,8 @@
 .mtp-confirm-table {
-  width: 100%;
   max-width: 850px;
 
-  tbody.mtp-confirm-table__details {
-    border: 3px solid $text-colour;
+  .mtp-confirm-table__details {
+    border: 3px solid $govuk-text-colour;
   }
 
   & td:last-child {
@@ -18,7 +17,7 @@
   }
 
   .mtp-confirm-table__section {
-    border-top: 2px solid $border-colour;
+    border-top: 2px solid $govuk-border-colour;
   }
 
   h2 {
@@ -26,7 +25,7 @@
   }
 
   tbody.mtp-confirm-table__history {
-    background-color: $grey-2;
+    background-color: $govuk-canvas-background-colour;
 
     & td:last-child {
       text-align: left;
