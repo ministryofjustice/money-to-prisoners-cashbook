@@ -4,6 +4,7 @@ export var Disbursements = {
   init: function () {
     this.initAmount();
     this.initRecipientAddress();
+    this.initRecipientBankAccount();
     this.initRemittanceDescription();
   },
 
@@ -47,6 +48,38 @@ export var Disbursements = {
           $postcode.val(addressData['postcode']);
         }
       });
+    });
+  },
+
+  initRecipientBankAccount: function () {
+    // as-you-type formatting of sort codes
+    $('.mtp-input--sort-code').each(function () {
+      var $control = $(this);
+      var sortCodeCleaner = /[^0-9-]+/;
+      var sortCodeMatcher = /^(\d\d)(-?((\d\d)(-?(\d\d)?)?)?)?$/;
+
+      function update () {
+        var value = $control.val().replace(sortCodeCleaner, '');
+        var match = sortCodeMatcher.exec(value);
+        if (match) {
+          var newValue = '';
+          if (match[1]) {
+            newValue += match[1];
+          }
+          if (match[4]) {
+            newValue += '-' + match[4];
+          }
+          if (match[6]) {
+            newValue += '-' + match[6];
+          }
+          if (newValue) {
+            $control.val(newValue);
+          }
+        }
+      }
+
+      $control.keyup(update);
+      update();
     });
   },
 

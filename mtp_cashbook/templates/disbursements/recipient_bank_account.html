@@ -15,14 +15,14 @@
         </h2>
       </header>
 
-      <br/>
+      <br />
 
       <form method="post">
         {% csrf_token %}
 
         {% include 'govuk-frontend/components/error-summary.html' with form=form only %}
 
-        {% include 'mtp_common/forms/field.html' with field=form.sort_code input_classes='govuk-input--width-10 mtp-sort-code-control' only %}
+        {% include 'mtp_common/forms/field.html' with field=form.sort_code input_classes='govuk-input--width-10 mtp-input--sort-code' only %}
         {% include 'mtp_common/forms/field.html' with field=form.account_number input_classes='govuk-input--width-20' only %}
         {% include 'mtp_common/forms/field.html' with field=form.roll_number input_classes='govuk-input--width-20' only %}
 
