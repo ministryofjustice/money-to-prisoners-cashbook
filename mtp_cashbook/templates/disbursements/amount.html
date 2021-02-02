@@ -34,9 +34,9 @@
           <th scope="col">{% trans 'Amount to send' %}</th>
         </tr>
 
-        <tr class="mtp-private-row">
+        <tr>
           <td>{% trans 'Private' %}</td>
-          <td class="govuk-table__cell--numeric" data-balance="cash">{{ form.nomis_balances.cash|currency:'£'|default:_('Unknown') }}</td>
+          <td class="govuk-table__cell--numeric mtp-accounts-table__amount" data-balance="cash">{{ form.nomis_balances.cash|currency:'£'|default:_('Unknown') }}</td>
           <td>
             {% include 'mtp_common/forms/amount-field.html' with field=form.amount only %}
           </td>
@@ -44,22 +44,23 @@
 
         <tr>
           <td>{% trans 'Spends' %}</td>
-          <td class="govuk-table__cell--numeric" data-balance="spends">{{ form.nomis_balances.spends|currency:'£'|default:_('Unknown') }}</td>
+          <td class="govuk-table__cell--numeric mtp-accounts-table__amount" data-balance="spends">{{ form.nomis_balances.spends|currency:'£'|default:_('Unknown') }}</td>
           <td>{% trans 'Can’t be used for sending money out' %}</td>
         </tr>
 
         <tr>
           <td>{% trans 'Saving' %}</td>
-          <td class="govuk-table__cell--numeric" data-balance="savings">{{ form.nomis_balances.savings|currency:'£'|default:_('Unknown') }}</td>
+          <td class="govuk-table__cell--numeric mtp-accounts-table__amount" data-balance="savings">{{ form.nomis_balances.savings|currency:'£'|default:_('Unknown') }}</td>
           <td>{% trans 'Can’t be used for sending money out' %}</td>
         </tr>
-
-        <tr class="mtp-refresh-row">
+      </tbody>
+      <tfoot>
+        <tr>
           <td></td>
           <td class="govuk-table__cell--numeric"><a href=".">{% trans 'Update balances' %}</a></td>
           <td></td>
         </tr>
-      </tbody>
+      </tfoot>
     </table>
 
     <button type="submit" class="govuk-button" data-module="govuk-button">{% trans 'Next' %}</button>
