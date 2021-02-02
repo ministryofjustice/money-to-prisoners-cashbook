@@ -39,18 +39,18 @@
             </legend>
 
             <div class="govuk-form-group {% if field.errors %}govuk-form-group--error{% endif %}">
-              <div class="govuk-radios">
+              <div class="govuk-radios govuk-radios--conditional" data-module="govuk-radios">
                 <div class="govuk-radios__item">
-                  <input id="mtp-radio-reveal__{{ choices.0.0 }}" class="govuk-radios__input mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.0.0 }}" data-reveal=".mtp-radio-reveal__yes" {% if form.remittance.value == 'yes' %}checked{% endif %}>
-                  <label for="mtp-radio-reveal__{{ choices.0.0 }}" class="govuk-label govuk-radios__label">{{ choices.0.1 }}</label>
+                  <input id="id_remittance-{{ choices.0.0 }}" class="govuk-radios__input" type="radio" name="{{ field.html_name }}" value="{{ choices.0.0 }}" data-aria-controls="id_remittance__conditional-yes" {% if form.remittance.value == 'yes' %}checked{% endif %}>
+                  <label for="id_remittance-{{ choices.0.0 }}" class="govuk-label govuk-radios__label">{{ choices.0.1 }}</label>
                 </div>
-                <div class="govuk-inset-text mtp-!-display-none-js-enabled-only mtp-radio-reveal__yes">
+                <div id="id_remittance__conditional-yes" class="govuk-radios__conditional govuk-radios__conditional--hidden">
                   {% include 'mtp_common/forms/textarea.html' with field=form.remittance_description character_count=remittance_description_character_count rows=2 only %}
                 </div>
 
                 <div class="govuk-radios__item">
-                  <input id="mtp-radio-reveal__{{ choices.1.0 }}" class="govuk-radios__input mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.1.0 }}" {% if form.remittance.value == 'no' %}checked{% endif %}>
-                  <label for="mtp-radio-reveal__{{ choices.1.0 }}" class="govuk-label govuk-radios__label">{{ choices.1.1 }}</label>
+                  <input id="id_remittance-{{ choices.1.0 }}" class="govuk-radios__input" type="radio" name="{{ field.html_name }}" value="{{ choices.1.0 }}" {% if form.remittance.value == 'no' %}checked{% endif %}>
+                  <label for="id_remittance-{{ choices.1.0 }}" class="govuk-label govuk-radios__label">{{ choices.1.1 }}</label>
                 </div>
               </div>
             </div>
