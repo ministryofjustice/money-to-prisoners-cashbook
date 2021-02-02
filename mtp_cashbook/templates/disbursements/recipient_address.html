@@ -7,41 +7,42 @@
 {% block content %}
   {{ block.super }}
 
-  <header>
-    <h1 class="govuk-heading-xl">{{ view.title }}</h1>
-  </header>
-
-  {% if address_picker %}
-    <p>
-      {% trans 'Postcode:' %}
-      <strong>{{ postcode }}</strong>
-      <a href="{% url 'disbursements:recipient_postcode' %}?next={{ view.url }}" class="govuk-!-display-none-print">
-        {% trans 'Change' %}
-        <span class="govuk-visually-hidden">{% trans 'Postcode' %}</span>
-      </a>
-    </p>
-
-    <div class="govuk-form-group">
-      <label for="address-select" id="address-select-label" class="govuk-label">
-        {% trans 'Choose address' %}
-      </label>
-      <select id="address-select" class="govuk-select mtp-address-picker">
-        <option value="">
-          {% blocktrans trimmed with count=addresses|length %}
-            {{ count }} addresses found
-          {% endblocktrans %}
-        </option>
-        {% for address in addresses %}
-          <option value="{{ forloop.counter }}" data-address='{"address_line1": "{{ address.address_line1 }}", "address_line2": "{{ address.address_line2 }}", "city": "{{ address.city }}", "postcode": "{{ address.postcode }}"}'>
-            {{ address.address }}
-          </option>
-        {% endfor %}
-      </select>
-    </div>
-  {% endif %}
-
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
+
+      <header>
+        <h1 class="govuk-heading-xl">{{ view.title }}</h1>
+      </header>
+
+      {% if address_picker %}
+        <p>
+          {% trans 'Postcode:' %}
+          <strong>{{ postcode }}</strong>
+          <a href="{% url 'disbursements:recipient_postcode' %}?next={{ view.url }}" class="govuk-!-display-none-print">
+            {% trans 'Change' %}
+            <span class="govuk-visually-hidden">{% trans 'Postcode' %}</span>
+          </a>
+        </p>
+
+        <div class="govuk-form-group">
+          <label for="address-select" id="address-select-label" class="govuk-label">
+            {% trans 'Choose address' %}
+          </label>
+          <select id="address-select" class="govuk-select mtp-address-picker">
+            <option value="">
+              {% blocktrans trimmed with count=addresses|length %}
+                {{ count }} addresses found
+              {% endblocktrans %}
+            </option>
+            {% for address in addresses %}
+              <option value="{{ forloop.counter }}" data-address='{"address_line1": "{{ address.address_line1 }}", "address_line2": "{{ address.address_line2 }}", "city": "{{ address.city }}", "postcode": "{{ address.postcode }}"}'>
+                {{ address.address }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+      {% endif %}
+
       <form method="post">
         {% csrf_token %}
 
@@ -80,6 +81,7 @@
 
         <button type="submit" class="govuk-button" data-module="govuk-button">{% trans 'Next' %}</button>
       </form>
+
     </div>
   </div>
 {% endblock %}

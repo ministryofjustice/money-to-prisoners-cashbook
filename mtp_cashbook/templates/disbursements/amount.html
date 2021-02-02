@@ -8,13 +8,19 @@
 {% block content %}
   {{ block.super }}
 
-  <header>
-    <h1 class="govuk-heading-xl">{{ view.title }}</h1>
-  </header>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
 
-  <p>
-    {% trans 'If there isn’t enough money in the prisoner’s private account, use NOMIS to move money across then ‘Update balances’ before you continue.' %}
-  </p>
+      <header>
+        <h1 class="govuk-heading-xl">{{ view.title }}</h1>
+      </header>
+
+      <p>
+        {% trans 'If there isn’t enough money in the prisoner’s private account, use NOMIS to move money across then ‘Update balances’ before you continue.' %}
+      </p>
+
+    </div>
+  </div>
 
   <form method="post">
     {% csrf_token %}
