@@ -39,7 +39,9 @@ PrintTrigger.init();
 TabbedPanel.init();
 
 // app components
+import {Disbursements} from './components/disbursements';
 import {PrintLinkTarget} from './components/print-link-target';
 import {RadioReveal} from './components/radio-reveal';
+Disbursements.init();
 PrintLinkTarget.init();
 RadioReveal.init();

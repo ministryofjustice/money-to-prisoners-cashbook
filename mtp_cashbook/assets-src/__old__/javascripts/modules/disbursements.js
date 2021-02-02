@@ -34,10 +34,5 @@ exports.Disbursements = {
         $infoRow.removeClass('mtp-!-display-none-js-enabled-only');
       }
     });
-
-    // prevent new lines in wrapped textareas
-    $('#id_remittance_description').keydown(function (e) {
-      return e.keyCode !== 13;
-    });
   }
 };
