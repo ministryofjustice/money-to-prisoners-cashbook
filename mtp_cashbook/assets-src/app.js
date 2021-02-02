@@ -11,6 +11,7 @@ import {Card} from 'mtp_common/components/card';
 import {DialogueBox} from 'mtp_common/components/dialogue-box';
 import {HiddenLongText} from 'mtp_common/components/hidden-long-text';
 import {MailcheckWarning} from 'mtp_common/components/mailcheck-warning';
+import {PageContents} from 'mtp_common/components/page-contents';
 import {PrintTrigger} from 'mtp_common/components/print-trigger';
 import {TabbedPanel} from 'mtp_common/components/tabbed-panel';
 initDefaults();
@@ -33,6 +34,7 @@ MailcheckWarning.init(
 MailcheckWarning.init(
   '.mtp-create-disbursement input[type=email]'
 );
+PageContents.init();
 PrintTrigger.init();
 TabbedPanel.init();
 
