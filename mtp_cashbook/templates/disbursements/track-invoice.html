@@ -5,8 +5,8 @@
 
 {% block page_title %}{% trans 'How it works' %} – {{ block.super }}{% endblock %}
 
-{% block sub_nav %}
-  {% include 'disbursements/get-help-tabs.html' with page=2 only %}
+{% block breadcrumb_bar %}
+  {% include 'mtp_common/components/sub-navigation.html' with links=sub_navigation_links only %}
   {{ block.super }}
 {% endblock %}
 
