@@ -21,21 +21,23 @@
         {% with field=form.recipient_type choices=form.recipient_type.field.choices %}
           <fieldset class="govuk-fieldset">
             <div class="govuk-form-group {% if field.errors %}govuk-form-group--error{% endif %}">
-              <div class="multiple-choice">
-                <input id="mtp-radio-reveal__{{ choices.0.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.0.0 }}" data-reveal=".mtp-radio-reveal__person" {% if field.value != choices.1.0 %}checked{% endif %}>
-                <label for="mtp-radio-reveal__{{ choices.0.0 }}">{{ choices.0.1 }}</label>
-              </div>
-              <div class="govuk-inset-text mtp-!-display-none-js-enabled-only mtp-radio-reveal__person">
-                {% include 'mtp_common/forms/field.html' with field=form.recipient_first_name input_classes='govuk-input--width-10' only %}
-                {% include 'mtp_common/forms/field.html' with field=form.recipient_last_name input_classes='govuk-input--width-10' only %}
-              </div>
+              <div class="govuk-radios">
+                <div class="govuk-radios__item">
+                  <input id="mtp-radio-reveal__{{ choices.0.0 }}" class="govuk-radios__input mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.0.0 }}" data-reveal=".mtp-radio-reveal__person" {% if field.value != choices.1.0 %}checked{% endif %}>
+                  <label for="mtp-radio-reveal__{{ choices.0.0 }}" class="govuk-label govuk-radios__label">{{ choices.0.1 }}</label>
+                </div>
+                <div class="govuk-inset-text mtp-!-display-none-js-enabled-only mtp-radio-reveal__person">
+                  {% include 'mtp_common/forms/field.html' with field=form.recipient_first_name input_classes='govuk-input--width-10' only %}
+                  {% include 'mtp_common/forms/field.html' with field=form.recipient_last_name input_classes='govuk-input--width-10' only %}
+                </div>
 
-              <div class="multiple-choice">
-                <input id="mtp-radio-reveal__{{ choices.1.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.1.0 }}" data-reveal=".mtp-radio-reveal__company" {% if field.value == choices.1.0 %}checked{% endif %}>
-                <label for="mtp-radio-reveal__{{ choices.1.0 }}">{{ choices.1.1 }}</label>
-              </div>
-              <div class="govuk-inset-text mtp-!-display-none-js-enabled-only mtp-radio-reveal__company">
-                {% include 'mtp_common/forms/field.html' with field=form.recipient_company_name input_classes='govuk-input--width-10' only %}
+                <div class="govuk-radios__item">
+                  <input id="mtp-radio-reveal__{{ choices.1.0 }}" class="govuk-radios__input mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.1.0 }}" data-reveal=".mtp-radio-reveal__company" {% if field.value == choices.1.0 %}checked{% endif %}>
+                  <label for="mtp-radio-reveal__{{ choices.1.0 }}" class="govuk-label govuk-radios__label">{{ choices.1.1 }}</label>
+                </div>
+                <div class="govuk-inset-text mtp-!-display-none-js-enabled-only mtp-radio-reveal__company">
+                  {% include 'mtp_common/forms/field.html' with field=form.recipient_company_name input_classes='govuk-input--width-10' only %}
+                </div>
               </div>
             </div>
           </fieldset>

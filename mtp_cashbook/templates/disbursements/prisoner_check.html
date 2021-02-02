@@ -34,14 +34,16 @@
             </legend>
 
             <div class="govuk-form-group {% if field.errors %}govuk-form-group--error{% endif %}">
-              <div class="multiple-choice">
-                <input id="mtp-radio-reveal__{{ choices.0.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.0.0 }}" data-reveal=".mtp-radio-reveal__yes">
-                <label for="mtp-radio-reveal__{{ choices.0.0 }}">{{ choices.0.1 }}</label>
-              </div>
+              <div class="govuk-radios">
+                <div class="govuk-radios__item">
+                  <input id="mtp-radio-reveal__{{ choices.0.0 }}" class="govuk-radios__input mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.0.0 }}" data-reveal=".mtp-radio-reveal__yes">
+                  <label for="mtp-radio-reveal__{{ choices.0.0 }}" class="govuk-label govuk-radios__label">{{ choices.0.1 }}</label>
+                </div>
 
-              <div class="multiple-choice">
-                <input id="mtp-radio-reveal__{{ choices.1.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.1.0 }}" data-reveal=".mtp-radio-reveal__no">
-                <label for="mtp-radio-reveal__{{ choices.1.0 }}">{{ choices.1.1 }}</label>
+                <div class="govuk-radios__item">
+                  <input id="mtp-radio-reveal__{{ choices.1.0 }}" class="govuk-radios__input mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.1.0 }}" data-reveal=".mtp-radio-reveal__no">
+                  <label for="mtp-radio-reveal__{{ choices.1.0 }}" class="govuk-label govuk-radios__label">{{ choices.1.1 }}</label>
+                </div>
               </div>
               <div class="govuk-inset-text mtp-!-display-none-js-enabled-only mtp-radio-reveal__no">
                 <p>

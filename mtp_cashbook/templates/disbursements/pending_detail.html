@@ -112,8 +112,8 @@
         <th scope="row">{% trans 'Address' %}:</th>
         <td>
           <address>
-            {{ disbursement.address_line1 }}<br>
-            {% if disbursement.address_line2 %}{{ disbursement.address_line2 }}<br>{% endif %}
+            {{ disbursement.address_line1 }}<br />
+            {% if disbursement.address_line2 %}{{ disbursement.address_line2 }}<br />{% endif %}
             {{ disbursement.city }}
           </address>
         </td>
@@ -202,7 +202,7 @@
         <th scope="row"><h2 class="govuk-heading-s">{% trans 'History' %}</h2></th>
         <td colspan="2">
           {% for log in disbursement.log_set|parse_date_fields %}
-            {{ log.created|date:'d/m/Y H:m' }} – {{ log.action|format_disbursement_action }} {% trans 'by' %} {{ log.user.first_name }} {{ log.user.last_name }}<br/>
+            {{ log.created|date:'d/m/Y H:m' }} – {{ log.action|format_disbursement_action }} {% trans 'by' %} {{ log.user.first_name }} {{ log.user.last_name }}<br />
           {% endfor %}
         </td>
         <td></td>
@@ -211,7 +211,7 @@
         <tr>
           <td colspan="4">
             <strong>
-            {% trans 'You can’t confirm this payment because you were the last person to edit it.' %}<br/>
+            {% trans 'You can’t confirm this payment because you were the last person to edit it.' %}<br />
             {% trans 'Ask another colleague to check and confirm it.' %}
             {% trans 'Make sure they have the paper form of this request.' %}
             </strong>
@@ -221,7 +221,7 @@
     </tbody>
   </table>
 
-  <br/>
+  <br />
   {% if viable %}
     <form method="post">
       {% csrf_token %}
@@ -235,22 +235,24 @@
           </legend>
 
           <div class="govuk-form-group {% if field.errors %}govuk-form-group--error{% endif %}">
-            <div class="multiple-choice">
-              <input id="mtp-radio-reveal__{{ choices.0.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.0.0 }}" data-reveal=".mtp-radio-reveal__yes">
-              <label for="mtp-radio-reveal__{{ choices.0.0 }}">{{ choices.0.1 }}</label>
-            </div>
-            <div class="govuk-inset-text mtp-!-display-none-js-enabled-only mtp-radio-reveal__yes">
-              <p>{% trans 'Sign the bottom of the paper form under ‘Staff’.' %}</p>
-              <img class="mtp-img--bordered" src="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-signed-2.jpg' %}" srcset="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-signed-2@2x.jpg' %} 2x" alt="{% trans 'Sign the bottom of the paper form under ‘Staff’.' %}" />
-            </div>
+            <div class="govuk-radios">
+              <div class="govuk-radios__item">
+                <input id="mtp-radio-reveal__{{ choices.0.0 }}" class="govuk-radios__input mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.0.0 }}" data-reveal=".mtp-radio-reveal__yes">
+                <label for="mtp-radio-reveal__{{ choices.0.0 }}" class="govuk-label govuk-radios__label">{{ choices.0.1 }}</label>
+              </div>
+              <div class="govuk-inset-text mtp-!-display-none-js-enabled-only mtp-radio-reveal__yes">
+                <p>{% trans 'Sign the bottom of the paper form under ‘Staff’.' %}</p>
+                <img class="mtp-img--bordered" src="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-signed-2.jpg' %}" srcset="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-signed-2@2x.jpg' %} 2x" alt="{% trans 'Sign the bottom of the paper form under ‘Staff’.' %}" />
+              </div>
 
-            <div class="multiple-choice">
-              <input id="mtp-radio-reveal__{{ choices.1.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.1.0 }}" data-reveal=".mtp-radio-reveal__no">
-              <label for="mtp-radio-reveal__{{ choices.1.0 }}">{{ choices.1.1 }}</label>
-            </div>
-            <div class="govuk-inset-text mtp-!-display-none-js-enabled-only mtp-radio-reveal__no">
-              {% trans 'Use ‘Change’ above to make sure the details match those on the paper form.' %}
-              {% trans 'Someone else will need to confirm this payment later.' %}
+              <div class="govuk-radios__item">
+                <input id="mtp-radio-reveal__{{ choices.1.0 }}" class="govuk-radios__input mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.1.0 }}" data-reveal=".mtp-radio-reveal__no">
+                <label for="mtp-radio-reveal__{{ choices.1.0 }}" class="govuk-label govuk-radios__label">{{ choices.1.1 }}</label>
+              </div>
+              <div class="govuk-inset-text mtp-!-display-none-js-enabled-only mtp-radio-reveal__no">
+                {% trans 'Use ‘Change’ above to make sure the details match those on the paper form.' %}
+                {% trans 'Someone else will need to confirm this payment later.' %}
+              </div>
             </div>
           </div>
         </fieldset>
@@ -263,12 +265,12 @@
 
   {% endif %}
   {% if editable %}
-    <br/>
+    <br />
     <p>
       {% blocktrans trimmed with linkstart='<a href="#cancel-disbursement-dialog" class="mtp-dialogue__open-trigger-link">' linkend='</a>' %}
         {{ linkstart }}Cancel this request{{ linkend }} if you no longer need to send it.
       {% endblocktrans %}
-      <br/>
+      <br />
       {% trans 'Cancelled requests are in ‘Payments made’.' %}
     </p>
 
