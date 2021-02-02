@@ -15,7 +15,7 @@
       {% if address_picker %}
         <p>
           {% trans 'Postcode:' %}
-          <strong>{{ postcode }}</strong>
+          <strong class="govuk-!-margin-right-2">{{ postcode }}</strong>
           <a href="{% url 'disbursements:recipient_postcode' %}?next={{ view.url }}" class="govuk-!-display-none-print">
             {% trans 'Change' %}
             <span class="govuk-visually-hidden">{% trans 'Postcode' %}</span>
@@ -23,10 +23,10 @@
         </p>
 
         <div class="govuk-form-group">
-          <label for="address-select" id="address-select-label" class="govuk-label">
+          <label for="id_address_select" class="govuk-label">
             {% trans 'Choose address' %}
           </label>
-          <select id="address-select" class="govuk-select mtp-address-picker">
+          <select id="id_address_select" class="govuk-select mtp-select__address">
             <option value="">
               {% blocktrans trimmed with count=addresses|length %}
                 {{ count }} addresses found
@@ -46,8 +46,8 @@
 
         <div id="manual-address-entry">
           {% if address_picker %}
-            <h3 class="govuk-heading-s">{% trans 'Or enter address manually' %}</h3>
-            <br/>
+            <h2 class="govuk-heading-s">{% trans 'Or enter address manually' %}</h2>
+            <br />
           {% endif %}
 
           {% include 'govuk-frontend/components/error-summary.html' with form=form only %}
