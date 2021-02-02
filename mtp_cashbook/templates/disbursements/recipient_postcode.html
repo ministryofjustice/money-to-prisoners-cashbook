@@ -22,8 +22,10 @@
         <button type="submit" class="govuk-button" data-module="govuk-button">{% trans 'Find address' %}</button>
       </form>
 
-      <br />
-      <a href='{{ view.get_success_url }}'>{% trans 'Enter address manually' %}</a>
+      <p class="govuk-body-s">
+        <a href='{{ view.get_success_url }}'>{% trans 'Enter address manually' %}</a>
+      </p>
+
     </div>
   </div>
 {% endblock %}
