@@ -1,7 +1,7 @@
 // Conditionally revealed targets linked to radio buttons
 'use strict';
 
-exports.ConditionallyRevealed = {
+export var RadioReveal = {
   init: function () {
     var $inputs = $('.mtp-radio-reveal');
     var revealSets = {};
@@ -10,7 +10,7 @@ exports.ConditionallyRevealed = {
       var name = e.target.name;
       var revealSet = revealSets[name];
       for (var i in revealSet) {
-        if (revealSet.hasOwnProperty(i)) {
+        if (Object.prototype.hasOwnProperty.call(revealSet, i)) {
           var group = revealSet[i];
           if (group.$input.prop('checked')) {
             group.$target.removeClass('mtp-!-display-none-js-enabled-only govuk-!-display-none');

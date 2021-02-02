@@ -40,4 +40,6 @@ TabbedPanel.init();
 
 // app components
 import {PrintLinkTarget} from './components/print-link-target';
+import {RadioReveal} from './components/radio-reveal';
 PrintLinkTarget.init();
+RadioReveal.init();

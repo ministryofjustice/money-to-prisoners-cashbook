@@ -22,19 +22,19 @@
           <fieldset class="govuk-fieldset">
             <div class="govuk-form-group {% if field.errors %}govuk-form-group--error{% endif %}">
               <div class="multiple-choice">
-                <input id="js-choice-{{ choices.0.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.0.0 }}" data-reveal=".js-choice-person" {% if field.value != choices.1.0 %}checked{% endif %}>
-                <label for="js-choice-{{ choices.0.0 }}">{{ choices.0.1 }}</label>
+                <input id="mtp-radio-reveal__{{ choices.0.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.0.0 }}" data-reveal=".mtp-radio-reveal__person" {% if field.value != choices.1.0 %}checked{% endif %}>
+                <label for="mtp-radio-reveal__{{ choices.0.0 }}">{{ choices.0.1 }}</label>
               </div>
-              <div class="govuk-inset-text mtp-!-display-none-js-enabled-only js-choice-person">
+              <div class="govuk-inset-text mtp-!-display-none-js-enabled-only mtp-radio-reveal__person">
                 {% include 'mtp_common/forms/field.html' with field=form.recipient_first_name input_classes='govuk-input--width-10' only %}
                 {% include 'mtp_common/forms/field.html' with field=form.recipient_last_name input_classes='govuk-input--width-10' only %}
               </div>
 
               <div class="multiple-choice">
-                <input id="js-choice-{{ choices.1.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.1.0 }}" data-reveal=".js-choice-company" {% if field.value == choices.1.0 %}checked{% endif %}>
-                <label for="js-choice-{{ choices.1.0 }}">{{ choices.1.1 }}</label>
+                <input id="mtp-radio-reveal__{{ choices.1.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.1.0 }}" data-reveal=".mtp-radio-reveal__company" {% if field.value == choices.1.0 %}checked{% endif %}>
+                <label for="mtp-radio-reveal__{{ choices.1.0 }}">{{ choices.1.1 }}</label>
               </div>
-              <div class="govuk-inset-text mtp-!-display-none-js-enabled-only js-choice-company">
+              <div class="govuk-inset-text mtp-!-display-none-js-enabled-only mtp-radio-reveal__company">
                 {% include 'mtp_common/forms/field.html' with field=form.recipient_company_name input_classes='govuk-input--width-10' only %}
               </div>
             </div>

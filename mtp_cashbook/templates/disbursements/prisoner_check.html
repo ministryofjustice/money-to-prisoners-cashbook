@@ -35,15 +35,15 @@
 
             <div class="govuk-form-group {% if field.errors %}govuk-form-group--error{% endif %}">
               <div class="multiple-choice">
-                <input id="js-choice-{{ choices.0.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.0.0 }}" data-reveal=".js-choice-yes">
-                <label for="js-choice-{{ choices.0.0 }}">{{ choices.0.1 }}</label>
+                <input id="mtp-radio-reveal__{{ choices.0.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.0.0 }}" data-reveal=".mtp-radio-reveal__yes">
+                <label for="mtp-radio-reveal__{{ choices.0.0 }}">{{ choices.0.1 }}</label>
               </div>
 
               <div class="multiple-choice">
-                <input id="js-choice-{{ choices.1.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.1.0 }}" data-reveal=".js-choice-no">
-                <label for="js-choice-{{ choices.1.0 }}">{{ choices.1.1 }}</label>
+                <input id="mtp-radio-reveal__{{ choices.1.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.1.0 }}" data-reveal=".mtp-radio-reveal__no">
+                <label for="mtp-radio-reveal__{{ choices.1.0 }}">{{ choices.1.1 }}</label>
               </div>
-              <div class="govuk-inset-text mtp-!-display-none-js-enabled-only js-choice-no">
+              <div class="govuk-inset-text mtp-!-display-none-js-enabled-only mtp-radio-reveal__no">
                 <p>
                   {% trans 'Check with the prisoner they have entered their correct details on the paper form, then process it as a new request.' %}
                 </p>
@@ -52,10 +52,10 @@
           </fieldset>
         {% endwith %}
 
-        <div class="js-choice-yes">
+        <div class="mtp-radio-reveal__yes">
           <button type="submit" class="govuk-button" data-module="govuk-button">{% trans 'Next' %}</button>
         </div>
-        <div class="mtp-!-display-none-js-enabled-only js-choice-no">
+        <div class="mtp-!-display-none-js-enabled-only mtp-radio-reveal__no">
           <a href="{{ view.alternate_success_url }}" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button">{% trans 'Process another request' %}</a>
         </div>
       </form>
