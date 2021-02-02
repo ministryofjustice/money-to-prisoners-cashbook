@@ -2,7 +2,12 @@
 
 export var Disbursements = {
   init: function () {
+    this.initAmount();
+    this.initRecipientAddress();
+    this.initRemittanceDescription();
+  },
 
+  initAmount: function () {
     // update NOMIS balances without page reload
     $('.mtp-accounts-table tfoot a').click(function (e) {
       e.preventDefault();
@@ -20,7 +25,9 @@ export var Disbursements = {
         $dataBoxes.text(errorMessage);
       });
     });
+  },
 
+  initRecipientAddress: function () {
     // fills recipient address form from select field
     $('.mtp-select__address').each(function () {
       var $addressSelect = $(this);
@@ -41,11 +48,12 @@ export var Disbursements = {
         }
       });
     });
+  },
 
+  initRemittanceDescription: function () {
     // prevent new lines in wrapped textareas
     $('#id_remittance_description').keydown(function (e) {
       return e.keyCode !== 13;
     });
-
   }
 };
