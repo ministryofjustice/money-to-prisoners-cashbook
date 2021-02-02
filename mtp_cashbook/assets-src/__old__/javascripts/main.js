@@ -13,8 +13,4 @@
   require('selection-count').SelectionCount.init();
   require('confirm-manual').ConfirmManual.init();
   require('navigation').Navigation.init();
-  require('sort-code').SortCode.init();
-  require('conditionally-revealed').ConditionallyRevealed.init();
-  require('disbursements').Disbursements.init();
-  require('address-picker').AddressPicker.init();
 }());

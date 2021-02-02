@@ -6,6 +6,7 @@ export var Disbursements = {
     this.initRecipientAddress();
     this.initRecipientBankAccount();
     this.initRemittanceDescription();
+    this.initPendingList();
   },
 
   initAmount: function () {
@@ -87,6 +88,23 @@ export var Disbursements = {
     // prevent new lines in wrapped textareas
     $('#id_remittance_description').keydown(function (e) {
       return e.keyCode !== 13;
+    });
+  },
+
+  initPendingList: function () {
+    // show note explaining why current user cannot confirm a payment
+    $('.mtp-table--pending-list__question-button').click(function (e) {
+      e.preventDefault();
+      var $button = $(this);
+      var $row = $button.parents('tr');
+      var $infoRow = $row.next();
+      if ($row.hasClass('mtp-table--pending-list__question-row')) {
+        $row.removeClass('mtp-table--pending-list__question-row');
+        $infoRow.addClass('mtp-!-display-none-js-enabled-only');
+      } else {
+        $row.addClass('mtp-table--pending-list__question-row');
+        $infoRow.removeClass('mtp-!-display-none-js-enabled-only');
+      }
     });
   }
 };

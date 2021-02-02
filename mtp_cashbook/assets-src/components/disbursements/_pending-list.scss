@@ -1,0 +1,31 @@
+.mtp-table--pending-list {
+  .mtp-table__cell--compact {
+    width: 16ex;
+  }
+}
+
+.mtp-table--pending-list__question-button {
+  display: inline-block;
+  width: 17px;
+  height: 16px;
+  margin: 0 0 0 6px;
+  vertical-align: middle;
+  background: mtp-static-url('images/question-icon.png') no-repeat 50% 0;
+  text-decoration: none;
+  text-indent: -1000px;
+  font-size: 1px;
+
+  @include govuk-device-pixel-ratio {
+    background-image: mtp-static-url('images/question-icon@2x.png');
+    background-size: 15px 15px;
+  }
+}
+
+.mtp-table--pending-list__question-row + tr td {
+  border-top: 0;
+  padding-top: 0;
+
+  .govuk-inset-text {
+    margin: 0;
+  }
+}

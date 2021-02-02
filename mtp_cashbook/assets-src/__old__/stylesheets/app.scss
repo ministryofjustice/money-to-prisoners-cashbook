@@ -12,10 +12,6 @@
 @import 'views/progress_bar';
 @import 'views/filter-box';
 @import 'views/page-tabs';
-@import 'views/confirmation-table';
-@import 'views/create-disbursement';
-@import 'views/disbursements-misc';
-@import 'views/confirm_disbursements';
 
 // mtp-common overrides
 .without-footer-padding #footer .footer-wrapper {
@@ -30,22 +26,5 @@
 
   .form-control {
     border: 2px solid $grey-2;
-  }
-}
-
-.mtp-question-button {
-  display: inline-block;
-  width: 15px;
-  height: 15px;
-  margin: 3px 0 0 6px;
-  vertical-align: top;
-  background: file-url('question-icon.png');
-  text-decoration: none;
-  text-indent: -1000px;
-  font-size: 1px;
-
-  @include device-pixel-ratio {
-    background: file-url('question-icon@2x.png');
-    background-size: 15px 15px;
   }
 }

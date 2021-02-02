@@ -14,8 +14,8 @@
   {% if disbursements %}
     <p>{% trans 'Have the completed form in front of you and choose the payment details you want to check.' %}</p>
 
-    <div class="mtp-table__container mtp-confirm-disbursements-list">
-      <table class="mtp-table">
+    <div class="mtp-table__container">
+      <table class="mtp-table mtp-table--pending-list">
         <caption class="govuk-visually-hidden">{% trans 'List of disbursements to confirm' %}</caption>
         <thead>
           <tr>
@@ -29,11 +29,11 @@
           {% for disbursement in disbursements %}
             <tr>
               <td>
-                {{ disbursement.prisoner_name }}<br/>
+                {{ disbursement.prisoner_name }}<br />
                 {{ disbursement.prisoner_number }}
               </td>
               <td>
-                £{{ disbursement.amount|currency }}<br/>
+                £{{ disbursement.amount|currency }}<br />
                 {% if disbursement.method == 'cheque' %}
                   {% trans 'Cheque' %}
                 {% elif disbursement.method == 'bank_transfer' %}
@@ -49,15 +49,15 @@
                 {% else %}
                   {% trans 'Confirmation required' %}
                   {% if disbursement.self_own %}
-                    <br>
+                    <br />
                     {% trans 'Another colleague needs to confirm this payment' %}
-                    <a href="#" class="mtp-question-button">
+                    <a href="#" class="mtp-table--pending-list__question-button" data-module="govuk-button" role="button">
                       {% trans 'Why can’t I confirm this payment?' %}
                     </a>
                   {% endif %}
                 {% endif %}
               </td>
-              <td class="mtp-button-column">
+              <td class="mtp-table__cell--compact">
                 {% if disbursement.viable %}
                   <a class="govuk-button" data-module="govuk-button" role="button" href="{% url 'disbursements:pending_detail' pk=disbursement.id %}">{% trans 'Check details' %}</a>
                 {% else %}
