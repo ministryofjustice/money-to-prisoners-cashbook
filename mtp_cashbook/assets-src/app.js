@@ -32,7 +32,7 @@ MailcheckWarning.init(
   []
 );
 MailcheckWarning.init(
-  '.mtp-create-disbursement input[type=email]'
+  '.mtp-email-input--disbursements'
 );
 PageContents.init();
 PrintTrigger.init();
