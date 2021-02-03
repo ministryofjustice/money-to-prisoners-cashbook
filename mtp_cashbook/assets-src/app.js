@@ -13,6 +13,7 @@ import {DialogueBox} from 'mtp_common/components/dialogue-box';
 import {HiddenLongText} from 'mtp_common/components/hidden-long-text';
 import {MailcheckWarning} from 'mtp_common/components/mailcheck-warning';
 import {PageContents} from 'mtp_common/components/page-contents';
+import {PrintAnalytics} from 'mtp_common/components/print-analytics';
 import {PrintTrigger} from 'mtp_common/components/print-trigger';
 import {TabbedPanel} from 'mtp_common/components/tabbed-panel';
 initDefaults();
@@ -37,6 +38,7 @@ MailcheckWarning.init(
   '.mtp-email-input--disbursements'
 );
 PageContents.init();
+PrintAnalytics.init();
 PrintTrigger.init();
 TabbedPanel.init();
 
