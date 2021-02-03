@@ -7,6 +7,7 @@ initAll();
 // mtp common components
 import {initDefaults} from 'mtp_common';
 import {initStaffDefaults} from 'mtp_common/staff-app';
+import {BeforeUnload} from 'mtp_common/components/before-unload';
 import {Card} from 'mtp_common/components/card';
 import {DialogueBox} from 'mtp_common/components/dialogue-box';
 import {HiddenLongText} from 'mtp_common/components/hidden-long-text';
@@ -16,6 +17,7 @@ import {PrintTrigger} from 'mtp_common/components/print-trigger';
 import {TabbedPanel} from 'mtp_common/components/tabbed-panel';
 initDefaults();
 initStaffDefaults();
+BeforeUnload.init();
 Card.init();
 DialogueBox.init();
 HiddenLongText.init();

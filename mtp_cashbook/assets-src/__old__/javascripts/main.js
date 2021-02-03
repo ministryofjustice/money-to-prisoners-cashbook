@@ -2,7 +2,6 @@
   'use strict';
 
   // common
-  require('unload').Unload.init();
   require('track-printing').TrackPrinting.init();
 
   // cashbook

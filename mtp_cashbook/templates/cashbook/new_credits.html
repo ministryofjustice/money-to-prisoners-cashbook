@@ -168,8 +168,9 @@
   <form
     method="post"
     action=""
-    class="js-BeforeUnload mtp-form--batch-validation"
-    data-credits-name="{{ form.new.credits.html_name }}">
+    class="mtp-form--before-unload mtp-form--batch-validation"
+    data-credits-name="{{ form.new.credits.html_name }}"
+    data-unload-msg="{% trans 'You haven’t submitted selected credits to NOMIS' %}">
     {% csrf_token %}
 
     {% include 'govuk-frontend/components/error-summary.html' with form=form.new only %}
