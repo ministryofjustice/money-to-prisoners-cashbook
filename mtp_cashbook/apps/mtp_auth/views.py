@@ -30,7 +30,7 @@ class CashbookAcceptRequestView(AcceptRequestView):
 @method_decorator(ensure_compatible_admin, name='dispatch')
 class MovePrisonView(FormView):
     title = _('Move prison')
-    template_name = 'mtp_auth/move-prison.html'
+    template_name = 'mtp_common/user_admin/move-prison.html'
     form_class = CashbookSignUpForm
     success_url = reverse_lazy(settings.LOGIN_REDIRECT_URL)
     success_template_name = 'mtp_common/user_admin/sign-up-success.html'
