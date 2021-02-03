@@ -135,7 +135,7 @@ class DisbursementTestCase(CashbookTestCase):
 
         self.assertShowingView('home')
         self.click_on_text('Digital disbursements')
-        self.click_on_text_substring('Confirm payments')
+        self.click_on_text('Confirm payments')
 
         self.assertShowingView('disbursements:pending_list')
         self.assertInSource(contact_form['id_recipient_first_name'])
@@ -146,7 +146,7 @@ class DisbursementTestCase(CashbookTestCase):
 
         self.assertShowingView('disbursements:pending_detail')
         self.assertInSource(contact_form['id_recipient_first_name'])
-        self.assertInSource('entered by HMP LEEDS Clerk')
+        self.assertInSource('entered by HMP Leeds Clerk')
         self.click_on_text_substring('Yes')
         self.click_button('Confirm payment')
 
@@ -174,8 +174,8 @@ class DisbursementTestCase(CashbookTestCase):
         self.get_element('id_recipient_name').clear()
         self.click_on_link('Recipient')
 
-        self.assertInSource('Entered by HMP LEEDS Clerk')
-        self.assertInSource('Confirmed by HMP LEEDS Clerk')
+        self.assertInSource('Entered by HMP Leeds Clerk')
+        self.assertInSource('Confirmed by HMP Leeds Clerk')
         self.assertInSource('Bank transfer')
         self.assertInSource('£11.00')
         for key in ('id_recipient_first_name', 'id_recipient_last_name', 'id_address_line1', 'id_city'):
@@ -265,7 +265,7 @@ class DisbursementTestCase(CashbookTestCase):
         self.assertInSource('JILLY HALL')
         self.assertInSource('A1401AE')
         self.assertNotInSource('LEGAL FEES')
-        self.assertInSource('(None given)')
+        self.assertInSource('Payment from JILLY HALL')
         self.click_on_text_substring('No')
         try:
             self.click_button('Next')
@@ -288,7 +288,7 @@ class DisbursementTestCase(CashbookTestCase):
 
         self.assertShowingView('home')
         self.click_on_text('Digital disbursements')
-        self.click_on_text_substring('Confirm payments')
+        self.click_on_text('Confirm payments')
 
         self.assertShowingView('disbursements:pending_list')
         self.assertInSource(contact_form['id_recipient_first_name'])
@@ -299,7 +299,7 @@ class DisbursementTestCase(CashbookTestCase):
 
         self.assertShowingView('disbursements:pending_detail')
         self.assertInSource(contact_form['id_recipient_first_name'])
-        self.assertInSource('entered by HMP LEEDS Clerk')
+        self.assertInSource('entered by HMP Leeds Clerk')
         self.click_on_text_substring('Yes')
         self.click_button('Confirm payment')
 
@@ -327,8 +327,8 @@ class DisbursementTestCase(CashbookTestCase):
         self.get_element('id_recipient_name').clear()
         self.click_on_link('Recipient')
 
-        self.assertInSource('Entered by HMP LEEDS Clerk')
-        self.assertInSource('Confirmed by HMP LEEDS Clerk')
+        self.assertInSource('Entered by HMP Leeds Clerk')
+        self.assertInSource('Confirmed by HMP Leeds Clerk')
         self.assertInSource('Cheque')
         self.assertInSource('£11.00')
         for key in ('id_recipient_company_name', 'id_address_line1', 'id_city'):

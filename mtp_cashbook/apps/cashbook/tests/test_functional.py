@@ -69,7 +69,7 @@ class LoginTests(CashbookTestCase):
     def test_title(self):
         self.driver.get(self.live_server_url + '/en-gb/')
         heading = self.driver.find_element_by_tag_name('h1')
-        self.assertEqual('Process money sent to your prison', heading.text)
+        self.assertEqual('Process money in and out of your prison', heading.text)
 
     def test_bad_login(self):
         self.login('test-hmp-leeds', 'bad-password')
@@ -116,14 +116,16 @@ class NewCreditsPageTests(CashbookTestCase):
     def test_submitting_and_not_confirming_partial_batch(self):
         self.select_first_credit()
         self.click_on_text('Credit to NOMIS')
-        self.click_on_text('No, continue processing')
+        self.driver.find_element_by_xpath(
+            '//a[normalize-space(text()) = "No, continue processing"]'
+        ).click()
         self.assertEqual('New credits – Digital cashbook', self.driver.title)
 
     @silence_logger(name='mtp', level=logging.WARNING)
     def test_submitting_and_confirming_partial_batch(self):
         self.select_first_credit()
         self.click_on_text('Credit to NOMIS')
-        self.click_on_text('Yes')
+        self.get_element('//button[@name="submit_new" and @value="override"]').click()
         if os.environ.get('DJANGO_TEST_REMOTE_INTEGRATION_URL', None):
             try:
                 self.assertInSource('Digital cashbook is crediting to NOMIS')
