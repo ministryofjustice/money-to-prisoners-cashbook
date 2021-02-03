@@ -1,0 +1,11 @@
+.mtp-form--horizontal {
+  .govuk-form-group {
+    display: inline-block;
+    margin-right: $govuk-gutter;
+    vertical-align: bottom;
+  }
+
+  #id_start-wrapper, #id_end-wrapper {
+    width: 7em;
+  }
+}

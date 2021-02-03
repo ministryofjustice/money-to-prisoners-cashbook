@@ -19,32 +19,29 @@
     <h1 class="govuk-heading-xl">{{ view.title }}</h1>
   </header>
 
-  <p>{% trans 'A list of all processed credits you can filter.' %}</p>
-  {% captureoutput as body %}
-    {% trans 'These credits have already been processed in NOMIS and batched accordingly.' %}
-    {% trans 'You can filter this list by date range.' %}
-    {% trans 'Just enter the date range of the credits you want to find.' %}
-  {% endcaptureoutput %}
-  {% include 'govuk-frontend/components/details.html' with summary=_('What do I do here?') body=body only %}
+  <div class="govuk-!-display-none-print">
+    <p>{% trans 'A list of all processed credits you can filter.' %}</p>
+    {% captureoutput as body %}
+      {% trans 'These credits have already been processed in NOMIS and batched accordingly.' %}
+      {% trans 'You can filter this list by date range.' %}
+      {% trans 'Just enter the date range of the credits you want to find.' %}
+    {% endcaptureoutput %}
+    {% include 'govuk-frontend/components/details.html' with summary=_('What do I do here?') body=body only %}
 
-  <h3 class="govuk-heading-m">{% trans 'Filter by' %}</h3>
-  <form method="get" class="mtp-processed-credits-search" action="">
-    {% include 'govuk-frontend/components/error-summary.html' with form=form only %}
+    <h3 class="govuk-heading-m">{% trans 'Filter by' %}</h3>
+    <form method="get" class="mtp-form--horizontal" action="">
+      {% include 'govuk-frontend/components/error-summary.html' with form=form only %}
 
-    <div class="mtp-processed-credits-search__date-start">
       {% include 'mtp_common/forms/field.html' with field=form.start input_classes='govuk-input--width-10' value=form.start.value|date:'d/m/Y'|default:form.start.value|default_if_none:'' only %}
-    </div>
-    <div class="mtp-processed-credits-search__date-end">
       {% include 'mtp_common/forms/field.html' with field=form.end input_classes='govuk-input--width-10' value=form.end.value|date:'d/m/Y'|default:form.end.value|default_if_none:'' only %}
-    </div>
-    <div class="mtp-processed-credits-search__submit">
-      <div class="govuk-form-group">
+
+      <p>
         {# always forces a search to start on page 1 #}
         <input type="hidden" name="{{ form.page.html_name }}" value="1">
         <input class="govuk-button" data-module="govuk-button" type="submit" value="{% trans 'Filter list' %}">
-      </div>
-    </div>
-  </form>
+      </p>
+    </form>
+  </div>
 
   <div class="mtp-table__container mtp-batch">
     {% if object_list %}
