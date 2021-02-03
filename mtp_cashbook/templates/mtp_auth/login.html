@@ -3,27 +3,27 @@
 {% load static %}
 {% load mtp_common %}
 
-{% block body_classes %}{{ block.super }} mtp-login{% endblock %}
+{% block body_classes %}{{ block.super }} mtp-page-with-masthead{% endblock %}
 {% block page_title %}{% trans 'Sign in' %} – {{ block.super }}{% endblock %}
 
-{% block content %}
+{% block main %}
+  <div class="mtp-masthead govuk-!-margin-bottom-9">
+    <div class="govuk-width-container">
 
-  <div class="mtp-login__header">
-    <div class="mtp-login__content">
       <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full">
-          {% language_switch %}
-        </div>
+        {% language_switch %}
       </div>
 
-      <div class="govuk-grid-row">
+      <div class="govuk-grid-row govuk-!-margin-top-9 govuk-!-margin-bottom-6">
         <header class="govuk-grid-column-two-thirds">
           <h1 class="govuk-heading-xl">
             {% trans 'Process money in and out of your prison' %}
           </h1>
 
           <aside>
-            {% trans 'These tools will help you manage prisoner money' %}:
+            <p>
+              {% trans 'These tools will help you manage prisoner money' %}:
+            </p>
             <ul class="govuk-list govuk-list--bullet">
               <li>{% trans 'digital cashbook' %}</li>
               <li>{% trans 'digital disbursements' %}</li>
@@ -35,10 +35,11 @@
           <img alt="{% trans 'Digital cashbook' %}" src="{% static 'images/landing-cashbook.png' %}" srcset="{% static 'images/landing-cashbook@2x.png' %} 2x"/>
         </div>
       </div>
+
     </div>
   </div>
 
-  <div class="mtp-login__content">
+  <div class="govuk-width-container govuk-!-margin-bottom-9">
     {% notification_banners request 'cashbook_login' %}
 
     <div class="govuk-grid-row">
@@ -71,9 +72,7 @@
           {% include 'mtp_common/forms/field.html' with field=form.username input_classes='govuk-input--width-10' only %}
           {% include 'mtp_common/forms/field.html' with field=form.password input_classes='govuk-input--width-10' only %}
 
-          <div class="govuk-form-group">
-            <button type="submit" class="govuk-button" data-module="govuk-button" name="signin">{% trans 'Sign in' %}</button>
-          </div>
+          <button type="submit" class="govuk-button" data-module="govuk-button" name="signin">{% trans 'Sign in' %}</button>
         </form>
 
         <p><a href="{% url 'reset_password' %}">{% trans 'Forgotten your password?' %}</a></p>
@@ -81,7 +80,7 @@
       </section>
     </div>
 
-    <br/>
+    <br />
 
     <p>
       {% url 'submit_ticket' as get_help_link %}
