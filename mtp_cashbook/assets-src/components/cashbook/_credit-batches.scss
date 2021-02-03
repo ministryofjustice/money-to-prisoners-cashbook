@@ -19,6 +19,10 @@
     }
   }
 
+  .mtp-table__highlighted-row .govuk-checkboxes__label:before {
+    background-color: $govuk-body-background-colour;
+  }
+
   .mtp-received-at--warning {
     color: $govuk-error-colour;
   }

@@ -1,7 +1,10 @@
 'use strict';
 
+import {SelectAll} from './select-all';
+
 export var Cashbook = {
   init: function () {
+    SelectAll.init();
     this.initSelectionCount();
   },
 

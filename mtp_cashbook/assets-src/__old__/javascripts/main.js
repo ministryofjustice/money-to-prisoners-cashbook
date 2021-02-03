@@ -2,7 +2,6 @@
   'use strict';
 
   // common
-  require('select-all').SelectAll.init();
   require('unload').Unload.init();
   require('track-printing').TrackPrinting.init();
 
