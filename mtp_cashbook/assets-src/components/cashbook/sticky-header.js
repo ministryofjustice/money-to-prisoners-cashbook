@@ -12,7 +12,7 @@ export var StickyHeader = {
     }
 
     this.$window = $(window);
-    this.$form = $('form.js-BatchValidation');
+    this.$form = $('.mtp-form--batch-validation');
     this.$stickyHeader = this.$originalHeader.clone().addClass(this.stickyClass);
     this.offsetPosition = this.$originalHeader.offset().top + this.$originalHeader.height();
 

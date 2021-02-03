@@ -7,6 +7,5 @@
 
   // cashbook
   require('sign-up').SignUpChoices.init();
-  require('batch-validation').BatchValidation.init();
   require('navigation').Navigation.init();
 }());

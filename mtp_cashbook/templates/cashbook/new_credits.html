@@ -168,7 +168,7 @@
   <form
     method="post"
     action=""
-    class="js-BeforeUnload js-BatchValidation"
+    class="js-BeforeUnload mtp-form--batch-validation"
     data-credits-name="{{ form.new.credits.html_name }}">
     {% csrf_token %}
 
@@ -368,14 +368,15 @@
     </div>
     {% endif %}
 
-    {% dialoguebox html_id='incomplete-batch-dialog' title=_('Do you want to submit only the selected credits?') %}
-      <button type="submit"
-              name="submit_new"
-              class="govuk-button govuk-!-margin-right-2"
-              value="override">{% trans 'Yes' %}</button>
-      <button type="button"
-              class="govuk-button govuk-button--secondary {{ dialogue_close_class }}"
-              data-analytics="pageview,/batch/-dialog_close/">{% trans 'No, continue processing' %}</button>
+    {% dialoguebox html_id='incomplete-batch-dialogue' title=_('Do you want to submit only the selected credits?') %}
+      <p>
+        <button type="submit" name="submit_new" class="govuk-button" value="override">
+          {% trans 'Yes' %}
+        </button>
+        <a href="#" class="{{ dialogue_close_class }} mtp-link--form-cancel" role="button" data-analytics="pageview,/batch/-dialog_close/">
+          {% trans 'No, continue processing' %}
+        </a>
+      </p>
     {% enddialoguebox %}
   </form>
 

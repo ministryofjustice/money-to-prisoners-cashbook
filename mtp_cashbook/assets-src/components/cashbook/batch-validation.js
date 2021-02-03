@@ -1,23 +1,14 @@
 // Batch validation module
 'use strict';
 
-var analytics = require('analytics');
+import {Analytics} from 'mtp_common/components/analytics';
 
-exports.BatchValidation = {
-  selector: '.js-BatchValidation',
+export var BatchValidation = {
+  selector: '.mtp-form--batch-validation',
 
   init: function () {
-    this.cacheEls();
-    this.bindEvents();
-  },
-
-  cacheEls: function () {
     this.$form = $(this.selector);
-    this.creditsName = this.$form.data('credits-name');
-    this.$credits = $('[name="' + this.creditsName + '"]');
-  },
-
-  bindEvents: function () {
+    this.$credits = $('[name="' + this.$form.data('credits-name') + '"]');
     this.$form.on('click', ':submit', $.proxy(this.onSubmit, this));
   },
 
@@ -50,8 +41,7 @@ exports.BatchValidation = {
     return count;
   },
 
-  // Called when the user submits the form,
-  // either clicking 'Done' or 'Yes' in the popup.
+  // display a dialogue box to ask for confirmation before submitting partial-selected credit list
   onSubmit: function (e) {
     var $el = $(e.target);
     var type = $el.val();
@@ -59,8 +49,7 @@ exports.BatchValidation = {
     var numChecked = this._numChecked();
 
     if (type !== 'submit') {
-      // If this is a 'Yes' click in the confirmation popup, so just
-      // actually submit
+      // 'Yes' was click in the confirmation dialogue box, so just actually submit
       return;
     }
 
@@ -68,8 +57,8 @@ exports.BatchValidation = {
     if (!checkedValid && numChecked > 0) {
       // Partial: ask for confirmation
       e.preventDefault();
-      $('#incomplete-batch-dialog').trigger('dialogue:open');
-      analytics.Analytics.send('pageview', '/batch/-dialog_open/');
+      $('#incomplete-batch-dialogue').trigger('dialogue:open');
+      Analytics.send('pageview', '/batch/-dialog_open/');
     }
   }
 };
