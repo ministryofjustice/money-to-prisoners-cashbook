@@ -1,4 +1,5 @@
 {% extends 'mtp_common/components/header-app-links.html' %}
+{% load i18n %}
 
 {% block app_links %}
   {% if request.proposition_app.sub_app == 'cashbook' %}
@@ -10,10 +11,15 @@
         {% include 'mtp_common/components/header-app-link.html' with view_name='processed-credits-list' subview_names='processed-credits-detail' link_text=_('Processed credits') %}
       </li>
       <li>
-        {% include 'mtp_common/components/header-app-link.html' with view_name='search' link_text=_('Search') %}
-      </li>
-      <li>
         {% include 'mtp_common/components/header-app-link.html' with view_name='cashbook_submit_ticket' subview_names='cashbook_feedback_success' link_text=_('Get help') %}
+      </li>
+
+      <li class="mtp-header-app-links__search">
+        <form method="get" action="{% url 'search' %}" novalidate>
+          <label class="govuk-visually-hidden" for="id_search">{% trans 'Search all credits' %}</label>
+          <input id="id_search" class="govuk-input govuk-input--width-5" name="search" value="{{ search_field.value|default_if_none:'' }}" placeholder="{% trans 'Search all credits, for example, by prisoner number' %}" type="search" />
+          <button type="submit" class="govuk-button" data-module="govuk-button">{% trans 'Search' %}</button>
+        </form>
       </li>
     </ul>
   {% elif request.proposition_app.sub_app == 'disbursements' %}

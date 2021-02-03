@@ -281,7 +281,7 @@ class SearchForm(GARequestErrorReportingMixin, forms.Form):
     end = forms.DateField(label=gettext_lazy('To date'),
                           help_text=gettext_lazy('For example, 15/6/2017'),
                           required=False)
-    search = forms.CharField(label=gettext_lazy('Keywords'),
+    search = forms.CharField(label=gettext_lazy('Search'),
                              help_text=gettext_lazy('For example, prisoner name, prisoner number or sender name'),
                              required=False)
     page = forms.IntegerField(required=False, widget=forms.HiddenInput)
