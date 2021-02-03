@@ -4,7 +4,7 @@ import os
 
 from mtp_common.test_utils import silence_logger
 from mtp_common.test_utils.functional_tests import FunctionalTestCase
-
+from selenium.common.exceptions import NoSuchElementException
 
 logger = logging.getLogger('mtp')
 
@@ -26,15 +26,16 @@ class CashbookTestCase(FunctionalTestCase):
         """
         Fill in login form
         """
-        self.driver.get(url or self.live_server_url + '/en-gb/')
-        self.type_in(username_field, username)
-        self.type_in(password_field, password, send_return=True)
+        super().login(username, password, url=url, username_field=username_field, password_field=password_field)
+        try:
+            self.get_element('//button[@name="read_briefing"]').click()
+        except NoSuchElementException:
+            pass
 
     def click_logout(self):
         """
         Finds and clicks the log-out link
         """
-        self.driver.find_element_by_class_name('mtp-user-menu__toggle').click()
         self.driver.find_element_by_link_text('Sign out').click()
 
     def login_and_go_to(self, link_text, substring=False):
