@@ -21,9 +21,9 @@
   </header>
 
   <div class="mtp-!-display-print-only">
-    <h2 class="govuk-heading-s">
+    <span class="govuk-heading-m">
       {% trans 'CONFIDENTIAL: dispose of securely' %}
-    </h2>
+    </span>
   </div>
 
   {% if credited_credits %}
@@ -82,34 +82,38 @@
       {% include 'govuk-frontend/components/error-summary.html' with form=form.manual only %}
 
       {% if owned_manual_credits %}
-        {% captureoutput as banner_heading %}
-          <a href="#manual-credits-dialog" class="mtp-dialogue__open-trigger-link">
-            {% blocktrans trimmed count manual_credits=owned_manual_credits %}
-              {{ manual_credits }} credit needs your manual input in NOMIS.
-            {% plural %}
-              {{ manual_credits }} credits need your manual input in NOMIS.
-            {% endblocktrans %}
-            {% trans 'How?' %}
-          </a>
-        {% endcaptureoutput %}
-        {% include 'mtp_common/components/notification-banner.html' with banner_level='warning' banner_title='warning'|notification_level banner_heading=banner_heading classes='govuk-!-display-none-print' only %}
+        <h2 class="govuk-heading-m">
+          {% trans 'These credits need your manual input to be processed' %}
+        </h2>
 
-        <div class="govuk-!-display-none-print"><p>{% trans 'These credits need your manual input to be processed.' %}</p></div>
+        <div class="govuk-!-display-none-print">
+          {% captureoutput as banner_heading %}
+            <a href="#manual-credits-dialog" class="mtp-dialogue__open-trigger-link">
+              {% blocktrans trimmed count manual_credits=owned_manual_credits %}
+                {{ manual_credits }} credit needs your manual input in NOMIS.
+              {% plural %}
+                {{ manual_credits }} credits need your manual input in NOMIS.
+              {% endblocktrans %}
+              {% trans 'How?' %}
+            </a>
+          {% endcaptureoutput %}
+          {% include 'mtp_common/components/notification-banner.html' with banner_level='warning' banner_title='warning'|notification_level banner_heading=banner_heading classes='govuk-!-display-none-print' only %}
 
-        {% dialoguebox title=_('These credits need further processing') html_id='manual-credits-dialog' %}
-          <p>
-            {% trans 'The prisoner may be in transit, may have moved prisons or may have been released.' %}
-            {% trans 'Please enter these credits into NOMIS manually, then click ‘Done’.' %}
-          </p>
-          <button type="button" class="govuk-button {{ dialogue_close_class }}">{% trans 'OK' %}</button>
-        {% enddialoguebox %}
+          {% dialoguebox title=_('These credits need further processing') html_id='manual-credits-dialog' %}
+            <p>
+              {% trans 'The prisoner may be in transit, may have moved prisons or may have been released.' %}
+              {% trans 'Please enter these credits into NOMIS manually, then click ‘Done’.' %}
+            </p>
+            <button type="button" class="govuk-button {{ dialogue_close_class }}">{% trans 'OK' %}</button>
+          {% enddialoguebox %}
+        </div>
 
         {% include 'cashbook/includes/manual_credit_table.html' with manual_object_list=owned_manual_object_list owned=True pre_approval_required=request.pre_approval_required only %}
       {% endif %}
 
 
       {% if unowned_manual_credits %}
-        <div class="govuk-!-display-none-print"><p>
+        <h2 class="govuk-heading-m">
           {% if unowned_oldest_date and unowned_oldest_date|dayssince > 0 %}
             {% blocktrans trimmed with owner=other_owners.0 count owners=other_owners|length %}
               {{ owner }} started to process these credits but may not have finished
@@ -123,36 +127,38 @@
               Your colleagues should be processing these credits into NOMIS manually
             {% endblocktrans %}
           {% endif %}
-        </p></div>
+        </h2>
 
-        {% captureoutput as body %}
-          <p>
-            {% blocktrans trimmed with owner=other_owners.0 count owners=other_owners|length %}
-              Your colleague, {{ owner }}, started processing these credits yesterday.
-            {% plural %}
-              Some of your colleagues started processing these credits yesterday.
-            {% endblocktrans %}
-            {% trans 'To make sure they were processed successfully, please check NOMIS.' %}
-          </p>
-          <p>
-            {% blocktrans trimmed with owner=other_owners.0 count owners=other_owners|length %}
-              If they have been entered correctly, just click ‘Done’ and tell {{ owner }} you’ve finished processing the credits.
-            {% plural %}
-              If they have been entered correctly, just click ‘Done’ and tell your colleagues you’ve finished processing the credits.
-            {% endblocktrans %}
-          </p>
-          <p>
-            {% blocktrans trimmed with owner=other_owners.0 count owners=other_owners|length %}
-              If they have not been entered, please manually enter these credits youself, click ‘Done’ and tell {{ owner }} you’ve processed these credits for them.
-            {% plural %}
-              If they have not been entered, please manually enter these credits youself, click ‘Done’ and tell your colleagues you’ve processed these credits for them.
-            {% endblocktrans %}
-          </p>
-        {% endcaptureoutput %}
-        {% captureoutput as analytics %}{% stripwhitespace %}
-          pageview,/-help_open/{{ request.resolver_match.view_name }}/
-        {% endstripwhitespace %}{% endcaptureoutput %}
-        {% include 'govuk-frontend/components/details.html' with summary=_('How to finish processing') body=body analytics=analytics %}
+        <div class="govuk-!-display-none-print">
+          {% captureoutput as body %}
+            <p>
+              {% blocktrans trimmed with owner=other_owners.0 count owners=other_owners|length %}
+                Your colleague, {{ owner }}, started processing these credits yesterday.
+              {% plural %}
+                Some of your colleagues started processing these credits yesterday.
+              {% endblocktrans %}
+              {% trans 'To make sure they were processed successfully, please check NOMIS.' %}
+            </p>
+            <p>
+              {% blocktrans trimmed with owner=other_owners.0 count owners=other_owners|length %}
+                If they have been entered correctly, just click ‘Done’ and tell {{ owner }} you’ve finished processing the credits.
+              {% plural %}
+                If they have been entered correctly, just click ‘Done’ and tell your colleagues you’ve finished processing the credits.
+              {% endblocktrans %}
+            </p>
+            <p>
+              {% blocktrans trimmed with owner=other_owners.0 count owners=other_owners|length %}
+                If they have not been entered, please manually enter these credits youself, click ‘Done’ and tell {{ owner }} you’ve processed these credits for them.
+              {% plural %}
+                If they have not been entered, please manually enter these credits youself, click ‘Done’ and tell your colleagues you’ve processed these credits for them.
+              {% endblocktrans %}
+            </p>
+          {% endcaptureoutput %}
+          {% captureoutput as analytics %}{% stripwhitespace %}
+            pageview,/-help_open/{{ request.resolver_match.view_name }}/
+          {% endstripwhitespace %}{% endcaptureoutput %}
+          {% include 'govuk-frontend/components/details.html' with summary=_('How to finish processing') body=body analytics=analytics %}
+        </div>
 
         {% include 'cashbook/includes/manual_credit_table.html' with manual_object_list=unowned_manual_object_list owned=False pre_approval_required=request.pre_approval_required only %}
       {% endif %}
@@ -169,7 +175,7 @@
     {% include 'govuk-frontend/components/error-summary.html' with form=form.new only %}
 
     {% if new_object_list or not manual_credits %}
-    <div class="mtp-batch mtp-new-credits-batch {% if not new_object_list %}govuk-!-display-none-print{% endif %}">
+    <div class="mtp-batch mtp-batch--new-credits">
       {% if new_object_list %}
         <div class="mtp-floating-header js-StickyHeader govuk-!-display-none-print">
           <div class="govuk-grid-row">
@@ -194,7 +200,7 @@
           </div>
         </div>
 
-        <div class="mtp-nomis-print-header mtp-!-display-print-only">
+        <div class="mtp-!-page-break-before mtp-!-display-print-only">
           {% include 'govuk-frontend/components/warning-text.html' with text=_('You don’t have to manually enter all credits into NOMIS any more') extra_text=_('Now when you ‘confirm’ credits, they’ll be sent digitally to NOMIS') only %}
         </div>
       {% endif %}
@@ -254,7 +260,7 @@
               {% if request.pre_approval_required %}
                 <th scope="col">{% trans 'Security' %}</th>
               {% endif %}
-              <th class="mtp-check-col mtp-table__header--compact govuk-!-display-none-print" scope="col">{% trans 'Select' %}</th>
+              <th class="mtp-table__header--compact govuk-!-display-none-print" scope="col">{% trans 'Select' %}</th>
             </tr>
           </thead>
 
@@ -265,7 +271,7 @@
                   <td>
                     <div>{{ credit.received_at.date|date:'d/m/Y' }}</div>
                     {% with days=credit.received_at.date|dayssince %}
-                    <div class="govuk-body-s--secondary {% if days >= 7 %}old{% endif %}">
+                    <div class="govuk-body-s--secondary {% if days >= 7 %}mtp-received-at--warning{% endif %}">
                       {% if days == 0 %}
                         {% trans 'Today' %}
                       {% else %}
@@ -316,9 +322,9 @@
                 </tr>
                 {% if credit.comments %}
                   <tr>
-                    <td class="mtp-security" colspan="{% if request.pre_approval_required %}6{% else %}5{% endif %}">
+                    <td class="mtp-table__cell--security" colspan="{% if request.pre_approval_required %}6{% else %}5{% endif %}">
                       {% for comment in credit.comments %}
-                        <div class="mtp-security__comment">
+                        <div class="mtp-security-comment">
                           {{ comment.comment|linebreaks }}
                         </div>
                       {% endfor %}
@@ -348,7 +354,7 @@
 
             <tbody>
               <tr>
-                <td class="mtp-no-credits" colspan="{% if request.pre_approval_required %}6{% else %}5{% endif %}">
+                <td colspan="{% if request.pre_approval_required %}6{% else %}5{% endif %}">
                   <p class="govuk-heading-l">{% trans 'Thank you' %}</p>
                   <p>{% trans 'All credits have been processed' %}</p>
                 </td>

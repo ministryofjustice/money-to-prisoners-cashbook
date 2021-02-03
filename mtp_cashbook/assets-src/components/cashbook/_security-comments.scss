@@ -1,9 +1,9 @@
-.mtp-security__comment {
+.mtp-security-comment {
   position: relative;
   padding: 15px;
-  border: 3px solid $orange;
-  color: $text-colour;
-  background: $page-colour;
+  border: 3px solid govuk-colour('orange');
+  color: $govuk-text-colour;
+  background: $govuk-body-background-colour;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
@@ -17,7 +17,7 @@
   }
 }
 
-.mtp-security__comment:before {
+.mtp-security-comment:before {
   content: '';
   position: absolute;
   border-style: solid;
@@ -27,10 +27,10 @@
   bottom: auto;
   left: -12px;
   border-width: 0 10px 12px 0;
-  border-color: transparent $orange;
+  border-color: transparent govuk-colour('orange');
 }
 
-.mtp-security__comment:after {
+.mtp-security-comment:after {
   content: '';
   position: absolute;
   border-style: solid;
@@ -40,5 +40,5 @@
   bottom: auto;
   left: -7px;
   border-width: 0 14px 15px 0;
-  border-color: transparent $page-colour;
+  border-color: transparent $govuk-body-background-colour;
 }

@@ -7,7 +7,7 @@
     {{ credit.received_at.date|date:'d/m/Y' }}
     {% if credit.resolution != 'credited' %}
       {% with days=credit.received_at.date|dayssince %}
-        <div class="govuk-body-s--secondary {% if days >= 7 %}old{% endif %}">
+        <div class="govuk-body-s--secondary {% if days >= 7 %}mtp-received-at--warning{% endif %}">
           {% if days == 0 %}
             {% trans 'Today' %}
           {% else %}
@@ -77,9 +77,9 @@
 </tr>
 {% if credit.comments %}
   <tr>
-    <td class="mtp-security" colspan="{% if include_status and pre_approval_required %}7{% elif include_status %}6{% else %}4{% endif %}">
+    <td class="mtp-table__cell--security" colspan="{% if include_status and pre_approval_required %}7{% elif include_status %}6{% else %}4{% endif %}">
       {% for comment in credit.comments %}
-        <div class="mtp-security__comment">
+        <div class="mtp-security-comment">
           {{ comment.comment|linebreaks }}
         </div>
       {% endfor %}
