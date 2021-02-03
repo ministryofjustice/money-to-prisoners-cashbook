@@ -25,13 +25,7 @@ Card.init();
 DialogueBox.init();
 HiddenLongText.init();
 MailcheckWarning.init(
-  '.mtp-account-management input[type=email]',
-  ['justice.gov.uk'],
-  ['gov.uk'],
-  []
-);
-MailcheckWarning.init(
-  '#change-your-email #id_email',
+  '.mtp-page-with-staff-email-input input[type=email]',
   ['justice.gov.uk'],
   ['gov.uk'],
   []
