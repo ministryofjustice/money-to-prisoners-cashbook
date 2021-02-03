@@ -1,0 +1,33 @@
+.mtp-sticky-header {
+  .govuk-grid-column-one-third {
+    text-align: right;
+  }
+
+  &.mtp-sticky-header--sticky {
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    width: 100%;
+    margin: 0;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    background: $govuk-body-background-colour;
+    border-top: 0;
+    border-bottom: 3px solid $govuk-text-colour;
+
+    .govuk-grid-row {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 $govuk-gutter-half;
+    }
+
+    p, .govuk-button {
+      margin-bottom: 0;
+    }
+  }
+
+  @media print {
+    display: none;
+  }
+}

@@ -177,7 +177,7 @@
     {% if new_object_list or not manual_credits %}
     <div class="mtp-batch mtp-batch--new-credits">
       {% if new_object_list %}
-        <div class="mtp-floating-header js-StickyHeader govuk-!-display-none-print">
+        <div class="mtp-sticky-header govuk-!-display-none-print">
           <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
               <p class="govuk-!-display-none-print">
@@ -192,7 +192,7 @@
               </p>
             </div>
 
-            <div class="govuk-grid-column-one-third mtp-submit__button">
+            <div class="govuk-grid-column-one-third">
               {% if new_object_list %}
                 <button type="submit" name="submit_new" value="submit" class="govuk-button" data-module="govuk-button">{% trans 'Credit to NOMIS' %}</button>
               {% endif %}

@@ -1,10 +1,12 @@
 'use strict';
 
 import {SelectAll} from './select-all';
+import {StickyHeader} from './sticky-header';
 
 export var Cashbook = {
   init: function () {
     SelectAll.init();
+    StickyHeader.init();
     this.initSelectionCount();
     this.initConfirmManual();
   },

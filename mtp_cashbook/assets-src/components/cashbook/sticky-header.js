@@ -1,34 +1,24 @@
 // Sticky header module
 'use strict';
 
-exports.StickyHeader = {
-  selector: '.js-StickyHeader',
-
-  stickyClass: 'is-sticky',
+export var StickyHeader = {
+  selector: '.mtp-sticky-header',
+  stickyClass: 'mtp-sticky-header--sticky',
 
   init: function () {
-    this.cacheEls();
-    if (this.$originalHeader.length) {
-      this.bindEvents();
-      this.render();
-    }
-  },
-
-  cacheEls: function () {
     this.$originalHeader = $(this.selector);
-
-    if (this.$originalHeader.length) {
-      this.$window = $(window);
-      this.$body = $('body');
-      this.$form = $('form.js-BatchValidation');
-      this.$stickyHeader = this.$originalHeader.clone().addClass(this.stickyClass);
-      this.offsetPosition = this.$originalHeader.offset().top + this.$originalHeader.height();
+    if (this.$originalHeader.length === 0) {
+      return;
     }
-  },
 
-  bindEvents: function () {
-    this.$body.on('StickyHeader.render', $.proxy(this.render, this));
+    this.$window = $(window);
+    this.$form = $('form.js-BatchValidation');
+    this.$stickyHeader = this.$originalHeader.clone().addClass(this.stickyClass);
+    this.offsetPosition = this.$originalHeader.offset().top + this.$originalHeader.height();
+
+    $('body').on('StickyHeader.render', $.proxy(this.render, this));
     this.$window.scroll($.proxy(this.onScroll, this));
+    this.render();
   },
 
   onScroll: function () {
