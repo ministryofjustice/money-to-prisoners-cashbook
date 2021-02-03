@@ -39,9 +39,11 @@ PrintTrigger.init();
 TabbedPanel.init();
 
 // app components
+import {Cashbook} from './components/cashbook';
 import {Disbursements} from './components/disbursements';
 import {PrintLinkTarget} from './components/print-link-target';
 import {RadioReveal} from './components/radio-reveal';
+Cashbook.init();
 Disbursements.init();
 PrintLinkTarget.init();
 RadioReveal.init();

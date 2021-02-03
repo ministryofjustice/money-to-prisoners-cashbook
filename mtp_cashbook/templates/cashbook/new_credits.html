@@ -186,7 +186,7 @@
                 {% plural %}
                   <strong>{{ new_credits }}</strong> new credits.
                 {% endblocktrans %}
-                <span class="js-SelectionCount">
+                <span class="mtp-input--selection-count">
                   {% trans 'You haven’t selected any to process yet.' %}
                 </span>
               </p>
@@ -307,7 +307,7 @@
 
                     <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
                       <div class="govuk-checkboxes__item">
-                        <input id="check-{{ credit.id }}" class="govuk-checkboxes__input js-SelectionCount-item" name="{{ form.new.credits.html_name }}" value="{{ credit_pk }}" data-amount="{{ credit.amount|currency }}" type="checkbox" {% if credit_pk|to_string in form.new.credits.value %}checked{% endif %} />
+                        <input id="check-{{ credit.id }}" class="govuk-checkboxes__input mtp-input--counted" name="{{ form.new.credits.html_name }}" value="{{ credit_pk }}" data-amount="{{ credit.amount|currency }}" type="checkbox" {% if credit_pk|to_string in form.new.credits.value %}checked{% endif %} />
                         <label for="check-{{ credit.id }}" class="govuk-label govuk-checkboxes__label">
                           <span class="govuk-visually-hidden">
                             {% blocktrans trimmed with amount=credit.amount|currency prisoner_name=credit.prisoner_name %}
