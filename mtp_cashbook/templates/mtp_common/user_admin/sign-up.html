@@ -1,5 +1,5 @@
 {% extends 'mtp_common/user_admin/sign-up.html' %}
 
 {% block sign_up_extras_fields %}
-  {% include 'mtp_common/forms/select-field.html' with field=form.prison only %}
+  {% include 'mtp_common/forms/select-field.html' with field=form.prison input_classes='mtp-select--autocomplete govuk-input--width-10' only %}
 {% endblock %}
