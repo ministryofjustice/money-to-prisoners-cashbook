@@ -9,6 +9,5 @@
   require('sign-up').SignUpChoices.init();
   require('sticky-header').StickyHeader.init();
   require('batch-validation').BatchValidation.init();
-  require('confirm-manual').ConfirmManual.init();
   require('navigation').Navigation.init();
 }());

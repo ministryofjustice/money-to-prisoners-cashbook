@@ -19,6 +19,17 @@
     }
   }
 
+  .mtp-table__cell--manual-action .govuk-table {
+    tbody, th, td {
+      padding-bottom: 0;
+      border: 0;
+    }
+
+    th {
+      padding-left: 0;
+    }
+  }
+
   .mtp-table__highlighted-row .govuk-checkboxes__label:before {
     background-color: $govuk-body-background-colour;
   }

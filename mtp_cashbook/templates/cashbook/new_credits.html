@@ -76,7 +76,7 @@
   {% endif %}
 
   {% if owned_manual_credits or unowned_manual_credits %}
-    <form class="js-ConfirmManual" method="post" action="?manually_credited={{ credited_manual_credits }}" data-credits-name="{{ form.manual.credits.html_name }}">
+    <form class="mtp-form--confirm-manual" method="post" action="?manually_credited={{ credited_manual_credits }}" data-credits-name="{{ form.manual.credits.html_name }}">
       {% csrf_token %}
 
       {% include 'govuk-frontend/components/error-summary.html' with form=form.manual only %}

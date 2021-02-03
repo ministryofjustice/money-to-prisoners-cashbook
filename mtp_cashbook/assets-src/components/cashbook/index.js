@@ -6,6 +6,7 @@ export var Cashbook = {
   init: function () {
     SelectAll.init();
     this.initSelectionCount();
+    this.initConfirmManual();
   },
 
   initSelectionCount: function () {
@@ -29,6 +30,24 @@ export var Cashbook = {
           );
         }
       });
+    });
+  },
+
+  initConfirmManual: function () {
+    // display a dialogue box to ask for confirmation before submitting manual credit form
+    $('.mtp-form--confirm-manual').on('click', ':submit', function (e) {
+      var $el = $(e.target);
+      var type = $el.val();
+
+      if (type !== 'submit') {
+        // 'Yes' was click in the confirmation dialogue box, so just actually submit
+        return;
+      }
+
+      e.preventDefault();
+
+      var creditID = $el.data('credit-id');
+      $('#manual-confirm-dialogue-' + creditID).trigger('dialogue:open');
     });
   }
 };
