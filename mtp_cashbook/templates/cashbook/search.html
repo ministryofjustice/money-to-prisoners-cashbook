@@ -21,13 +21,13 @@
     <div class="govuk-grid-column-two-thirds">
 
       {% captureoutput as body %}
-        <form method="get" action="">
+        <form class="mtp-form--horizontal" method="get" action="">
           {% include 'govuk-frontend/components/error-summary.html' with form=form only %}
 
           {% include 'mtp_common/forms/field.html' with field=form.start input_classes='govuk-input--width-10' value=form.start.value|date:'d/m/Y'|default:form.start.value|default_if_none:'' only %}
           {% include 'mtp_common/forms/field.html' with field=form.end input_classes='govuk-input--width-10' value=form.end.value|date:'d/m/Y'|default:form.end.value|default_if_none:'' only %}
 
-          <div class="govuk-form-group mtp-search-box__submit">
+          <div>
             {# forces a search to start on page 1, copy search terms from header #}
             <input type="hidden" name="{{ form.page.html_name }}" value="1">
             <input type="hidden" name="{{ form.search.html_name }}" value="{{ form.search.value|default_if_none:'' }}">
@@ -68,6 +68,10 @@
             </tbody>
           </table>
         </div>
+      {% endif %}
+
+      {% if new_credit_list and old_credit_list %}
+        {% include 'govuk-frontend/components/section-break.html' with size='m' %}
       {% endif %}
 
       {% if old_credit_list %}
