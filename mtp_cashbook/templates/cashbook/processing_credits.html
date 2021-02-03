@@ -4,7 +4,7 @@
 {% block head %}
   {{ block.super }}
   {% if percentage < 100 %}
-    <meta http-equiv="refresh" content="2">
+    <meta http-equiv="refresh" content="5" />
   {% endif %}
 {% endblock %}
 
@@ -12,29 +12,31 @@
   {{ block.super }}
 
   <div class="mtp-progress-bar">
-    <div class="mtp-progress-bar__content">
-      <h2 class="govuk-heading-l">
-        {% if percentage < 100 %}
-          {% trans 'Digital cashbook is crediting to NOMIS' %}
-        {% else %}
-          {% trans 'Digital cashbook has finished crediting to NOMIS' %}
-        {% endif %}
-      </h2>
-      <p>
-        {% if percentage < 100 %}
-          {% trans 'This may take a minute or two so please don’t close this page' %}
-        {% else %}
-          &nbsp;
-        {% endif %}
-      </p>
-    </div>
+    <h1 class="govuk-heading-xl">
+      {% if percentage < 100 %}
+        {% trans 'Digital cashbook is crediting to NOMIS' %}
+      {% else %}
+        {% trans 'Digital cashbook has finished crediting to NOMIS' %}
+      {% endif %}
+    </h1>
+    <p class="govuk-body-l">
+      {% if percentage < 100 %}
+        {% trans 'This may take a minute or two so please don’t close this page' %}
+      {% else %}
+        &nbsp;
+      {% endif %}
+    </p>
     <div class="mtp-progress-bar__background">
       <div class="mtp-progress-bar__fill" style="width: {{ percentage }}%"></div>
     </div>
-    {% if percentage == 100 %}
-      <a class="mtp-progress-bar__continue" href="{% url 'new-credits' %}">{% trans 'Continue' %}</a>
-    {% else %}
-      <div class="mtp-progress-bar__progress">{{ percentage }}%</div>
-    {% endif %}
+    <p class="govuk-body-l">
+      {% if percentage == 100 %}
+          <a href="{% url 'new-credits' %}" class="govuk-button" data-module="govuk-button" role="button">
+            {% trans 'Continue' %}
+          </a>
+      {% else %}
+        {{ percentage }}%
+      {% endif %}
+    </p>
   </div>
 {% endblock %}
