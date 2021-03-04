@@ -13,6 +13,16 @@ export var Disbursements = {
     // update NOMIS balances without page reload
     $('.mtp-accounts-table tfoot a').click(function (e) {
       e.preventDefault();
+
+      if(typeof django === 'undefined') {
+        // if django js library hasn't loaded yet, fall back to no translation
+        window.django = {
+          gettext: function(text) {
+            return text;
+          }
+        };
+      }
+
       var $button = $(this);
       var $dataBoxes = $('.mtp-accounts-table__amount');
       var errorMessage = django.gettext('Please try again later');
