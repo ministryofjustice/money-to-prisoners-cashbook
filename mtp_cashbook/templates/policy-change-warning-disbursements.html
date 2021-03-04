@@ -1,9 +1,0 @@
-{% load i18n %}
-{% load mtp_common %}
-
-{% captureoutput as banner_heading %}
-  <a href="{% url 'policy-change' %}">
-    {% trans 'How the cap on disbursements works' %}
-  </a>
-{% endcaptureoutput %}
-{% include 'mtp_common/components/notification-banner.html' with banner_level='info' banner_title='info'|notification_level banner_heading=banner_heading only %}

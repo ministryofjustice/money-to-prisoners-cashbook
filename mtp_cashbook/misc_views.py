@@ -50,7 +50,6 @@ class LandingView(BaseView, TemplateView):
 
         kwargs.update(
             start_page_url=settings.START_PAGE_URL,
-            bank_transfers_enabled=settings.BANK_TRANSFERS_ENABLED,
             cards=cards,
         )
         return super().get_context_data(**kwargs)

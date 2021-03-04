@@ -169,7 +169,6 @@ class NewCreditsView(CashbookView, FormView):
         request_params = self.request.GET.dict()
         request_params.setdefault('ordering', '-received_at')
         context['request_params'] = request_params
-        context['bank_transfers_enabled'] = settings.BANK_TRANSFERS_ENABLED
 
         return context
 
@@ -240,7 +239,6 @@ class ProcessedCreditsListView(CashbookView, FormView):
             'object_count': form.pagination['count'],
             'current_page': form.pagination['page'],
             'page_count': form.pagination['page_count'],
-            'bank_transfers_enabled': settings.BANK_TRANSFERS_ENABLED,
         })
         return context
 
