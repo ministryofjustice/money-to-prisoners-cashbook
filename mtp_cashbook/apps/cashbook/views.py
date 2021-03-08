@@ -29,9 +29,25 @@ class CashbookView(BaseView):
             'sub_app': 'cashbook',
             'name': _('Digital cashbook'),
             'url': reverse('new-credits'),
-            'help_url': reverse('cashbook_submit_ticket'),
+            'help_url': reverse('cashbook_faq'),
         }
         return super().dispatch(request, *args, **kwargs)
+
+
+class CashbookFAQView(CashbookView, TemplateView):
+    title = _('What do you need help with?')
+    base_template_name = 'cashbook/base.html'
+    template_name = 'cashbook/faq.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['contact_us_url'] = reverse('cashbook_submit_ticket')
+        context['fiu_email'] = settings.FIU_EMAIL
+        context['noms_ops_url'] = settings.NOMS_OPS_URL
+        context['send_money_url'] = settings.SEND_MONEY_URL
+
+        return context
 
 
 class CashbookGetHelpView(CashbookView, GetHelpView):

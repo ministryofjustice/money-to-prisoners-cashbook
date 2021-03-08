@@ -1,0 +1,137 @@
+{% extends 'cashbook/base.html' %}
+{% load i18n %}
+
+{% block page_title %}{{ view.title }} – {{ block.super }}{% endblock %}
+
+{% block body_classes %}{{ block.super }} mtp-credits{% endblock %}
+
+{% block content %}
+  {{ block.super }}
+
+  {% if bank_transfers_enabled %}
+    {% include 'policy-change-warning-credits.html' %}
+  {% endif %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <header>
+        <h1 class="govuk-heading-xl">{{ view.title }}</h1>
+      </header>
+
+      <div class="mtp-!-display-print-only">
+        <span class="govuk-heading-m">
+          {% trans 'CONFIDENTIAL: dispose of securely' %}
+        </span>
+      </div>
+
+
+      <h2 class="govuk-heading-m" id="faq-send-money">
+        {% trans "I have a query about a payment in the 'Send money to someone in prison' service" %}
+      </h2>
+
+      <p class="govuk-body">
+        {% blocktrans trimmed %}
+          Ask the sender of the payment to go to the <a href="{{ send_money_url }}/help" class="govuk-link">help pages on the service</a>.
+        {% endblocktrans %}
+      </p>
+      <p class="govuk-body">
+        {% blocktrans trimmed %}
+          They can <a href="{{ send_money_url }}/help/with-a-payment-i-sent/" class="govuk-link">get help about a payment they've already made</a> by clicking the 'Contact us' button at the bottom of this help page and filling in the form.
+        {% endblocktrans %}
+      </p>
+
+
+      <h2 class="govuk-heading-m" id="faq-update-details">
+        {% trans 'I need to update my prisons / password / email address' %}
+      </h2>
+
+      <p class="govuk-body">
+        {% trans "Sign in, click your name in the top-right corner, and go to 'Settings' where you can:" %}
+      </p>
+
+      <ul class="govuk-list govuk-list--bullet">
+        <li>
+          {% trans "see what prisons you cover" %}
+        </li>
+        <li>
+          {% trans "update the prisons you cover, click 'Move prison'" %}
+        </li>
+        <li>
+          {% trans "update your password, click 'Change password'" %}
+        </li>
+        <li>
+          {% trans "update your email address, click 'Change email'" %}
+        </li>
+      </ul>
+
+
+      <h2 class="govuk-heading-m" id="faq-block-sender">
+        {% trans 'I want to block a sender or return / reject a payment' %}
+      </h2>
+
+      <p class="govuk-body">
+        {% blocktrans trimmed %}
+          Once you have it, you can't block a sender or return / reject a payment but you can put it on hold in NOMIS and/or email HMPPS Financial Investigation Unit at {{ fiu_email }} for help." 
+        {% endblocktrans %}
+      </p>
+
+
+      <h2 class="govuk-heading-m" id="faq-security">
+        {% trans 'I want to know how security works' %}
+      </h2>
+
+      <p class="govuk-body">
+        {% blocktrans trimmed %}
+          Email HMPPS Financial Investigation Unit at {{ fiu_email }}
+        {% endblocktrans %}
+      </p>
+
+
+      <h2 class="govuk-heading-m" id="faq-reconciliation">
+        {% trans 'I have a question about reconciliation' %}
+      </h2>
+
+      <p class="govuk-body">
+        {% blocktrans %}
+          We can't access enough relevant information to answer questions about this.
+          But if, over several days, you check the balance of the general ledger against NOMIS, you might find the difference due to some credits not being credited on the day.
+        {% endblocktrans %}
+      </p>
+
+
+      <h2 class="govuk-heading-m" id="faq-intelligence-tool">
+        {% trans 'I want a prisoner money intelligence tool account' %}
+      </h2>
+
+      <p class="govuk-body">
+        {% blocktrans trimmed %}
+          You can only have one account - intelligence tool OR digital cashbook. If you need an intelligence tool account, instead of a cashbook one, go directly to the <a href="{{ noms_ops_url }}" class="govuk-link">intelligence tool</a> and request it.
+        {% endblocktrans %}
+      </p>
+
+
+      <h2 class="govuk-heading-m" id="faq-change-name">
+        {% trans 'I need to change my name' %}
+      </h2>
+
+      <p class="govuk-body">
+        {% blocktrans trimmed %}
+          To change your name, <a href="{{ contact_us_url }}?message=My new name is [please fill in]" class="govuk-link">contact us</a>.
+        {% endblocktrans %}
+      </p>
+
+
+      <h2 class="govuk-heading-m" id="faq-something-else">
+        {% trans 'I have a question about something else' %}
+      </h2>
+
+      <p class="govuk-body">
+        {% blocktrans trimmed %}
+          Please <a href="{{ contact_us_url }}" class="govuk-link">contact us</a>.
+        {% endblocktrans %}
+      </p>
+
+    </div>
+  </div>
+
+{% endblock %}
