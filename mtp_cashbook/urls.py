@@ -17,6 +17,7 @@ urlpatterns = i18n_patterns(
     url(r'^$', misc_views.LandingView.as_view(), name='home'),
 
     # miscellaneous views
+    url(r'^faq/$', misc_views.FAQView.as_view(), name='faq'),
     url(r'^ml-briefing/$', misc_views.MLBriefingConfirmationView.as_view(), name='ml-briefing-confirmation'),
     url(r'^ml-briefing/read/$', misc_views.MLBriefingView.as_view(), name='ml-briefing'),
     url(r'^policy-change/$', misc_views.PolicyChangeInfo.as_view(), name='policy-change'),

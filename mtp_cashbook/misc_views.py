@@ -120,3 +120,17 @@ class PolicyChangeInfo(BaseView, TemplateView):
             return ['policy-change-warning.html']
         else:
             return ['policy-change-info.html']
+
+
+class FAQView(TemplateView):
+    title = _('What do you need help with?')
+    template_name = 'faq.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['contact_us_url'] = reverse_lazy('submit_ticket')
+        context['reset_password_url'] = reverse_lazy('reset_password')
+        context['sign_up_url'] = reverse_lazy('sign-up')
+
+        return context
