@@ -11,10 +11,6 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-      <a class="govuk-back-link" href="{% url 'home' %}">
-        {% trans 'Back' %}
-      </a>
-
       <header>
         <h1 class="govuk-heading-xl">{{ view.title }}</h1>
       </header>
@@ -24,9 +20,9 @@
         {% trans "I requested an account, but heard nothing" %}
       </h2>
 
-      <p class="govuk-body">
+      <p>
         {% blocktrans trimmed %}
-          Either remind your business hub manager to accept your request, or <a href="{{ sign_up_url }}" class="govuk-link">request an account</a> again.
+          Either remind your business hub manager to accept your request, or <a href="{{ sign_up_url }}">request an account</a> again.
         {% endblocktrans %}
       </p>
 
@@ -35,9 +31,12 @@
         {% trans "I’m locked out" %}
       </h2>
 
-      <p class="govuk-body">
+      <p>
         {% blocktrans trimmed %}
-          If you mis-type your password too many times, you'll be locked out. Try again in about half an hour.
+          If you mis-type your password too many times, you'll be locked out.
+        {% endblocktrans %}
+        {% blocktrans trimmed %}
+          Try again in about half an hour.
         {% endblocktrans %}
       </p>
 
@@ -46,9 +45,15 @@
         {% trans "I may already have an account" %}
       </h2>
 
-      <p class="govuk-body">
+      <p>
         {% blocktrans trimmed %}
-          Try <a href="{{ reset_password_url }}" class="govuk-link">resetting your password</a>. If you have an account, you'll get an email with a link. If not, <a href="{{ sign_up_url }}">request an account</a>.
+          Try <a href="{{ reset_password_url }}">resetting your password</a>.
+        {% endblocktrans %}
+        {% blocktrans trimmed %}
+          If you have an account, you'll get an email with a link.
+        {% endblocktrans %}
+        {% blocktrans trimmed %}
+          If not, <a href="{{ sign_up_url }}">request an account</a>.
         {% endblocktrans %}
       </p>
 
@@ -57,9 +62,10 @@
         {% trans "I've forgotten or need to change my username" %}
       </h2>
 
-      <p class="govuk-body">
+      <p>
+        {% url 'submit_ticket' as contact_us_url %}
         {% blocktrans trimmed %}
-            To change your username, <a href="{{ contact_us_url }}?message=My new username (usually your Quantum ID) is [please fill in]" class="govuk-link">contact us</a>.
+            To change your username, <a href="{{ contact_us_url }}?message=My%20new%20username%20%28usually%20your%20Quantum%20ID%29%20is%20%5Bplease%20fill%20in%5D">contact us</a>.
         {% endblocktrans %}
       </p>
 
@@ -68,9 +74,10 @@
         {% trans "Reset password isn’t working" %}
       </h2>
 
-      <p class="govuk-body">
+      <p>
+        {% url 'submit_ticket' as contact_us_url %}
         {% blocktrans trimmed %}
-          To reset your password, <a href="{{ contact_us_url }}?message=My new password is [please fill in]" class="govuk-link">contact us</a>.
+          To reset your password, <a href="{{ contact_us_url }}?message=I%20need%20help%20resetting%20my%20password.%20My%20username%20is%20%5Bplease%20fill%20in%5D.">contact us</a>.
         {% endblocktrans %}
       </p>
 
