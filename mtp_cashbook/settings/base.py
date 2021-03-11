@@ -145,7 +145,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'mtp_common.context_processors.analytics',
                 'mtp_common.context_processors.app_environment',
-                'cashbook.context_processors.govuk_localisation',
+                'mtp_common.context_processors.govuk_localisation',
                 'cashbook.context_processors.cashbook_settings',
             ],
         },

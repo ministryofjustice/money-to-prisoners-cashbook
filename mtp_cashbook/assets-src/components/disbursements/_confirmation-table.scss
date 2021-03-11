@@ -1,0 +1,34 @@
+.mtp-confirm-table {
+  max-width: 850px;
+
+  .mtp-confirm-table__details {
+    border: 3px solid $govuk-text-colour;
+  }
+
+  & td:last-child {
+    padding-right: 1em;
+    text-align: right;
+  }
+
+  th, td {
+    padding-left: 1em;
+    vertical-align: top;
+    border: 0;
+  }
+
+  .mtp-confirm-table__section {
+    border-top: 2px solid $govuk-border-colour;
+  }
+
+  h2 {
+    margin: 0;
+  }
+
+  tbody.mtp-confirm-table__history {
+    background-color: $govuk-canvas-background-colour;
+
+    & td:last-child {
+      text-align: left;
+    }
+  }
+}

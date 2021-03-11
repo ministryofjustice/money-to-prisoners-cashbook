@@ -1,0 +1,54 @@
+.mtp-credits {
+  .govuk-\!-display-none-print {
+    td {
+      border-top: 0;
+    }
+  }
+
+  .mtp-table__cell--manual-action {
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .mtp-table__cell--manual-action__details {
+    color: govuk-colour('orange');
+    font-weight: bold;
+
+    @media print {
+      color: #000;
+    }
+  }
+
+  .mtp-table__cell--manual-action .govuk-table {
+    tbody, th, td {
+      padding-bottom: 0;
+      border: 0;
+    }
+
+    th {
+      padding-left: 0;
+    }
+  }
+
+  .mtp-table__highlighted-row .govuk-checkboxes__label:before {
+    background-color: $govuk-body-background-colour;
+  }
+
+  .mtp-received-at--warning {
+    color: $govuk-error-colour;
+  }
+
+  .mtp-table__cell--security {
+    border-top: 0;
+  }
+
+  @media print {
+    &, .mtp-table {
+      width: 100%;
+    }
+
+    .govuk-button {
+      display: none;
+    }
+  }
+}

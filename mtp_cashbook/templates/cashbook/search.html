@@ -6,47 +6,45 @@
 
 {% block body_classes %}{{ block.super }} mtp-credits{% endblock %}
 
-{% block inner_content %}
+{% block content %}
   {{ block.super }}
 
   <header>
-    <h1 class="heading-xlarge mtp-heading--compact">{{ view.title }}</h1>
+    <h1 class="govuk-heading-xl">{{ view.title }}</h1>
   </header>
-
-  {% include 'mtp_common/includes/message_box.html' %}
 
   {% if form.is_valid %}
     <p>{{ form.get_search_description }}</p>
   {% endif %}
 
-  <div class="grid-row print-hidden">
-    <div class="column-two-thirds">
-      <p>
-        <a class="mtp-disclosure" href="#" aria-controls="mtp-search-box" aria-expanded="{% if form.is_valid %}false{% else %}true{% endif %}" role="button" data-analytics="pageview,/-help_open/{{ request.resolver_match.view_name }}/">
-          <span></span>{% trans 'Filter these credits' %}
-        </a>
-      </p>
+  <div class="govuk-grid-row govuk-!-display-none-print">
+    <div class="govuk-grid-column-two-thirds">
 
-      <div class="mtp-search-box mtp-disclosure__contents panel panel-border-narrow print-hidden" id="mtp-search-box">
-        <form method="get" action="">
-          {% include 'mtp_common/forms/error-summary.html' with form=form only %}
+      {% captureoutput as body %}
+        <form class="mtp-form--horizontal" method="get" action="">
+          {% include 'govuk-frontend/components/error-summary.html' with form=form only %}
 
-          {% include 'mtp_common/forms/field.html' with field=form.start value=form.start.value|date:'d/m/Y'|default:form.start.value|default_if_none:'' only %}
-          {% include 'mtp_common/forms/field.html' with field=form.end value=form.end.value|date:'d/m/Y'|default:form.end.value|default_if_none:'' only %}
+          {% include 'mtp_common/forms/field.html' with field=form.start input_classes='govuk-input--width-10' value=form.start.value|date:'d/m/Y'|default:form.start.value|default_if_none:'' only %}
+          {% include 'mtp_common/forms/field.html' with field=form.end input_classes='govuk-input--width-10' value=form.end.value|date:'d/m/Y'|default:form.end.value|default_if_none:'' only %}
 
-          <div class="form-group mtp-search-box__submit">
+          <div>
             {# forces a search to start on page 1, copy search terms from header #}
             <input type="hidden" name="{{ form.page.html_name }}" value="1">
             <input type="hidden" name="{{ form.search.html_name }}" value="{{ form.search.value|default_if_none:'' }}">
-            <input class="button" type="submit" value="{% trans 'Filter list' %}">
+            <input class="govuk-button" data-module="govuk-button" type="submit" value="{% trans 'Filter list' %}">
           </div>
         </form>
-      </div>
+      {% endcaptureoutput %}
+      {% captureoutput as analytics %}{% stripwhitespace %}
+        pageview,/-help_open/{{ request.resolver_match.view_name }}/
+      {% endstripwhitespace %}{% endcaptureoutput %}
+      {% include 'govuk-frontend/components/details.html' with id='mtp-search-box' summary=_('Filter these credits') body=body analytics=analytics open=form_has_errors only %}
+
     </div>
 
-    <div class="column-one-third">
+    <div class="govuk-grid-column-one-third">
       {% if credits_returned %}
-        <p style="text-align:right"><a href="#" class="print-hidden js-print-trigger">{% trans 'Print this page of credits' %}</a></p>
+        <p style="text-align:right"><a href="#" class="govuk-!-display-none-print mtp-print-trigger">{% trans 'Print this page of credits' %}</a></p>
       {% endif %}
     </div>
   </div>
@@ -54,37 +52,45 @@
   {% if credits_returned %}
     <div class="mtp-batch">
       {% if new_credit_list %}
-        <h2 class="heading-medium">{% trans 'New credits' %}</h2>
-        <table class="mtp-table">
-          <caption class="visually-hidden">{% trans 'New credits' %}</caption>
+        <h2 class="govuk-heading-m">{% trans 'New credits' %}</h2>
+        <div class="mtp-table__container">
+          <table class="mtp-table">
+            <caption class="govuk-visually-hidden">{% trans 'New credits' %}</caption>
 
-          <thead>
-            {% include 'cashbook/includes/credits-header-row.html' with form=form include_status=False pre_approval_required=request.pre_approval_required only %}
-          </thead>
+            <thead>
+              {% include 'cashbook/includes/credits-header-row.html' with form=form include_status=False pre_approval_required=request.pre_approval_required only %}
+            </thead>
 
-          <tbody>
-            {% for credit in new_credit_list %}
-              {% include 'cashbook/includes/credit-row.html' with credit=credit include_status=False pre_approval_required=request.pre_approval_required only %}
-            {% endfor %}
-          </tbody>
-        </table>
+            <tbody>
+              {% for credit in new_credit_list %}
+                {% include 'cashbook/includes/credit-row.html' with credit=credit include_status=False pre_approval_required=request.pre_approval_required only %}
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% endif %}
+
+      {% if new_credit_list and old_credit_list %}
+        {% include 'govuk-frontend/components/section-break.html' with size='m' %}
       {% endif %}
 
       {% if old_credit_list %}
-        <h2 class="heading-medium">{% trans 'Processed credits' %}</h2>
-        <table class="mtp-table">
-          <caption class="visually-hidden">{% trans 'Processed credits' %}</caption>
+        <h2 class="govuk-heading-m">{% trans 'Processed credits' %}</h2>
+        <div class="mtp-table__container">
+          <table class="mtp-table">
+            <caption class="govuk-visually-hidden">{% trans 'Processed credits' %}</caption>
 
-          <thead>
-            {% include 'cashbook/includes/credits-header-row.html' with form=form include_status=True pre_approval_required=request.pre_approval_required only %}
-          </thead>
+            <thead>
+              {% include 'cashbook/includes/credits-header-row.html' with form=form include_status=True pre_approval_required=request.pre_approval_required only %}
+            </thead>
 
-          <tbody>
-            {% for credit in old_credit_list %}
-              {% include 'cashbook/includes/credit-row.html' with credit=credit include_status=True pre_approval_required=request.pre_approval_required only %}
-            {% endfor %}
-          </tbody>
-        </table>
+            <tbody>
+              {% for credit in old_credit_list %}
+                {% include 'cashbook/includes/credit-row.html' with credit=credit include_status=True pre_approval_required=request.pre_approval_required only %}
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       {% endif %}
     </div>
 

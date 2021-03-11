@@ -8,103 +8,93 @@
 {% block page_title %}{{ view.title }} – {{ block.super }}{% endblock %}
 {% block body_classes %}{{ block.super }} mtp-disbursement-search{% endblock %}
 
-{% block inner_content %}
+{% block content %}
   {{ block.super }}
 
   <header>
-    <h1 class="heading-xlarge mtp-heading--compact">{% trans 'Payments made' %}</h1>
+    <h1 class="govuk-heading-xl">{% trans 'Payments made' %}</h1>
   </header>
 
-  <p class="lede">{{ form.search_description.description }}</p>
+  <p class="govuk-body-l">{{ form.search_description.description }}</p>
 
-  <form method="get" class="print-hidden">
+  <form method="get" class="govuk-!-display-none-print">
     <p><a href="{% url 'disbursements:process-overview' %}#section-track">{% trans 'How to trace a payment' %}</a></p>
 
     {{ form.ordering.as_hidden }}
 
-    {% include 'mtp_common/forms/error-summary.html' with form=form only %}
+    {% include 'govuk-frontend/components/error-summary.html' with form=form only %}
 
     {% tabbedpanel cookie_name='disbursement-search' tab_label=_('Filter by') %}
       {% paneltab name='prisoner' title=_('Prisoner') %}
-        <div class="grid-row">
-          <div class="column-third">
-            {% include 'mtp_common/forms/field.html' with field=form.prisoner_name input_classes='form-control-3-4' %}
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-one-third">
+            {% include 'mtp_common/forms/field.html' with field=form.prisoner_name input_classes='govuk-input--width-10' %}
           </div>
-          <div class="column-third">
-            {% include 'mtp_common/forms/field.html' with field=form.prisoner_number input_classes='form-control-2-3' %}
+          <div class="govuk-grid-column-one-third">
+            {% include 'mtp_common/forms/field.html' with field=form.prisoner_number input_classes='govuk-input--width-10 mtp-input--prisoner-number' %}
           </div>
         </div>
       {% endpaneltab %}
 
       {% paneltab name='recipient' title=_('Recipient') %}
-        <div class="grid-row">
-          <div class="column-two-thirds">
-            {% include 'mtp_common/forms/field.html' with field=form.recipient_name %}
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-two-thirds">
+            {% include 'mtp_common/forms/field.html' with field=form.recipient_name input_classes='govuk-input--width-10' %}
           </div>
         </div>
       {% endpaneltab %}
 
       {% paneltab name='invoice_number' title=_('Invoice number') %}
-        <div class="grid-row">
-          <div class="column-two-thirds">
-            {% include 'mtp_common/forms/field.html' with field=form.invoice_number %}
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-two-thirds">
+            {% include 'mtp_common/forms/field.html' with field=form.invoice_number input_classes='govuk-input--width-10' %}
           </div>
         </div>
       {% endpaneltab %}
 
       {% paneltab name='status' title=_('Status') %}
-        <div class="grid-row">
-          <div class="column-third">
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-one-third">
             {% include 'mtp_common/forms/select-field.html' with field=form.resolution %}
           </div>
-          <div class="column-third">
-            {% include 'mtp_common/forms/field.html' with field=form.nomis_transaction_id input_classes='form-control-2-3' %}
+          <div class="govuk-grid-column-one-third">
+            {% include 'mtp_common/forms/field.html' with field=form.nomis_transaction_id input_classes='govuk-input--width-10' %}
           </div>
         </div>
       {% endpaneltab %}
 
       {% paneltab name='date' title=_('Date') %}
-        <div class="grid-row">
-          <div class="column-one-third">
-            {% with field=form.date_filter %}
-              <div class="form-group {% if field.errors %}form-group-error{% endif %}">
-                {% include 'mtp_common/forms/field-errors.html' with field=field only %}
-                {% for choice_value, choice_label in field.field.choices %}
-                  <div class="multiple-choice">
-                    <input id="{{ field.id_for_label }}-{{ forloop.counter0 }}" type="radio" name="{{ field.html_name }}" value="{{ choice_value }}" {% if field.value == choice_value %}checked{% endif %}>
-                    <label for="{{ field.id_for_label }}-{{ forloop.counter0 }}">{{ choice_label }}</label>
-                  </div>
-                {% endfor %}
-              </div>
-            {% endwith %}
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-one-third">
+            {% include 'mtp_common/forms/radio-field.html' with field=form.date_filter small=True only %}
           </div>
-          <div class="column-one-third">
-            {% include 'mtp_common/forms/field.html' with field=form.date__gte %}
+          <div class="govuk-grid-column-one-third">
+            {% include 'mtp_common/forms/field.html' with field=form.date__gte input_classes='govuk-input--width-10' %}
           </div>
-          <div class="column-one-third">
-            {% include 'mtp_common/forms/field.html' with field=form.date__lt %}
+          <div class="govuk-grid-column-one-third">
+            {% include 'mtp_common/forms/field.html' with field=form.date__lt input_classes='govuk-input--width-10' %}
           </div>
         </div>
       {% endpaneltab %}
 
-      <div class="mtp-tab-container__footer">
-        <button type="submit" class="button">{% trans 'Filter list' %}</button>
+      <p class="mtp-tab-container__footer govuk-!-margin-top-4">
+        <button type="submit" class="govuk-button" data-module="govuk-button">{% trans 'Filter list' %}</button>
         {% if form.search_description.has_filters %}
-          <a href="?{% if form.ordering.value %}ordering={{ form.ordering.value }}{% endif %}" role="button">
+          <a href="?{% if form.ordering.value %}ordering={{ form.ordering.value }}{% endif %}" class="mtp-link--form-cancel" role="button">
             {% trans 'Clear filters' %}
           </a>
         {% endif %}
-      </div>
+      </p>
 
     {% endtabbedpanel %}
   </form>
 
-  <br/>
+  <br />
 
   {% if form.is_valid %}
-    <div class="mtp-batch">
+    <div class="mtp-table__container mtp-disbursement-search-results">
       <table class="mtp-table">
-        <caption class="visually-hidden">{{ form.search_description.description }}</caption>
+        <caption class="govuk-visually-hidden">{{ form.search_description.description }}</caption>
         <thead>
           <tr>
             {% sortable_cell _('Sender') form.cleaned_data 'prisoner_name' %}
@@ -118,77 +108,79 @@
           {% for disbursement in disbursements %}
             <tr>
               <!-- {{ disbursement.id }} -->
-              <td class="mtp-sender">
-                <span class="visually-hidden">{% trans 'Prisoner' %}:</span>
+              <td class="mtp-disbursement-search-results__sender">
+                <span class="govuk-visually-hidden">{% trans 'Prisoner' %}:</span>
                 {{ disbursement.prisoner_name }}
-                <br/>
-                <br/>
-                <span class="visually-hidden">{% trans 'Prisoner number' %}:</span>
-                <small>{{ disbursement.prisoner_number }}</small>
+                <br />
+                <br />
+                <span class="govuk-visually-hidden">{% trans 'Prisoner number' %}:</span>
+                <small class="govuk-body-s">{{ disbursement.prisoner_number }}</small>
               </td>
 
-              <td class="mtp-amount">
+              <td class="mtp-disbursement-search-results__amount">
                 {{ disbursement.amount|currency:'£' }}
-                <br/>
-                <br/>
+                <br />
+                <br />
                 {% if disbursement.method == 'bank_transfer' %}
-                  <small>
+                  <small class="govuk-body-s">
                     {% blocktrans trimmed with account_number=disbursement.account_number %}
-                      Account {{ account_number }}<br/>
+                      Account {{ account_number }}<br />
                     {% endblocktrans %}
                     {% blocktrans trimmed with sort_code=disbursement.sort_code|format_sortcode %}
                       Sort code {{ sort_code }}
                     {% endblocktrans %}
                   </small>
-                  <br/>
-                  <br/>
+                  <br />
+                  <br />
                 {% else %}
-                  <small>{% trans 'Cheque' %}</small>
-                  <br/>
-                  <br/>
+                  <small class="govuk-body-s">{% trans 'Cheque' %}</small>
+                  <br />
+                  <br />
                 {% endif %}
-                <small class="mtp-description">
+                <small class="govuk-body-s">
                   <div>{% trans 'Description' %}:</div>
                   {% if disbursement.remittance_description %}
                     {{ disbursement.remittance_description|hide_long_text }}
                   {% else %}
-                    <span class="text-secondary">({% trans 'None given' %})</span>
+                    <span class="govuk-body-s--secondary">({% trans 'None given' %})</span>
                   {% endif %}
                 </small>
               </td>
 
-              <td class="mtp-recipient">
+              <td class="mtp-disbursement-search-results__recipient">
                 {{ disbursement.recipient_first_name }} {{ disbursement.recipient_last_name }}
-                <br/>
-                <br/>
-                <span class="visually-hidden">{% trans 'Recipient address' %}:</span>
+                <br />
+                <br />
+                <span class="govuk-visually-hidden">{% trans 'Recipient address' %}:</span>
                 <address>
-                  <small>
-                    {{ disbursement.address_line1 }}<br/>
-                    {% if disbursement.address_line2 %}{{ disbursement.address_line2 }}<br/>{% endif %}
-                      {{ disbursement.city }}<br/>
+                  <small class="govuk-body-s">
+                    {{ disbursement.address_line1 }}<br />
+                    {% if disbursement.address_line2 %}{{ disbursement.address_line2 }}<br />{% endif %}
+                      {{ disbursement.city }}<br />
                       {{ disbursement.postcode }}
                       {% if disbursement.country and disbursement.country != 'UK' %}
-                      <br/>
+                      <br />
                       <strong>{{ disbursement.country }}</strong>
                     {% endif %}
                   </small>
                 </address>
-                {% if disbursement.recipient_email %}<br/>
-                  <span class="visually-hidden">{% trans 'Recipient email' %}:</span>
-                  <small>{{ disbursement.recipient_email }}</small>
+                {% if disbursement.recipient_email %}<br />
+                  <span class="govuk-visually-hidden">{% trans 'Recipient email' %}:</span>
+                  <small class="govuk-body-s">{{ disbursement.recipient_email }}</small>
                 {% endif %}
               </td>
 
-              <td class="mtp-status mtp-status--{{ disbursement.resolution }}">
-                {{ disbursement.resolution|format_disbursement_resolution }}
+              <td class="mtp-disbursement-search-results__status mtp-disbursement-search-results__status--{{ disbursement.resolution }}">
+                <strong>
+                  {{ disbursement.resolution|format_disbursement_resolution }}
+                </strong>
               </td>
 
-              <td class="mtp-history">
+              <td class="mtp-disbursement-search-results__history">
                 {% for log_item in disbursement.log_set %}
                   {% if log_item.action == 'created' %}
                     {% trans 'Entered' %} {{ log_item.created|date:'d/m/Y' }}<br />
-                    <small>
+                    <small class="govuk-body-s">
                       {% blocktrans trimmed with staff_name=log_item.staff_name %}
                         by {{ staff_name }}
                       {% endblocktrans %}
@@ -196,7 +188,7 @@
 
                   {% elif log_item.action == 'edited' %}
                     {% trans 'Edited' %} {{ log_item.created|date:'d/m/Y' }}<br />
-                    <small>
+                    <small class="govuk-body-s">
                       {% blocktrans trimmed with staff_name=log_item.staff_name %}
                         by {{ staff_name }}
                       {% endblocktrans %}
@@ -204,26 +196,26 @@
 
                   {% elif log_item.action == 'confirmed' %}
                     {% trans 'Confirmed' %} {{ log_item.created|date:'d/m/Y' }}<br />
-                    <small>
+                    <small class="govuk-body-s">
                       {% blocktrans trimmed with staff_name=log_item.staff_name %}
                         by {{ staff_name }}
                       {% endblocktrans %}
                     </small>
-                    <br/>
-                    <small>
+                    <br />
+                    <small class="govuk-body-s">
                       {% trans 'NOMIS ref' %}:
                       {{ disbursement.nomis_transaction_id|default:'—' }}
                     </small>
 
                   {% elif log_item.action == 'sent' %}
-                    {% trans 'Sent to SSCL' %} {{ log_item.created|date:'d/m/Y' }}<br/>
-                    <small>
+                    {% trans 'Sent to SSCL' %} {{ log_item.created|date:'d/m/Y' }}<br />
+                    <small class="govuk-body-s">
                       {% trans 'Invoice' %}: {{ disbursement.invoice_number }}
                     </small>
 
                   {% endif %}
                   {% if not forloop.last %}
-                    <br/>
+                    <br />
                     <br />
                   {% endif %}
                 {% endfor %}
@@ -233,7 +225,7 @@
           {% empty %}
 
             <tr>
-              <td class="mtp-no-credits" colspan="6">
+              <td colspan="6">
                 {% trans 'No disbursements found' %}
               </td>
             </tr>

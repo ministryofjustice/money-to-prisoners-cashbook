@@ -7,7 +7,7 @@
     {{ credit.received_at.date|date:'d/m/Y' }}
     {% if credit.resolution != 'credited' %}
       {% with days=credit.received_at.date|dayssince %}
-        <div class="sub {% if days >= 7 %}old{% endif %}">
+        <div class="govuk-body-s--secondary {% if days >= 7 %}mtp-received-at--warning{% endif %}">
           {% if days == 0 %}
             {% trans 'Today' %}
           {% else %}
@@ -23,9 +23,9 @@
   </td>
   <td>
     {{ credit.prisoner_number }}
-    <div class="sub">{{ credit.prisoner_name }}</div>
+    <div class="govuk-body-s--secondary">{{ credit.prisoner_name }}</div>
   </td>
-  <td class="numeric">
+  <td class="govuk-table__cell--numeric">
     <span class="mtp-sortable-cell--pad">
       £{{ credit.amount|currency }}
     </span>
@@ -33,7 +33,7 @@
   <td>
     {% if credit.anonymous %}
       {% trans 'Anonymous sender' %}
-      <div class="sub">
+      <div class="govuk-body-s--secondary">
         {% trans 'Will not be credited' %}
       </div>
     {% else %}
@@ -54,19 +54,19 @@
     <td>
       {% if credit.resolution == 'credited' %}
         {{ credit.credited_at.date }}
-        <div class="sub">
+        <div class="govuk-body-s--secondary">
           {% blocktrans trimmed with name_of_clerk=credit.owner_name|default:'—' %}
             by {{ name_of_clerk }}
           {% endblocktrans %}
         </div>
       {% elif credit.resolution == 'refunded' %}
         {% trans 'Refunded' %}
-        <div class="sub">
+        <div class="govuk-body-s--secondary">
           {{ credit.refunded_at.date }}
         </div>
       {% elif credit.anonymous %}
         {% trans 'Anonymous sender' %}
-        <div class="sub">
+        <div class="govuk-body-s--secondary">
           {% trans 'Will not be credited' %}
         </div>
       {% else %}
@@ -77,9 +77,9 @@
 </tr>
 {% if credit.comments %}
   <tr>
-    <td class="mtp-security" colspan="{% if include_status and pre_approval_required %}7{% elif include_status %}6{% else %}4{% endif %}">
+    <td class="mtp-table__cell--security" colspan="{% if include_status and pre_approval_required %}7{% elif include_status %}6{% else %}4{% endif %}">
       {% for comment in credit.comments %}
-        <div class="mtp-security__comment">
+        <div class="mtp-security-comment">
           {{ comment.comment|linebreaks }}
         </div>
       {% endfor %}

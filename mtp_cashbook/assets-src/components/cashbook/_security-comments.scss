@@ -1,0 +1,44 @@
+.mtp-security-comment {
+  position: relative;
+  padding: 15px;
+  border: 3px solid govuk-colour('orange');
+  color: $govuk-text-colour;
+  background: $govuk-body-background-colour;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  float: right;
+  min-width: 400px;
+  max-width: 700px;
+  margin-bottom: 15px;
+
+  p {
+    margin: 0;
+  }
+}
+
+.mtp-security-comment:before {
+  content: '';
+  position: absolute;
+  border-style: solid;
+  display: block;
+  width: 0;
+  top: 24px;
+  bottom: auto;
+  left: -12px;
+  border-width: 0 10px 12px 0;
+  border-color: transparent govuk-colour('orange');
+}
+
+.mtp-security-comment:after {
+  content: '';
+  position: absolute;
+  border-style: solid;
+  display: block;
+  width: 0;
+  top: 26px;
+  bottom: auto;
+  left: -7px;
+  border-width: 0 14px 15px 0;
+  border-color: transparent $govuk-body-background-colour;
+}

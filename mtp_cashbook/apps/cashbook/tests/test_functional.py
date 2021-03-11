@@ -4,7 +4,7 @@ import os
 
 from mtp_common.test_utils import silence_logger
 from mtp_common.test_utils.functional_tests import FunctionalTestCase
-
+from selenium.common.exceptions import NoSuchElementException
 
 logger = logging.getLogger('mtp')
 
@@ -26,15 +26,16 @@ class CashbookTestCase(FunctionalTestCase):
         """
         Fill in login form
         """
-        self.driver.get(url or self.live_server_url + '/en-gb/')
-        self.type_in(username_field, username)
-        self.type_in(password_field, password, send_return=True)
+        super().login(username, password, url=url, username_field=username_field, password_field=password_field)
+        try:
+            self.get_element('//button[@name="read_briefing"]').click()
+        except NoSuchElementException:
+            pass
 
     def click_logout(self):
         """
         Finds and clicks the log-out link
         """
-        self.driver.find_element_by_class_name('mtp-user-menu__toggle').click()
         self.driver.find_element_by_link_text('Sign out').click()
 
     def login_and_go_to(self, link_text, substring=False):
@@ -68,7 +69,7 @@ class LoginTests(CashbookTestCase):
     def test_title(self):
         self.driver.get(self.live_server_url + '/en-gb/')
         heading = self.driver.find_element_by_tag_name('h1')
-        self.assertEqual('Process money sent to your prison', heading.text)
+        self.assertEqual('Process money in and out of your prison', heading.text)
 
     def test_bad_login(self):
         self.login('test-hmp-leeds', 'bad-password')
@@ -115,14 +116,16 @@ class NewCreditsPageTests(CashbookTestCase):
     def test_submitting_and_not_confirming_partial_batch(self):
         self.select_first_credit()
         self.click_on_text('Credit to NOMIS')
-        self.click_on_text('No, continue processing')
+        self.driver.find_element_by_xpath(
+            '//a[normalize-space(text()) = "No, continue processing"]'
+        ).click()
         self.assertEqual('New credits – Digital cashbook', self.driver.title)
 
     @silence_logger(name='mtp', level=logging.WARNING)
     def test_submitting_and_confirming_partial_batch(self):
         self.select_first_credit()
         self.click_on_text('Credit to NOMIS')
-        self.click_on_text('Yes')
+        self.get_element('//button[@name="submit_new" and @value="override"]').click()
         if os.environ.get('DJANGO_TEST_REMOTE_INTEGRATION_URL', None):
             try:
                 self.assertInSource('Digital cashbook is crediting to NOMIS')

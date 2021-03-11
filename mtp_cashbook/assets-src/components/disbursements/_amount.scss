@@ -1,0 +1,11 @@
+.mtp-accounts-table {
+  width: auto;
+
+  label {
+    @extend .govuk-visually-hidden;
+  }
+
+  tfoot td {
+    border: 0;
+  }
+}

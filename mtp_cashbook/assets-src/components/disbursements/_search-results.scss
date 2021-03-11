@@ -1,0 +1,23 @@
+.mtp-disbursement-search-results__sender {
+  width: 10%;
+}
+
+.mtp-disbursement-search-results__amount {
+  width: 30%;
+}
+
+.mtp-disbursement-search-results__recipient {
+  width: 20%;
+}
+
+.mtp-disbursement-search-results__status {
+  width: 5%;
+}
+
+.mtp-disbursement-search-results__status--sent, .mtp-disbursement-search-results__status--confirmed {
+  color: govuk-colour('green');
+}
+
+.mtp-disbursement-search-results__history {
+  width: 35%;
+}

@@ -2,50 +2,13 @@
 {% load i18n %}
 {% load mtp_common %}
 
+
+{% block page_title %}{% trans 'Manage prisoner money' %}{% endblock %}
+
+
 {% block body_end %}
   <script src="{% url 'js-i18n' %}?{{ APP_GIT_COMMIT_SHORT }}"></script>
   {{ block.super }}
   <!--[{{ request.resolver_match.view_name }}]-->
   {% sentry_js %}
-{% endblock %}
-
-{% block page_title %}{% trans 'Manage prisoner money' %}{% endblock %}
-{% block proposition %}{% trans 'Manage prisoner money' %}{% endblock %}
-
-
-{% block footer_top %}
-  {% if request.user.is_authenticated %}
-    <div class="footer-categories grid-row">
-      <div class="column-third">
-        <h2>{% trans 'Manage prisoner money' %}</h2>
-        <ul>
-          <li><a href="{% url 'new-credits' %}">{% trans 'Digital cashbook' %}</a></li>
-          <li><a href="{% url 'disbursements:start' %}">{% trans 'Digital disbursements' %}</a></li>
-        </ul>
-      </div>
-      <div class="column-third">
-        <h2>{% trans 'Other related tools' %}</h2>
-        <ul>
-          <li><a href="{{ noms_ops_url }}" title="{% trans 'For security staff' %}">{% trans 'Prisoner money intelligence' %}</a></li>
-        </ul>
-      </div>
-    </div>
-  {% endif %}
-{% endblock %}
-
-{% block footer_support_links %}
-  <ul>
-    <li>
-      {% url 'submit_ticket' as submit_ticket_fallback %}
-      <a href="{{ request.proposition_app.help_url|default:submit_ticket_fallback }}">
-        {% trans 'Get help' %}
-      </a>
-    </li>
-    <li>
-      {% trans 'Built by' %}
-      <a href="https://mojdigital.blog.gov.uk/">
-        <abbr title="{% trans 'Ministry of Justice' %}">MOJ</abbr> Digital
-      </a>
-    </li>
-  </ul>
 {% endblock %}

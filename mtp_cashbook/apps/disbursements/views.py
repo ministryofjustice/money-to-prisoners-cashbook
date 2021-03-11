@@ -41,6 +41,7 @@ class DisbursementView(BaseView, TemplateView):
 
     def dispatch(self, request, **kwargs):
         request.proposition_app = {
+            'sub_app': 'disbursements',
             'name': _('Digital disbursements'),
             'url': StartView.url(),
             'help_url': DisbursementGetHelpView.url(),
@@ -315,9 +316,7 @@ class RemittanceDescriptionView(BasePagedFormView):
             context['prisoner_name'] = form_data['prisoner_name']
 
         field = disbursement_forms.RemittanceDescriptionForm.base_fields['remittance_description']
-        context['remittance_description_attrs'] = {
-            'maxlength': field.max_length,
-        }
+        context['remittance_description_character_count'] = field.max_length
         return context
 
 
@@ -776,34 +775,70 @@ class SearchView(DisbursementView, FormView):
     get = FormView.post
 
 
-class ProcessOverview(DisbursementView):
+class DisbursementHelpView(DisbursementView):
+    sub_navigation_links = [
+        {
+            'key': 'process_overview',
+            'href': reverse_lazy('disbursements:process-overview'),
+            'text': _('How it works'),
+        },
+        {
+            'key': 'submit_ticket',
+            'href': reverse_lazy('disbursements:submit_ticket'),
+            'text': _('Contact us'),
+        },
+    ]
+
+    @classmethod
+    def make_sub_navigation_links(cls, active_key):
+        return [
+            dict(link, active=link['key'] == active_key)
+            for link in cls.sub_navigation_links
+        ]
+
+
+class ProcessOverview(DisbursementHelpView):
     url_name = 'process-overview'
 
+    def get_context_data(self, **kwargs):
+        kwargs['sub_navigation_links'] = self.make_sub_navigation_links('process_overview')
+        return super().get_context_data(**kwargs)
 
-class TrackInvoice(DisbursementView):
+
+class TrackInvoice(DisbursementHelpView):
     url_name = 'track-invoice'
 
     def get_context_data(self, **kwargs):
         kwargs.setdefault('breadcrumbs_back', reverse('disbursements:process-overview'))
+        kwargs['sub_navigation_links'] = self.make_sub_navigation_links('process_overview')
         return super().get_context_data(**kwargs)
 
 
-class KioskInstructions(DisbursementView):
+class KioskInstructions(DisbursementHelpView):
     url_name = 'kiosk-instructions'
 
     def get_context_data(self, **kwargs):
         kwargs.setdefault('breadcrumbs_back', f"{reverse('disbursements:process-overview')}#section-fill-form")
+        kwargs['sub_navigation_links'] = self.make_sub_navigation_links('process_overview')
         return super().get_context_data(**kwargs)
 
 
-class DisbursementGetHelpView(DisbursementView, GetHelpView):
+class DisbursementGetHelpView(DisbursementHelpView, GetHelpView):
     url_name = 'submit_ticket'
     base_template_name = 'disbursements/base.html'
     template_name = 'disbursements/feedback/submit_feedback.html'
     success_url = reverse_lazy('disbursements:feedback_success')
 
+    def get_context_data(self, **kwargs):
+        kwargs['sub_navigation_links'] = self.make_sub_navigation_links('submit_ticket')
+        return super().get_context_data(**kwargs)
 
-class DisbursementGetHelpSuccessView(DisbursementView, GetHelpSuccessView):
+
+class DisbursementGetHelpSuccessView(DisbursementHelpView, GetHelpSuccessView):
     url_name = 'feedback_success'
     base_template_name = 'disbursements/base.html'
     template_name = 'disbursements/feedback/success.html'
+
+    def get_context_data(self, **kwargs):
+        kwargs['sub_navigation_links'] = self.make_sub_navigation_links('submit_ticket')
+        return super().get_context_data(**kwargs)

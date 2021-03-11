@@ -35,11 +35,25 @@ class LandingView(BaseView, TemplateView):
             response = api_client.get_api_session(self.request).get('requests/', params={'page_size': 1})
             kwargs['user_request_count'] = response.json().get('count')
 
-        return super().get_context_data(
+        cards = [
+            {
+                'heading': _('Digital cashbook'),
+                'link': reverse_lazy('new-credits'),
+                'description': _('Credit money into a prisoner’s account'),
+            },
+            {
+                'heading': _('Digital disbursements'),
+                'link': reverse_lazy('disbursements:start'),
+                'description': _('Send money out of a prisoner’s account by bank transfer or cheque'),
+            },
+        ]
+
+        kwargs.update(
             start_page_url=settings.START_PAGE_URL,
             bank_transfers_enabled=settings.BANK_TRANSFERS_ENABLED,
-            **kwargs
+            cards=cards,
         )
+        return super().get_context_data(**kwargs)
 
 
 class MLBriefingConfirmationForm(forms.Form):

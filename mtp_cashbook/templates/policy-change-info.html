@@ -5,51 +5,48 @@
 
 {% block page_title %}{{ view.title }} – {{ block.super }}{% endblock %}
 
-{% block inner_content %}
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
 
-  {% static 'downloads/apply-to-send-out-more-than-50.pdf' as form_link %}
+      <!--[policy-change-info]-->
+      {% static 'downloads/apply-to-send-out-more-than-50.pdf' as form_link %}
+      <header>
+        <h1 class="govuk-heading-xl">{% trans 'Policy changes made on Nov 2nd 2020 that may affect your work' %}</h1>
+      </header>
 
-  {% notifications_box request 'cashbook_dashboard' 'cashbook_all' %}
-
-  {% include 'mtp_common/includes/message_box.html' %}
-
-  <!--[policy-change-info]-->
-  <header>
-    <h1 class="heading-xlarge">{% trans 'Policy changes made on Nov 2nd 2020 that may affect your work' %}</h1>
-  </header>
-
-  <div class="grid-row">
-    <div class="column-two-thirds">
-
-      <h2 class="heading-large">{% trans 'Credits' %}</h2>
+      <h2 class="govuk-heading-l">{% trans 'Credits' %}</h2>
       <p>{% trans 'Senders can no longer send money by bank transfer, cash, cheque or postal order.' %}</p>
       <p>{% trans 'If they don’t have a bank account, we’re encouraging them to set one up.' %}</p>
       <p>{% trans 'If they can’t use the service, they can apply to the governor for an ‘exemption’.' %}</p>
 
-      <h2 class="heading-large">{% trans 'Disbursements' %}</h2>
+      <h2 class="govuk-heading-l">{% trans 'Disbursements' %}</h2>
       <p>{% trans 'There is a cap on how much money can be sent out of prison.' %}</p>
       <p>{% trans 'Only £50 a week can be sent out to each person (with a maximum of 5 people).' %}</p>
       <p>{% trans 'Example: They can send up to £250 a week, if it’s to 5 different people.' %}</p>
-
-      <p>{% trans 'A resident must apply for approval from the governor if they need to send out more than £50 to a person in a week. In exceptional circumstances, this might be granted.' %}</p>
       <p>
-        {% blocktrans %}
+        {% trans 'A resident must apply for approval from the governor if they need to send out more than £50 to a person in a week.' %}
+        {% trans 'In exceptional circumstances, this might be granted.' %}
+      </p>
+      <p>
+        {% blocktrans trimmed %}
           It must be applied for each time by filling in a <a href="{{ form_link }}">form</a> which they attach to their disbursement before handing in.
         {% endblocktrans %}
       </p>
-      <p>{% trans '<strong>What you need to do</strong>' %}</p>
+
+      <h3 class="govuk-heading-m">{% trans 'What you need to do' %}</h3>
       <p>{% trans 'If the resident’s application is approved, make the disbursement.' %}</p>
       <p>{% trans 'If it is not approved, send the application form back with a reason why.' %}</p>
       <p>{% trans 'Exceptional circumstances could be:' %}</p>
-      <ul class="list list-bullet">
-        <li>paying off debts if you have no external bank account</li>
-        <li>sending financial support to family</li>
-        <li>paying for a legitimate service, e.g. legal fees, dentistry</li>
-        <li>operating a business, if unconvicted</li>
-        <li>transferring your money from prison to a new or existing bank account</li>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>{% trans 'paying off debts if you have no external bank account' %}</li>
+        <li>{% trans 'sending financial support to family' %}</li>
+        <li>{% trans 'paying for a legitimate service, e.g. legal fees, dentistry' %}</li>
+        <li>{% trans 'operating a business, if unconvicted' %}</li>
+        <li>{% trans 'transferring your money from prison to a new or existing bank account' %}</li>
       </ul>
 
-      <h2 class="heading-large">{% trans 'Cap on prisoner bank accounts' %}</h2>
+      <h2 class="govuk-heading-l">{% trans 'Cap on prisoner bank accounts' %}</h2>
       <p>{% trans 'Prisoner bank accounts can no longer exceed £900' %}</p>
 
     </div>

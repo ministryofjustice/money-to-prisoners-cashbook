@@ -13,23 +13,23 @@ from mtp_cashbook import misc_views
 
 
 urlpatterns = i18n_patterns(
+    # dashboard / landing page
     url(r'^$', misc_views.LandingView.as_view(), name='home'),
 
+    # miscellaneous views
     url(r'^ml-briefing/$', misc_views.MLBriefingConfirmationView.as_view(), name='ml-briefing-confirmation'),
     url(r'^ml-briefing/read/$', misc_views.MLBriefingView.as_view(), name='ml-briefing'),
     url(r'^policy-change/$', misc_views.PolicyChangeInfo.as_view(), name='policy-change'),
 
-    url(r'^policy-change/$', misc_views.PolicyChangeInfo.as_view(), name='policy-change'),
-
-
+    # main applications
     url(r'^', include('cashbook.urls')),
     url(r'^disbursements/', include('disbursements.urls', namespace='disbursements')),
 
+    # authentication and account management
     url(r'^', include('mtp_auth.urls')),
     url(r'^', include('mtp_common.user_admin.urls')),
 
     url(r'^', include('feedback.urls')),
-
 
     url(r'^js-i18n.js$', cache_control(public=True, max_age=86400)(JavaScriptCatalog.as_view()), name='js-i18n'),
 

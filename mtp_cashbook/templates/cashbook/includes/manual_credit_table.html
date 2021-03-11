@@ -3,9 +3,9 @@
 {% load credits %}
 {% load mtp_common %}
 
-<div class="mtp-batch mtp-manual-credits-batch">
+<div class="mtp-table__container mtp-batch govuk-!-margin-bottom-9">
   <table class="mtp-table">
-    <caption class="visually-hidden">
+    <caption class="govuk-visually-hidden">
       {% blocktrans trimmed count manual_credits=manual_object_list|length %}
         {{ manual_credits }} credit needs your manual input in NOMIS
       {% plural %}
@@ -14,20 +14,20 @@
     </caption>
 
     <thead>
-      <tr class="print-hidden">
-        <td colspan="{% if pre_approval_required %}6{% else %}5{% endif %}" class="mtp-compact-cell">
-          <a href="#" class="js-print-trigger" data-do-not-print=".mtp-new-credits-batch">{% trans 'Print these credits' %}</a>
+      <tr class="govuk-!-display-none-print">
+        <td colspan="{% if pre_approval_required %}6{% else %}5{% endif %}" class="mtp-table__cell--compact">
+          <a href="#" class="mtp-print-trigger" data-do-not-print=".mtp-batch--new-credits">{% trans 'Print these credits' %}</a>
         </td>
       </tr>
       <tr>
-        <th>{% trans 'Date sent' %}</th>
-        <th>{% trans 'Prisoner' %}</th>
-        <th class="numeric">{% trans 'Amount' %}</th>
-        <th>{% trans 'Sender' %}</th>
+        <th scope="col">{% trans 'Date sent' %}</th>
+        <th scope="col">{% trans 'Prisoner' %}</th>
+        <th class="govuk-table__header--numeric" scope="col">{% trans 'Amount' %}</th>
+        <th scope="col">{% trans 'Sender' %}</th>
         {% if pre_approval_required %}
-          <th>{% trans 'Security' %}</th>
+          <th scope="col">{% trans 'Security' %}</th>
         {% endif %}
-        <th class="print-hidden"></th>
+        <th class="govuk-!-display-none-print" scope="col"></th>
       </tr>
     </thead>
 
@@ -37,7 +37,7 @@
           <td>
             <div>{{ credit.received_at.date|date:'d/m/Y' }}</div>
             {% with days=credit.received_at.date|dayssince %}
-            <div class="sub {% if days >= 7 %}old{% endif %}">
+            <div class="govuk-body-s--secondary {% if days >= 7 %}mtp-received-at--warning{% endif %}">
               {% if days == 0 %}
                 {% trans 'Today' %}
               {% else %}
@@ -52,9 +52,9 @@
           </td>
           <td>
             <div>{{ credit.prisoner_number }}</div>
-            <div class="sub">{{ credit.prisoner_name }}</div>
+            <div class="govuk-body-s--secondary">{{ credit.prisoner_name }}</div>
           </td>
-          <td class="numeric">£{{ credit.amount|currency }}</td>
+          <td class="govuk-table__cell--numeric">£{{ credit.amount|currency }}</td>
           <td>{{ credit.sender_name }}</td>
           {% if pre_approval_required %}
             <td>
@@ -65,13 +65,13 @@
               {% endif %}
             </td>
           {% endif %}
-          <td></td>
+          <td class="govuk-!-display-none-print"></td>
         </tr>
         {% if credit.comments %}
           <tr>
-            <td class="mtp-security" colspan="{% if pre_approval_required %}6{% else %}5{% endif %}">
+            <td class="mtp-table__cell--security" colspan="{% if pre_approval_required %}6{% else %}5{% endif %}">
               {% for comment in credit.comments %}
-                <div class="mtp-security__comment">
+                <div class="mtp-security-comment">
                   {{ comment.comment|linebreaks }}
                 </div>
               {% endfor %}
@@ -79,73 +79,73 @@
           </tr>
         {% endif %}
         <tr>
-          <td class="mtp-manual-action"></td>
-          <td class="mtp-manual-action" colspan="{% if pre_approval_required %}4{% else %}3{% endif %}">
-            <div class="mtp-manual-action__details">
-              {% if owned %}
-                {% trans 'You need to manually put this into NOMIS:' %}
-              {% elif credit.set_manual_at %}
-                {% with days=credit.set_manual_at.date|dayssince %}
-                  {% if days == 0 %}
-                    {% blocktrans trimmed with owner=credit.owner_name %}
-                      {{ owner }} started processing this credit today:
+          <td class="mtp-table__cell--manual-action"></td>
+          <td class="mtp-table__cell--manual-action mtp-table__cell--manual-action__details" colspan="{% if pre_approval_required %}4{% else %}3{% endif %}">
+            {% if owned %}
+              {% trans 'You need to manually put this into NOMIS:' %}
+            {% elif credit.set_manual_at %}
+              {% with days=credit.set_manual_at.date|dayssince %}
+                {% if days == 0 %}
+                  {% blocktrans trimmed with owner=credit.owner_name %}
+                    {{ owner }} started processing this credit today:
+                  {% endblocktrans %}
+                {% elif days == 1 %}
+                  {% blocktrans trimmed with owner=credit.owner_name %}
+                    {{ owner }} started processing this credit yesterday:
+                  {% endblocktrans %}
+                {% else %}
+                    {% blocktrans trimmed with owner=credit.owner_name processed=credit.set_manual_at.date|date:'d/m/Y' %}
+                      {{ owner }} started processing this credit {{ processed }}:
                     {% endblocktrans %}
-                  {% elif days == 1 %}
-                    {% blocktrans trimmed with owner=credit.owner_name %}
-                      {{ owner }} started processing this credit yesterday:
-                    {% endblocktrans %}
-                  {% else %}
-                      {% blocktrans trimmed with owner=credit.owner_name processed=credit.set_manual_at.date|date:'d/m/Y' %}
-                        {{ owner }} started processing this credit {{ processed }}:
-                      {% endblocktrans %}
-                  {% endif %}
-                {% endwith %}
-              {% else %}
-                {% blocktrans trimmed with owner=credit.owner_name %}
-                  {{ owner }} started processing this credit:
-                {% endblocktrans %}
-              {% endif %}
-              {% if credit.new_location.nomis_id == 'TRN' %}
-                {% trans 'Prisoner in transit' %}
-              {% elif credit.new_location.nomis_id %}
-                {% blocktrans trimmed with new_prison=credit.new_location.name %}
-                  Prisoner transferred to {{ new_prison }}
-                {% endblocktrans %}
-              {% else %}
-                {% trans 'Prisoner left this prison' %}
-              {% endif %}
-            </div>
+                {% endif %}
+              {% endwith %}
+            {% else %}
+              {% blocktrans trimmed with owner=credit.owner_name %}
+                {{ owner }} started processing this credit:
+              {% endblocktrans %}
+            {% endif %}
+            {% if credit.new_location.nomis_id == 'TRN' %}
+              {% trans 'Prisoner in transit' %}
+            {% elif credit.new_location.nomis_id %}
+              {% blocktrans trimmed with new_prison=credit.new_location.name %}
+                Prisoner transferred to {{ new_prison }}
+              {% endblocktrans %}
+            {% else %}
+              {% trans 'Prisoner left this prison' %}
+            {% endif %}
           </td>
-          <td class="mtp-manual-action print-hidden">
-            <button type="submit" name="submit_manual_{{ credit_pk }}" value="submit" class="button" data-credit-id="{{ credit_pk }}">{% trans 'Done' %}</button>
-            {% dialoguebox html_id=credit_pk|prefixed_slug:'manual-confirm-dialog-' %}
-              <table class="mtp-dialog-info-table">
-                <caption class="heading-medium">{% trans 'Have you entered this credit into NOMIS?' %}</caption>
+          <td class="mtp-table__cell--manual-action govuk-!-display-none-print">
+            <button type="submit" name="submit_manual_{{ credit_pk }}" value="submit" class="govuk-button" data-credit-id="{{ credit_pk }}">{% trans 'Done' %}</button>
+            {% dialoguebox html_id=credit_pk|prefixed_slug:'manual-confirm-dialogue-' %}
+              <table class="govuk-table">
+                <caption class="govuk-table__caption govuk-heading-m">{% trans 'Have you entered this credit into NOMIS?' %}</caption>
                 <tbody>
                   <tr>
-                    <th>{% trans 'Date sent:' %}</th>
+                    <th scope="row">{% trans 'Date sent:' %}</th>
                     <td>{{ credit.received_at.date|date:'d/m/Y' }}</td>
                   </tr>
                   <tr>
-                    <th>{% trans 'Prisoner:' %}</th>
+                    <th scope="row">{% trans 'Prisoner:' %}</th>
                     <td>{{ credit.prisoner_number }} &nbsp; {{ credit.prisoner_name }}</td>
                   </tr>
                   <tr>
-                    <th>{% trans 'Amount:' %}</th>
+                    <th scope="row">{% trans 'Amount:' %}</th>
                     <td>£{{ credit.amount|currency }}</td>
                   </tr>
                   <tr>
-                    <th>{% trans 'Sender:' %}</th>
+                    <th scope="row">{% trans 'Sender:' %}</th>
                     <td>{{ credit.sender_name }}</td>
                   </tr>
                 </tbody>
               </table>
-              <button type="submit" name="submit_manual_{{ credit_pk }}" class="button" value="override">
-                {% trans 'Yes' %}
-              </button>
-              <a href="#" class="{{ dialogue_close_class }} mtp-dialog-info-table__close" role="button">
-                {% trans 'No, I’ll do that now' %}
-              </a>
+              <div>
+                <button type="submit" name="submit_manual_{{ credit_pk }}" class="govuk-button" value="override">
+                  {% trans 'Yes' %}
+                </button>
+                <a href="#" class="{{ dialogue_close_class }} mtp-link--form-cancel" role="button">
+                  {% trans 'No, I’ll do that now' %}
+                </a>
+              </div>
             {% enddialoguebox %}
           </td>
         </tr>

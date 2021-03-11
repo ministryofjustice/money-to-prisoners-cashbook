@@ -1,10 +1,10 @@
 {% load i18n %}
+{% load mtp_common %}
 
-<!--[policy-change-notice]-->
-<div class="mtp-notification mtp-notification--info mtp-notification--open">
-  <p class="mtp-notification__headline">
-
-    <a href="{% url 'policy-change' %}">{% trans 'Check you’re up to date with recent policy changes' %}</a>
-
-  </p>
-</div>
+{% captureoutput as banner_heading %}
+  <!--[policy-change-notice]-->
+  <a href="{% url 'policy-change' %}">
+    {% trans 'Check you’re up to date with recent policy changes' %}
+  </a>
+{% endcaptureoutput %}
+{% include 'mtp_common/components/notification-banner.html' with banner_level='info' banner_title='info'|notification_level banner_heading=banner_heading only %}

@@ -2,71 +2,61 @@
 {% load i18n %}
 {% load mtp_common %}
 
-{% block body_classes %}{{ block.super }} mtp-create-disbursement{% endblock %}
-
-{% block inner_content %}
+{% block content %}
   {{ block.super }}
 
-  <header>
-    <h1 class="heading-xlarge mtp-heading--compact">{{ view.title }}</h1>
-  </header>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
 
-  <div class="grid-row">
-    <div class="column-two-thirds">
+      <header>
+        <h1 class="govuk-heading-xl">{{ view.title }}</h1>
+      </header>
+
       <p>
         {% trans 'A description can be useful to help the recipient know who their payment has come from, especially when the recipient is a business or organisation.' %}
       </p>
       <p>
-        {% trans 'The description will appear on the remittance advice - either an email or a letter - sent out by SSCL to the recipient before the payment itself arrives.' %}
+        {% trans 'The description will appear on the remittance advice – either an email or a letter – sent out by SSCL to the recipient before the payment itself arrives.' %}
       </p>
       <p>
         {% blocktrans trimmed %}
           What will automatically appear is <strong>‘Payment from {{ prisoner_name }}’</strong>.
         {% endblocktrans %}
 
-        {% trans 'You can change - or add to - this description but if you delete the prisoner’s name, it won’t appear on the recipient’s bank statement or anywhere else on the transaction.' %}
+        {% trans 'You can change – or add to – this description but if you delete the prisoner’s name, it won’t appear on the recipient’s bank statement or anywhere else on the transaction.' %}
       </p>
 
       <form method="post">
         {% csrf_token %}
 
-        {% include 'mtp_common/forms/error-summary.html' with form=form only %}
+        {% include 'govuk-frontend/components/error-summary.html' with form=form only %}
 
         {% with field=form.remittance choices=form.remittance.field.choices %}
-          <fieldset>
-            <legend id="{{ field.id_for_label }}-label">
-              <strong>{{ field.label }}</strong>
+          <fieldset class="govuk-fieldset">
+            <legend id="{{ field.id_for_label }}-label" class="govuk-fieldset__legend govuk-fieldset__legend--m">
+              {{ field.label }}
             </legend>
 
-            <div class="form-group {% if field.errors %}form-group-error{% endif %}">
-              <div class="multiple-choice">
-                <input id="js-choice-{{ choices.0.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.0.0 }}" data-reveal=".js-choice-yes" {% if form.remittance.value == 'yes' %}checked{% endif %}>
-                <label for="js-choice-{{ choices.0.0 }}">{{ choices.0.1 }}</label>
-              </div>
-              <div class="panel panel-border-narrow js-hidden js-choice-yes">
-                {% with field=form.remittance_description rows=2 input_classes='js-character-count' attrs=remittance_description_attrs %}
-                  <div id="{{ field.id_for_label }}-wrapper" class="form-group {% if field.errors %}form-group-error{% endif %}">
-                    <label for="{{ field.id_for_label }}" id="{{ field.id_for_label }}-label" class="form-label">
-                      {% include 'mtp_common/forms/field-help-text.html' with field=field only %}
-                    </label>
-                    {% include 'mtp_common/forms/field-errors.html' with field=field only %}
-                    <textarea id="{{ field.id_for_label }}" class="form-control {% if field.errors %}form-control-error{% endif %} {{ input_classes }}" name="{{ field.html_name }}" rows="{{ rows|default:4 }}" cols="{{ cols|default:50 }}" {% for attr, attr_val in attrs.items %}{{ attr }}="{{ attr_val }}"{% endfor %}>{{ value|default:field.value|default_if_none:'' }}</textarea>
-                  </div>
-                {% endwith %}
-              </div>
+            <div class="govuk-form-group {% if field.errors %}govuk-form-group--error{% endif %}">
+              <div class="govuk-radios govuk-radios--conditional" data-module="govuk-radios">
+                <div class="govuk-radios__item">
+                  <input id="id_remittance-{{ choices.0.0 }}" class="govuk-radios__input" type="radio" name="{{ field.html_name }}" value="{{ choices.0.0 }}" data-aria-controls="id_remittance__conditional-yes" {% if form.remittance.value == 'yes' %}checked{% endif %}>
+                  <label for="id_remittance-{{ choices.0.0 }}" class="govuk-label govuk-radios__label">{{ choices.0.1 }}</label>
+                </div>
+                <div id="id_remittance__conditional-yes" class="govuk-radios__conditional govuk-radios__conditional--hidden">
+                  {% include 'mtp_common/forms/textarea.html' with field=form.remittance_description character_count=remittance_description_character_count rows=2 only %}
+                </div>
 
-              <div class="multiple-choice">
-                <input id="js-choice-{{ choices.1.0 }}" class="mtp-radio-reveal" type="radio" name="{{ field.html_name }}" value="{{ choices.1.0 }}"
-                {% if form.remittance.value == 'no' %}checked{% endif %}>
-
-
-                <label for="js-choice-{{ choices.1.0 }}">{{ choices.1.1 }}</label>
+                <div class="govuk-radios__item">
+                  <input id="id_remittance-{{ choices.1.0 }}" class="govuk-radios__input" type="radio" name="{{ field.html_name }}" value="{{ choices.1.0 }}" {% if form.remittance.value == 'no' %}checked{% endif %}>
+                  <label for="id_remittance-{{ choices.1.0 }}" class="govuk-label govuk-radios__label">{{ choices.1.1 }}</label>
+                </div>
               </div>
             </div>
           </fieldset>
         {% endwith %}
 
-        <button type="submit" class="button mtp-next-button">{% trans 'Next' %}</button>
+        <button type="submit" class="govuk-button" data-module="govuk-button">{% trans 'Next' %}</button>
       </form>
     </div>
   </div>

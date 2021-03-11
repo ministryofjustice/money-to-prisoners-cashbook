@@ -1,0 +1,45 @@
+.mtp-progress-bar {
+  @include govuk-responsive-padding(9);
+  text-align: center;
+  background-color: govuk-colour('blue');
+
+  .govuk-heading-xl, .govuk-body-l {
+    color: $govuk-body-background-colour;
+  }
+
+  .govuk-button {
+    margin-bottom: 0;
+    background-color: govuk-colour('white');
+
+    &, &:link, &:visited, &:active, &:hover {
+      color: govuk-colour('black');
+    }
+
+    &:hover {
+      background-color: govuk-shade(govuk-colour('white'), 10%);
+    }
+  }
+}
+
+.mtp-progress-bar__background {
+  margin: $govuk-gutter auto;
+  width: 70%;
+  height: 60px;
+  background-color: $govuk-body-background-colour;
+}
+
+.mtp-progress-bar__fill {
+  height: 100%;
+  background-color: $govuk-text-colour;
+  position: relative;
+
+  &:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border: 2px solid $govuk-body-background-colour;
+  }
+}

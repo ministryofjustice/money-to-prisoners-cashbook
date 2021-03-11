@@ -1,0 +1,13 @@
+.mtp-tab-container__footer {
+  .mtp-tab-container--collapsed & {
+    margin-top: 0;
+
+    button {
+      display: none;
+    }
+
+    .mtp-link--form-cancel {
+      margin: 0;
+    }
+  }
+}

@@ -2,45 +2,36 @@
 {% load i18n %}
 {% load currency %}
 
-{% block body_classes %}{{ block.super }} mtp-confirm-disbursements{% endblock %}
-
-{% block inner_content %}
+{% block content %}
   {{ block.super }}
 
   <header>
-    <h1 class="heading-xlarge mtp-heading--compact">{{ view.title }} ({{ pending_count }})</h1>
+    <h1 class="govuk-heading-xl">{{ view.title }} ({{ pending_count }})</h1>
   </header>
-
-  {% for message in messages %}
-    <div class="mtp-message mtp-message--{{ message.level_tag }}">
-      {{ message }}
-    </div>
-    <br/>
-  {% endfor %}
 
   {% if disbursements %}
     <p>{% trans 'Have the completed form in front of you and choose the payment details you want to check.' %}</p>
 
-    <div class="mtp-confirm-disbursements-list">
-      <table class="mtp-table">
-        <caption class="visually-hidden">{% trans 'List of disbursements to confirm' %}</caption>
+    <div class="mtp-table__container">
+      <table class="mtp-table mtp-table--pending-list">
+        <caption class="govuk-visually-hidden">{% trans 'List of disbursements to confirm' %}</caption>
         <thead>
           <tr>
-            <th>{% trans 'Sender' %}</th>
-            <th>{% trans 'Amount' %}</th>
-            <th>{% trans 'Recipient' %}</th>
-            <th colspan="2">{% trans 'Status' %}</th>
+            <th scope="col">{% trans 'Sender' %}</th>
+            <th scope="col">{% trans 'Amount' %}</th>
+            <th scope="col">{% trans 'Recipient' %}</th>
+            <th colspan="2" scope="colgroup">{% trans 'Status' %}</th>
           </tr>
         </thead>
         <tbody>
           {% for disbursement in disbursements %}
             <tr>
               <td>
-                {{ disbursement.prisoner_name }}<br/>
+                {{ disbursement.prisoner_name }}<br />
                 {{ disbursement.prisoner_number }}
               </td>
               <td>
-                £{{ disbursement.amount|currency }}<br/>
+                £{{ disbursement.amount|currency }}<br />
                 {% if disbursement.method == 'cheque' %}
                   {% trans 'Cheque' %}
                 {% elif disbursement.method == 'bank_transfer' %}
@@ -56,31 +47,31 @@
                 {% else %}
                   {% trans 'Confirmation required' %}
                   {% if disbursement.self_own %}
-                    <br>
+                    <br />
                     {% trans 'Another colleague needs to confirm this payment' %}
-                    <a href="#" class="mtp-question-button">
+                    <a href="#" class="mtp-table--pending-list__question-button" data-module="govuk-button" role="button">
                       {% trans 'Why can’t I confirm this payment?' %}
                     </a>
                   {% endif %}
                 {% endif %}
               </td>
-              <td class="mtp-button-column">
+              <td class="mtp-table__cell--compact">
                 {% if disbursement.viable %}
-                  <a class="button" href="{% url 'disbursements:pending_detail' pk=disbursement.id %}">{% trans 'Check details' %}</a>
+                  <a class="govuk-button" data-module="govuk-button" role="button" href="{% url 'disbursements:pending_detail' pk=disbursement.id %}">{% trans 'Check details' %}</a>
                 {% else %}
-                  <a class="button button-secondary" href="{% url 'disbursements:pending_detail' pk=disbursement.id %}">{% trans 'Edit' %}</a>
+                  <a class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button" href="{% url 'disbursements:pending_detail' pk=disbursement.id %}">{% trans 'Edit' %}</a>
                 {% endif %}
               </td>
             </tr>
             {% if disbursement.confirmable_by_other %}
-              <tr class="js-hidden">
+              <tr class="mtp-!-display-none-js-enabled-only">
                 <td colspan="3"></td>
                 <td colspan="2">
-                  <div class="panel panel-border-narrow">
+                  <div class="govuk-inset-text">
                     <strong>
                       {% trans 'A payment can’t be confirmed by the person who' %}:
                     </strong>
-                    <ul class="list list-bullet">
+                    <ul class="govuk-list govuk-list--bullet">
                       <li>
                         {% trans '‘entered’ the payment request' %}
                         –

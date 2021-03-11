@@ -5,94 +5,99 @@
 
 {% block page_title %}{% trans 'Paper forms' %} – {{ block.super }}{% endblock %}
 
-{% block inner_content %}
+{% block content %}
   {{ block.super }}
 
-  <div class="grid-row">
-    <div class="column-two-thirds">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
       <header>
-        <h1 class="heading-xlarge">{% trans 'Paper forms' %}</h1>
+        <h1 class="govuk-heading-xl">{% trans 'Paper forms' %}</h1>
       </header>
       <p>
         {% trans 'Prisoners can send money out digitally by bank transfer or cheque.' %}
         {% trans 'They can also continue to send money out non-digitally by cash and/or postal order.' %}
       </p>
-    </div>
-  </div>
 
-  <h2 class="heading-medium">
-    {% trans 'Digital disbursement form' %}
-  </h2>
-  <div class="mtp-paper-form-download grid-row">
-    {% trans 'Bank transfer or cheque (PDF)' as link_title %}
-    {% static 'disbursements/disbursement-by-bank-transfer-or-cheque-V6.pdf' as pdf_link %}
-    <div class="column-one-third">
-      <a href="{{ pdf_link }}">
-        <img src="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-V6.jpg' %}" srcset="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-V6@2x.jpg' %} 2x" alt="{{ link_title }}" />
-      </a>
-    </div>
-    <div class="column-two-thirds">
-      <a href="{{ pdf_link }}">{{ link_title }}</a>
+      {% include 'govuk-frontend/components/section-break.html' with size='m' %}
+
+      <h2 class="govuk-heading-m">
+        {% trans 'Digital disbursement form' %}
+      </h2>
+
+      <div class="mtp-paper-form govuk-grid-row govuk-!-margin-top-6">
+        {% trans 'Bank transfer or cheque (PDF)' as link_title %}
+        {% static 'disbursements/disbursement-by-bank-transfer-or-cheque-V6.pdf' as pdf_link %}
+        <div class="govuk-grid-column-one-third" aria-hidden="true">
+          <a href="{{ pdf_link }}">
+            <img src="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-V6.jpg' %}" srcset="{% static 'disbursements/disbursement-by-bank-transfer-or-cheque-V6@2x.jpg' %} 2x" class="mtp-img--bordered mtp-paper-form__image" alt="{{ link_title }}" />
+          </a>
+        </div>
+        <div class="govuk-grid-column-two-thirds">
+          <a href="{{ pdf_link }}" class="govuk-body-l">{{ link_title }}</a>
+          <p>
+            {% trans 'Use to send a payment by bank transfer or cheque using the digital disbursement tool' %}
+          </p>
+        </div>
+      </div>
+
+      {% include 'govuk-frontend/components/section-break.html' with size='m' %}
+
+      <h2 class="govuk-heading-m">
+        {% trans 'Non-digital disbursement forms' %}
+      </h2>
+
       <p>
-        {% trans 'Use to send a payment by bank transfer or cheque using the digital disbursement tool' %}
+        {% trans 'Use one of these 3 forms for non-digital disbursements.' %}
       </p>
+
+      <div class="mtp-paper-form govuk-grid-row govuk-!-margin-top-6">
+        {% trans 'Cash or postal order (PDF)' as link_title %}
+        {% static 'disbursements/disbursement-by-cash-or-postal-order-V2.pdf' as pdf_link %}
+        <div class="govuk-grid-column-one-third" aria-hidden="true">
+          <a href="{{ pdf_link }}">
+            <img src="{% static 'disbursements/disbursement-by-cash-or-postal-order-V2.jpg' %}" srcset="{% static 'disbursements/disbursement-by-cash-or-postal-order-V2@2x.jpg' %} 2x" class="mtp-img--bordered mtp-paper-form__image" alt="{{ link_title }}" />
+          </a>
+        </div>
+        <div class="govuk-grid-column-two-thirds">
+          <a href="{{ pdf_link }}" class="govuk-body-l">{{ link_title }}</a>
+          <p>
+            {% trans 'Use if your prison offers both cash and postal order disbursements' %}
+          </p>
+        </div>
+      </div>
+
+      <div class="mtp-paper-form govuk-grid-row govuk-!-margin-top-6">
+        {% trans 'Cash only (PDF)' as link_title %}
+        {% static 'disbursements/disbursement-by-cash-V2.pdf' as pdf_link %}
+        <div class="govuk-grid-column-one-third" aria-hidden="true">
+          <a href="{{ pdf_link }}">
+            <img src="{% static 'disbursements/disbursement-by-cash-V2.jpg' %}" srcset="{% static 'disbursements/disbursement-by-cash-V2@2x.jpg' %} 2x" class="mtp-img--bordered mtp-paper-form__image" alt="{{ link_title }}" />
+          </a>
+        </div>
+        <div class="govuk-grid-column-two-thirds">
+          <a href="{{ pdf_link }}" class="govuk-body-l">{{ link_title }}</a>
+          <p>
+            {% trans 'Use if your prison offers only cash disbursements' %}
+          </p>
+        </div>
+      </div>
+
+      <div class="mtp-paper-form govuk-grid-row govuk-!-margin-top-6">
+        {% trans 'Postal order only (PDF)' as link_title %}
+        {% static 'disbursements/disbursement-by-postal-order-V2.pdf' as pdf_link %}
+        <div class="govuk-grid-column-one-third" aria-hidden="true">
+          <a href="{{ pdf_link }}">
+            <img src="{% static 'disbursements/disbursement-by-postal-order-V2.jpg' %}" srcset="{% static 'disbursements/disbursement-by-postal-order-V2@2x.jpg' %} 2x" class="mtp-img--bordered mtp-paper-form__image" alt="{{ link_title }}" />
+          </a>
+        </div>
+        <div class="govuk-grid-column-two-thirds">
+          <a href="{{ pdf_link }}" class="govuk-body-l">{{ link_title }}</a>
+          <p>
+            {% trans 'Use if your prison offers only postal order disbursements' %}
+          </p>
+        </div>
+      </div>
+
     </div>
   </div>
-
-  <h2 class="heading-medium">
-    {% trans 'Non-digital disbursement forms' %}
-  </h2>
-
-  <p>
-    {% trans 'Use one of these 3 forms for non-digital disbursements.' %}
-  </p>
-
-  <div class="mtp-paper-form-download grid-row">
-    {% trans 'Cash or postal order (PDF)' as link_title %}
-    {% static 'disbursements/disbursement-by-cash-or-postal-order-V2.pdf' as pdf_link %}
-    <div class="column-one-third">
-      <a href="{{ pdf_link }}">
-        <img src="{% static 'disbursements/disbursement-by-cash-or-postal-order-V2.jpg' %}" srcset="{% static 'disbursements/disbursement-by-cash-or-postal-order-V2@2x.jpg' %} 2x" alt="{{ link_title }}" />
-      </a>
-    </div>
-    <div class="column-two-thirds">
-      <a href="{{ pdf_link }}">{{ link_title }}</a>
-      <p>
-        {% trans 'Use if your prison offers both cash and postal order disbursements' %}
-      </p>
-    </div>
-  </div>
-
-  <div class="mtp-paper-form-download grid-row">
-    {% trans 'Cash only (PDF)' as link_title %}
-    {% static 'disbursements/disbursement-by-cash-V2.pdf' as pdf_link %}
-    <div class="column-one-third">
-      <a href="{{ pdf_link }}">
-        <img src="{% static 'disbursements/disbursement-by-cash-V2.jpg' %}" srcset="{% static 'disbursements/disbursement-by-cash-V2@2x.jpg' %} 2x" alt="{{ link_title }}" />
-      </a>
-    </div>
-    <div class="column-two-thirds">
-      <a href="{{ pdf_link }}">{{ link_title }}</a>
-      <p>
-        {% trans 'Use if your prison offers only cash disbursements' %}
-      </p>
-    </div>
-  </div>
-
-  <div class="mtp-paper-form-download grid-row">
-    {% trans 'Postal order only (PDF)' as link_title %}
-    {% static 'disbursements/disbursement-by-postal-order-V2.pdf' as pdf_link %}
-    <div class="column-one-third">
-      <a href="{{ pdf_link }}">
-        <img src="{% static 'disbursements/disbursement-by-postal-order-V2.jpg' %}" srcset="{% static 'disbursements/disbursement-by-postal-order-V2@2x.jpg' %} 2x" alt="{{ link_title }}" />
-      </a>
-    </div>
-    <div class="column-two-thirds">
-      <a href="{{ pdf_link }}">{{ link_title }}</a>
-      <p>
-        {% trans 'Use if your prison offers only postal order disbursements' %}
-      </p>
-    </div>
-  </div>
-
 {% endblock %}

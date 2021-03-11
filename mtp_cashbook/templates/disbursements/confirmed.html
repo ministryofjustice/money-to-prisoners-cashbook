@@ -7,28 +7,28 @@
 
 {% block page_title %}{{ view.title }} – {{ block.super }}{% endblock %}
 
-{% block body_classes %}{{ block.super }} mtp-confirm-disbursements{% endblock %}
-
-{% block inner_content %}
+{% block content %}
   {{ block.super }}
 
-  <div class="govuk-box-highlight">
-    <h1 class="bold-medium">
+  <div class="govuk-panel govuk-panel--confirmation">
+    <h1 class="govuk-panel__title">
       {% trans 'Payment request sent to SSCL' %}
     </h1>
-    {% if nomis_transaction_id %}
-      <br/>
-      {% blocktrans trimmed %}
-        The NOMIS reference is {{ nomis_transaction_id }}
-      {% endblocktrans %}
-    {% endif %}
+    <div class="govuk-panel__body">
+      {% if nomis_transaction_id %}
+        <br />
+        {% blocktrans trimmed %}
+          The NOMIS reference is {{ nomis_transaction_id }}
+        {% endblocktrans %}
+      {% endif %}
+    </div>
   </div>
 
   <p>
     {% trans 'You don’t need to do anything else.' %}
   </p>
 
-  <h2 class="heading-medium">{% trans 'What happens next' %}</h2>
+  <h2 class="govuk-heading-m">{% trans 'What happens next' %}</h2>
 
   <p>
     {% trans 'SSCL will process the payment request the next working day and notify the recipient.' %}
@@ -36,11 +36,11 @@
   </p>
 
   <p>
-    <a class="button button-secondary" href="{% url 'disbursements:pending_list' %}">{% trans 'Confirm another payment' %}</a>
+    <a class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button" href="{% url 'disbursements:pending_list' %}">{% trans 'Confirm another payment' %}</a>
   </p>
 
   <p>
-    <a class="button button-secondary" href="{% url 'disbursements:search' %}">{% trans 'View payments made' %}</a>
+    <a class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button" href="{% url 'disbursements:search' %}">{% trans 'View payments made' %}</a>
   </p>
 
 {% endblock %}

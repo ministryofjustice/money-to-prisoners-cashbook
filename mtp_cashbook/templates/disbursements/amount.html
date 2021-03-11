@@ -3,78 +3,66 @@
 {% load mtp_common %}
 {% load currency %}
 
-{% block body_classes %}{{ block.super }} mtp-create-disbursement{% endblock %}
-
-{% block inner_content %}
+{% block content %}
   {{ block.super }}
 
-  <header>
-    <h1 class="heading-xlarge mtp-heading--compact">{{ view.title }}</h1>
-  </header>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
 
-  <p>
-    {% trans 'If there isn’t enough money in the prisoner’s private account, use NOMIS to move money across then ‘Update balances’ before you continue.' %}
-  </p>
+      <header>
+        <h1 class="govuk-heading-xl">{{ view.title }}</h1>
+      </header>
+
+      <p>
+        {% trans 'If there isn’t enough money in the prisoner’s private account, use NOMIS to move money across then ‘Update balances’ before you continue.' %}
+      </p>
+
+    </div>
+  </div>
 
   <form method="post">
     {% csrf_token %}
 
-    {% include 'mtp_common/forms/error-summary.html' with form=form only %}
+    {% include 'govuk-frontend/components/error-summary.html' with form=form only %}
 
-    <table class="mtp-accounts-table">
-      <caption class="visually-hidden">{% trans 'Prisoner’s balances in NOMIS' %}</caption>
+    <table class="govuk-table mtp-accounts-table">
+      <caption class="govuk-visually-hidden">{% trans 'Prisoner’s balances in NOMIS' %}</caption>
       <tbody>
         <tr>
-          <th>{% trans 'Account' %}</th>
-          <th>{% trans 'Balance on NOMIS' %}</th>
-          <th>{% trans 'Amount to send' %}</th>
+          <th scope="col">{% trans 'Account' %}</th>
+          <th class="govuk-table__header--numeric" scope="col">{% trans 'Balance on NOMIS' %}</th>
+          <th scope="col">{% trans 'Amount to send' %}</th>
         </tr>
 
-        <tr class="mtp-private-row">
+        <tr>
           <td>{% trans 'Private' %}</td>
-          <td class="numeric" data-balance="cash">{{ form.nomis_balances.cash|currency:'£'|default:_('Unknown') }}</td>
+          <td class="govuk-table__cell--numeric mtp-accounts-table__amount" data-balance="cash">{{ form.nomis_balances.cash|currency:'£'|default:_('Unknown') }}</td>
           <td>
-            {% with field=form.amount %}
-              <label id="{{ field.id_for_label }}-label" for="{{ field.id_for_label }}" class="visually-hidden">
-                {% trans 'Please enter the amount in pounds' %}
-              </label>
-              <div id="{{ field.id_for_label }}-wrapper" class="mtp-money-amount {% if field.errors %}form-group-error{% endif %}">
-                <div class="mtp-money-box">
-                  <span class="form-control mtp-currency-sign">
-                    £
-                  </span><input id="{{ field.id_for_label }}"
-                        class="form-control  {% if field.errors %}form-control-error{% endif %} mtp-charges-amount"
-                        maxlength="10"
-                        name="{{ field.html_name }}"
-                        value="{{ field.value|default:'' }}"
-                        type="text"
-                        autocomplete="off" />
-                </div>
-              </div>
-            {% endwith %}
+            {% include 'mtp_common/forms/amount-field.html' with field=form.amount only %}
           </td>
         </tr>
 
         <tr>
           <td>{% trans 'Spends' %}</td>
-          <td class="numeric" data-balance="spends">{{ form.nomis_balances.spends|currency:'£'|default:_('Unknown') }}</td>
+          <td class="govuk-table__cell--numeric mtp-accounts-table__amount" data-balance="spends">{{ form.nomis_balances.spends|currency:'£'|default:_('Unknown') }}</td>
           <td>{% trans 'Can’t be used for sending money out' %}</td>
         </tr>
 
         <tr>
           <td>{% trans 'Saving' %}</td>
-          <td class="numeric" data-balance="savings">{{ form.nomis_balances.savings|currency:'£'|default:_('Unknown') }}</td>
+          <td class="govuk-table__cell--numeric mtp-accounts-table__amount" data-balance="savings">{{ form.nomis_balances.savings|currency:'£'|default:_('Unknown') }}</td>
           <td>{% trans 'Can’t be used for sending money out' %}</td>
         </tr>
-
-        <tr class="mtp-refresh-row">
+      </tbody>
+      <tfoot>
+        <tr>
           <td></td>
-          <td><a href=".">{% trans 'Update balances' %}</a></td>
+          <td class="govuk-table__cell--numeric"><a href=".">{% trans 'Update balances' %}</a></td>
           <td></td>
         </tr>
-      </tbody>
+      </tfoot>
     </table>
 
-    <button type="submit" class="button mtp-next-button">{% trans 'Next' %}</button>
+    <button type="submit" class="govuk-button" data-module="govuk-button">{% trans 'Next' %}</button>
   </form>
 {% endblock %}

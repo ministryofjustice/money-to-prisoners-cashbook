@@ -1,11 +1,13 @@
 {% extends 'mtp_common/user_admin/accept-request.html' %}
-{% load mtp_common %}
+{% load i18n %}
 
 {% block sign_up_extras_fields %}
-  <br />
-  <div class="grid-row">
-    <div class="column-two-thirds">
-      {% labelled_data _('Prison') account_request_prisons tag='strong' %}
-    </div>
-  </div>
+  <tr>
+    <th scope="row">
+      {% trans 'Prison' %}
+    </th>
+    <td>
+      {{ account_request_prisons }}
+    </td>
+  </tr>
 {% endblock %}

@@ -2,62 +2,41 @@
 {% load i18n %}
 {% load mtp_common %}
 
-{% block inner_content %}
-  {% notifications_box request 'cashbook_dashboard' 'cashbook_all' %}
-
-  {% include 'mtp_common/includes/message_box.html' %}
+{% block content %}
+  {% notification_banners request 'cashbook_dashboard' 'cashbook_all' %}
 
   {% if bank_transfers_enabled %}
     {% include 'policy-change-warning-landing.html' %}
   {% else %}
-    {% include './policy-change-notice.html' %}
+    {% include 'policy-change-notice.html' %}
   {% endif %}
 
   {% if user_request_count %}
-    <div class="mtp-notification mtp-notification--info">
-      <h1>
-        <a href="{% url 'list-users' %}" class="mtp-notification__headline">
-          {% blocktrans trimmed count count=user_request_count %}
-            You have {{ count }} new user request
-          {% plural %}
-            You have {{ count }} new user requests
-          {% endblocktrans %}
-          <span>
-            {% trans 'View' %}
-          </span>
-        </a>
-      </h1>
-    </div>
+    {% captureoutput as banner_heading %}
+      <a href="{% url 'list-users' %}">
+        {% blocktrans trimmed count count=user_request_count %}
+          You have {{ count }} new user request
+        {% plural %}
+          You have {{ count }} new user requests
+        {% endblocktrans %}
+      </a>
+    {% endcaptureoutput %}
+    {% include 'mtp_common/components/notification-banner.html' with banner_level='info' banner_title='info'|notification_level banner_heading=banner_heading only %}
   {% endif %}
 
   <header>
-    <h1 class="heading-xlarge mtp-heading--compact">
+    <h1 class="govuk-heading-xl">
       {% blocktrans trimmed with name=request.user.get_full_name|default:request.user.username %}
         Welcome {{ name }}
       {% endblocktrans %}
     </h1>
   </header>
-  <p class="lede">
+  <p class="govuk-body-l">
     {% trans 'Use the tools below to manage prisoner money' %}
   </p>
 
-  <div class="grid-row">
-    <div class="column-third">
-      <div class="mtp-box">
-        <a href="{% url 'new-credits' %}" aria-labelledby="tool-1">{% trans 'Digital cashbook' %}</a>
-        <p id="tool-1">
-          {% trans 'Credit money into a prisoner’s account' %}
-        </p>
-      </div>
-    </div>
+  {% card_group cards %}
 
-    <div class="column-third">
-      <div class="mtp-box">
-        <a href="{% url 'disbursements:start' %}" aria-labelledby="tool-2">{% trans 'Digital disbursements' %}</a>
-        <p id="tool-2">
-          {% trans 'Send money out of a prisoner’s account by bank transfer or cheque' %}
-        </p>
-      </div>
-    </div>
-  </div>
+  {% include 'govuk-frontend/components/section-break.html' with size='l' %}
+
 {% endblock %}
