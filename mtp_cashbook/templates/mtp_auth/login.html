@@ -83,9 +83,9 @@
     <br />
 
     <p>
-      {% url 'submit_ticket' as get_help_link %}
+      {% url 'faq' as faq_url %}
       {% blocktrans trimmed %}
-        <a href="{{ get_help_link }}">Get help</a> if you’re having difficulties requesting access or signing in.
+        <a href="{{ faq_url }}">Get help</a> if you’re having difficulties requesting access or signing in.
       {% endblocktrans %}
     </p>
   </div>

@@ -45,8 +45,12 @@
   </h2>
   <ul class="govuk-footer__inline-list">
     <li class="govuk-footer__inline-list-item">
-      {% url 'submit_ticket' as submit_ticket_fallback %}
-      <a class="govuk-footer__link" href="{{ request.proposition_app.help_url|default:submit_ticket_fallback }}">
+      {% if request.user.is_authenticated %}
+        {% url 'submit_ticket' as get_help_fallback %}
+      {% else %}
+        {% url 'faq' as get_help_fallback %}
+      {% endif %}
+      <a class="govuk-footer__link" href="{{ request.proposition_app.help_url|default:get_help_fallback }}">
         {% trans 'Get help' %}
       </a>
     </li>
