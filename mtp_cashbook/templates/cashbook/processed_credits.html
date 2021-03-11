@@ -11,10 +11,6 @@
 {% block content %}
   {{ block.super }}
 
-  {% if bank_transfers_enabled %}
-    {% include 'policy-change-warning-credits.html' %}
-  {% endif %}
-
   <header>
     <h1 class="govuk-heading-xl">{{ view.title }}</h1>
   </header>

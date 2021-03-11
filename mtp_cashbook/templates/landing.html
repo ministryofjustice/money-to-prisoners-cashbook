@@ -5,12 +5,6 @@
 {% block content %}
   {% notification_banners request 'cashbook_dashboard' 'cashbook_all' %}
 
-  {% if bank_transfers_enabled %}
-    {% include 'policy-change-warning-landing.html' %}
-  {% else %}
-    {% include 'policy-change-notice.html' %}
-  {% endif %}
-
   {% if user_request_count %}
     {% captureoutput as banner_heading %}
       <a href="{% url 'list-users' %}">

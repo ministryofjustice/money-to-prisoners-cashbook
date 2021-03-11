@@ -13,18 +13,6 @@ class LandingPageTestCase(MTPBaseTestCase):
         response = self.client.get(reverse('home'), follow=True)
         self.assertOnPage(response, 'login')
 
-    @override_settings(BANK_TRANSFERS_ENABLED=True)
-    def test_displays_policy_change_warning_pre_launch(self):
-        self.login()
-        response = self.client.get(reverse('home'), follow=True)
-        self.assertOnPage(response, 'policy-change-warning-landing')
-
-    @override_settings(BANK_TRANSFERS_ENABLED=False)
-    def test_displays_policy_change_notice_post_launch(self):
-        self.login()
-        response = self.client.get(reverse('home'), follow=True)
-        self.assertOnPage(response, 'policy-change-notice')
-
 
 class MLBriefingTestCase(MTPBaseTestCase):
     confirmation_url = reverse_lazy('ml-briefing-confirmation')
