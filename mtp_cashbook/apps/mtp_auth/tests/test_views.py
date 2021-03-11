@@ -32,8 +32,18 @@ class MovePrisonTestCase(MTPBaseTestCase):
         self.login()
         with responses.RequestsMock() as rsps:
             self.mock_prison_list(rsps)
-            rsps.add(rsps.POST, api_url('/requests/'),
-                     json={}, status=201)
+            rsps.add(
+                rsps.POST,
+                api_url('/requests/'),
+                json={},
+                status=201
+            )
+            rsps.add(
+                rsps.GET,
+                api_url('/requests/?username=my-username&role__name=prison-clerk'),
+                json={'count': 0},
+                status=200
+            )
             response = self.client.post(reverse('move-prison'), data={
                 'first_name': 'My First Name', 'last_name': 'My Last Name',
                 'email': 'my-username@mtp.local', 'username': 'my-username',
@@ -46,8 +56,18 @@ class MovePrisonTestCase(MTPBaseTestCase):
         self.login()
         with responses.RequestsMock() as rsps:
             self.mock_prison_list(rsps)
-            rsps.add(rsps.POST, api_url('/requests/'),
-                     json={'non_field_errors': 'ERROR MSG 1'}, status=400)
+            rsps.add(
+                rsps.POST,
+                api_url('/requests/'),
+                json={'non_field_errors': 'ERROR MSG 1'},
+                status=400
+            )
+            rsps.add(
+                rsps.GET,
+                api_url('/requests/?username=my-username&role__name=prison-clerk'),
+                json={'count': 0},
+                status=200
+            )
             response = self.client.post(reverse('move-prison'), data={
                 'first_name': 'My First Name', 'last_name': 'My Last Name',
                 'email': 'my-username@mtp.local', 'username': 'my-username',
