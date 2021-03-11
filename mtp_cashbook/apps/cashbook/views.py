@@ -36,7 +36,6 @@ class CashbookView(BaseView):
 
 class CashbookFAQView(CashbookView, TemplateView):
     title = _('What do you need help with?')
-    base_template_name = 'cashbook/base.html'
     template_name = 'cashbook/faq.html'
 
     def get_context_data(self, **kwargs):

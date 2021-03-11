@@ -8,10 +8,6 @@
 {% block content %}
   {{ block.super }}
 
-  {% if bank_transfers_enabled %}
-    {% include 'policy-change-warning-credits.html' %}
-  {% endif %}
-
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <header>
@@ -29,14 +25,14 @@
         {% trans "I have a query about a payment in the 'Send money to someone in prison' service" %}
       </h2>
 
-      <p class="govuk-body">
+      <p>
         {% blocktrans trimmed %}
-          Ask the sender of the payment to go to the <a href="{{ send_money_url }}/help" class="govuk-link">help pages on the service</a>.
+          Ask the sender of the payment to go to the <a href="{{ send_money_url }}/help/">help pages on the service</a>.
         {% endblocktrans %}
       </p>
-      <p class="govuk-body">
+      <p>
         {% blocktrans trimmed %}
-          They can <a href="{{ send_money_url }}/help/with-a-payment-i-sent/" class="govuk-link">get help about a payment they've already made</a> by clicking the 'Contact us' button at the bottom of this help page and filling in the form.
+          They can <a href="{{ send_money_url }}/help/with-a-payment-i-sent/">get help about a payment they've already made</a> by clicking the 'Contact us' button at the bottom of this help page and filling in the form.
         {% endblocktrans %}
       </p>
 
@@ -45,7 +41,7 @@
         {% trans 'I need to update my prisons / password / email address' %}
       </h2>
 
-      <p class="govuk-body">
+      <p>
         {% trans "Sign in, click your name in the top-right corner, and go to 'Settings' where you can:" %}
       </p>
 
@@ -69,7 +65,7 @@
         {% trans 'I want to block a sender or return / reject a payment' %}
       </h2>
 
-      <p class="govuk-body">
+      <p>
         {% blocktrans trimmed %}
           Once you have it, you can't block a sender or return / reject a payment but you can put it on hold in NOMIS and/or email HMPPS Financial Investigation Unit at {{ fiu_email }} for help." 
         {% endblocktrans %}
@@ -80,7 +76,7 @@
         {% trans 'I want to know how security works' %}
       </h2>
 
-      <p class="govuk-body">
+      <p>
         {% blocktrans trimmed %}
           Email HMPPS Financial Investigation Unit at {{ fiu_email }}
         {% endblocktrans %}
@@ -91,8 +87,8 @@
         {% trans 'I have a question about reconciliation' %}
       </h2>
 
-      <p class="govuk-body">
-        {% blocktrans %}
+      <p>
+        {% blocktrans trimmed %}
           We can't access enough relevant information to answer questions about this.
           But if, over several days, you check the balance of the general ledger against NOMIS, you might find the difference due to some credits not being credited on the day.
         {% endblocktrans %}
@@ -103,9 +99,9 @@
         {% trans 'I want a prisoner money intelligence tool account' %}
       </h2>
 
-      <p class="govuk-body">
+      <p>
         {% blocktrans trimmed %}
-          You can only have one account - intelligence tool OR digital cashbook. If you need an intelligence tool account, instead of a cashbook one, go directly to the <a href="{{ noms_ops_url }}" class="govuk-link">intelligence tool</a> and request it.
+          You can only have one account - intelligence tool OR digital cashbook. If you need an intelligence tool account, instead of a cashbook one, go directly to the <a href="{{ noms_ops_url }}">intelligence tool</a> and request it.
         {% endblocktrans %}
       </p>
 
@@ -114,9 +110,9 @@
         {% trans 'I need to change my name' %}
       </h2>
 
-      <p class="govuk-body">
+      <p>
         {% blocktrans trimmed %}
-          To change your name, <a href="{{ contact_us_url }}?message=My new name is [please fill in]" class="govuk-link">contact us</a>.
+          To change your name, <a href="{{ contact_us_url }}?message=My%20new%20name%20is%20%5Bplease%20fill%20in%5D">contact us</a>.
         {% endblocktrans %}
       </p>
 
@@ -125,9 +121,9 @@
         {% trans 'I have a question about something else' %}
       </h2>
 
-      <p class="govuk-body">
+      <p>
         {% blocktrans trimmed %}
-          Please <a href="{{ contact_us_url }}" class="govuk-link">contact us</a>.
+          Please <a href="{{ contact_us_url }}">contact us</a>.
         {% endblocktrans %}
       </p>
 
