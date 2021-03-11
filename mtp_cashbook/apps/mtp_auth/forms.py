@@ -1,3 +1,4 @@
+from collections import OrderedDict
 import logging
 
 from django import forms
@@ -28,7 +29,7 @@ class CashbookSignUpForm(SignUpForm, BaseTicketForm):
         role_field.initial = ACCOUNT_REQUEST_ROLE
         role_field.choices = ((ACCOUNT_REQUEST_ROLE, 'Business hub'),)
         prison_field = self.fields['prison']
-        prison_field.choices = [['', _('Select a prison')]] + self.prison_choices
+        prison_field.choices = [['', _('Select a prison')]] + list(self.prison_choices.items())
 
     @property
     def prison_choices(self):
@@ -36,7 +37,7 @@ class CashbookSignUpForm(SignUpForm, BaseTicketForm):
         if not choices:
             try:
                 choices = retrieve_all_pages_for_path(self.api_session, '/prisons/', exclude_empty_prisons=True)
-                choices = [[prison['nomis_id'], prison['name']] for prison in choices]
+                choices = OrderedDict([[prison['nomis_id'], prison['name']] for prison in choices])
                 cache.set('sign-up-prisons', choices, timeout=60 * 60 * 6)
             except (RequestException, OAuth2Error, ValueError):
                 logger.exception('Could not look up prison list')
@@ -61,5 +62,6 @@ class CashbookSignUpForm(SignUpForm, BaseTicketForm):
                 tags=self.zendesk_tags,
                 ticket_template_name='mtp_common/user_admin/new-account-request-ticket.txt',
                 requester_email=self.cleaned_data['email'],
+                extra_context={'prison_name': self.prison_choices.get(self.cleaned_data['prison'], 'N/A')}
             )
         return super().clean()
