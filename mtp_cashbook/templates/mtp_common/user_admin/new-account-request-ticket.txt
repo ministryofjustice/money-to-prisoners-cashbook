@@ -1,8 +1,7 @@
 Requesting a new staff account - Digital Cashbook
 =================================================
 
-
-{{ ticket_content|safe }}
+Reason for requesting account: {{ reason|safe }}
 
 ---
 
@@ -12,4 +11,3 @@ Username (Quantum ID): {{ username|safe }}
 Staff email: {{ email|safe }}
 Prison: {{ prison_name|safe }}
 Account Type: {{ role|safe }}
-Reason for requesting account: {{ reason|safe }}

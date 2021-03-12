@@ -19,9 +19,8 @@ class CashbookSignUpForm(SignUpForm, BaseTicketForm):
     prison = forms.ChoiceField(label=_('Prison'), help_text=_('Enter the prison you’re based in'))
 
     # Non form class variables
-    cashbook_account_request_zendesk_subject = 'Request for access to cashbook'
-    # TODO check these tags with laurie
-    zendesk_tags = ('mtp', 'cashbook', 'account-request')
+    cashbook_account_request_zendesk_subject = 'Requesting a new staff account - Digital Cashbook'
+    zendesk_tags = ('mtp', 'cashbook', 'account_request')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -45,14 +44,18 @@ class CashbookSignUpForm(SignUpForm, BaseTicketForm):
 
     def user_already_requested_account(self):
         # TODO Also, is it worth adding a unique_together definition for username/role fields?
-        response = self.api_session.get(
-            'requests/',
-            params={
-                'username': self.cleaned_data['username'],
-                'role__name': self.cleaned_data['role']
-            }
-        )
-        return response.json().get('count', 0) > 0
+        try:
+            response = self.api_session.get(
+                'requests/',
+                params={
+                    'username': self.cleaned_data['username'],
+                    'role__name': self.cleaned_data['role']
+                }
+            )
+            return response.json().get('count', 0) > 0
+        except (RequestException, OAuth2Error, ValueError):
+            logger.exception('Could not look up access requests')
+            self.add_error(None, _('This service is currently unavailable'))
 
     def clean(self):
         if self.user_already_requested_account():

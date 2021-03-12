@@ -7,4 +7,3 @@ money-to-prisoners-common[testing]~=11.1.0
 django-stubs
 types-requests
 django-pdb
-pdbpp
