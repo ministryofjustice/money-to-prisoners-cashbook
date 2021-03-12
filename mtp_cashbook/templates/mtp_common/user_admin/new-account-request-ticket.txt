@@ -1,0 +1,15 @@
+Requesting a new staff account - Digital Cashbook
+=================================================
+
+
+{{ ticket_content|safe }}
+
+---
+
+Forename: {{ first_name|safe }}
+Surname: {{ last_name|safe }}
+Username (Quantum ID): {{ username|safe }}
+Staff email: {{ email|safe }}
+Prison: {{ prison_name|safe }}
+Account Type: {{ role|safe }}
+Reason for requesting account: {{ reason|safe }}
