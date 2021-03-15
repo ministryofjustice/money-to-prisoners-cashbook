@@ -20,7 +20,7 @@ class CashbookSignUpForm(SignUpForm, BaseTicketForm):
     prison = forms.ChoiceField(label=_('Prison'), help_text=_('Enter the prison you’re based in'))
 
     # Non form class variables
-    cashbook_account_request_zendesk_subject = 'MTP for digital team - Digital Cashbook - Requesting a new staff account'
+    cashbook_account_request_zendesk_subject = 'MTP for digital team - Digital Cashbook - Request for new staff account'
     zendesk_tags = ('feedback', 'mtp', 'cashbook', 'account_request', settings.ENVIRONMENT)
 
     def __init__(self, *args, **kwargs):

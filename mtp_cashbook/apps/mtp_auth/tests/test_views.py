@@ -1,8 +1,10 @@
 import json
 from urllib.parse import urljoin
 
+from django.conf import settings
 from django.test import override_settings
 from django.urls import reverse
+from mtp_common.test_utils import silence_logger
 import responses
 
 from cashbook.tests import MTPBaseTestCase, api_url
@@ -98,7 +100,7 @@ class MovePrisonTestCase(UserRequestFormTestCase):
     CACHES={'default': {'BACKEND': 'django.core.cache.backends.dummy.DummyCache'}}
 )
 class RequestAccessTestCase(UserRequestFormTestCase):
-    maxDiff = 1500
+    maxDiff = None
 
     def test_success_response_no_previous_request(self):
         with responses.RequestsMock() as rsps:
@@ -199,21 +201,15 @@ class RequestAccessTestCase(UserRequestFormTestCase):
                             'email': 'my-username@mtp.local',
                             'name': 'Sender: my-username'
                         },
-                        'subject': 'Requesting a new staff account - Digital Cashbook',
-                        'tags': ['mtp', 'cashbook', 'account_request']
+                        'subject': 'MTP for digital team - Digital Cashbook - Request for new staff account',
+                        'tags': ['feedback', 'mtp', 'cashbook', 'account_request', settings.ENVIRONMENT]
                     }
                 }
             )
 
     def test_error_response(self):
-        with responses.RequestsMock() as rsps:
+        with responses.RequestsMock() as rsps, silence_logger():
             self.mock_prison_list(rsps)
-            #  rsps.add(
-            #      rsps.POST,
-            #      api_url('/requests/'),
-            #      json={'non_field_errors': 'ERROR MSG 1'},
-            #      status=400
-            #  )
             rsps.add(
                 rsps.GET,
                 api_url('/requests/?username=my-username&role__name=prison-clerk'),
