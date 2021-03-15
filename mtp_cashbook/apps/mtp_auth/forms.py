@@ -2,6 +2,7 @@ from collections import OrderedDict
 import logging
 
 from django import forms
+from django.conf import settings
 from django.core.cache import cache
 from django.utils.translation import gettext_lazy as _
 from mtp_common.api import retrieve_all_pages_for_path
@@ -19,8 +20,8 @@ class CashbookSignUpForm(SignUpForm, BaseTicketForm):
     prison = forms.ChoiceField(label=_('Prison'), help_text=_('Enter the prison you’re based in'))
 
     # Non form class variables
-    cashbook_account_request_zendesk_subject = 'Requesting a new staff account - Digital Cashbook'
-    zendesk_tags = ('mtp', 'cashbook', 'account_request')
+    cashbook_account_request_zendesk_subject = 'MTP for digital team - Digital Cashbook - Requesting a new staff account'
+    zendesk_tags = ('feedback', 'mtp', 'cashbook', 'account_request', settings.ENVIRONMENT)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -43,7 +44,6 @@ class CashbookSignUpForm(SignUpForm, BaseTicketForm):
         return choices
 
     def user_already_requested_account(self):
-        # TODO Also, is it worth adding a unique_together definition for username/role fields?
         try:
             response = self.api_session.get(
                 'requests/',
