@@ -1,5 +1,9 @@
 # Place development and testing dependencies here
 
-money-to-prisoners-common[testing]~=11.1.0
+money-to-prisoners-common[testing]~=11.2.0
 
 -r base.txt
+
+django-stubs
+types-requests
+django-pdb
