@@ -77,14 +77,16 @@
         </div>
       {% endpaneltab %}
 
-      <p class="mtp-tab-container__footer govuk-!-margin-top-4">
-        <button type="submit" class="govuk-button" data-module="govuk-button">{% trans 'Filter list' %}</button>
-        {% if form.search_description.has_filters %}
-          <a href="?{% if form.ordering.value %}ordering={{ form.ordering.value }}{% endif %}" class="mtp-link--form-cancel" role="button">
-            {% trans 'Clear filters' %}
-          </a>
-        {% endif %}
-      </p>
+      <div class="mtp-tab-container__footer govuk-!-margin-top-4">
+        <div class="govuk-button-group">
+          <button type="submit" class="govuk-button" data-module="govuk-button">{% trans 'Filter list' %}</button>
+          {% if form.search_description.has_filters %}
+            <a href="?{% if form.ordering.value %}ordering={{ form.ordering.value }}{% endif %}" class="govuk-link" role="button">
+              {% trans 'Clear filters' %}
+            </a>
+          {% endif %}
+        </div>
+      </div>
 
     {% endtabbedpanel %}
   </form>

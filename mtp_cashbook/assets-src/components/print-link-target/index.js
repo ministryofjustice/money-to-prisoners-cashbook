@@ -1,5 +1,4 @@
 // Prints the target of a link using an iframe
-/* globals Sentry */
 'use strict';
 
 export var PrintLinkTarget = {
@@ -29,7 +28,7 @@ export var PrintLinkTarget = {
     try {
       printFrame.contentWindow.print();
     } catch (error) {
-      if (Sentry !== undefined) {
+      if (typeof Sentry !== 'undefined') {
         Sentry.captureException(error);
       }
     }

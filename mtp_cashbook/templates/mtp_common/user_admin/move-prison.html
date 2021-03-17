@@ -26,12 +26,12 @@
         {% endfor %}
         {% include 'mtp_common/forms/select-field.html' with field=form.prison input_classes='mtp-select--autocomplete govuk-input--width-10' only %}
 
-        <p>
+        <div class="govuk-button-group">
           <button type="submit" class="govuk-button" data-module="govuk-button">
             {% trans 'Submit request' %}
           </button>
-          <a class="mtp-link--form-cancel" href="{% url 'settings' %}">{% trans 'Cancel' %}</a>
-        </p>
+          <a class="govuk-link" href="{% url 'settings' %}">{% trans 'Cancel' %}</a>
+        </div>
       </form>
 
     </div>
