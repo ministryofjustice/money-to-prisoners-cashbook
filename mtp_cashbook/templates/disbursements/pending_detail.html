@@ -14,7 +14,7 @@
   </header>
 
   {% if disbursement.resolution == 'rejected' %}
-    {% include 'mtp_common/components/notification-banner.html' with banner_level='success' banner_title='success'|notification_level banner_heading=_('This payment request has been cancelled.') banner_message=_('All cancelled payments can be found in ‘Payments made’.') only %}
+    {% include 'mtp_common/components/notification-banner.html' with banner_level='success' banner_title='success'|notification_level banner_heading=_('This payment request has been cancelled.') only %}
   {% elif disbursement.resolution == 'confirmed' or disbursement.resolution == 'sent' %}
     {% include 'mtp_common/components/notification-banner.html' with banner_level='info' banner_title='info'|notification_level banner_heading=_('This payment request has already been confirmed.') banner_message=_('All confirmed payments can be found in ‘Payments made’.') only %}
   {% else %}
@@ -268,8 +268,6 @@
       {% blocktrans trimmed with linkstart='<a href="#cancel-disbursement-dialog" class="mtp-dialogue__open-trigger-link">' linkend='</a>' %}
         {{ linkstart }}Cancel this request{{ linkend }} if you no longer need to send it.
       {% endblocktrans %}
-      <br />
-      {% trans 'Cancelled requests are in ‘Payments made’.' %}
     </p>
 
     {% dialoguebox html_id='cancel-disbursement-dialog' title=_('Are you sure you want to cancel this payment request?') %}
