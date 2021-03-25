@@ -65,7 +65,7 @@
       <p>
         {% url 'submit_ticket' as contact_us_url %}
         {% blocktrans trimmed %}
-            To change your username, <a href="{{ contact_us_url }}?message=My%20new%20username%20%28usually%20your%20Quantum%20ID%29%20is%20%5Bplease%20fill%20in%5D">contact us</a>.
+            To change your username, <a href="{{ contact_us_url }}?message=I%20want%20to%20change%20my%20username.%0A%0AMy%20old%20username%20%20%28usually%20your%20Quantum%20ID%29%20is%3A%20%5Bplease%20fill%20in%5D.%0A%0AMy%20new%20username%20%28usually%20your%20Quantum%20ID%29%20is%3A%20%5Bplease%20fill%20in%5D.">contact us</a>.
         {% endblocktrans %}
       </p>
 
@@ -77,7 +77,7 @@
       <p>
         {% url 'submit_ticket' as contact_us_url %}
         {% blocktrans trimmed %}
-          To reset your password, <a href="{{ contact_us_url }}?message=I%20need%20help%20resetting%20my%20password.%20My%20username%20is%20%5Bplease%20fill%20in%5D.">contact us</a>.
+          To reset your password, <a href="{{ contact_us_url }}?message=Reset%20password%20isn%E2%80%99t%20working.%0A%0AMy%20username%20is%3A%20%5Bplease%20fill%20in%5D.">contact us</a>.
         {% endblocktrans %}
       </p>
 
