@@ -58,7 +58,7 @@ class CashbookSignUpForm(SignUpForm, BaseTicketForm):
             self.add_error(None, _('This service is currently unavailable'))
 
     def clean(self):
-        if self.user_already_requested_account():
+        if self.is_valid() and self.user_already_requested_account():
             return self.submit_ticket(
                 self.request,
                 subject=self.cashbook_account_request_zendesk_subject,
