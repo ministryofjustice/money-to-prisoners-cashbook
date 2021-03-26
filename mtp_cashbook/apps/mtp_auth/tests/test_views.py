@@ -230,3 +230,24 @@ class RequestAccessTestCase(UserRequestFormTestCase):
                 follow=True
             )
         self.assertContains(response, 'This service is currently unavailable')
+
+    def test_form_invalid_response(self):
+        """
+        Test that errors are rendered when mandatory field is missing (email)
+        """
+        with responses.RequestsMock() as rsps, silence_logger():
+            self.mock_prison_list(rsps)
+            response = self.client.post(
+                reverse('sign-up'),
+                data={
+                    'first_name': 'My First Name',
+                    'last_name': 'My Last Name',
+                    'username': 'my-username',
+                    'role': 'prison-clerk',
+                    'prison': 'INP',
+                    'reason': 'because'
+                },
+                follow=True
+            )
+        self.assertContains(response, 'Email')
+        self.assertContains(response, 'This field is required')
