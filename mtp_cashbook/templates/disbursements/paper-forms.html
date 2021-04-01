@@ -98,6 +98,28 @@
         </div>
       </div>
 
+      {% include 'govuk-frontend/components/section-break.html' with size='m' visible=True %}
+
+      <h2 class="govuk-heading-m">
+        {% trans 'Exemption form' %}
+      </h2>
+
+      <div class="mtp-paper-form govuk-grid-row govuk-!-margin-top-6">
+        {% trans 'Apply to send out more than £50 (PDF)' as link_title %}
+        {% static 'downloads/apply-to-send-out-more-than-50.pdf' as pdf_link %}
+        <div class="govuk-grid-column-one-third" aria-hidden="true">
+          <a href="{{ pdf_link }}">
+            <img src="{% static 'downloads/apply-to-send-out-more-than-50.jpg' %}" srcset="{% static 'downloads/apply-to-send-out-more-than-50@2x.jpg' %} 2x" class="mtp-img--bordered mtp-paper-form__image" alt="{{ link_title }}" />
+          </a>
+        </div>
+        <div class="govuk-grid-column-two-thirds">
+          <a href="{{ pdf_link }}" class="govuk-body-l">{{ link_title }}</a>
+          <p>
+            {% trans 'Use to ask for exemption from disbursement cap policy' %}
+          </p>
+        </div>
+      </div>
+
     </div>
   </div>
 {% endblock %}
