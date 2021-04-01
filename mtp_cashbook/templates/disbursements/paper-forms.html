@@ -17,6 +17,12 @@
         {% trans 'Prisoners can send money out digitally by bank transfer or cheque.' %}
         {% trans 'They can also continue to send money out non-digitally by cash and/or postal order.' %}
       </p>
+      <p>
+        {% url 'policy-change' as link %}
+        {% blocktrans trimmed %}
+          There is a <a href="{{ link }}">policy to cap disbursements at £50</a>.
+        {% endblocktrans %}
+      </p>
 
       {% include 'govuk-frontend/components/section-break.html' with size='m' %}
 
