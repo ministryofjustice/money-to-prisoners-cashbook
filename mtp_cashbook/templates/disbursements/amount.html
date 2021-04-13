@@ -16,11 +16,16 @@
       <p>
         {% trans 'If there isn’t enough money in the prisoner’s private account, use NOMIS to move money across then ‘Update balances’ before you continue.' %}
       </p>
+      <p>
+        <a href="{% url 'policy-change' %}">
+          {% trans 'An exemption is needed to send more than £50.' %}
+        </a>
+      </p>
 
     </div>
   </div>
 
-  <form method="post">
+  <form method="post" class="govuk-!-margin-top-6">
     {% csrf_token %}
 
     {% include 'govuk-frontend/components/error-summary.html' with form=form only %}

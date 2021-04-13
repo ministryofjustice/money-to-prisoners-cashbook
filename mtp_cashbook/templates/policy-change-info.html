@@ -46,8 +46,12 @@
         <li>{% trans 'transferring your money from prison to a new or existing bank account' %}</li>
       </ul>
 
-      <h2 class="govuk-heading-l">{% trans 'Cap on prisoner bank accounts' %}</h2>
-      <p>{% trans 'Prisoner bank accounts can no longer exceed £900' %}</p>
+      <h2 class="govuk-heading-l">{% trans 'Cap on prisoner accounts' %}</h2>
+      <p>
+        {% trans 'Prisoner accounts should no longer exceed £900.' %}
+        {% trans 'If their accounts in NOMIS reach this limit, they will not be able to receive money through the ‘Send money to someone in prison’ service.' %}
+        {% trans 'They will still be able to earn money from work.' %}
+      </p>
 
     </div>
   </div>
