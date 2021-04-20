@@ -27,7 +27,7 @@ def credit_selected_credits_to_nomis(*, user, user_session, selected_credit_ids,
             credit_individual_credit_to_nomis(user, user_session, credit_id, credits[credit_id])
             credited += 1
         else:
-            logger.warning('Credit is no longer available', {'credit_id': credit_id})
+            logger.warning('Credit %(credit_id)s is no longer available', {'credit_id': credit_id})
     metrics.credited_summary.observe(credited)
 
     if settings.PRISONER_CAPPING_ENABLED:
@@ -59,19 +59,19 @@ def credit_individual_credit_to_nomis(user, user_session, credit_id, credit):
         )
     except HTTPError as e:
         if e.response.status_code == 409:
-            logger.warning('Credit was already present in NOMIS', {'credit_id': credit_id})
+            logger.warning('Credit %(credit_id)s was already present in NOMIS', {'credit_id': credit_id})
         elif e.response.status_code >= 500:
-            logger.error('Credit could not credited as NOMIS is unavailable', {'credit_id': credit_id})
+            logger.error('Credit %(credit_id)s could not credited as NOMIS is unavailable', {'credit_id': credit_id})
             return
         else:
-            logger.warning('Credit cannot be automatically credited to NOMIS', {'credit_id': credit_id})
+            logger.warning('Credit %(credit_id)s cannot be automatically credited to NOMIS', {'credit_id': credit_id})
             api_session.post(
                 'credits/actions/setmanual/',
                 json={'credit_ids': [int(credit_id)]}
             )
             return
     except RequestException:
-        logger.exception('Credit could not credited as NOMIS is unavailable', {'credit_id': credit_id})
+        logger.exception('Credit %(credit_id)s could not credited as NOMIS is unavailable', {'credit_id': credit_id})
         return
 
     credit_update = {'id': credit_id, 'credited': True}
@@ -111,10 +111,19 @@ def check_balance_is_below_cap(prison, prisoner_number):
             for account in NOMIS_ACCOUNTS
         ), 'not all response values are natural ints'
     except AssertionError as e:
-        logger.exception('NOMIS balances is malformed', {'prisoner_number': prisoner_number, 'exception': e})
+        logger.exception(
+            'NOMIS balances for %(prisoner_number)s is malformed',
+            {'prisoner_number': prisoner_number, 'exception': e}
+        )
     except requests.RequestException:
-        logger.exception('Cannot lookup NOMIS balances for prisoner', {'prisoner_number': prisoner_number})
+        logger.exception(
+            'Cannot lookup NOMIS balances for %(prisoner_number)s',
+            {'prisoner_number': prisoner_number}
+        )
     else:
         prisoner_account_balance = sum(nomis_account_balances[account] for account in NOMIS_ACCOUNTS)
         if prisoner_account_balance > settings.PRISONER_CAPPING_THRESHOLD_IN_POUNDS * 100:
-            logger.error('NOMIS account balance exceeds cap', {'prisoner_number': prisoner_number})
+            logger.error(
+                'NOMIS account balance for %(prisoner_number)s exceeds cap',
+                {'prisoner_number': prisoner_number}
+            )

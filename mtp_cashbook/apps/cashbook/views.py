@@ -171,7 +171,7 @@ class NewCreditsView(CashbookView, FormView):
 
         if context.get('credited_count', 0):
             username = self.request.user.user_data.get('username', 'Unknown')
-            logger.info('User "%(username)s" added %(credited)d credits(s) to NOMIS' % {
+            logger.info('User "%(username)s" added %(credited)d credits(s) to NOMIS', {
                 'username': username,
                 'credited': context['credited_count'],
             }, extra={
