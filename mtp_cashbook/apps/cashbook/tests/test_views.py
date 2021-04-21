@@ -354,9 +354,14 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, '2 credits sent to NOMIS')
-        logger_error_messages = [call[0][0] for call in mock_logger.error.call_args_list]
+        logger_error_messages = [call[0] for call in mock_logger.error.call_args_list]
         self.assertEqual(len(logger_error_messages), 1)
-        self.assertEqual(logger_error_messages[0], 'NOMIS account balance for A1234GG exceeds cap')
+        self.assertEqual(
+            logger_error_messages[0], (
+                'NOMIS account balance for %(prisoner_number)s exceeds cap',
+                {'prisoner_number': 'A1234GG'}
+            )
+        )
 
     @override_settings(ENVIRONMENT='prod')  # because non-prod environments don't send to .local
     @mock.patch(

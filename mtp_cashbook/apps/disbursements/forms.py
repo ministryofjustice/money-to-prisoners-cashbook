@@ -126,7 +126,10 @@ class PrisonerForm(DisbursementForm):
                 raise forms.ValidationError(
                     self.error_messages['wrong_prison'], code='wrong_prison')
             except (RequestException, ValueError):
-                logger.exception('Could not look up prisoner location')
+                logger.exception(
+                    'Could not look up prisoner location for %(prisoner_number)s',
+                    {'prisoner_number': prisoner_number}
+                )
                 raise forms.ValidationError(
                     self.error_messages['connection'], code='connection')
         return prisoner_number

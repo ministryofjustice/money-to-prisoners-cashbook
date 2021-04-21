@@ -447,7 +447,7 @@ class PendingDetailView(BaseConfirmationView):
                 'disbursements/{pk}/'.format(pk=kwargs['pk'])
             ).json()
         except HttpNotFoundError:
-            raise Http404('Disbursement %s not found' % kwargs['pk'])
+            raise Http404('Disbursement not found', {'disbursement_id': kwargs['pk']})
         self.disbursement_viability = get_disbursement_viability(self.request, self.disbursement)
         return super().dispatch(request, **kwargs)
 
@@ -489,22 +489,26 @@ class PendingDetailView(BaseConfirmationView):
         except HTTPError as e:
             if e.response.status_code == 409:
                 logger.warning(
-                    'Disbursement %s was already present in NOMIS' % disbursement['id']
+                    'Disbursement %(disbursement_id)s was already present in NOMIS',
+                    {'disbursement_id': disbursement['id']}
                 )
                 return None
             elif e.response.status_code >= 500:
                 logger.error(
-                    'Disbursement %s could not be made as NOMIS is unavailable'
-                    % disbursement['id']
+                    'Disbursement %(disbursement_id)s could not be made as NOMIS is unavailable',
+                    {'disbursement_id': disbursement['id']}
                 )
                 form.add_error(None, self.error_messages['connection'])
             else:
-                logger.warning('Disbursement %s is invalid' % disbursement['id'])
+                logger.warning(
+                    'Disbursement %(disbursement_id)s is invalid',
+                    {'disbursement_id': disbursement['id']}
+                )
                 form.add_error(None, self.error_messages['invalid'])
         except RequestException:
             logger.exception(
-                'Disbursement %s could not be made as NOMIS is unavailable'
-                % disbursement['id']
+                'Disbursement %(disbursement_id)s could not be made as NOMIS is unavailable',
+                {'disbursement_id': disbursement['id']}
             )
             form.add_error(None, self.error_messages['connection'])
 
@@ -580,7 +584,10 @@ class RejectPendingView(DisbursementView, FormView):
             form.reject(self.request, self.kwargs['pk'])
             messages.info(self.request, _('Payment request cancelled.'))
         except RequestException:
-            logger.exception('Could not reject disbursement')
+            logger.exception(
+                'Could not reject disbursement %(disbursement_id)s',
+                {'disbursement_id': self.kwargs['pk']}
+            )
             messages.error(self.request, _('Unable to cancel payment request.'))
         return super().form_valid(form)
 
@@ -600,7 +607,7 @@ class BaseEditFormView(BasePagedFormView):
                 'disbursements/{pk}/'.format(pk=kwargs['pk'])
             ).json()
         except HttpNotFoundError:
-            raise Http404('Disbursement %s not found' % kwargs['pk'])
+            raise Http404('Disbursement not found', {'disbursement_id': kwargs['pk']})
         for view in list(self.get_previous_views()) + [self.__class__]:
             if not issubclass(view, BasePagedFormView) or not view.is_form_required(self.valid_form_data):
                 continue
