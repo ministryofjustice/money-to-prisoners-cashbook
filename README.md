@@ -4,7 +4,7 @@ Business hub staff facing site for [Prisoner Money suite of apps](https://github
 
 ## Requirements
 
-- Unix-like platform with Python 3.8+ and NodeJS 10 (e.g. via [nvm](https://github.com/nvm-sh/nvm#nvmrc))
+- Unix-like platform with Python 3.8+ and NodeJS 16 (e.g. via [nvm](https://github.com/nvm-sh/nvm#nvmrc))
 
 ## Running locally
 
