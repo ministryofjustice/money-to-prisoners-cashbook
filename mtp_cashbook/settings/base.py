@@ -210,7 +210,8 @@ if os.environ.get('SENTRY_DSN'):
         environment=ENVIRONMENT,
         release=APP_GIT_COMMIT or 'unknown',
         send_default_pii=DEBUG,
-        traces_sample_rate=0.3 if ENVIRONMENT == 'prod' else 1.0,
+        request_bodies='medium' if DEBUG else 'never',
+        traces_sample_rate=1.0 if DEBUG else 0.3,
     )
 
 TEST_RUNNER = 'mtp_common.test_utils.runner.TestRunner'
