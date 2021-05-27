@@ -45,7 +45,7 @@ SEND_MONEY_URL = (
 )
 SITE_URL = CASHBOOK_URL
 
-FIU_EMAIL = os.environ.get('FIU_EMAIL', '')
+FIU_EMAIL = os.environ.get('FIU_EMAIL', 'fiu@mtp.local')
 
 # Application definition
 INSTALLED_APPS = (
