@@ -17,8 +17,9 @@ APP_GIT_COMMIT = os.environ.get('APP_GIT_COMMIT')
 MOJ_INTERNAL_SITE = True
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-SECRET_KEY = 'CHANGE_ME'
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY') or 'CHANGE_ME'
 ALLOWED_HOSTS = []
 
 START_PAGE_URL = os.environ.get('START_PAGE_URL', 'https://www.gov.uk/send-prisoner-money')
@@ -44,7 +45,7 @@ SEND_MONEY_URL = (
 )
 SITE_URL = CASHBOOK_URL
 
-FIU_EMAIL = os.environ.get('FIU_EMAIL', '')
+FIU_EMAIL = os.environ.get('FIU_EMAIL', 'fiu@mtp.local')
 
 # Application definition
 INSTALLED_APPS = (
@@ -209,7 +210,8 @@ if os.environ.get('SENTRY_DSN'):
         environment=ENVIRONMENT,
         release=APP_GIT_COMMIT or 'unknown',
         send_default_pii=DEBUG,
-        traces_sample_rate=0.3 if ENVIRONMENT == 'prod' else 1.0,
+        request_bodies='medium' if DEBUG else 'never',
+        traces_sample_rate=1.0 if DEBUG else 0.3,
     )
 
 TEST_RUNNER = 'mtp_common.test_utils.runner.TestRunner'
