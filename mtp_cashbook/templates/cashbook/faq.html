@@ -20,7 +20,7 @@
 
 
       <h2 class="govuk-heading-m" id="faq-send-money">
-        {% trans "I have a query about a payment in the 'Send money to someone in prison' service" %}
+        {% trans 'I have a query about a payment in the ‘Send money to someone in prison’ service' %}
       </h2>
 
       <p>
@@ -30,7 +30,7 @@
       </p>
       <p>
         {% blocktrans trimmed %}
-          They can <a href="{{ send_money_url }}/help/with-a-payment-i-sent/">get help about a payment they've already made</a> by clicking the 'Contact us' button at the bottom of this help page and filling in the form.
+          They can <a href="{{ send_money_url }}/help/with-a-payment-i-sent/">get help about a payment they’ve already made</a> by clicking the ‘Contact us’ button at the bottom of this help page and filling in the form.
         {% endblocktrans %}
       </p>
 
@@ -40,21 +40,21 @@
       </h2>
 
       <p>
-        {% trans "Sign in, click your name in the top-right corner, and go to 'Settings' where you can:" %}
+        {% trans 'Sign in, click your name in the top-right corner, and go to ‘Settings’ where you can:' %}
       </p>
 
       <ul class="govuk-list govuk-list--bullet">
         <li>
-          {% trans "see what prisons you cover" %}
+          {% trans 'see what prisons you cover' %}
         </li>
         <li>
-          {% trans "update the prisons you cover, click 'Move prison'" %}
+          {% trans 'update the prisons you cover, click ‘Move prison’' %}
         </li>
         <li>
-          {% trans "update your password, click 'Change password'" %}
+          {% trans 'update your password, click ‘Change password’' %}
         </li>
         <li>
-          {% trans "update your email address, click 'Change email'" %}
+          {% trans 'update your email address, click ‘Change email’' %}
         </li>
       </ul>
 
@@ -65,7 +65,7 @@
 
       <p>
         {% blocktrans trimmed %}
-          Once you have it, you can't block a sender or return / reject a payment but you can put it on hold in NOMIS and/or email HMPPS Financial Investigation Unit at {{ fiu_email }} for help.
+          Once you have it, you can’t block a sender or return / reject a payment but you can put it on hold in NOMIS and/or email HMPPS Financial Investigation Unit at {{ fiu_email }} for help.
         {% endblocktrans %}
       </p>
 
@@ -86,10 +86,8 @@
       </h2>
 
       <p>
-        {% blocktrans trimmed %}
-          We can't access enough relevant information to answer questions about this.
-          But if, over several days, you check the balance of the general ledger against NOMIS, you might find the difference due to some credits not being credited on the day.
-        {% endblocktrans %}
+        {% trans 'We can’t access enough relevant information to answer questions about this.' %}
+        {% trans 'But if, over several days, you check the balance of the general ledger against NOMIS, you might find the difference due to some credits not being credited on the day.' %}
       </p>
 
 
