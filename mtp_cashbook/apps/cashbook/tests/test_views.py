@@ -7,6 +7,7 @@ from django.core import mail
 from django.test import override_settings
 from django.urls import reverse
 from mtp_common.test_utils import silence_logger
+from mtp_common.test_utils.notify import NotifyMock, GOVUK_NOTIFY_TEST_API_KEY
 from requests.exceptions import HTTPError
 import responses
 
@@ -60,7 +61,10 @@ EXPIRED_PROCESSING_BATCH = {
 }
 
 
-@override_settings(PRISONER_CAPPING_ENABLED=False)
+@override_settings(
+    PRISONER_CAPPING_ENABLED=False,
+    GOVUK_NOTIFY_API_KEY=GOVUK_NOTIFY_TEST_API_KEY,
+)
 class NewCreditsViewTestCase(MTPBaseTestCase):
 
     @property
@@ -104,7 +108,7 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
         side_effect=lambda **kwargs: {'id': f'{kwargs["prisoner_number"]}-1'},
     )
     def test_new_credits_submit(self, mock_create_transaction):
-        with responses.RequestsMock() as rsps:
+        with NotifyMock() as rsps:
             # get new credits
             rsps.add(
                 rsps.GET,
@@ -195,10 +199,11 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
                 [{'id': 1, 'credited': True, 'nomis_transaction_id': 'A1234BC-1'}],
                 [{'id': 2, 'credited': True, 'nomis_transaction_id': 'A1234GG-1'}]
             ]
-            self.assertTrue(
-                json.loads(rsps.calls[3].request.body.decode('utf-8')) in expected_calls and
-                json.loads(rsps.calls[4].request.body.decode('utf-8')) in expected_calls
-            )
+            self.assertTrue(all(
+                json.loads(call.request.body.decode('utf-8')) in expected_calls
+                for call in rsps.calls
+                if call.request.url.endswith('/credits/actions/credit/')
+            ))
 
             request_nomis_session_used = mock_create_transaction.call_args_list[0][1]['session']
             mock_create_transaction.assert_has_calls(
@@ -227,14 +232,20 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
                 any_order=True,
             )
             self.assertContains(response, '2 credits sent to NOMIS')
-            self.assertEqual(len(mail.outbox), 2)
-            self.assertTrue(
-                '£52.00' in mail.outbox[0].body and '£45.00' in mail.outbox[1].body or
-                '£52.00' in mail.outbox[1].body and '£45.00' in mail.outbox[0].body
+            self.assertEqual(len(mail.outbox), 0)
+            self.assertSetEqual(
+                set(
+                    data['personalisation']['amount']
+                    for data in rsps.send_email_request_data
+                ),
+                {'£52.00', '£45.00'},
             )
-            self.assertTrue(
-                'BAAB65F6' in mail.outbox[0].body or
-                'BAAB65F6' in mail.outbox[1].body
+            self.assertSetEqual(
+                set(
+                    data['personalisation']['ref_number']
+                    for data in rsps.send_email_request_data
+                ),
+                {'BAAB65F6', '319900D4'},
             )
 
     @override_settings(
@@ -265,7 +276,7 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
         mock_nomis.create_transaction = create_transaction
         mock_nomis.get_account_balances = get_account_balances
 
-        with responses.RequestsMock() as rsps:
+        with NotifyMock() as rsps:
             # get new credits
             rsps.add(
                 rsps.GET,
@@ -351,6 +362,8 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
                 data={'credits': [1, 2], 'submit_new': 'submit'},
                 follow=True
             )
+            self.assertEqual(len(mail.outbox), 0)
+            self.assertEqual(len(rsps.send_email_calls), 2)
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, '2 credits sent to NOMIS')
@@ -372,7 +385,7 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
         ],
     )
     def test_new_credits_submit_with_conflict(self, _):
-        with responses.RequestsMock() as rsps:
+        with NotifyMock() as rsps:
             # get new credits
             rsps.add(
                 rsps.GET,
@@ -461,7 +474,8 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
                 )
             self.assertEqual(response.status_code, 200)
             self.assertContains(response, '2 credits sent to NOMIS')
-            self.assertEqual(len(mail.outbox), 2)
+            self.assertEqual(len(mail.outbox), 0)
+            self.assertEqual(len(rsps.send_email_calls), 2)
 
     @override_settings(ENVIRONMENT='prod')  # because non-prod environments don't send to .local
     @mock.patch(
@@ -479,7 +493,7 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
         },
     )
     def test_new_credits_submit_with_uncreditable(self, *_):
-        with responses.RequestsMock() as rsps:
+        with NotifyMock() as rsps:
             # get new credits
             rsps.add(
                 rsps.GET,
@@ -570,7 +584,8 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             self.assertEqual(response.status_code, 200)
             self.assertContains(response, '1 credit sent to NOMIS')
             self.assertContains(response, '1 credit needs your manual input in NOMIS')
-            self.assertEqual(len(mail.outbox), 1)
+            self.assertEqual(len(mail.outbox), 0)
+            self.assertEqual(len(rsps.send_email_calls), 1)
 
     @override_settings(ENVIRONMENT='prod')  # because non-prod environments don't send to .local
     @mock.patch(
@@ -641,6 +656,7 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             )
             self.assertEqual(response.status_code, 200)
             self.assertContains(response, '1 credit manually input by you into NOMIS')
+            self.assertEqual(len(mail.outbox), 0)
 
 
 @mock.patch(

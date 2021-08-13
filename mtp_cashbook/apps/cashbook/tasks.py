@@ -3,11 +3,12 @@ from threading import local
 from urllib.parse import urljoin
 
 from django.conf import settings
-from django.utils.translation import gettext as _
-from mtp_common.auth.api_client import get_api_session_with_session
+from django.utils.dateformat import format as format_date
 from mtp_common import nomis
+from mtp_common.auth.api_client import get_api_session_with_session
 from mtp_common.spooling import spoolable
 from mtp_common.tasks import send_email
+from mtp_common.utils import format_currency
 import requests
 from requests.exceptions import HTTPError, RequestException
 
@@ -80,20 +81,22 @@ def credit_individual_credit_to_nomis(user, user_session, credit_id, credit):
     api_session.post('credits/actions/credit/', json=[credit_update])
 
     if credit.get('sender_email'):
+        ref_number = credit.get('short_payment_ref') or ''
+        prisoner_name = credit.get('intended_recipient') or ''
         send_email(
-            credit['sender_email'], 'cashbook/email/credited-confirmation.txt',
-            _('Send money to someone in prison: the prisoner’s account has been credited'),
-            context={
-                'amount': credit['amount'],
-                'ref_number': credit.get('short_payment_ref'),
-                'received_at': credit['received_at'],
-                'prisoner_name': credit.get('intended_recipient'),
+            template_name='cashbook-credited-confirmation',
+            to=credit['sender_email'],
+            personalisation={
+                'amount': format_currency(credit['amount']),
+                'has_ref_number': 'yes' if ref_number else 'no',
+                'ref_number': ref_number,
+                'received_at': format_date(credit['received_at'], 'd/m/Y'),
+                'has_prisoner_name': 'yes' if prisoner_name else 'no',
+                'prisoner_name': prisoner_name,
                 'help_url': urljoin(settings.SEND_MONEY_URL, '/help/'),
-                'feedback_url': urljoin(settings.SEND_MONEY_URL, '/contact-us/'),
                 'site_url': settings.START_PAGE_URL,
             },
-            html_template='cashbook/email/credited-confirmation.html',
-            anymail_tags=['credited'],
+            staff_email=False,
         )
 
 
