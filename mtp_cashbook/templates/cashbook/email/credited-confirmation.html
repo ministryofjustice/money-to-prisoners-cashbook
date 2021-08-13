@@ -1,6 +1,6 @@
 {% extends 'mtp_common/email_base.html' %}
 {% load i18n %}
-{% load currency %}
+{% load mtp_common %}
 
 {% block content %}
   <p>{% trans 'Dear sender,' %}</p>
@@ -24,7 +24,7 @@
     {% endif %}
     <tr>
       <th valign="top" align="left" scope="row">{% trans 'Amount paid:' %}</th>
-      <td>£{{ amount|currency }}</td>
+      <td>{{ amount|currency }}</td>
     </tr>
     <tr>
       <th valign="top" align="left" scope="row">{% trans 'Date payment made:' %}</th>

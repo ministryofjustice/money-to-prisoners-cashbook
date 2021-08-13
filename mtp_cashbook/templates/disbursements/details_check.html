@@ -3,7 +3,6 @@
 {% load static %}
 {% load mtp_common %}
 {% load disbursements %}
-{% load currency %}
 
 {% block content %}
   {{ block.super }}
@@ -38,7 +37,7 @@
       </tr>
       <tr>
         <th scope="row">{% trans 'Amount' %}:</th>
-        <td>£{{ amount|currency }}</td>
+        <td>{{ amount|currency }}</td>
         <td>
           <a href="{% url 'disbursements:amount' %}?next={{ view.url }}" class="govuk-!-display-none-print">
             {% trans 'Change' %}

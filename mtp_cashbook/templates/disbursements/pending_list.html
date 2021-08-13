@@ -1,6 +1,6 @@
 {% extends 'disbursements/base.html' %}
 {% load i18n %}
-{% load currency %}
+{% load mtp_common %}
 
 {% block content %}
   {{ block.super }}
@@ -31,7 +31,7 @@
                 {{ disbursement.prisoner_number }}
               </td>
               <td>
-                £{{ disbursement.amount|currency }}<br />
+                {{ disbursement.amount|currency }}<br />
                 {% if disbursement.method == 'cheque' %}
                   {% trans 'Cheque' %}
                 {% elif disbursement.method == 'bank_transfer' %}

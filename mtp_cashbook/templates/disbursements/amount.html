@@ -1,7 +1,6 @@
 {% extends 'disbursements/base.html' %}
 {% load i18n %}
 {% load mtp_common %}
-{% load currency %}
 
 {% block content %}
   {{ block.super }}
@@ -41,7 +40,7 @@
 
         <tr>
           <td>{% trans 'Private' %}</td>
-          <td class="govuk-table__cell--numeric mtp-accounts-table__amount" data-balance="cash">{{ form.nomis_balances.cash|currency:'£'|default:_('Unknown') }}</td>
+          <td class="govuk-table__cell--numeric mtp-accounts-table__amount" data-balance="cash">{{ form.nomis_balances.cash|currency|default:_('Unknown') }}</td>
           <td>
             {% include 'mtp_common/forms/amount-field.html' with field=form.amount only %}
           </td>
@@ -49,13 +48,13 @@
 
         <tr>
           <td>{% trans 'Spends' %}</td>
-          <td class="govuk-table__cell--numeric mtp-accounts-table__amount" data-balance="spends">{{ form.nomis_balances.spends|currency:'£'|default:_('Unknown') }}</td>
+          <td class="govuk-table__cell--numeric mtp-accounts-table__amount" data-balance="spends">{{ form.nomis_balances.spends|currency|default:_('Unknown') }}</td>
           <td>{% trans 'Can’t be used for sending money out' %}</td>
         </tr>
 
         <tr>
           <td>{% trans 'Saving' %}</td>
-          <td class="govuk-table__cell--numeric mtp-accounts-table__amount" data-balance="savings">{{ form.nomis_balances.savings|currency:'£'|default:_('Unknown') }}</td>
+          <td class="govuk-table__cell--numeric mtp-accounts-table__amount" data-balance="savings">{{ form.nomis_balances.savings|currency|default:_('Unknown') }}</td>
           <td>{% trans 'Can’t be used for sending money out' %}</td>
         </tr>
       </tbody>

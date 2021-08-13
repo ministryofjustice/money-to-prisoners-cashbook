@@ -50,4 +50,4 @@ def dayssince(date):
 
 @register.filter
 def prefixed_slug(value, prefix='item-'):
-    return '%s%s' % (prefix, slugify(value))
+    return f'{prefix}{slugify(value)}'

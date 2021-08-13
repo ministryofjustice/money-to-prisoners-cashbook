@@ -1,10 +1,9 @@
 {% extends 'disbursements/base.html' %}
 {% load i18n %}
-{% load disbursements %}
-{% load currency %}
+{% load static %}
 {% load mtp_common %}
 {% load credits %}
-{% load static %}
+{% load disbursements %}
 
 {% block content %}
   {{ block.super }}
@@ -57,7 +56,7 @@
       </tr>
       <tr>
         <th scope="row">{% trans 'Amount' %}:</th>
-        <td>£{{ disbursement.amount|currency }}</td>
+        <td>{{ disbursement.amount|currency }}</td>
         <td>
           {% if editable %}
             <a href="{% url 'disbursements:update_amount' pk=disbursement.id %}" class="govuk-!-display-none-print">

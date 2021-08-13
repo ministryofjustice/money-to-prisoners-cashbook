@@ -1,6 +1,5 @@
 {% extends 'cashbook/base.html' %}
 {% load i18n %}
-{% load currency %}
 {% load mtp_common %}
 {% load credits %}
 
@@ -18,7 +17,7 @@
       {% plural %}
         {{ count }} credits processed on {{ date }}
       {% endblocktrans %}
-      <span class="govuk-caption-xl">{% trans 'Total:' %} £{{ total|currency }}</span>
+      <span class="govuk-caption-xl">{% trans 'Total:' %} {{ total|currency }}</span>
     </h1>
   </header>
 

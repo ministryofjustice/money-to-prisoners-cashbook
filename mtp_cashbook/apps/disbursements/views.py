@@ -8,14 +8,14 @@ from django.utils.functional import cached_property
 from django.utils.http import is_safe_url
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView, TemplateView
+from mtp_common import nomis
 from mtp_common.analytics import genericised_pageview
 from mtp_common.api import retrieve_all_pages_for_path
 from mtp_common.auth.api_client import get_api_session
 from mtp_common.auth.exceptions import HttpNotFoundError
-from mtp_common import nomis
+from mtp_common.utils import format_currency
 from requests.exceptions import HTTPError, RequestException
 
-from cashbook.templatetags.currency import currency
 from disbursements import forms as disbursement_forms, metrics
 from disbursements.utils import get_disbursement_viability, find_addresses
 from feedback.views import GetHelpView, GetHelpSuccessView
@@ -219,9 +219,9 @@ class AmountView(BasePagedFormView):
             balances = self.get_nomis_balances()
             if balances:
                 return JsonResponse({
-                    'spends': currency(balances['spends'], '£'),
-                    'cash': currency(balances['cash'], '£'),
-                    'savings': currency(balances['savings'], '£'),
+                    'spends': format_currency(balances['spends']),
+                    'cash': format_currency(balances['cash']),
+                    'savings': format_currency(balances['savings']),
                 })
             else:
                 raise Http404('Balance not available')
