@@ -3,21 +3,18 @@
 
 {% block page_title %}{{ view.title }} – {{ block.super }}{% endblock %}
 
-{% block body_classes %}{{ block.super }} mtp-credits{% endblock %}
-
 {% block content %}
   {{ block.super }}
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-
       <header>
         <h1 class="govuk-heading-xl">{{ view.title }}</h1>
       </header>
 
 
       <h2 class="govuk-heading-m" id="faq-account-requested">
-        {% trans "I requested an account, but heard nothing" %}
+        {% trans 'I requested an account, but heard nothing' %}
       </h2>
 
       <p>
@@ -28,30 +25,24 @@
 
 
       <h2 class="govuk-heading-m" id="faq-locked-out">
-        {% trans "I’m locked out" %}
+        {% trans 'I’m locked out' %}
       </h2>
 
       <p>
-        {% blocktrans trimmed %}
-          If you mis-type your password too many times, you'll be locked out.
-        {% endblocktrans %}
-        {% blocktrans trimmed %}
-          Try again in about half an hour.
-        {% endblocktrans %}
+        {% trans 'If you mis-type your password too many times, you’ll be locked out.' %}
+        {% trans 'Try again in about half an hour.' %}
       </p>
 
 
       <h2 class="govuk-heading-m" id="faq-may-have-account">
-        {% trans "I may already have an account" %}
+        {% trans 'I may already have an account' %}
       </h2>
 
       <p>
         {% blocktrans trimmed %}
           Try <a href="{{ reset_password_url }}">resetting your password</a>.
         {% endblocktrans %}
-        {% blocktrans trimmed %}
-          If you have an account, you'll get an email with a link.
-        {% endblocktrans %}
+        {% trans 'If you have an account, you’ll get an email with a link.' %}
         {% blocktrans trimmed %}
           If not, <a href="{{ sign_up_url }}">request an account</a>.
         {% endblocktrans %}
@@ -59,7 +50,7 @@
 
 
       <h2 class="govuk-heading-m" id="faq-username">
-        {% trans "I've forgotten or need to change my username" %}
+        {% trans 'I’ve forgotten or need to change my username' %}
       </h2>
 
       <p>
@@ -71,7 +62,7 @@
 
 
       <h2 class="govuk-heading-m" id="faq-reset-password">
-        {% trans "Reset password isn’t working" %}
+        {% trans 'Reset password isn’t working' %}
       </h2>
 
       <p>
