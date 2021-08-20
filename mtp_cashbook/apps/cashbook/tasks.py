@@ -96,6 +96,7 @@ def credit_individual_credit_to_nomis(user, user_session, credit_id, credit):
                 'help_url': urljoin(settings.SEND_MONEY_URL, '/help/'),
                 'site_url': settings.START_PAGE_URL,
             },
+            reference=f'credited-{credit_id}',
             staff_email=False,
         )
 

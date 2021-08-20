@@ -243,7 +243,14 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
                     data['personalisation']['ref_number']
                     for data in rsps.send_email_request_data
                 ),
-                {'BAAB65F6', '319900D4'},
+                {'319900D4', 'BAAB65F6'},
+            )
+            self.assertSetEqual(
+                set(
+                    data['reference']
+                    for data in rsps.send_email_request_data
+                ),
+                {'credited-1', 'credited-2'},
             )
 
     @override_settings(
