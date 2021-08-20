@@ -100,10 +100,8 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             self.assertContains(response, '52.00')
             self.assertContains(response, '45.00')
 
-    @override_settings(ENVIRONMENT='prod')  # because non-prod environments don't send to .local
     @mock.patch(
         'cashbook.tasks.nomis.create_transaction',
-
         # return {'id' == '<prisoner-number>-1'}
         side_effect=lambda **kwargs: {'id': f'{kwargs["prisoner_number"]}-1'},
     )
@@ -249,7 +247,6 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             )
 
     @override_settings(
-        ENVIRONMENT='prod',  # because non-prod environments don't send to .local
         PRISONER_CAPPING_ENABLED=True,
         PRISONER_CAPPING_THRESHOLD_IN_POUNDS=100,
     )
@@ -376,7 +373,6 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             )
         )
 
-    @override_settings(ENVIRONMENT='prod')  # because non-prod environments don't send to .local
     @mock.patch(
         'cashbook.tasks.nomis.create_transaction',
         side_effect=[
@@ -477,7 +473,6 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             self.assertEqual(len(mail.outbox), 0)
             self.assertEqual(len(rsps.send_email_calls), 2)
 
-    @override_settings(ENVIRONMENT='prod')  # because non-prod environments don't send to .local
     @mock.patch(
         'cashbook.tasks.nomis.create_transaction',
         side_effect=[
@@ -587,7 +582,6 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             self.assertEqual(len(mail.outbox), 0)
             self.assertEqual(len(rsps.send_email_calls), 1)
 
-    @override_settings(ENVIRONMENT='prod')  # because non-prod environments don't send to .local
     @mock.patch(
         'cashbook.views.nomis.get_location',
         return_value={
