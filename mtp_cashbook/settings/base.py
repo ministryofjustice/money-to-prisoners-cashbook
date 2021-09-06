@@ -43,6 +43,11 @@ SEND_MONEY_URL = (
     if os.environ.get('PUBLIC_SEND_MONEY_HOST')
     else 'http://localhost:8004'
 )
+EMAILS_URL = (
+    f'https://{os.environ["PUBLIC_EMAILS_HOST"]}'
+    if os.environ.get('PUBLIC_EMAILS_HOST')
+    else 'http://localhost:8006'
+)
 SITE_URL = CASHBOOK_URL
 
 FIU_EMAIL = os.environ.get('FIU_EMAIL', 'fiu@mtp.local')
