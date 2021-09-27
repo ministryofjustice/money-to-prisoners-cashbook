@@ -1,7 +1,6 @@
 {% extends 'disbursements/base.html' %}
 {% load i18n %}
 {% load mtp_common %}
-{% load currency %}
 {% load credits %}
 {% load disbursements %}
 
@@ -120,7 +119,7 @@
               </td>
 
               <td class="mtp-disbursement-search-results__amount">
-                {{ disbursement.amount|currency:'£' }}
+                {{ disbursement.amount|currency }}
                 <br />
                 <br />
                 {% if disbursement.method == 'bank_transfer' %}

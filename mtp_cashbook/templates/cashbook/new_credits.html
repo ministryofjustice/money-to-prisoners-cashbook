@@ -1,9 +1,7 @@
 {% extends 'cashbook/base.html' %}
 {% load i18n %}
-{% load credits %}
-{% load currency %}
 {% load mtp_common %}
-{% load static %}
+{% load credits %}
 
 {% block page_title %}{{ view.title }} – {{ block.super }}{% endblock %}
 
@@ -287,7 +285,7 @@
                   </td>
                   <td class="govuk-table__cell--numeric">
                     <span class="mtp-sortable-cell--pad">
-                      £{{ credit.amount|currency }}
+                      {{ credit.amount|currency }}
                     </span>
                   </td>
                   <td>{{ credit.sender_name }}</td>
@@ -304,11 +302,11 @@
 
                     <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
                       <div class="govuk-checkboxes__item">
-                        <input id="check-{{ credit.id }}" class="govuk-checkboxes__input mtp-input--counted" name="{{ form.new.credits.html_name }}" value="{{ credit_pk }}" data-amount="{{ credit.amount|currency }}" type="checkbox" {% if credit_pk|to_string in form.new.credits.value %}checked{% endif %} />
+                        <input id="check-{{ credit.id }}" class="govuk-checkboxes__input mtp-input--counted" name="{{ form.new.credits.html_name }}" value="{{ credit_pk }}" data-amount="{% currency credit.amount symbol='' %}" type="checkbox" {% if credit_pk|to_string in form.new.credits.value %}checked{% endif %} />
                         <label for="check-{{ credit.id }}" class="govuk-label govuk-checkboxes__label">
                           <span class="govuk-visually-hidden">
                             {% blocktrans trimmed with amount=credit.amount|currency prisoner_name=credit.prisoner_name %}
-                              Credit £{{ amount }} to {{ prisoner_name }}
+                              Credit {{ amount }} to {{ prisoner_name }}
                             {% endblocktrans %}
                           </span>
                         </label>

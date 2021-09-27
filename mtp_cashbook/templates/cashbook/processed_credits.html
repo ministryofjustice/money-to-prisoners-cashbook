@@ -1,6 +1,5 @@
 {% extends 'cashbook/base.html' %}
 {% load i18n %}
-{% load currency %}
 {% load mtp_common %}
 {% load credits %}
 
@@ -86,7 +85,7 @@
                   {% endblocktrans %}
                 </a>
               </td>
-              <td class="govuk-table__cell--numeric">£{{ batch.total|currency }}</td>
+              <td class="govuk-table__cell--numeric">{{ batch.total|currency }}</td>
               <td>{{ batch.owner_name }}</td>
               {% if request.pre_approval_required %}
                 {% if batch.comment_count %}

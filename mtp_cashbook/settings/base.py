@@ -43,6 +43,11 @@ SEND_MONEY_URL = (
     if os.environ.get('PUBLIC_SEND_MONEY_HOST')
     else 'http://localhost:8004'
 )
+EMAILS_URL = (
+    f'https://{os.environ["PUBLIC_EMAILS_HOST"]}'
+    if os.environ.get('PUBLIC_EMAILS_HOST')
+    else 'http://localhost:8006'
+)
 SITE_URL = CASHBOOK_URL
 
 FIU_EMAIL = os.environ.get('FIU_EMAIL', 'fiu@mtp.local')
@@ -56,7 +61,6 @@ INSTALLED_APPS = (
     'django.contrib.auth',
 )
 PROJECT_APPS = (
-    'anymail',
     'mtp_common',
     'mtp_common.metrics',
     'widget_tweaks',
@@ -265,18 +269,12 @@ HMPPS_PRISON_API_BASE_URL = os.environ.get('HMPPS_PRISON_API_BASE_URL', '')
 TOKEN_RETRIEVAL_USERNAME = os.environ.get('TOKEN_RETRIEVAL_USERNAME', '_token_retrieval')
 TOKEN_RETRIEVAL_PASSWORD = os.environ.get('TOKEN_RETRIEVAL_PASSWORD', '_token_retrieval')
 
-EMAIL_BACKEND = 'anymail.backends.mailgun.EmailBackend'
-ANYMAIL = {
-    'MAILGUN_API_KEY': os.environ.get('MAILGUN_ACCESS_KEY', ''),
-    'MAILGUN_SENDER_DOMAIN': os.environ.get('MAILGUN_SERVER_NAME', ''),
-    'MAILGUN_API_URL': os.environ.get('MAILGUN_API_URL', 'https://api.mailgun.net/v3'),
-    'SEND_DEFAULTS': {
-        'tags': [APP, ENVIRONMENT],
-    },
-}
-MAILGUN_FROM_ADDRESS = os.environ.get('MAILGUN_FROM_ADDRESS', '')
-if MAILGUN_FROM_ADDRESS:
-    DEFAULT_FROM_EMAIL = MAILGUN_FROM_ADDRESS
+GOVUK_NOTIFY_API_KEY = os.environ.get('GOVUK_NOTIFY_API_KEY', '')
+GOVUK_NOTIFY_REPLY_TO_PUBLIC = os.environ.get('GOVUK_NOTIFY_REPLY_TO_PUBLIC', '')
+GOVUK_NOTIFY_REPLY_TO_STAFF = os.environ.get('GOVUK_NOTIFY_REPLY_TO_STAFF', '')
+GOVUK_NOTIFY_BLOCKED_DOMAINS = set(os.environ.get('GOVUK_NOTIFY_BLOCKED_DOMAINS', '').split())
+# install GOV.UK Notify fallback for emails accidentally sent using Django's email functionality:
+EMAIL_BACKEND = 'mtp_common.notify.email_backend.NotifyEmailBackend'
 
 POSTCODE_LOOKUP_ENDPOINT = os.environ.get('POSTCODE_LOOKUP_ENDPOINT', '')
 POSTCODE_LOOKUP_AUTH_TOKEN = os.environ.get('POSTCODE_LOOKUP_AUTH_TOKEN', '')
