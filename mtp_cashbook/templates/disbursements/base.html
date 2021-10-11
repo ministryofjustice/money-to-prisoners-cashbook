@@ -4,6 +4,19 @@
 
 {% block page_title %}{% if view.title %}{{ view.title }} – {% endif %}{% trans 'Digital disbursements' %}{% endblock %}
 
+{% block footer %}
+  {% if request.user.is_authenticated and footer_feedback_link %}
+    {% captureoutput as feedback_link %}
+      <a href="{{ footer_feedback_link }}" target="_blank">
+        {% trans 'Give feedback on Digital disbursements (opens in a new tab)' %}
+      </a>
+    {% endcaptureoutput %}
+    {% include 'mtp_common/components/footer-feedback.html' with content=feedback_link %}
+  {% endif %}
+
+  {{ block.super }}
+{% endblock %}
+
 {% block content %}
   {% notification_banners request 'cashbook_disbursements' 'cashbook_all' %}
 {% endblock %}

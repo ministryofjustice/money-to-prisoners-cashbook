@@ -258,6 +258,7 @@ ZENDESK_CUSTOM_FIELDS = {
     'user_agent': 23791776,
     'contact_email': 30769508,
 }
+FOOTER_FEEDBACK_LINK = os.environ.get('FOOTER_FEEDBACK_LINK', None)
 
 SHOW_LANGUAGE_SWITCH = os.environ.get('SHOW_LANGUAGE_SWITCH', 'False') == 'True'
 
