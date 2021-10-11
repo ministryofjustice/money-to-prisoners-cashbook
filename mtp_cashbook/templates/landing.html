@@ -34,3 +34,16 @@
   {% include 'govuk-frontend/components/section-break.html' with size='l' %}
 
 {% endblock %}
+
+{% block footer %}
+  {% if request.user.is_authenticated and footer_feedback_link %}
+    {% captureoutput as feedback_link %}
+      <a href="{{ footer_feedback_link }}" target="_blank">
+        {% trans 'Give feedback on Digital cashbook (opens in a new tab)' %}
+      </a>
+    {% endcaptureoutput %}
+    {% include 'mtp_common/components/footer-feedback.html' with content=feedback_link %}
+  {% endif %}
+
+  {{ block.super }}
+{% endblock %}
