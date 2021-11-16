@@ -1,4 +1,3 @@
-from django import forms
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -10,6 +9,7 @@ from django.views.generic import View, TemplateView, FormView
 from mtp_common.auth import api_client
 
 from mtp_cashbook import READ_ML_BRIEFING_FLAG
+from mtp_cashbook.misc_forms import MLBriefingConfirmationForm
 from mtp_cashbook.utils import add_user_flag
 
 
@@ -53,25 +53,6 @@ class LandingView(BaseView, TemplateView):
             cards=cards,
         )
         return super().get_context_data(**kwargs)
-
-
-class MLBriefingConfirmationForm(forms.Form):
-    read_briefing = forms.ChoiceField(
-        label=_('Have you read the money laundering briefing?'),
-        required=True,
-        choices=(
-            ('yes', _('Yes')),
-            ('no', _('No')),
-        ), error_messages={
-            'required': _('Please select ‘yes’ or ‘no’'),
-        },
-    )
-
-    def clean_read_briefing(self):
-        read_briefing = self.cleaned_data.get('read_briefing')
-        if read_briefing:
-            read_briefing = read_briefing == 'yes'
-        return read_briefing
 
 
 class MLBriefingConfirmationView(BaseView, FormView):
