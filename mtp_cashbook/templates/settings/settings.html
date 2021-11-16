@@ -5,6 +5,24 @@
 {% block settings %}
   {{ block.super }}
 
+  {% if can_edit_credit_notice_emails %}
+    {% include 'govuk-frontend/components/section-break.html' with visible=True size='l' %}
+
+    <h2 class="govuk-heading-l">
+      {% trans 'Email address for credit slips' %}
+    </h2>
+    <p>
+      {% for credit_notice_email in credit_notice_emails %}
+        {{ credit_notice_email.prison_name }}: {{ credit_notice_email.email }}
+        {% if not forloop.last %}
+          <br />
+        {% endif %}
+      {% empty %}
+        {% trans 'Not set up in your prison.' %}
+      {% endfor %}
+    </p>
+  {% endif %}
+
   {% include 'govuk-frontend/components/section-break.html' with visible=True size='l' %}
 
   <h2 class="govuk-heading-l">

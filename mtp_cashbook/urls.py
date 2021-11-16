@@ -32,6 +32,8 @@ urlpatterns = i18n_patterns(
 
     url(r'^', include('feedback.urls')),
 
+    url(r'^settings/', include('settings.urls')),
+
     url(r'^js-i18n.js$', cache_control(public=True, max_age=86400)(JavaScriptCatalog.as_view()), name='js-i18n'),
 
     url(r'^404.html$', lambda request: TemplateResponse(request, 'mtp_common/errors/404.html', status=404)),
