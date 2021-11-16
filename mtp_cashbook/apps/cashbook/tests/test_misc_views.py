@@ -15,9 +15,6 @@ class LandingPageTestCase(MTPBaseTestCase):
 
 
 class MLBriefingTestCase(MTPBaseTestCase):
-    confirmation_url = reverse_lazy('ml-briefing-confirmation')
-    info_url = reverse_lazy('ml-briefing')
-
     def setUp(self):
         self.unconfirmed_login_data = copy.deepcopy(self._default_login_data)
         flags = list(filter(
@@ -35,12 +32,7 @@ class MLBriefingTestCase(MTPBaseTestCase):
 
     def test_cannot_access_app_without_confirmation_flag(self):
         self.login(login_data=self.unconfirmed_login_data)
-        urls = [
-            'home',
-            'new-credits', 'processed-credits-list', 'search',
-            'disbursements:sending_method', 'disbursements:pending_list', 'disbursements:search',
-        ]
-        for url in urls:
+        for url in self.main_app_urls:
             response = self.client.get(reverse(url), follow=True)
             self.assertOnPage(response, 'ml-briefing-confirmation')
 

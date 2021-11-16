@@ -11,6 +11,15 @@ from mtp_cashbook import READ_ML_BRIEFING_FLAG
 
 
 class MTPBaseTestCase(SimpleTestCase):
+    main_app_urls = [
+        'home',
+        # cashbook
+        'new-credits', 'processed-credits-list', 'cashbook-faq', 'search',
+        # disbursements
+        'disbursements:start', 'disbursements:sending_method', 'disbursements:pending_list',
+        'disbursements:search', 'disbursements:paper-forms', 'disbursements:process-overview',
+    ]
+
     def setUp(self):
         super().setUp()
         self.notifications_mock = mock.patch('mtp_common.templatetags.mtp_common.notifications_for_request',
