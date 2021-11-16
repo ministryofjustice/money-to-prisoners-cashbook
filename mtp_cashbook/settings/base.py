@@ -309,6 +309,6 @@ if NOVEMBER_SECOND_CHANGES_LIVE:
     PRISONER_CAPPING_ENABLED = True
 
 try:
-    from .local import *  # noqa
+    from .local import *  # noqa: F401,F403
 except ImportError:
     pass

@@ -21,7 +21,7 @@ class MTPBaseTestCase(SimpleTestCase):
         self.notifications_mock.stop()
         super().tearDown()
 
-    def assertOnPage(self, response, view_name):  # noqa
+    def assertOnPage(self, response, view_name):  # noqa: N802
         self.assertContains(response, '<!--[%s]-->' % view_name)
 
     @property
