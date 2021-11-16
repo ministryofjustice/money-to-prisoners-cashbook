@@ -21,6 +21,13 @@
         {% trans 'Not set up in your prison.' %}
       {% endfor %}
     </p>
+    <a class="govuk-button" data-module="govuk-button" role="button" href="{% url 'credit-notice-emails' %}">
+      {% if credit_notice_emails %}
+        {% trans 'Change email' %}
+      {% else %}
+        {% trans 'Set up email' %}
+      {% endif %}
+    </a>
   {% endif %}
 
   {% include 'govuk-frontend/components/section-break.html' with visible=True size='l' %}
