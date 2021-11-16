@@ -1,5 +1,3 @@
-import copy
-
 from django.urls import reverse
 from mtp_common.test_utils import silence_logger
 import responses
@@ -7,16 +5,7 @@ import responses
 from cashbook.tests import MTPBaseTestCase, api_url
 
 
-class CreditNoticeEmailsBaseTestCase(MTPBaseTestCase):
-    def get_login_data_for_user_admin(self, prisons=None):
-        login_data_for_user_admin = copy.deepcopy(self._default_login_data)
-        login_data_for_user_admin['user_data']['user_admin'] = True
-        if prisons:
-            login_data_for_user_admin['user_data']['prisons'] = prisons
-        return login_data_for_user_admin
-
-
-class SettingsPageTestCase(CreditNoticeEmailsBaseTestCase):
+class SettingsPageTestCase(MTPBaseTestCase):
     def test_non_admins_see_no_settings(self):
         self.login()
         with responses.RequestsMock():
@@ -61,7 +50,7 @@ class SettingsPageTestCase(CreditNoticeEmailsBaseTestCase):
         self.assertContains(response, 'Set up email')
 
 
-class EditPageTestCase(CreditNoticeEmailsBaseTestCase):
+class EditPageTestCase(MTPBaseTestCase):
     def test_non_admins_see_no_settings(self):
         self.login()
         with responses.RequestsMock(), silence_logger('django.request'):
@@ -80,7 +69,7 @@ class EditPageTestCase(CreditNoticeEmailsBaseTestCase):
         self.assertEqual(response.context_data['form']['email'].initial, 'bxi@mtp.local')
 
     def test_saves_email_for_user_prisons(self):
-        self.login(login_data=self.get_login_data_for_user_admin([
+        self.login(login_data=self.get_login_data_for_user_admin(prisons=[
             {'nomis_id': 'BXI', 'name': 'HMP Brixton', 'pre_approval_required': False},
             {'nomis_id': 'LEI', 'name': 'HMP Leeds', 'pre_approval_required': False},
         ]))
