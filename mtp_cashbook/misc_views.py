@@ -10,7 +10,7 @@ from django.views.generic import View, TemplateView, FormView
 from mtp_common.auth import api_client
 
 from mtp_cashbook import READ_ML_BRIEFING_FLAG
-from mtp_cashbook.utils import save_user_flags
+from mtp_cashbook.utils import add_user_flag
 
 
 class BaseView(View):
@@ -90,7 +90,7 @@ class MLBriefingConfirmationView(BaseView, FormView):
     def form_valid(self, form):
         read_briefing = form.cleaned_data['read_briefing']
         if read_briefing:
-            save_user_flags(self.request, READ_ML_BRIEFING_FLAG)
+            add_user_flag(self.request, READ_ML_BRIEFING_FLAG)
             messages.success(self.request, _('Thank you, please carry on with your work.'))
             return super().form_valid(form)
         else:
