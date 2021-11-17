@@ -3,7 +3,7 @@ Docker settings
 """
 from mtp_common.stack import get_current_pod
 
-from .base import *  # noqa
+from .base import *  # noqa: F401,F403
 from .base import DEBUG, ENVIRONMENT, SECRET_KEY, os
 
 if ENVIRONMENT == 'prod':

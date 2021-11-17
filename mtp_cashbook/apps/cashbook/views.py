@@ -29,7 +29,7 @@ class CashbookView(BaseView):
             'sub_app': 'cashbook',
             'name': _('Digital cashbook'),
             'url': reverse('new-credits'),
-            'help_url': reverse('cashbook_faq'),
+            'help_url': reverse('cashbook-faq'),
         }
         return super().dispatch(request, *args, **kwargs)
 

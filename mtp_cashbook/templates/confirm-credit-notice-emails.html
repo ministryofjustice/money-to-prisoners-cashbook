@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block page_title %}{{ view.title }} – {{ block.super }}{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <header>
+        <h1 class="govuk-heading-xl">{{ view.title }}</h1>
+      </header>
+
+      <form method="post">
+        {% csrf_token %}
+
+        {% include 'govuk-frontend/components/error-summary.html' with form=form only %}
+
+        {% if credit_notice_emails %}
+
+          <p>
+            {% trans 'Right now all credit slips are sent to:' %}
+            {% for credit_notice_email in credit_notice_emails %}
+              <br />
+              {{ credit_notice_email.prison_name }}: {% if credit_notice_email.email %}{{ credit_notice_email.email }}{% else %}{% trans 'Not set up' %}{% endif %}
+            {% endfor %}
+          </p>
+
+        {% else %}
+
+          <p>
+            {% trans 'When your residents receive credits or send disbursements, we can email you a PDF to print each day to let them know.' %}
+          </p>
+          <p>
+            {% trans 'These credit slips are not sent to your prison right now.' %}
+          </p>
+
+        {% endif %}
+
+        {% with field=form.change_email choices=form.change_email.field.choices %}
+          <div class="govuk-form-group {% if field.errors %}govuk-form-group--error{% endif %}">
+            <button type="submit" name="{{ field.html_name }}" value="{{ choices.0.0 }}" class="govuk-button" data-module="govuk-button">
+              {{ choices.0.1 }}
+            </button>
+            <p>
+              <button type="submit" name="{{ field.html_name }}" value="{{ choices.1.0 }}" class="govuk-link" data-module="govuk-button">
+                {{ choices.1.1 }}
+              </button>
+            </p>
+          </div>
+        {% endwith %}
+
+      </form>
+
+    </div>
+  </div>
+
+{% endblock %}

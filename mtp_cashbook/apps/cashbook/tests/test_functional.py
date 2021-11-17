@@ -54,7 +54,7 @@ class CashbookTestCase(FunctionalTestCase):
         checkbox_id = self.get_element(xpath).get_attribute('id')
         self.get_element('//label[@for="%s"]' % checkbox_id).click()
 
-    def assertShowingView(self, view_name):  # noqa
+    def assertShowingView(self, view_name):  # noqa: N802
         self.assertInSource('<!--[%s]-->' % view_name)
 
     def click_on_link(self, text):

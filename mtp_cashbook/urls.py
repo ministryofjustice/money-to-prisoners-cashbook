@@ -18,9 +18,13 @@ urlpatterns = i18n_patterns(
 
     # miscellaneous views
     url(r'^faq/$', misc_views.FAQView.as_view(), name='faq'),
+    url(r'^policy-change/$', misc_views.PolicyChangeInfo.as_view(), name='policy-change'),
     url(r'^ml-briefing/$', misc_views.MLBriefingConfirmationView.as_view(), name='ml-briefing-confirmation'),
     url(r'^ml-briefing/read/$', misc_views.MLBriefingView.as_view(), name='ml-briefing'),
-    url(r'^policy-change/$', misc_views.PolicyChangeInfo.as_view(), name='policy-change'),
+    url(
+        r'^confirm-credit-notice-emails/$', misc_views.ConfirmCreditNoticeEmailsView.as_view(),
+        name='confirm-credit-notice-emails',
+    ),
 
     # main applications
     url(r'^', include('cashbook.urls')),
@@ -31,6 +35,8 @@ urlpatterns = i18n_patterns(
     url(r'^', include('mtp_common.user_admin.urls')),
 
     url(r'^', include('feedback.urls')),
+
+    url(r'^settings/', include('settings.urls')),
 
     url(r'^js-i18n.js$', cache_control(public=True, max_age=86400)(JavaScriptCatalog.as_view()), name='js-i18n'),
 

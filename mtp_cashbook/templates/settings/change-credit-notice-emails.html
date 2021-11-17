@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block page_title %}{% trans 'Email address for credit slips' %} – {{ block.super }}{% endblock %}
+{% block body_classes %}{{ block.super }} mtp-page-with-staff-email-input{% endblock %}
+
+{% block content %}
+  {% trans 'Email address for credit slips' as form_title %}
+  {% trans 'Submit' as submit_text %}
+  {% include 'mtp_common/forms/generic.html' %}
+{% endblock %}

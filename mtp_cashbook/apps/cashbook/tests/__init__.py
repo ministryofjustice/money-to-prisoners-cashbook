@@ -1,3 +1,4 @@
+import copy
 from unittest import mock
 from urllib.parse import urljoin
 
@@ -11,6 +12,15 @@ from mtp_cashbook import READ_ML_BRIEFING_FLAG
 
 
 class MTPBaseTestCase(SimpleTestCase):
+    main_app_urls = [
+        'home',
+        # cashbook
+        'new-credits', 'processed-credits-list', 'cashbook-faq', 'search',
+        # disbursements
+        'disbursements:start', 'disbursements:sending_method', 'disbursements:pending_list',
+        'disbursements:search', 'disbursements:paper-forms', 'disbursements:process-overview',
+    ]
+
     def setUp(self):
         super().setUp()
         self.notifications_mock = mock.patch('mtp_common.templatetags.mtp_common.notifications_for_request',
@@ -21,7 +31,7 @@ class MTPBaseTestCase(SimpleTestCase):
         self.notifications_mock.stop()
         super().tearDown()
 
-    def assertOnPage(self, response, view_name):  # noqa
+    def assertOnPage(self, response, view_name):  # noqa: N802
         self.assertContains(response, '<!--[%s]-->' % view_name)
 
     @property
@@ -64,6 +74,17 @@ class MTPBaseTestCase(SimpleTestCase):
             'credentials': credentials,
             'user_data': user_data,
         }
+
+    def get_login_data_for_user_admin(self, prisons=None, flags=None):
+        login_data = copy.deepcopy(self._default_login_data)
+        login_data['user_data']['user_admin'] = True
+        if prisons:
+            login_data['user_data']['prisons'] = prisons
+        if flags:
+            new_flags = set(login_data['user_data']['flags'])
+            new_flags.update(flags)
+            login_data['user_data']['flags'] = list(new_flags)
+        return login_data
 
     @mock.patch('mtp_common.auth.backends.api_client')
     def login(self, mocked_auth_client, login_data=None, credentials=None):
