@@ -84,6 +84,25 @@ class EditPageTestCase(MTPBaseTestCase):
         self.assertOnPage(response, 'settings')
         self.assertContains(response, 'Email address for credit slips changed')
 
+    def test_saves_email_for_user_prisons_creating_new_models_when_missing(self):
+        self.login(login_data=self.get_login_data_for_user_admin(prisons=[
+            {'nomis_id': 'BXI', 'name': 'HMP Brixton', 'pre_approval_required': False},
+            {'nomis_id': 'LEI', 'name': 'HMP Leeds', 'pre_approval_required': False},
+        ]))
+        with responses.RequestsMock() as rsps:
+            rsps.add(rsps.GET, api_url('/prisoner_credit_notice_email/'), json=[
+                {'prison': 'LEI', 'prison_name': 'HMP Leeds', 'email': 'lei@mtp.local'},
+            ])
+            rsps.add(rsps.POST, api_url('/prisoner_credit_notice_email/'), json={
+                'email': 'new@mtp.local', 'prison': 'BXI',
+            })
+            rsps.add(rsps.PATCH, api_url('/prisoner_credit_notice_email/LEI/'), json={
+                'email': 'new@mtp.local',
+            })
+            response = self.client.post(reverse('credit-notice-emails'), data={'email': 'new@mtp.local'}, follow=True)
+        self.assertOnPage(response, 'settings')
+        self.assertContains(response, 'Email address for credit slips changed')
+
     def test_failing_to_saves_email_shows_error(self):
         self.login(login_data=self.get_login_data_for_user_admin())
         with responses.RequestsMock() as rsps:

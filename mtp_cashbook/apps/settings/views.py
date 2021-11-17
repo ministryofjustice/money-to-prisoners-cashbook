@@ -42,11 +42,16 @@ class ChangeCreditNoticeEmailsView(BaseView, FormView):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.session = None
+        self.credit_notice_emails = []
 
     def dispatch(self, request, **kwargs):
         if not can_edit_credit_notice_emails(request):
             raise Http404
+
+        # load current settings from api
         self.session = get_api_session(self.request)
+        self.credit_notice_emails = self.session.get('/prisoner_credit_notice_email/').json()
+
         return super().dispatch(request, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -63,8 +68,7 @@ class ChangeCreditNoticeEmailsView(BaseView, FormView):
         initial = super().get_initial()
 
         # arbitrarily pick first as initial form value
-        credit_notice_emails = self.session.get('/prisoner_credit_notice_email/').json()
-        for credit_notice_email in credit_notice_emails:
+        for credit_notice_email in self.credit_notice_emails:
             initial['email'] = credit_notice_email['email']
             break
 
@@ -73,12 +77,29 @@ class ChangeCreditNoticeEmailsView(BaseView, FormView):
     def form_valid(self, form):
         patch_data = {'email': form.cleaned_data['email']}
 
+        prisons_already_setup = set(
+            credit_notice_email['prison']
+            for credit_notice_email in self.credit_notice_emails
+        )
         user_prisons = self.request.user.user_data.get('prisons') or []
+
         for user_prison in user_prisons:
             prison_id = user_prison['nomis_id']
             try:
-                response = self.session.patch(f'/prisoner_credit_notice_email/{prison_id}/', json=patch_data)
-                if response.status_code != 200:
+                if prison_id in prisons_already_setup:
+                    # update existing email for prison
+                    response = self.session.patch(
+                        f'/prisoner_credit_notice_email/{prison_id}/',
+                        json=patch_data,
+                    )
+                else:
+                    # create new email for prison
+                    response = self.session.post(
+                        '/prisoner_credit_notice_email/',
+                        json=dict(prison=prison_id, **patch_data),
+                    )
+                if response.status_code not in (200, 201):
+                    # session already raises errors for some status codes
                     raise HTTPError(response=response)
             except HTTPError as e:
                 logger.error(f'Error patching credit notice email: {e.response.text}')
