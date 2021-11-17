@@ -21,7 +21,7 @@
             {% trans 'Right now all credit slips are sent to:' %}
             {% for credit_notice_email in credit_notice_emails %}
               <br />
-              {{ credit_notice_email.prison_name }}: {{ credit_notice_email.email }}
+              {{ credit_notice_email.prison_name }}: {% if credit_notice_email.email %}{{ credit_notice_email.email }}{% else %}{% trans 'Not set up' %}{% endif %}
             {% endfor %}
           </p>
 

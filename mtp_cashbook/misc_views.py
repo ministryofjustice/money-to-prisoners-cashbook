@@ -11,7 +11,7 @@ from mtp_common.auth.api_client import get_api_session
 
 from mtp_cashbook import READ_ML_BRIEFING_FLAG, CONFIRM_CREDIT_NOTICE_EMAIL_FLAG
 from mtp_cashbook.misc_forms import MLBriefingConfirmationForm, ConfirmCreditNoticeEmailsForm
-from mtp_cashbook.utils import add_user_flag, delete_user_flag
+from mtp_cashbook.utils import add_user_flag, delete_user_flag, merge_credit_notice_emails_with_user_prisons
 
 
 class BaseView(View):
@@ -118,7 +118,9 @@ class ConfirmCreditNoticeEmailsView(BaseView, FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['credit_notice_emails'] = self.credit_notice_emails
+        context['credit_notice_emails'] = merge_credit_notice_emails_with_user_prisons(
+            self.credit_notice_emails, self.request,
+        )
         return context
 
     def get_form_kwargs(self):

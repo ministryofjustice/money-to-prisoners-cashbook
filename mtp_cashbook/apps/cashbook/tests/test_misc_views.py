@@ -112,6 +112,22 @@ class ConfirmCreditNoticeEmailsTestCase(MTPBaseTestCase):
         self.assertIn('Change email', response_content)
         self.assertIn('I’m happy with the current email', response_content)
 
+    def test_confirmation_page_presents_missing_user_prisons(self):
+        self.login(login_data=self.get_login_data_for_user_admin(prisons=[
+            {'nomis_id': 'BXI', 'name': 'HMP Brixton', 'pre_approval_required': False},
+            {'nomis_id': 'LEI', 'name': 'HMP Leeds', 'pre_approval_required': False},
+        ], flags=[CONFIRM_CREDIT_NOTICE_EMAIL_FLAG]))
+        with responses.RequestsMock() as rsps:
+            rsps.add(rsps.GET, api_url('/prisoner_credit_notice_email/'), json=[
+                {'prison': 'LEI', 'prison_name': 'HMP Leeds', 'email': 'business-hub@mtp.local'},
+            ])
+            response = self.client.get(self.confirmation_url)
+        response_content = response.content.decode()
+        self.assertIn('HMP Brixton: Not set up', response_content)
+        self.assertIn('HMP Leeds: business-hub@mtp.local', response_content)
+        self.assertIn('Change email', response_content)
+        self.assertIn('I’m happy with the current email', response_content)
+
     def test_confirmation_page_when_no_emails_set_up(self):
         self.login(login_data=self.get_login_data_for_user_admin(flags=[CONFIRM_CREDIT_NOTICE_EMAIL_FLAG]))
         with responses.RequestsMock() as rsps:

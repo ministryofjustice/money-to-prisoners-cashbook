@@ -49,6 +49,19 @@ class SettingsPageTestCase(MTPBaseTestCase):
             response = self.client.get(reverse('settings'))
         self.assertContains(response, 'Set up email')
 
+    def test_show_settings_including_user_prisons_without_emails(self):
+        self.login(login_data=self.get_login_data_for_user_admin(prisons=[
+            {'nomis_id': 'BXI', 'name': 'HMP Brixton', 'pre_approval_required': False},
+            {'nomis_id': 'LEI', 'name': 'HMP Leeds', 'pre_approval_required': False},
+        ]))
+        with responses.RequestsMock() as rsps:
+            rsps.add(rsps.GET, api_url('/prisoner_credit_notice_email/'), json=[
+                {'prison': 'LEI', 'prison_name': 'HMP Leeds', 'email': 'business-hub@mtp.local'},
+            ])
+            response = self.client.get(reverse('settings'))
+        self.assertContains(response, 'HMP Brixton: Not set up')
+        self.assertContains(response, 'HMP Leeds: business-hub@mtp.local')
+
 
 class EditPageTestCase(MTPBaseTestCase):
     def test_non_admins_see_no_settings(self):

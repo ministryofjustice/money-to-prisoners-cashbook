@@ -10,6 +10,7 @@ from mtp_common.views import SettingsView
 from requests.exceptions import HTTPError
 
 from mtp_cashbook.misc_views import BaseView
+from mtp_cashbook.utils import merge_credit_notice_emails_with_user_prisons
 from settings.forms import ChangeCreditNoticeEmailsForm
 
 logger = logging.getLogger('mtp')
@@ -28,7 +29,10 @@ class CashbookSettingsView(SettingsView):
         context['can_edit_credit_notice_emails'] = can_edit_credit_notice_emails(self.request)
         if context['can_edit_credit_notice_emails']:
             session = get_api_session(self.request)
-            context['credit_notice_emails'] = session.get('/prisoner_credit_notice_email/').json()
+            credit_notice_emails = session.get('/prisoner_credit_notice_email/').json()
+            context['credit_notice_emails'] = merge_credit_notice_emails_with_user_prisons(
+                credit_notice_emails, self.request,
+            )
 
         return context
 
