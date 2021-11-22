@@ -18,14 +18,14 @@
           <br />
         {% endif %}
       {% empty %}
-        {% trans 'Not set up in your prison.' %}
+        {% trans 'No email registered for this service.' %}
       {% endfor %}
     </p>
     <a class="govuk-button" data-module="govuk-button" role="button" href="{% url 'credit-notice-emails' %}">
       {% if credit_notice_emails %}
         {% trans 'Change email' %}
       {% else %}
-        {% trans 'Set up email' %}
+        {% trans 'Add email' %}
       {% endif %}
     </a>
   {% endif %}

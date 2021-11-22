@@ -11,7 +11,7 @@ class SettingsPageTestCase(MTPBaseTestCase):
         with responses.RequestsMock():
             response = self.client.get(reverse('settings'))
         self.assertNotContains(response, 'Email address for credit slips')
-        self.assertNotContains(response, 'Not set up in your prison')
+        self.assertNotContains(response, 'No email registered for this service')
 
     def test_show_unconfigured_settings(self):
         self.login(login_data=self.get_login_data_for_user_admin())
@@ -19,7 +19,7 @@ class SettingsPageTestCase(MTPBaseTestCase):
             rsps.add(rsps.GET, api_url('/prisoner_credit_notice_email/'), json=[])
             response = self.client.get(reverse('settings'))
         self.assertContains(response, 'Email address for credit slips')
-        self.assertContains(response, 'Not set up in your prison')
+        self.assertContains(response, 'No email registered for this service')
 
     def test_show_typical_settings(self):
         self.login(login_data=self.get_login_data_for_user_admin())
@@ -47,7 +47,8 @@ class SettingsPageTestCase(MTPBaseTestCase):
         with responses.RequestsMock() as rsps:
             rsps.add(rsps.GET, api_url('/prisoner_credit_notice_email/'), json=[])
             response = self.client.get(reverse('settings'))
-        self.assertContains(response, 'Set up email')
+        self.assertContains(response, 'No email registered for this service')
+        self.assertContains(response, 'Add email')
 
     def test_show_settings_including_user_prisons_without_emails(self):
         self.login(login_data=self.get_login_data_for_user_admin(prisons=[

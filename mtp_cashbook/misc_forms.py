@@ -37,8 +37,8 @@ class ConfirmCreditNoticeEmailsForm(forms.Form):
         super().__init__(**kwargs)
         if not credit_notice_emails_set:
             self.fields['change_email'].choices = (
-                ('yes', _('Set up email address')),
-                ('no', _('I’m happy to not receive credit slips')),
+                ('yes', _('Yes, add an email address')),
+                ('no', _('No, continue without setup')),
             )
 
     def clean_change_email(self):

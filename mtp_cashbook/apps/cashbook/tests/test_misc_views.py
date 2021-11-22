@@ -135,8 +135,8 @@ class ConfirmCreditNoticeEmailsTestCase(MTPBaseTestCase):
             response = self.client.get(self.confirmation_url)
         response_content = response.content.decode()
         self.assertNotIn('Brixton', response_content)  # the user’s prison
-        self.assertIn('Set up email address', response_content)
-        self.assertIn('I’m happy to not receive credit slips', response_content)
+        self.assertIn('Yes, add an email address', response_content)
+        self.assertIn('No, continue without setup', response_content)
 
     def assertChoiceRedirects(self, choice, redirected_page):  # noqa: N802
         login_data = self.get_login_data_for_user_admin(flags=[CONFIRM_CREDIT_NOTICE_EMAIL_FLAG])
