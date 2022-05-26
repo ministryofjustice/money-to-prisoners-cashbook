@@ -23,6 +23,18 @@ class CashbookNotifyTemplates(NotifyTemplateRegistry):
 
                 Help with problems using this service: ((help_url))
                 Back to the service: ((site_url))
+
+                ---
+
+                Take part in research and receive a £30 gift voucher
+
+                We are carrying out research to understand how we can improve
+                prison services. If you have visited a friend or family member
+                in prison in the last six months or are planning to do so
+                in the next 12 months, we’d like to hear from you.
+
+                Please fill out our quick screener to see if you are eligible for one of our upcoming research studies.
+                https://eu.surveymonkey.com/r/7FRLB95
             """).strip(),
             'personalisation': [
                 'has_ref_number', 'ref_number',
