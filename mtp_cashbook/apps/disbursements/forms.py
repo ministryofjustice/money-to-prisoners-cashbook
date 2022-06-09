@@ -27,8 +27,6 @@ from mtp_common.bank_accounts import (
 from mtp_common.auth.exceptions import HttpNotFoundError, Forbidden
 from requests.exceptions import RequestException
 
-from disbursements import metrics
-
 logger = logging.getLogger('mtp')
 
 SENDING_METHOD = Choices(
@@ -423,7 +421,7 @@ class RejectDisbursementForm(GARequestErrorReportingMixin, forms.Form):
             'disbursements/actions/reject/',
             json={'disbursement_ids': [disbursement_id]}
         )
-        metrics.rejected_counter.inc()
+        logger.info('Rejected disbursement %(disbursement_id)d', {'disbursement_id': disbursement_id})
         reason = self.cleaned_data['reason']
         if reason:
             reasons = [{

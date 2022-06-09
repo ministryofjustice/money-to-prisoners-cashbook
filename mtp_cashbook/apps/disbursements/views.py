@@ -16,7 +16,7 @@ from mtp_common.auth.exceptions import HttpNotFoundError
 from mtp_common.utils import format_currency
 from requests.exceptions import HTTPError, RequestException
 
-from disbursements import forms as disbursement_forms, metrics
+from disbursements import forms as disbursement_forms
 from disbursements.utils import get_disbursement_viability, find_addresses
 from feedback.views import GetHelpView, GetHelpSuccessView
 from mtp_cashbook.misc_views import BaseView
@@ -388,7 +388,7 @@ class CreatedView(BasePagedView):
             del disbursement_data['remittance']
         try:
             self.api_session.post('/disbursements/', json=disbursement_data)
-            metrics.entered_counter.inc()
+            logger.info('Created disbursement')
         except RequestException:
             logger.exception('Failed to create disbursement')
             return redirect('%s?e=connection' % self.previous_view.url())
@@ -548,7 +548,7 @@ class PendingDetailView(BaseConfirmationView):
                 'disbursements/actions/confirm/',
                 json=[update]
             )
-            metrics.confirmed_counter.inc()
+            logger.info('Confirmed disbursement %(id)d', update)
             return redirect(ConfirmedView.url() + url_suffix)
 
         self.api_session.post(

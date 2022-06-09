@@ -12,8 +12,6 @@ from mtp_common.utils import format_currency
 import requests
 from requests.exceptions import HTTPError, RequestException
 
-from cashbook import metrics
-
 logger = logging.getLogger('mtp')
 
 thread_local = local()
@@ -29,7 +27,7 @@ def credit_selected_credits_to_nomis(*, user, user_session, selected_credit_ids,
             credited += 1
         else:
             logger.warning('Credit %(credit_id)s is no longer available', {'credit_id': credit_id})
-    metrics.credited_summary.observe(credited)
+    logger.info('Credited %(count)d credits', {'count': credited})
 
     if settings.PRISONER_CAPPING_ENABLED:
         prisoner_locations = set(
