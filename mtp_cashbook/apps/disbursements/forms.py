@@ -745,9 +745,10 @@ class SearchForm(BaseSearchForm):
         object_list = super().get_object_list()
 
         def format_staff_name(log_item):
-            username = log_item['user']['username'] or _('Unknown user')
-            log_item['staff_name'] = ' '.join(filter(None, (log_item['user']['first_name'],
-                                                            log_item['user']['last_name']))) or username
+            user = log_item['user'] or {}
+            username = user.get('username') or _('Unknown user')
+            log_item['staff_name'] = ' '.join(filter(None, (user.get('first_name'),
+                                                            user.get('last_name')))) or username
             return log_item
 
         for disbursement in object_list:
