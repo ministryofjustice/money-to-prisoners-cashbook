@@ -5,7 +5,7 @@
 {% block footer_top %}
   {% if request.user.is_authenticated %}
     <div class="govuk-footer__navigation">
-      <div class="govuk-footer__section">
+      <div class="govuk-footer__section govuk-grid-column-two-thirds">
         <h2 class="govuk-footer__heading govuk-heading-m">
           {% trans 'Manage prisoner money' %}
         </h2>
@@ -22,7 +22,7 @@
           </li>
         </ul>
       </div>
-      <div class="govuk-footer__section">
+      <div class="govuk-footer__section govuk-grid-column-one-third">
         <h2 class="govuk-footer__heading govuk-heading-m">
           {% trans 'Other related tools' %}
         </h2>
