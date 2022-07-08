@@ -53,4 +53,4 @@ def merge_credit_notice_emails_with_user_prisons(credit_notice_emails, request):
 
 
 def one_month_ago():
-    return datetime.datetime.today() - datetime.timedelta(days=30)
+    return datetime.date.today() - datetime.timedelta(days=30)
