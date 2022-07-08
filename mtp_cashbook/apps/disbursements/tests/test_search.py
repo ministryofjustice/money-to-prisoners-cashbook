@@ -6,6 +6,7 @@ import responses
 
 from cashbook.tests import MTPBaseTestCase, api_url
 from disbursements.forms import SearchForm
+from mtp_cashbook import utils
 
 
 class DisbursementSearchViewTextCase(MTPBaseTestCase):
@@ -75,7 +76,12 @@ class DisbursementSearchViewTextCase(MTPBaseTestCase):
     def test_disbursements_search(self):
         self.login()
         with responses.RequestsMock() as rsps:
-            rsps.add(rsps.GET, api_url('/disbursements/?offset=10&limit=10&ordering=-created&resolution=confirmed',),
+            one_month_ago = utils.one_month_ago().strftime('%Y-%m-%d')
+            url = api_url(
+                '/disbursements/?offset=10&limit=10&ordering=-created&resolution=confirmed'
+                f'&log__action=confirmed&logged_at__gte={one_month_ago}'
+            )
+            rsps.add(rsps.GET, url,
                      match_querystring=True,
                      json={'count': 11, 'results': [{
                          'id': 99, 'amount': 25010, 'invoice_number': '1000099',
