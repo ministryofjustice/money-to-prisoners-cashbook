@@ -1,3 +1,5 @@
+import datetime
+
 from mtp_common.auth import USER_DATA_SESSION_KEY
 from mtp_common.auth.api_client import get_api_session
 
@@ -48,3 +50,7 @@ def merge_credit_notice_emails_with_user_prisons(credit_notice_emails, request):
         key=lambda credit_notice_email: credit_notice_email['prison_name'],
     )
     return credit_notice_emails
+
+
+def one_month_ago():
+    return datetime.datetime.today() - datetime.timedelta(days=30)
