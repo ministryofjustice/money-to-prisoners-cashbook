@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import logging
 
 from django.conf import settings
@@ -21,6 +21,10 @@ from feedback.views import GetHelpView, GetHelpSuccessView
 from mtp_cashbook.misc_views import BaseView
 
 logger = logging.getLogger('mtp')
+
+
+def one_month_ago():
+    return datetime.today() - timedelta(days=30)
 
 
 class CashbookView(BaseView):
@@ -226,7 +230,9 @@ class ProcessedCreditsListView(CashbookView, FormView):
         initial = super().get_initial()
         initial.update({
             'page': 1,
+            'start': one_month_ago(),
         })
+
         return initial
 
     def get_form_kwargs(self):
@@ -295,7 +301,9 @@ class SearchView(CashbookView, FormView):
         initial = super().get_initial()
         initial.update({
             'page': 1,
+            'start': one_month_ago(),
         })
+
         return initial
 
     def get_form_kwargs(self):
