@@ -20,6 +20,7 @@ from disbursements import forms as disbursement_forms
 from disbursements.utils import get_disbursement_viability, find_addresses
 from feedback.views import GetHelpView, GetHelpSuccessView
 from mtp_cashbook.misc_views import BaseView
+from mtp_cashbook.utils import one_month_ago
 
 logger = logging.getLogger('mtp')
 
@@ -758,6 +759,14 @@ class SearchView(DisbursementView, FormView):
     title = _('Payments made')
     url_name = 'search'
     form_class = disbursement_forms.SearchForm
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial.update({
+            'date__gte': one_month_ago().strftime('%d/%m/%Y'),
+        })
+
+        return initial
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

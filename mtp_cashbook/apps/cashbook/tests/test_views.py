@@ -16,6 +16,7 @@ from cashbook.tests import (
     MTPBaseTestCase,
     wrap_response_data,
 )
+from mtp_cashbook.utils import one_month_ago
 
 CREDIT_1 = {
     'id': 1,
@@ -900,12 +901,15 @@ class ProcessedCreditsDetailViewTestCase(MTPBaseTestCase):
         with responses.RequestsMock() as rsps:
             self.login()
 
+            default_start = one_month_ago().strftime('%Y-%m-%d')
+
             rsps.add(
                 rsps.GET,
                 api_url(
                     '/credits/?logged_at__gte=2017-06-03+00:00:00&limit=100'
                     '&logged_at__lt=2017-06-04+00:00:00&user=1'
                     '&log__action=credited&offset=0&ordering=-received_at'
+                    f'&received_at__gte={default_start}&page=1'
                 ),
                 json={
                     'count': 2,
@@ -954,12 +958,15 @@ class ProcessedCreditsDetailViewTestCase(MTPBaseTestCase):
         with responses.RequestsMock() as rsps:
             self.login()
 
+            default_start = one_month_ago().strftime('%Y-%m-%d')
+
             rsps.add(
                 rsps.GET,
                 api_url(
                     '/credits/?logged_at__gte=2017-06-03+00:00:00&limit=100'
                     '&logged_at__lt=2017-06-04+00:00:00&user=1'
                     '&log__action=credited&offset=0&ordering=-received_at'
+                    f'&received_at__gte={default_start}&page=1'
                 ),
                 json={
                     'count': 0,

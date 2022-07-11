@@ -19,6 +19,7 @@ from cashbook.forms import (
 )
 from feedback.views import GetHelpView, GetHelpSuccessView
 from mtp_cashbook.misc_views import BaseView
+from mtp_cashbook.utils import one_month_ago
 
 logger = logging.getLogger('mtp')
 
@@ -226,16 +227,18 @@ class ProcessedCreditsListView(CashbookView, FormView):
         initial = super().get_initial()
         initial.update({
             'page': 1,
+            'start': one_month_ago().strftime('%d/%m/%Y'),
         })
+
         return initial
 
     def get_form_kwargs(self):
-        return {
-            'request': self.request,
-            'data': self.request.GET or {},
-            'initial': self.get_initial(),
-            'prefix': self.get_prefix(),
-        }
+        kwargs = super().get_form_kwargs()
+        request_data = self.get_initial()
+        request_data.update(self.request.GET.dict())
+        kwargs['data'] = request_data
+        kwargs['request'] = self.request
+        return kwargs
 
     def get(self, request, *args, **kwargs):
         form = self.get_form()
@@ -295,16 +298,18 @@ class SearchView(CashbookView, FormView):
         initial = super().get_initial()
         initial.update({
             'page': 1,
+            'start': one_month_ago().strftime('%d/%m/%Y'),
         })
+
         return initial
 
     def get_form_kwargs(self):
-        return {
-            'request': self.request,
-            'data': self.request.GET or {},
-            'initial': self.get_initial(),
-            'prefix': self.get_prefix(),
-        }
+        kwargs = super().get_form_kwargs()
+        request_data = self.get_initial()
+        request_data.update(self.request.GET.dict())
+        kwargs['data'] = request_data
+        kwargs['request'] = self.request
+        return kwargs
 
     def get(self, request, *args, **kwargs):
         form = self.get_form()
