@@ -80,7 +80,7 @@
         <div class="govuk-button-group">
           <button type="submit" class="govuk-button" data-module="govuk-button">{% trans 'Filter list' %}</button>
           {% if form.search_description.has_filters %}
-            <a href="?{% if form.ordering.value %}ordering={{ form.ordering.value }}{% endif %}" class="govuk-link" role="button">
+            <a href="?date__gte={% if form.ordering.value %}&ordering={{ form.ordering.value }}{% endif %}" class="govuk-link" role="button">
               {% trans 'Clear filters' %}
             </a>
           {% endif %}
