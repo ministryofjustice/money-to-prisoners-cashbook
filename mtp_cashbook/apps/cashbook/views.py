@@ -227,7 +227,7 @@ class ProcessedCreditsListView(CashbookView, FormView):
         initial = super().get_initial()
         initial.update({
             'page': 1,
-            'start': one_month_ago(),
+            'start': one_month_ago().strftime('%d/%m/%Y'),
         })
 
         return initial
@@ -298,7 +298,7 @@ class SearchView(CashbookView, FormView):
         initial = super().get_initial()
         initial.update({
             'page': 1,
-            'start': one_month_ago(),
+            'start': one_month_ago().strftime('%d/%m/%Y'),
         })
 
         return initial

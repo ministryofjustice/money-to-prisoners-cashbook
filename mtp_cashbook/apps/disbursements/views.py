@@ -763,7 +763,7 @@ class SearchView(DisbursementView, FormView):
     def get_initial(self):
         initial = super().get_initial()
         initial.update({
-            'date__gte': one_month_ago(),
+            'date__gte': one_month_ago().strftime('%d/%m/%Y'),
         })
 
         return initial
