@@ -203,8 +203,6 @@ class FilterProcessedCreditsListForm(GARequestErrorReportingMixin, forms.Form):
             if field.name == 'page':
                 continue
             value = self.cleaned_data.get(field.name)
-            if value in ['', []]:
-                continue
             if value is None:
                 value = ''
             data[field.name] = value
@@ -430,8 +428,8 @@ class SearchForm(GARequestErrorReportingMixin, forms.Form):
             if field.name == 'page':
                 continue
             value = self.cleaned_data.get(field.name)
-            if value in [None, '', []]:
-                continue
+            if value is None:
+                value = ''
             data[field.name] = value
         return data
 

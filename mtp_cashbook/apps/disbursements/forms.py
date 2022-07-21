@@ -506,8 +506,6 @@ class BaseSearchForm(GARequestErrorReportingMixin, forms.Form):
             if field.name == 'page':
                 continue
             value = self.cleaned_data.get(field.name)
-            if value in ['', []]:
-                continue
             if value is None:
                 value = ''
             data[field.name] = value
