@@ -148,12 +148,19 @@ class DisbursementSearchFormTextCase(SimpleTestCase):
         })
         self.assertTrue(form.is_valid())
         query_params = form.get_api_request_params()
-        query_params.pop('resolution', None)
         self.assertDictEqual(query_params, {
             'ordering': '-created',
             'log__action': 'created',
             'logged_at__gte': datetime.date(2018, 1, 10),
             'logged_at__lt': datetime.date(2018, 1, 12),
+            # emtpy input field default values:
+            'prisoner_name': '',
+            'prisoner_number': '',
+            'recipient_name': '',
+            'nomis_transaction_id': '',
+            'invoice_number': '',
+            'resolution': ['confirmed', 'sent'],
+            'method': '',
         })
         description = form.search_description
         self.assertTrue(description['has_filters'])
@@ -166,11 +173,18 @@ class DisbursementSearchFormTextCase(SimpleTestCase):
         })
         self.assertTrue(form.is_valid())
         query_params = form.get_api_request_params()
-        query_params.pop('resolution', None)
         self.assertDictEqual(query_params, {
             'ordering': '-amount',
             'log__action': 'confirmed',
             'logged_at__lt': datetime.date(2018, 1, 11),
+            # emtpy input field default values:
+            'prisoner_name': '',
+            'prisoner_number': '',
+            'recipient_name': '',
+            'nomis_transaction_id': '',
+            'invoice_number': '',
+            'resolution': ['confirmed', 'sent'],
+            'method': '',
         })
         description = form.search_description
         self.assertTrue(description['has_filters'])

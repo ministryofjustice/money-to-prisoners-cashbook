@@ -506,15 +506,15 @@ class BaseSearchForm(GARequestErrorReportingMixin, forms.Form):
             if field.name == 'page':
                 continue
             value = self.cleaned_data.get(field.name)
-            if value in [None, '', []]:
-                continue
+            if value is None:
+                value = ''
             data[field.name] = value
         return data
 
     def get_api_request_params(self):
         filters = self.get_query_data()
         for param in filters:
-            if param in self.exclusive_date_params:
+            if param in self.exclusive_date_params and filters[param]:
                 filters[param] += datetime.timedelta(days=1)
         return filters
 
