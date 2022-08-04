@@ -87,6 +87,20 @@ MIDDLEWARE = (
     'mtp_common.analytics.ReferrerPolicyMiddleware',
 )
 
+APPLICATIONINSIGHTS_CONNECTION_STRING = os.environ.get('APPLICATIONINSIGHTS_CONNECTION_STRING')
+if APPLICATIONINSIGHTS_CONNECTION_STRING:
+    from mtp_common.application_insights import AppInsightsTraceExporter
+    from opencensus.trace.samplers import ProbabilitySampler
+
+    # Sends traces to Azure Application Insights
+    MIDDLEWARE += ('opencensus.ext.django.middleware.OpencensusMiddleware',)
+    OPENCENSUS = {
+        'TRACE': {
+            'SAMPLER': ProbabilitySampler(rate=0.1 if ENVIRONMENT == 'prod' else 1),
+            'EXPORTER': AppInsightsTraceExporter(),
+        }
+    }
+
 HEALTHCHECKS = []
 AUTODISCOVER_HEALTHCHECKS = True
 
@@ -203,6 +217,14 @@ LOGGING = {
         },
     },
 }
+if APPLICATIONINSIGHTS_CONNECTION_STRING:
+    # Sends messages from `mtp` logger to Azure Application Insights
+    LOGGING['handlers']['azure'] = {
+        'level': 'INFO',
+        'class': 'mtp_common.application_insights.AppInsightsLogHandler',
+    }
+    LOGGING['loggers']['mtp']['handlers'].append('azure')
+    LOGGING['root']['handlers'].append('azure')
 
 # sentry exception handling
 if os.environ.get('SENTRY_DSN'):
