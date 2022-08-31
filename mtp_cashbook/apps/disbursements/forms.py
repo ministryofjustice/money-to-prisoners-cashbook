@@ -421,7 +421,7 @@ class RejectDisbursementForm(GARequestErrorReportingMixin, forms.Form):
             'disbursements/actions/reject/',
             json={'disbursement_ids': [disbursement_id]}
         )
-        logger.info('Rejected disbursement %(disbursement_id)d', {'disbursement_id': disbursement_id})
+        logger.info('Rejected disbursement %(disbursement_id)s', {'disbursement_id': disbursement_id})
         reason = self.cleaned_data['reason']
         if reason:
             reasons = [{
