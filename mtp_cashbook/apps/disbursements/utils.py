@@ -30,8 +30,8 @@ def get_disbursement_viability(request, disbursement):
         pass
 
     change_logs = sorted(
-        filter(lambda l: l['action'] in ('created', 'edited'), disbursement['log_set']),
-        key=lambda l: l['created']
+        filter(lambda log: log['action'] in ('created', 'edited'), disbursement['log_set']),
+        key=lambda log: log['created']
     )
     viability['self_own'] = (
         change_logs and change_logs[-1]['user']['username'] == request.user.username
