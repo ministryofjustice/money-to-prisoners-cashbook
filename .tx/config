@@ -1,8 +1,8 @@
 [main]
 host = https://www.transifex.com
 
-[mtp.cashbook]
+[o:ministry-of-justice:p:mtp:r:cashbook]
 file_filter = mtp_cashbook/translations/<lang>/LC_MESSAGES/django.po
 source_file = mtp_cashbook/translations/django.pot
 source_lang = en_GB
-type = PO
+type        = PO
