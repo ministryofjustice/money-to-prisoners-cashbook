@@ -58,7 +58,9 @@ export var BatchValidation = {
       // Partial: ask for confirmation
       e.preventDefault();
       $('#incomplete-batch-dialogue').trigger('dialogue:open');
-      Analytics.send('pageview', '/batch/-dialog_open/');
+      var pageLocation = '/batch/-dialog_open/';
+      Analytics.send('pageview', pageLocation);
+      Analytics.ga4SendPageView(pageLocation);
     }
   }
 };
