@@ -19,7 +19,6 @@ from django.utils.translation import (
     gettext, gettext_lazy as _, override as override_locale
 )
 from extended_choices import Choices
-from form_error_reporting import GARequestErrorReportingMixin
 from mtp_common.auth.api_client import get_api_session
 from mtp_common.bank_accounts import (
     roll_number_required, roll_number_valid_for_account
@@ -35,7 +34,7 @@ SENDING_METHOD = Choices(
 )
 
 
-class ConfirmationForm(GARequestErrorReportingMixin, forms.Form):
+class ConfirmationForm(forms.Form):
     confirmation = forms.ChoiceField(required=True, choices=(
         ('yes', _('Yes')),
         ('no', _('No')),
@@ -45,7 +44,7 @@ class ConfirmationForm(GARequestErrorReportingMixin, forms.Form):
     })
 
 
-class DisbursementForm(GARequestErrorReportingMixin, forms.Form):
+class DisbursementForm(forms.Form):
     @classmethod
     def unserialise_from_session(cls, request, valid_form_data):
         session = request.session
@@ -412,7 +411,7 @@ class RemittanceDescriptionForm(DisbursementForm):
         return self.cleaned_data
 
 
-class RejectDisbursementForm(GARequestErrorReportingMixin, forms.Form):
+class RejectDisbursementForm(forms.Form):
     reason = forms.CharField(label=_('Why do you want to cancel?'), required=False)
 
     def reject(self, request, disbursement_id):
@@ -460,7 +459,7 @@ def validate_range_field(field_name, bound_ordering_msg):
     return inner
 
 
-class BaseSearchForm(GARequestErrorReportingMixin, forms.Form):
+class BaseSearchForm(forms.Form):
     """
     Base form for searching, always uses initial values as defaults
     """
