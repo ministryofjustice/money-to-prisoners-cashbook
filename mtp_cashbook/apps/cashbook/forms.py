@@ -9,7 +9,6 @@ from django.utils.functional import cached_property
 from django.utils.dateformat import format as format_date
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext, gettext_lazy, ngettext
-from form_error_reporting import GARequestErrorReportingMixin
 from mtp_common.api import retrieve_all_pages_for_path
 from mtp_common.auth.api_client import get_api_session
 
@@ -19,7 +18,7 @@ from .templatetags.credits import parse_date_fields
 MANUALLY_CREDITED_LOG_LEVEL = 21
 
 
-class ProcessNewCreditsForm(GARequestErrorReportingMixin, forms.Form):
+class ProcessNewCreditsForm(forms.Form):
     credits = forms.MultipleChoiceField(choices=(), required=False)
 
     def __init__(self, request, ordering='-received_at', *args, **kwargs):
@@ -64,7 +63,7 @@ class ProcessNewCreditsForm(GARequestErrorReportingMixin, forms.Form):
         )
 
 
-class ProcessManualCreditsForm(GARequestErrorReportingMixin, forms.Form):
+class ProcessManualCreditsForm(forms.Form):
     credit = forms.ChoiceField(choices=(), required=False)
 
     def __init__(self, request, ordering='-received_at', *args, **kwargs):
@@ -121,7 +120,7 @@ class ProcessManualCreditsForm(GARequestErrorReportingMixin, forms.Form):
         return credit_id
 
 
-class FilterProcessedCreditsListForm(GARequestErrorReportingMixin, forms.Form):
+class FilterProcessedCreditsListForm(forms.Form):
     start = forms.DateField(label=gettext_lazy('From date'),
                             help_text=gettext_lazy('For example, 13/6/2017'),
                             required=False)
@@ -262,7 +261,7 @@ class FilterProcessedCreditsDetailForm(FilterProcessedCreditsListForm):
         return len(credits), credits
 
 
-class SearchForm(GARequestErrorReportingMixin, forms.Form):
+class SearchForm(forms.Form):
     ordering = forms.ChoiceField(
         label=gettext_lazy('Order by'), required=False,
         initial='-received_at',
