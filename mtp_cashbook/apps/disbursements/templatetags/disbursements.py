@@ -8,7 +8,7 @@ register = template.Library()
 
 @register.filter
 def sendingmethod(method_key):
-    return SENDING_METHOD.for_value(method_key).display
+    return dict(SENDING_METHOD.choices)[method_key]
 
 
 @register.filter

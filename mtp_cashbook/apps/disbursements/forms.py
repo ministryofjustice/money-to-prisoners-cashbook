@@ -9,6 +9,7 @@ from urllib.parse import quote_plus, urlencode
 from django import forms
 from django.conf import settings
 from django.core.validators import RegexValidator
+from django.db import models
 from django.utils import timezone
 from django.utils.encoding import force_text
 from django.utils.dateformat import format as date_format
@@ -18,7 +19,6 @@ from django.utils.html import format_html, format_html_join
 from django.utils.translation import (
     gettext, gettext_lazy as _, override as override_locale
 )
-from extended_choices import Choices
 from mtp_common.auth.api_client import get_api_session
 from mtp_common.bank_accounts import (
     roll_number_required, roll_number_valid_for_account
@@ -28,10 +28,10 @@ from requests.exceptions import RequestException
 
 logger = logging.getLogger('mtp')
 
-SENDING_METHOD = Choices(
-    ('BANK_TRANSFER', 'bank_transfer', _('Bank transfer')),
-    ('CHEQUE', 'cheque', _('Cheque')),
-)
+
+class SENDING_METHOD(models.TextChoices):  # noqa: N801
+    BANK_TRANSFER = 'bank_transfer', _('Bank transfer')
+    CHEQUE = 'cheque', _('Cheque')
 
 
 class ConfirmationForm(forms.Form):
@@ -183,7 +183,7 @@ class AmountForm(DisbursementForm):
 class SendingMethodForm(DisbursementForm):
     method = forms.ChoiceField(
         label=_('Sending method'),
-        choices=SENDING_METHOD,
+        choices=SENDING_METHOD.choices,
         widget=forms.RadioSelect(),
     )
     method_choices_help_text = [
@@ -696,7 +696,7 @@ class SearchForm(BaseSearchForm):
     resolution = forms.ChoiceField(label=_('Status'), required=False,
                                    choices=insert_blank_option(resolutions, _('Any status')))
     method = forms.ChoiceField(label=_('Sending method'), required=False,
-                               choices=insert_blank_option(SENDING_METHOD, _('Any method')))
+                               choices=insert_blank_option(SENDING_METHOD.choices, _('Any method')))
 
     # form config
     page_size = 10
