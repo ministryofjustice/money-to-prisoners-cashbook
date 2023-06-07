@@ -11,7 +11,7 @@ from django.conf import settings
 from django.core.validators import RegexValidator
 from django.db import models
 from django.utils import timezone
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.dateformat import format as date_format
 from django.utils.dateparse import parse_date, parse_datetime
 from django.utils.functional import cached_property
@@ -137,7 +137,7 @@ def serialise_amount(amount):
 
 
 def unserialise_amount(amount_text):
-    amount_text = force_text(amount_text)
+    amount_text = force_str(amount_text)
     return Decimal(amount_text)
 
 
