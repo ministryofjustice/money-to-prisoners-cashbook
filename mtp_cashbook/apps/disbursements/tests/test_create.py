@@ -7,7 +7,7 @@ import responses
 from mtp_common.test_utils import silence_logger
 
 from cashbook.tests import api_url, MTPBaseTestCase
-from ..forms import PrisonerForm, AmountForm, SENDING_METHOD
+from ..forms import PrisonerForm, AmountForm, SendingMethod
 from ..views import HandoverView
 
 
@@ -51,7 +51,7 @@ class CreateDisbursementFlowTestCase(MTPBaseTestCase):
                 follow=True
             )
 
-    def choose_sending_method(self, method=SENDING_METHOD.BANK_TRANSFER):
+    def choose_sending_method(self, method=SendingMethod.bank_transfer):
         return self.client.post(
             reverse('disbursements:sending_method'),
             data={
@@ -123,7 +123,7 @@ class PrisonerTestCase(CreateDisbursementFlowTestCase):
     @responses.activate
     def test_valid_prisoner_number(self):
         self.login()
-        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
+        self.choose_sending_method(method=SendingMethod.bank_transfer)
         response = self.enter_prisoner_details()
         self.assertOnPage(response, 'disbursements:prisoner_check')
 
@@ -139,7 +139,7 @@ class PrisonerTestCase(CreateDisbursementFlowTestCase):
         )
 
         self.login()
-        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
+        self.choose_sending_method(method=SendingMethod.bank_transfer)
         response = self.client.post(
             self.url,
             data={'prisoner_number': prisoner_number},
@@ -161,7 +161,7 @@ class PrisonerTestCase(CreateDisbursementFlowTestCase):
         )
 
         self.login()
-        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
+        self.choose_sending_method(method=SendingMethod.bank_transfer)
         response = self.client.post(
             self.url,
             data={'prisoner_number': prisoner_number},
@@ -181,7 +181,7 @@ class AmountTestCase(CreateDisbursementFlowTestCase):
     @responses.activate
     def test_valid_amount(self):
         self.login()
-        self.choose_sending_method(method=SENDING_METHOD.CHEQUE)
+        self.choose_sending_method(method=SendingMethod.cheque)
         self.enter_prisoner_details()
         response = self.enter_amount(amount=10, cash=5000)
 
@@ -190,7 +190,7 @@ class AmountTestCase(CreateDisbursementFlowTestCase):
     @responses.activate
     def test_too_high_amount(self):
         self.login()
-        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
+        self.choose_sending_method(method=SendingMethod.bank_transfer)
         self.enter_prisoner_details()
         response = self.enter_amount(amount=60, cash=5000)
 
@@ -204,7 +204,7 @@ class AmountTestCase(CreateDisbursementFlowTestCase):
     )
     def test_nomis_unavailable(self, _):
         self.login()
-        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
+        self.choose_sending_method(method=SendingMethod.bank_transfer)
         self.enter_prisoner_details()
         response = self.client.get(self.url)
 
@@ -217,7 +217,7 @@ class SendingMethodTestCase(CreateDisbursementFlowTestCase):
     @responses.activate
     def test_cheque_sending_method_skips_bank_account(self):
         self.login()
-        self.choose_sending_method(method=SENDING_METHOD.CHEQUE)
+        self.choose_sending_method(method=SendingMethod.cheque)
         self.enter_prisoner_details()
         self.enter_amount()
 
@@ -238,7 +238,7 @@ class SendingMethodTestCase(CreateDisbursementFlowTestCase):
     @responses.activate
     def test_cheque_sending_method_includes_bank_account(self):
         self.login()
-        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
+        self.choose_sending_method(method=SendingMethod.bank_transfer)
         self.enter_prisoner_details()
         self.enter_amount()
 
@@ -257,7 +257,7 @@ class RecipientContactTestCase(CreateDisbursementFlowTestCase):
     @responses.activate
     def test_contact_details_required(self):
         self.login()
-        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
+        self.choose_sending_method(method=SendingMethod.bank_transfer)
         self.enter_prisoner_details()
         self.enter_amount()
 
@@ -329,7 +329,7 @@ class RecipientPostcodeTestCase(CreateDisbursementFlowTestCase):
         )
 
         self.login()
-        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
+        self.choose_sending_method(method=SendingMethod.bank_transfer)
         self.enter_prisoner_details()
         self.enter_amount()
         self.enter_recipient_details()
@@ -343,7 +343,7 @@ class RecipientPostcodeTestCase(CreateDisbursementFlowTestCase):
     @responses.activate
     def test_full_postcode_required(self):
         self.login()
-        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
+        self.choose_sending_method(method=SendingMethod.bank_transfer)
         self.enter_prisoner_details()
         self.enter_amount()
         self.enter_recipient_details()
@@ -360,7 +360,7 @@ class RecipientPostcodeTestCase(CreateDisbursementFlowTestCase):
     @responses.activate
     def test_first_name_required(self):
         self.login()
-        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
+        self.choose_sending_method(method=SendingMethod.bank_transfer)
         self.enter_prisoner_details()
         self.enter_amount()
 
@@ -378,7 +378,7 @@ class RecipientPostcodeTestCase(CreateDisbursementFlowTestCase):
     @responses.activate
     def test_last_name_required(self):
         self.login()
-        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
+        self.choose_sending_method(method=SendingMethod.bank_transfer)
         self.enter_prisoner_details()
         self.enter_amount()
 
@@ -396,7 +396,7 @@ class RecipientPostcodeTestCase(CreateDisbursementFlowTestCase):
     @responses.activate
     def test_company_name_required(self):
         self.login()
-        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
+        self.choose_sending_method(method=SendingMethod.bank_transfer)
         self.enter_prisoner_details()
         self.enter_amount()
 
@@ -419,7 +419,7 @@ class RecipientBankAccountTestCase(CreateDisbursementFlowTestCase):
     @responses.activate
     def test_account_details_required(self):
         self.login()
-        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
+        self.choose_sending_method(method=SendingMethod.bank_transfer)
         self.enter_prisoner_details()
         self.enter_amount()
         self.enter_recipient_details()
@@ -433,7 +433,7 @@ class RecipientBankAccountTestCase(CreateDisbursementFlowTestCase):
     @responses.activate
     def test_account_details_validity(self):
         self.login()
-        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
+        self.choose_sending_method(method=SendingMethod.bank_transfer)
         self.enter_prisoner_details()
         self.enter_amount()
         self.enter_recipient_details()
@@ -450,7 +450,7 @@ class RecipientBankAccountTestCase(CreateDisbursementFlowTestCase):
     @responses.activate
     def test_building_society_account_detected(self):
         self.login()
-        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
+        self.choose_sending_method(method=SendingMethod.bank_transfer)
         self.enter_prisoner_details()
         self.enter_amount()
         self.enter_recipient_details()
@@ -470,7 +470,7 @@ class RecipientBankAccountTestCase(CreateDisbursementFlowTestCase):
     @responses.activate
     def test_non_building_society_account_detected(self):
         self.login()
-        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
+        self.choose_sending_method(method=SendingMethod.bank_transfer)
         self.enter_prisoner_details()
         self.enter_amount()
         self.enter_recipient_details()
@@ -490,7 +490,7 @@ class RecipientBankAccountTestCase(CreateDisbursementFlowTestCase):
     @responses.activate
     def test_building_society_roll_number_validation_failure(self):
         self.login()
-        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
+        self.choose_sending_method(method=SendingMethod.bank_transfer)
         self.enter_prisoner_details()
         self.enter_amount()
         self.enter_recipient_details()
@@ -511,7 +511,7 @@ class RecipientBankAccountTestCase(CreateDisbursementFlowTestCase):
     @responses.activate
     def test_building_society_roll_number_validation_success(self):
         self.login()
-        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
+        self.choose_sending_method(method=SendingMethod.bank_transfer)
         self.enter_prisoner_details()
         self.enter_amount()
         self.enter_recipient_details()
@@ -533,7 +533,7 @@ class RemittanceDescriptionTestCase(CreateDisbursementFlowTestCase):
     @responses.activate
     def test_remittance_choice_required(self):
         self.login()
-        self.choose_sending_method(method=SENDING_METHOD.CHEQUE)
+        self.choose_sending_method(method=SendingMethod.cheque)
         self.enter_prisoner_details()
         self.enter_amount()
         self.enter_recipient_details()
@@ -547,7 +547,7 @@ class RemittanceDescriptionTestCase(CreateDisbursementFlowTestCase):
     @responses.activate
     def test_remittance_being_empty(self):
         self.login()
-        self.choose_sending_method(method=SENDING_METHOD.CHEQUE)
+        self.choose_sending_method(method=SendingMethod.cheque)
         self.enter_prisoner_details()
         self.enter_amount()
         self.enter_recipient_details()
@@ -560,7 +560,7 @@ class RemittanceDescriptionTestCase(CreateDisbursementFlowTestCase):
     @responses.activate
     def test_remittance_description(self):
         self.login()
-        self.choose_sending_method(method=SENDING_METHOD.CHEQUE)
+        self.choose_sending_method(method=SendingMethod.cheque)
         self.enter_prisoner_details()
         self.enter_amount()
         self.enter_recipient_details()
@@ -574,7 +574,7 @@ class RemittanceDescriptionTestCase(CreateDisbursementFlowTestCase):
     @responses.activate
     def test_remittance_default_description(self):
         self.login()
-        self.choose_sending_method(method=SENDING_METHOD.CHEQUE)
+        self.choose_sending_method(method=SendingMethod.cheque)
         self.enter_prisoner_details()
         self.enter_amount()
         self.enter_recipient_details()
@@ -602,7 +602,7 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
         )
 
         self.login()
-        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
+        self.choose_sending_method(method=SendingMethod.bank_transfer)
         self.enter_prisoner_details()
         self.enter_amount(10)
         self.enter_recipient_details()
@@ -617,7 +617,7 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
         post_requests = [call.request for call in responses.calls if call.request.method == responses.POST]
         self.assertEqual(len(post_requests), 1)
         self.assertJSONEqual(post_requests[0].body.decode(), {
-            'method': SENDING_METHOD.BANK_TRANSFER,
+            'method': SendingMethod.bank_transfer,
             'prisoner_number': self.prisoner_number,
             'prison': 'BXI',
             'prisoner_name': 'JILLY HALL',
@@ -646,7 +646,7 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
         )
 
         self.login()
-        self.choose_sending_method(method=SENDING_METHOD.CHEQUE)
+        self.choose_sending_method(method=SendingMethod.cheque)
         self.enter_prisoner_details()
         self.enter_amount()
         self.enter_recipient_details()
@@ -667,7 +667,7 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
         )
 
         self.login()
-        self.choose_sending_method(method=SENDING_METHOD.CHEQUE)
+        self.choose_sending_method(method=SendingMethod.cheque)
         self.enter_prisoner_details()
         self.enter_amount(10)
         self.enter_recipient_details()
@@ -702,7 +702,7 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
         post_requests = [call.request for call in responses.calls if call.request.method == responses.POST]
         self.assertEqual(len(post_requests), 1)
         self.assertJSONEqual(post_requests[0].body.decode(), {
-            'method': SENDING_METHOD.CHEQUE,
+            'method': SendingMethod.cheque,
             'prisoner_number': self.prisoner_number,
             'prison': 'BXI',
             'prisoner_name': 'JILLY HALL',
@@ -721,7 +721,7 @@ class DisbursementCompleteTestCase(CreateDisbursementFlowTestCase):
     @responses.activate
     def test_create_disbursement_service_unavailable(self):
         self.login()
-        self.choose_sending_method(method=SENDING_METHOD.BANK_TRANSFER)
+        self.choose_sending_method(method=SendingMethod.bank_transfer)
         self.enter_prisoner_details()
         self.enter_amount()
         self.enter_recipient_details()
