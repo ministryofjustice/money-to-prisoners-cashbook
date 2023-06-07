@@ -59,7 +59,6 @@ export var BatchValidation = {
       e.preventDefault();
       $('#incomplete-batch-dialogue').trigger('dialogue:open');
       var pageLocation = '/batch/-dialog_open/';
-      Analytics.send('pageview', pageLocation);
       Analytics.ga4SendPageView(pageLocation);
     }
   }
