@@ -29,9 +29,9 @@ from requests.exceptions import RequestException
 logger = logging.getLogger('mtp')
 
 
-class SENDING_METHOD(models.TextChoices):  # noqa: N801
-    BANK_TRANSFER = 'bank_transfer', _('Bank transfer')
-    CHEQUE = 'cheque', _('Cheque')
+class SendingMethod(models.TextChoices):
+    bank_transfer = 'bank_transfer', _('Bank transfer')
+    cheque = 'cheque', _('Cheque')
 
 
 class ConfirmationForm(forms.Form):
@@ -183,7 +183,7 @@ class AmountForm(DisbursementForm):
 class SendingMethodForm(DisbursementForm):
     method = forms.ChoiceField(
         label=_('Sending method'),
-        choices=SENDING_METHOD.choices,
+        choices=SendingMethod.choices,
         widget=forms.RadioSelect(),
     )
     method_choices_help_text = [
@@ -696,7 +696,7 @@ class SearchForm(BaseSearchForm):
     resolution = forms.ChoiceField(label=_('Status'), required=False,
                                    choices=insert_blank_option(resolutions, _('Any status')))
     method = forms.ChoiceField(label=_('Sending method'), required=False,
-                               choices=insert_blank_option(SENDING_METHOD.choices, _('Any method')))
+                               choices=insert_blank_option(SendingMethod.choices, _('Any method')))
 
     # form config
     page_size = 10

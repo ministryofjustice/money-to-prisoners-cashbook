@@ -1,14 +1,14 @@
 from django import template
 from django.utils.translation import gettext_lazy as _
 
-from disbursements.forms import SENDING_METHOD
+from disbursements.forms import SendingMethod
 
 register = template.Library()
 
 
 @register.filter
 def sendingmethod(method_key):
-    return dict(SENDING_METHOD.choices)[method_key]
+    return SendingMethod[method_key].label
 
 
 @register.filter

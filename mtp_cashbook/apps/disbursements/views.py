@@ -174,7 +174,7 @@ class SendingMethodView(BasePagedFormView):
     form_class = disbursement_forms.SendingMethodForm
 
     def form_valid(self, form):
-        if form.cleaned_data['method'] == disbursement_forms.SENDING_METHOD.CHEQUE:
+        if form.cleaned_data['method'] == disbursement_forms.SendingMethod.cheque:
             RecipientBankAccountView.form_class.delete_from_session(self.request)
         return super().form_valid(form)
 
@@ -269,7 +269,7 @@ class RecipientAddressView(BasePagedFormView):
 
     def get_success_url(self):
         form_data = self.get_valid_form_data(SendingMethodView)
-        if form_data.get('method') == disbursement_forms.SENDING_METHOD.CHEQUE:
+        if form_data.get('method') == disbursement_forms.SendingMethod.cheque:
             self.next_view = RemittanceDescriptionView
         else:
             self.next_view = RecipientBankAccountView
@@ -286,7 +286,7 @@ class RecipientBankAccountView(BasePagedFormView):
     def is_form_required(cls, valid_form_data):
         return (
             valid_form_data[SendingMethodView.form_class.__name__]['method'] ==
-            disbursement_forms.SENDING_METHOD.BANK_TRANSFER
+            disbursement_forms.SendingMethod.bank_transfer
         )
 
     def get_context_data(self, **kwargs):
@@ -309,7 +309,7 @@ class RemittanceDescriptionView(BasePagedFormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         form_data = self.get_valid_form_data(SendingMethodView)
-        if form_data.get('method') == disbursement_forms.SENDING_METHOD.CHEQUE:
+        if form_data.get('method') == disbursement_forms.SendingMethod.cheque:
             context['breadcrumbs_back'] = RecipientBankAccountView.previous_view.url()
 
         form_data = self.get_valid_form_data(PrisonerView)
@@ -661,7 +661,7 @@ class UpdateSendingMethodView(BaseEditFormView, SendingMethodView):
         self.require_bank_account = False
 
     def form_valid(self, form):
-        self.require_bank_account = form.cleaned_data['method'] == disbursement_forms.SENDING_METHOD.BANK_TRANSFER
+        self.require_bank_account = form.cleaned_data['method'] == disbursement_forms.SendingMethod.bank_transfer
         return super().form_valid(form)
 
     def get_update_payload(self, form):
@@ -720,7 +720,7 @@ class UpdateRecipientBankAccountView(BaseEditFormView, RecipientBankAccountView)
 
     def get_update_payload(self, form):
         payload = super().get_update_payload(form)
-        payload.update(method=disbursement_forms.SENDING_METHOD.BANK_TRANSFER)
+        payload.update(method=disbursement_forms.SendingMethod.bank_transfer)
         return payload
 
 
