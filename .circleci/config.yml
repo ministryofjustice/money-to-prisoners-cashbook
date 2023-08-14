@@ -48,18 +48,18 @@ jobs:
       - run:
           name: Log docker into ECR
           command: |
-            source /tmp/mtp-env.sh
+            . /tmp/mtp-env.sh
             aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${ECR_REGISTRY}
       - run:
           name: Pull base image
           command: |
-            source /tmp/mtp-env.sh
+            . /tmp/mtp-env.sh
             docker pull ${registry}:base-web
             docker tag ${registry}:base-web base-web
       - run:
           name: Build docker image
           command: |
-            source /tmp/mtp-env.sh
+            . /tmp/mtp-env.sh
             docker build \
               --force-rm \
               --build-arg APP_GIT_COMMIT=${CIRCLE_SHA1} \
@@ -71,7 +71,7 @@ jobs:
       - run:
           name: Test docker image
           command: |
-            source /tmp/mtp-env.sh
+            . /tmp/mtp-env.sh
             docker run \
               --name ${app} \
               -e DJANGO_SETTINGS_MODULE=mtp_cashbook.settings.ci \
@@ -81,7 +81,7 @@ jobs:
           name: Extract test reports
           when: always
           command: |
-            source /tmp/mtp-env.sh
+            . /tmp/mtp-env.sh
             docker cp ${app}:/app/reports /tmp/reports
             docker rm ${app}
       - store_artifacts:
@@ -91,7 +91,7 @@ jobs:
       - run:
           name: Push docker image
           command: |
-            source /tmp/mtp-env.sh
+            . /tmp/mtp-env.sh
             echo "Pushing ${tag} to ECR"
             docker tag ${tag} ${registry}:${tag}
             docker push ${registry}:${tag}
@@ -103,13 +103,13 @@ jobs:
       - run:
           name: Log out of ECR
           command: |
-            source /tmp/mtp-env.sh
+            . /tmp/mtp-env.sh
             docker logout ${ECR_REGISTRY}
       - deploy:
           name: Deploy to test
           command: |
             if [[ "${CIRCLE_BRANCH}" == "main" ]]; then
-              source /tmp/mtp-env.sh
+              . /tmp/mtp-env.sh
               echo "Deploying to test"
 
               echo -n ${K8S_CLUSTER_CERT} | base64 -d > /tmp/mtp-k8s-ca.crt
@@ -126,7 +126,7 @@ jobs:
       - run:
           name: Clean up ECR
           command: |
-            source /tmp/mtp-env.sh
+            . /tmp/mtp-env.sh
             echo "Cleaning ECR"
 
             delete_images() {
