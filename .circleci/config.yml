@@ -101,7 +101,7 @@ jobs:
               docker push ${registry}:${app}
             fi
       - run:
-          name: Log out of ECR
+          name: Log docker out of ECR
           command: |
             . /tmp/mtp-env.sh
             docker logout ${ECR_REGISTRY}
