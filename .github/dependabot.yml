@@ -7,6 +7,9 @@ updates:
       interval: monthly
     pull-request-branch-name:
       separator: '-'
+    groups:
+      minor-updates:
+        update-types: [minor, patch]
 
   - package-ecosystem: github-actions
     directory: /
