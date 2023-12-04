@@ -8,7 +8,7 @@ orbs:
 parameters:
   kubectl-version:
     type: string
-    default: v1.24.17
+    default: v1.26.11
 
 jobs:
   build-test-push:
