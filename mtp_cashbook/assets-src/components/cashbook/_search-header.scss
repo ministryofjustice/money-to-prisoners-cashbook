@@ -1,5 +1,5 @@
 .mtp-header-app-links__search {
-  width: 280px;
+  width: 18rem;
 
   .govuk-input, .govuk-button {
     margin: 0;
@@ -7,13 +7,15 @@
 
   .govuk-input {
     position: relative;
-    width: 220px;
+    width: 15rem;
     max-width: none;
+    height: 2.25rem;
+    font-size: 1em;
   }
 
   .govuk-button {
-    width: 38px;
-    height: 40px;
+    width: 2.25rem;
+    height: 2.25rem;
     text-indent: -200px;
     font-size: 1px;
     background: govuk-colour('blue') mtp-static-url('images/search-icon.png') no-repeat 50% 50%;
@@ -49,5 +51,13 @@
   @include govuk-media-query($from: desktop) {
     float: right;
     text-align: right;
+
+    .govuk-input {
+      right: 3px;
+    }
+
+    .govuk-button {
+      float: right;
+    }
   }
 }

@@ -100,7 +100,11 @@
                   <td>{% trans 'No' %}</td>
                 {% endif %}
               {% endif %}
-              <td class="govuk-!-display-none-print"><a href="{% url 'processed-credits-detail' date=batch.logged_at|date:'Ymd' user_id=batch.owner %}" class="mtp-print-link-target">{% trans 'Print' %}</a></td>
+              <td class="govuk-!-display-none-print">
+                <a href="{% url 'processed-credits-detail' date=batch.logged_at|date:'Ymd' user_id=batch.owner %}" class="mtp-print-link-target">
+                  {% trans 'Print' %}
+                </a>
+              </td>
             </tr>
           {% endfor %}
         </tbody>

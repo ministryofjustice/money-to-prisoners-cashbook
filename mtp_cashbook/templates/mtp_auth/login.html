@@ -7,87 +7,90 @@
 {% block page_title %}{% trans 'Sign in' %} – {{ block.super }}{% endblock %}
 
 {% block main %}
-  <div class="mtp-masthead govuk-!-margin-bottom-9">
-    <div class="govuk-width-container">
+  <main id="main-content" role="main">
+
+    <div class="mtp-masthead govuk-!-margin-bottom-9">
+      <div class="govuk-width-container">
+
+        <div class="govuk-grid-row">
+          {% language_switch %}
+        </div>
+
+        <div class="govuk-grid-row govuk-!-margin-top-9 govuk-!-margin-bottom-6">
+          <header class="govuk-grid-column-two-thirds">
+            <h1 class="govuk-heading-xl">
+              {% trans 'Process money in and out of your prison' %}
+            </h1>
+
+            <aside>
+              <p>
+                {% trans 'These tools will help you manage prisoner money' %}:
+              </p>
+              <ul class="govuk-list govuk-list--bullet">
+                <li>{% trans 'digital cashbook' %}</li>
+                <li>{% trans 'digital disbursements' %}</li>
+              </ul>
+            </aside>
+          </header>
+
+          <div class="govuk-grid-column-one-third">
+            <img alt="{% trans 'Digital cashbook' %}" src="{% static 'images/landing-cashbook.png' %}" srcset="{% static 'images/landing-cashbook@2x.png' %} 2x"/>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="govuk-width-container govuk-!-margin-bottom-9">
+      {% notification_banners request 'cashbook_login' %}
 
       <div class="govuk-grid-row">
-        {% language_switch %}
+        <section class="govuk-grid-column-one-half">
+          <h2 class="govuk-heading-m">{% trans 'Need access?' %}</h2>
+          <p>
+            {% trans 'If you’re a business hub staff member in a public prison in England or Wales, you can request access to the digital cashbook.' %}
+          </p>
+          <p>
+            <a href="{% url 'sign-up' %}">
+              {% trans 'Request access' %}
+            </a>
+          </p>
+          <p>
+            {% blocktrans trimmed %}
+              Intelligence staff need to log into the <a href="{{ noms_ops_url }}">prisoner money intelligence tool</a> instead.
+            {% endblocktrans %}
+          </p>
+        </section>
+
+        <section class="govuk-grid-column-one-half">
+          <h2 class="govuk-heading-m">{% trans 'Sign in' %}</h2>
+
+          {% include 'govuk-frontend/components/error-summary.html' with form=form only %}
+
+          <form action="{{ app_path }}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}">
+
+            {% include 'mtp_common/forms/field.html' with field=form.username input_classes='govuk-input--width-10' only %}
+            {% include 'mtp_common/forms/field.html' with field=form.password input_classes='govuk-input--width-10' only %}
+
+            <button type="submit" class="govuk-button" data-module="govuk-button" name="signin">{% trans 'Sign in' %}</button>
+          </form>
+
+          <p><a href="{% url 'reset_password' %}">{% trans 'Forgotten your password?' %}</a></p>
+
+        </section>
       </div>
 
-      <div class="govuk-grid-row govuk-!-margin-top-9 govuk-!-margin-bottom-6">
-        <header class="govuk-grid-column-two-thirds">
-          <h1 class="govuk-heading-xl">
-            {% trans 'Process money in and out of your prison' %}
-          </h1>
+      <br />
 
-          <aside>
-            <p>
-              {% trans 'These tools will help you manage prisoner money' %}:
-            </p>
-            <ul class="govuk-list govuk-list--bullet">
-              <li>{% trans 'digital cashbook' %}</li>
-              <li>{% trans 'digital disbursements' %}</li>
-            </ul>
-          </aside>
-        </header>
-
-        <div class="govuk-grid-column-one-third">
-          <img alt="{% trans 'Digital cashbook' %}" src="{% static 'images/landing-cashbook.png' %}" srcset="{% static 'images/landing-cashbook@2x.png' %} 2x"/>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="govuk-width-container govuk-!-margin-bottom-9">
-    {% notification_banners request 'cashbook_login' %}
-
-    <div class="govuk-grid-row">
-      <section class="govuk-grid-column-one-half">
-        <h2 class="govuk-heading-m">{% trans 'Need access?' %}</h2>
-        <p>
-          {% trans 'If you’re a business hub staff member in a public prison in England or Wales, you can request access to the digital cashbook.' %}
-        </p>
-        <p>
-          <a href="{% url 'sign-up' %}">
-            {% trans 'Request access' %}
-          </a>
-        </p>
-        <p>
-          {% blocktrans trimmed %}
-            Intelligence staff need to log into the <a href="{{ noms_ops_url }}">prisoner money intelligence tool</a> instead.
-          {% endblocktrans %}
-        </p>
-      </section>
-
-      <section class="govuk-grid-column-one-half">
-        <h2 class="govuk-heading-m">{% trans 'Sign in' %}</h2>
-
-        {% include 'govuk-frontend/components/error-summary.html' with form=form only %}
-
-        <form action="{{ app_path }}" method="post">
-          {% csrf_token %}
-          <input type="hidden" name="next" value="{{ next }}">
-
-          {% include 'mtp_common/forms/field.html' with field=form.username input_classes='govuk-input--width-10' only %}
-          {% include 'mtp_common/forms/field.html' with field=form.password input_classes='govuk-input--width-10' only %}
-
-          <button type="submit" class="govuk-button" data-module="govuk-button" name="signin">{% trans 'Sign in' %}</button>
-        </form>
-
-        <p><a href="{% url 'reset_password' %}">{% trans 'Forgotten your password?' %}</a></p>
-
-      </section>
+      <p>
+        {% url 'faq' as faq_url %}
+        {% blocktrans trimmed %}
+          <a href="{{ faq_url }}">Get help</a> if you’re having difficulties requesting access or signing in.
+        {% endblocktrans %}
+      </p>
     </div>
 
-    <br />
-
-    <p>
-      {% url 'faq' as faq_url %}
-      {% blocktrans trimmed %}
-        <a href="{{ faq_url }}">Get help</a> if you’re having difficulties requesting access or signing in.
-      {% endblocktrans %}
-    </p>
-  </div>
-
+  </main>
 {% endblock %}

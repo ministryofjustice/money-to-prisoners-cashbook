@@ -240,6 +240,11 @@ class ProcessedCreditsListView(CashbookView, FormView):
         kwargs['request'] = self.request
         return kwargs
 
+    def dispatch(self, request, *args, **kwargs):
+        response = super().dispatch(request, *args, **kwargs)
+        response['X-Frame-Options'] = 'SAMEORIGIN'
+        return response
+
     def get(self, request, *args, **kwargs):
         form = self.get_form()
         if form.is_bound:
