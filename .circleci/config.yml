@@ -105,7 +105,7 @@ jobs:
           command: |
             . /tmp/mtp-env.sh
             docker logout ${ECR_REGISTRY}
-      - deploy:
+      - run:
           name: Deploy to test
           command: |
             if [[ "${CIRCLE_BRANCH}" == "main" ]]; then
