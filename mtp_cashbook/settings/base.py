@@ -49,6 +49,7 @@ EMAILS_URL = (
     else 'http://localhost:8006'
 )
 SITE_URL = CASHBOOK_URL
+DPS = os.environ.get('DPS', '/')
 
 FIU_EMAIL = os.environ.get('FIU_EMAIL', 'fiu@mtp.local')
 
