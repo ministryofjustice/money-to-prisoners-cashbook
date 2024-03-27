@@ -47,7 +47,7 @@ export var SelectAll = {
 
   onCheckKeypress: function (e) {
     // disallow submitting form with enter key
-    if (e.keyCode === 13) {
+    if (e.key === 'Enter') {
       e.preventDefault();
       return false;
     }
