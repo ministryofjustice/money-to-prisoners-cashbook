@@ -72,7 +72,7 @@
             <input type="hidden" name="next" value="{{ next }}">
 
             {% include 'mtp_common/forms/field.html' with field=form.username input_classes='govuk-input--width-10' only %}
-            {% include 'mtp_common/forms/field.html' with field=form.password input_classes='govuk-input--width-10' only %}
+            {% include 'mtp_common/forms/password-field.html' with field=form.password only %}
 
             <button type="submit" class="govuk-button" data-module="govuk-button" name="signin">{% trans 'Sign in' %}</button>
           </form>

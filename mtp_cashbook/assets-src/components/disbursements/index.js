@@ -97,7 +97,7 @@ export var Disbursements = {
   initRemittanceDescription: function () {
     // prevent new lines in wrapped textareas
     $('#id_remittance_description').keydown(function (e) {
-      return e.keyCode !== 13;
+      return e.key !== 'Enter';
     });
   },
 
