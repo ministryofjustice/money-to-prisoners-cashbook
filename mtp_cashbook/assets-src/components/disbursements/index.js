@@ -14,10 +14,10 @@ export var Disbursements = {
     $('.mtp-accounts-table tfoot a').click(function (e) {
       e.preventDefault();
 
-      if(typeof django === 'undefined') {
+      if (typeof django === 'undefined') {
         // if django js library hasn't loaded yet, fall back to no translation
         window.django = {
-          gettext: function(text) {
+          gettext: function (text) {
             return text;
           }
         };

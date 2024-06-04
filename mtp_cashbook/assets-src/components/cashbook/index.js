@@ -44,7 +44,7 @@ export var Cashbook = {
 };
 
 function displayCreditSelectionCount (itemCount, $countContainer) {
-  if(typeof django === 'undefined') {
+  if (typeof django === 'undefined') {
     // if django js library hasn't loaded yet, fall back to simple message
     $countContainer.text(
       'Credits selected for processing in NOMIS: ' + itemCount
