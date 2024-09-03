@@ -2,13 +2,14 @@
 version: 2.1
 
 orbs:
-  aws-cli: circleci/aws-cli@4.0
-  aws-ecr: circleci/aws-ecr@9.0
+  aws-cli: circleci/aws-cli@5
+  aws-ecr: circleci/aws-ecr@9
 
 parameters:
   kubectl-version:
     type: string
-    default: v1.26.11
+    description: version of kubectl binary to use
+    default: v1.29.8
 
 jobs:
   build-test-push:
