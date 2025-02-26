@@ -5,7 +5,7 @@ from django.http import Http404, JsonResponse
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
 from django.utils.functional import cached_property
-from django.utils.http import is_safe_url
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView, TemplateView
 from mtp_common import nomis
@@ -105,7 +105,7 @@ class BasePagedView(DisbursementView):
             elif view.is_form_required(self.valid_form_data):
                 return redirect(view.url(**kwargs))
         next_url = request.GET.get('next')
-        if is_safe_url(next_url, allowed_hosts={request.get_host()}):
+        if url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}):
             self.redirect_success_url = next_url
         return super().dispatch(request, **kwargs)
 
