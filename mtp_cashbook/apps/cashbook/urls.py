@@ -13,8 +13,11 @@ urlpatterns = [
     re_path(r'^new/$', NewCreditsView.as_view(), name='new-credits'),
 
     re_path(r'^processed/$', ProcessedCreditsListView.as_view(), name='processed-credits-list'),
-    re_path(r'^processed/(?P<date>[0-9]{8})-(?P<user_id>[0-9]+)/$',
-        ProcessedCreditsDetailView.as_view(), name='processed-credits-detail'),
+    re_path(
+        r'^processed/(?P<date>[0-9]{8})-(?P<user_id>[0-9]+)/$',
+        ProcessedCreditsDetailView.as_view(),
+        name='processed-credits-detail',
+    ),
     re_path(r'^processing/$', ProcessingCreditsView.as_view(), name='processing-credits'),
 
     re_path(r'^search/$', SearchView.as_view(), name='search'),
