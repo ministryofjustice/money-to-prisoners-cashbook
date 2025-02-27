@@ -216,7 +216,8 @@ class AmountView(BasePagedFormView):
             pass
 
     def get(self, request, **kwargs):
-        if request.is_ajax():
+        is_ajax = request.headers.get('x-requested-with') == 'XMLHttpRequest'
+        if is_ajax:
             balances = self.get_nomis_balances()
             if balances:
                 return JsonResponse({
