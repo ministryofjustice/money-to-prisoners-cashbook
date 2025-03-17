@@ -28,7 +28,7 @@ class ProcessNewCreditsForm(forms.Form):
         self.session = get_api_session(request)
         self.ordering = ordering
 
-        self.fields['credits'].choices = self.credit_choices
+        self.fields['credits'].choices = [(id, f'Credit {id}') for id, _ in self.credit_choices]
 
     def _request_all_credits(self):
         return retrieve_all_pages_for_path(
@@ -73,7 +73,7 @@ class ProcessManualCreditsForm(forms.Form):
         self.session = get_api_session(request)
         self.ordering = ordering
 
-        self.fields['credit'].choices = self.credit_choices
+        self.fields['credit'].choices = [(id, f'Credit {id}') for id, _ in self.credit_choices]
 
     def _request_all_credits(self):
         return retrieve_all_pages_for_path(
