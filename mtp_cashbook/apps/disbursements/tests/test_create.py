@@ -266,7 +266,7 @@ class RecipientContactTestCase(CreateDisbursementFlowTestCase):
             'recipient_first_name': 'John',
         })
         self.assertOnPage(response, 'disbursements:recipient_contact')
-        self.assertFormError(response.context['form'], 'recipient_last_name', 'This field is required.')
+        self.assertFormError(response.context['form'], 'recipient_last_name', 'This field is required')
 
 
 class RecipientPostcodeTestCase(CreateDisbursementFlowTestCase):
@@ -373,7 +373,7 @@ class RecipientPostcodeTestCase(CreateDisbursementFlowTestCase):
             'postcode': 'n17 9bj',
         })
         self.assertOnPage(response, 'disbursements:recipient_contact')
-        self.assertFormError(response.context['form'], 'recipient_first_name', 'This field is required.')
+        self.assertFormError(response.context['form'], 'recipient_first_name', 'This field is required')
 
     @responses.activate
     def test_last_name_required(self):
@@ -391,7 +391,7 @@ class RecipientPostcodeTestCase(CreateDisbursementFlowTestCase):
             'postcode': 'n17 9bj',
         })
         self.assertOnPage(response, 'disbursements:recipient_contact')
-        self.assertFormError(response.context['form'], 'recipient_last_name', 'This field is required.')
+        self.assertFormError(response.context['form'], 'recipient_last_name', 'This field is required')
 
     @responses.activate
     def test_company_name_required(self):
@@ -408,7 +408,7 @@ class RecipientPostcodeTestCase(CreateDisbursementFlowTestCase):
             'postcode': 'n17 9bj',
         })
         self.assertOnPage(response, 'disbursements:recipient_contact')
-        self.assertFormError(response.context['form'], 'recipient_company_name', 'This field is required.')
+        self.assertFormError(response.context['form'], 'recipient_company_name', 'This field is required')
 
 
 class RecipientBankAccountTestCase(CreateDisbursementFlowTestCase):
@@ -427,8 +427,8 @@ class RecipientBankAccountTestCase(CreateDisbursementFlowTestCase):
         self.enter_recipient_address()
         response = self.enter_recipient_bank_account({'sort_code': ''})
         self.assertOnPage(response, 'disbursements:recipient_bank_account')
-        self.assertFormError(response.context['form'], 'sort_code', 'This field is required.')
-        self.assertFormError(response.context['form'], 'account_number', 'This field is required.')
+        self.assertFormError(response.context['form'], 'sort_code', 'This field is required')
+        self.assertFormError(response.context['form'], 'account_number', 'This field is required')
 
     @responses.activate
     def test_account_details_validity(self):
