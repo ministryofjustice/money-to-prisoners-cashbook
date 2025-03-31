@@ -1,8 +1,8 @@
-from django.conf.urls import url
+from django.urls import re_path
 
 from .views import CashbookSettingsView, ChangeCreditNoticeEmailsView
 
 urlpatterns = [
-    url(r'^$', CashbookSettingsView.as_view(), name='settings'),
-    url(r'^credit-notice-emails/$', ChangeCreditNoticeEmailsView.as_view(), name='credit-notice-emails'),
+    re_path(r'^$', CashbookSettingsView.as_view(), name='settings'),
+    re_path(r'^credit-notice-emails/$', ChangeCreditNoticeEmailsView.as_view(), name='credit-notice-emails'),
 ]

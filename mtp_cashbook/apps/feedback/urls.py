@@ -1,8 +1,8 @@
-from django.conf.urls import url
+from django.urls import re_path
 
 from feedback.views import GetHelpView, GetHelpSuccessView
 
 urlpatterns = [
-    url(r'^feedback/$', GetHelpView.as_view(), name='submit_ticket'),
-    url(r'^feedback/success/$', GetHelpSuccessView.as_view(), name='feedback_success'),
+    re_path(r'^feedback/$', GetHelpView.as_view(), name='submit_ticket'),
+    re_path(r'^feedback/success/$', GetHelpSuccessView.as_view(), name='feedback_success'),
 ]

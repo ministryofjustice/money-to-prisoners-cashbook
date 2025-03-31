@@ -266,7 +266,7 @@ class RecipientContactTestCase(CreateDisbursementFlowTestCase):
             'recipient_first_name': 'John',
         })
         self.assertOnPage(response, 'disbursements:recipient_contact')
-        self.assertFormError(response, 'form', 'recipient_last_name', 'This field is required')
+        self.assertFormError(response.context['form'], 'recipient_last_name', 'This field is required')
 
 
 class RecipientPostcodeTestCase(CreateDisbursementFlowTestCase):
@@ -353,7 +353,7 @@ class RecipientPostcodeTestCase(CreateDisbursementFlowTestCase):
         })
         self.assertOnPage(response, 'disbursements:recipient_postcode')
         self.assertFormError(
-            response, 'form', 'postcode',
+            response.context['form'], 'postcode',
             'Enter a full valid UK postcode'
         )
 
@@ -373,7 +373,7 @@ class RecipientPostcodeTestCase(CreateDisbursementFlowTestCase):
             'postcode': 'n17 9bj',
         })
         self.assertOnPage(response, 'disbursements:recipient_contact')
-        self.assertFormError(response, 'form', 'recipient_first_name', 'This field is required')
+        self.assertFormError(response.context['form'], 'recipient_first_name', 'This field is required')
 
     @responses.activate
     def test_last_name_required(self):
@@ -391,7 +391,7 @@ class RecipientPostcodeTestCase(CreateDisbursementFlowTestCase):
             'postcode': 'n17 9bj',
         })
         self.assertOnPage(response, 'disbursements:recipient_contact')
-        self.assertFormError(response, 'form', 'recipient_last_name', 'This field is required')
+        self.assertFormError(response.context['form'], 'recipient_last_name', 'This field is required')
 
     @responses.activate
     def test_company_name_required(self):
@@ -408,7 +408,7 @@ class RecipientPostcodeTestCase(CreateDisbursementFlowTestCase):
             'postcode': 'n17 9bj',
         })
         self.assertOnPage(response, 'disbursements:recipient_contact')
-        self.assertFormError(response, 'form', 'recipient_company_name', 'This field is required')
+        self.assertFormError(response.context['form'], 'recipient_company_name', 'This field is required')
 
 
 class RecipientBankAccountTestCase(CreateDisbursementFlowTestCase):
@@ -427,8 +427,8 @@ class RecipientBankAccountTestCase(CreateDisbursementFlowTestCase):
         self.enter_recipient_address()
         response = self.enter_recipient_bank_account({'sort_code': ''})
         self.assertOnPage(response, 'disbursements:recipient_bank_account')
-        self.assertFormError(response, 'form', 'sort_code', 'This field is required')
-        self.assertFormError(response, 'form', 'account_number', 'This field is required')
+        self.assertFormError(response.context['form'], 'sort_code', 'This field is required')
+        self.assertFormError(response.context['form'], 'account_number', 'This field is required')
 
     @responses.activate
     def test_account_details_validity(self):
@@ -444,8 +444,8 @@ class RecipientBankAccountTestCase(CreateDisbursementFlowTestCase):
             'account_number': '9090878',
         })
         self.assertOnPage(response, 'disbursements:recipient_bank_account')
-        self.assertFormError(response, 'form', 'sort_code', 'The sort code should be 6 digits long')
-        self.assertFormError(response, 'form', 'account_number', 'The account number should be 8 digits long')
+        self.assertFormError(response.context['form'], 'sort_code', 'The sort code should be 6 digits long')
+        self.assertFormError(response.context['form'], 'account_number', 'The account number should be 8 digits long')
 
     @responses.activate
     def test_building_society_account_detected(self):
@@ -462,7 +462,7 @@ class RecipientBankAccountTestCase(CreateDisbursementFlowTestCase):
         })
         self.assertOnPage(response, 'disbursements:recipient_bank_account')
         self.assertFormError(
-            response, 'form', 'roll_number',
+            response.context['form'], 'roll_number',
             'This is a building society account. ' +
             'Contact the prisoner to get the building society roll number or send a cheque.'
         )
@@ -483,7 +483,7 @@ class RecipientBankAccountTestCase(CreateDisbursementFlowTestCase):
         })
         self.assertOnPage(response, 'disbursements:recipient_bank_account')
         self.assertFormError(
-            response, 'form', 'roll_number',
+            response.context['form'], 'roll_number',
             'You don’t need a roll number because this is not a building society account.'
         )
 
@@ -503,7 +503,7 @@ class RecipientBankAccountTestCase(CreateDisbursementFlowTestCase):
         })
         self.assertOnPage(response, 'disbursements:recipient_bank_account')
         self.assertFormError(
-            response, 'form', 'roll_number',
+            response.context['form'], 'roll_number',
             'This roll number is not valid for this type of account. ' +
             'Contact the prisoner to get the correct building society roll number or send a cheque.'
         )
