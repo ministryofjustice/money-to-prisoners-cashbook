@@ -9,7 +9,7 @@ parameters:
   kubectl-version:
     type: string
     description: version of kubectl binary to use
-    default: v1.29.8
+    default: v1.31.6
 
 jobs:
   build-test-push:
