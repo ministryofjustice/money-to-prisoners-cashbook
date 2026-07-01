@@ -48,6 +48,11 @@ EMAILS_URL = (
     if os.environ.get('PUBLIC_EMAILS_HOST')
     else 'http://localhost:8006'
 )
+SERVICENOW_PASSWORD_RESET_URL = os.environ.get(
+    'SERVICENOW_PASSWORD_RESET_URL',
+    'https://mojprod.service-now.com/moj_sp?id=sc_cat_item'
+    '&sys_id=acc3d27e1b7e32103393a797b04bcbda&table=sc_cat_item',
+)
 SITE_URL = CASHBOOK_URL
 DPS = os.environ.get('DPS', '/')
 
