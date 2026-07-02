@@ -66,9 +66,8 @@
       </h2>
 
       <p>
-        {% url 'submit_ticket' as contact_us_url %}
         {% blocktrans trimmed %}
-          To reset your password, <a href="{{ contact_us_url }}?message=Reset%20password%20isn%E2%80%99t%20working.%0A%0AMy%20username%20is%3A%20%5Bplease%20fill%20in%5D.">contact us</a>.
+          To reset your password, <a href="{{ servicenow_password_reset_url }}">contact us</a>.
         {% endblocktrans %}
       </p>
 
