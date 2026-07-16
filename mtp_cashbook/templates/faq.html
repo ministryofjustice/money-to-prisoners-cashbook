@@ -54,9 +54,8 @@
       </h2>
 
       <p>
-        {% url 'submit_ticket' as contact_us_url %}
         {% blocktrans trimmed %}
-            To change your username, <a href="{{ contact_us_url }}?message=I%20want%20to%20change%20my%20username.%0A%0AMy%20old%20username%20%20%28usually%20your%20Quantum%20ID%29%20is%3A%20%5Bplease%20fill%20in%5D.%0A%0AMy%20new%20username%20%28usually%20your%20Quantum%20ID%29%20is%3A%20%5Bplease%20fill%20in%5D.">contact us</a>.
+            To change your username, <a href="{{ servicenow_password_reset_url }}">contact us</a>.
         {% endblocktrans %}
       </p>
 
@@ -66,9 +65,7 @@
       </h2>
 
       <p>
-        {% blocktrans trimmed %}
-          To reset your password, <a href="{{ servicenow_password_reset_url }}">contact us</a>.
-        {% endblocktrans %}
+        <a href="{{ servicenow_password_reset_url }}">{% trans 'Contact us' %}</a>
       </p>
 
 

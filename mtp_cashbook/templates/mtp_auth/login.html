@@ -77,7 +77,7 @@
             <button type="submit" class="govuk-button" data-module="govuk-button" name="signin">{% trans 'Sign in' %}</button>
           </form>
 
-          <p><a href="{{ servicenow_password_reset_url }}">{% trans 'Forgotten your password?' %}</a></p>
+          <p><a href="{% url 'reset_password' %}">{% trans 'Forgotten your password?' %}</a></p>
 
         </section>
       </div>
