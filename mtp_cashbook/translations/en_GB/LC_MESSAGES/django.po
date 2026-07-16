@@ -785,3 +785,12 @@ msgstr ""
 #: templates/cashbook/search.html:25
 msgid "Filter these credits"
 msgstr ""
+
+#: templates/faq.html:58
+#, python-format
+msgid "To change your username, <a href=\"%(servicenow_password_reset_url)s\">contact us</a>."
+msgstr ""
+
+#: templates/faq.html:68
+msgid "Contact us"
+msgstr ""
