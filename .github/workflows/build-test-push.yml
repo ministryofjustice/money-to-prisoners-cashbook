@@ -12,7 +12,7 @@ jobs:
       packages: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Assume IAM role to access ECR
         uses: aws-actions/configure-aws-credentials@v6
