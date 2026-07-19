@@ -9,12 +9,13 @@ jobs:
     permissions:
       id-token: write
       contents: read
+      packages: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Assume IAM role to access ECR
-        uses: aws-actions/configure-aws-credentials@v5
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           aws-region: ${{ vars.ECR_REGION }}
           role-to-assume: ${{ secrets.ECR_ROLE_TO_ASSUME }}
@@ -23,6 +24,13 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
+      - name: Log docker into GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Compute image tags
         id: tags
         run: |
@@ -30,18 +38,23 @@ jobs:
           version=${branch_lc}.${GITHUB_SHA::7}
           tag=cashbook.${version}
           registry=${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}
-          echo "branch_lc=${branch_lc}" >> "$GITHUB_OUTPUT"
-          echo "version=${version}"     >> "$GITHUB_OUTPUT"
-          echo "tag=${tag}"             >> "$GITHUB_OUTPUT"
-          echo "registry=${registry}"   >> "$GITHUB_OUTPUT"
+          ghcr_package=ghcr.io/${{ github.repository_owner }}/money-to-prisoners-cashbook
+          ghcr_base=ghcr.io/${{ github.repository_owner }}/money-to-prisoners-base
+          echo "branch_lc=${branch_lc}"         >> "$GITHUB_OUTPUT"
+          echo "version=${version}"             >> "$GITHUB_OUTPUT"
+          echo "tag=${tag}"                     >> "$GITHUB_OUTPUT"
+          echo "registry=${registry}"           >> "$GITHUB_OUTPUT"
+          echo "ghcr_package=${ghcr_package}"   >> "$GITHUB_OUTPUT"
+          echo "ghcr_base=${ghcr_base}"         >> "$GITHUB_OUTPUT"
           echo "Building ${tag}"
 
+      # base images come from the public GHCR package, so this needs no credentials
       - name: Pull base image
         env:
-          REGISTRY: ${{ steps.tags.outputs.registry }}
+          GHCR_BASE: ${{ steps.tags.outputs.ghcr_base }}
         run: |
-          docker pull ${REGISTRY}:base-web
-          docker tag ${REGISTRY}:base-web base-web
+          docker pull ${GHCR_BASE}:base-web
+          docker tag ${GHCR_BASE}:base-web base-web
 
       - name: Build docker image
         env:
@@ -83,15 +96,23 @@ jobs:
       - name: Push docker image
         env:
           TAG: ${{ steps.tags.outputs.tag }}
+          VERSION: ${{ steps.tags.outputs.version }}
           REGISTRY: ${{ steps.tags.outputs.registry }}
+          GHCR_PACKAGE: ${{ steps.tags.outputs.ghcr_package }}
         run: |
           echo "Pushing ${TAG} to ECR"
           docker tag ${TAG} ${REGISTRY}:${TAG}
           docker push ${REGISTRY}:${TAG}
+          echo "Pushing ${VERSION} to GHCR ${GHCR_PACKAGE}"
+          docker tag ${TAG} ${GHCR_PACKAGE}:${VERSION}
+          docker push ${GHCR_PACKAGE}:${VERSION}
           if [[ "${GITHUB_REF_NAME}" == "main" ]]; then
             echo "Pushing cashbook to ECR (acts as latest)"
             docker tag ${TAG} ${REGISTRY}:cashbook
             docker push ${REGISTRY}:cashbook
+            echo "Pushing latest to GHCR"
+            docker tag ${TAG} ${GHCR_PACKAGE}:latest
+            docker push ${GHCR_PACKAGE}:latest
           fi
 
       
@@ -106,7 +127,7 @@ jobs:
         env:
           TAG: ${{ steps.tags.outputs.tag }}
           VERSION: ${{ steps.tags.outputs.version }}
-          REGISTRY: ${{ steps.tags.outputs.registry }}
+          GHCR_PACKAGE: ${{ steps.tags.outputs.ghcr_package }}
           K8S_CLUSTER_CERT: ${{ secrets.K8S_CLUSTER_CERT }}
           K8S_CLUSTER_NAME: ${{ secrets.K8S_CLUSTER_NAME }}
           K8S_CLUSTER_SERVER: ${{ secrets.K8S_CLUSTER_SERVER }}
@@ -119,6 +140,6 @@ jobs:
           kubectl config set-credentials github-actions --token=${K8S_TOKEN}
           kubectl config set-context ${K8S_CLUSTER_NAME} --cluster=${K8S_CLUSTER_NAME} --user=github-actions --namespace=${K8S_NAMESPACE}
           kubectl config use-context ${K8S_CLUSTER_NAME}
-          IMAGE=${REGISTRY}:${TAG}
+          IMAGE=${GHCR_PACKAGE}:${VERSION}
           kubectl patch configmap app-versions --patch "{\"data\": {\"cashbook\": \"${VERSION}\"}}"
           kubectl patch deployment cashbook --type strategic --patch "{\"metadata\": {\"annotations\": {\"kubernetes.io/change-cause\": \"${VERSION}\"}}, \"spec\": {\"template\": {\"spec\": {\"containers\": [{\"name\": \"app\", \"image\": \"${IMAGE}\"}], \"initContainers\": [{\"name\": \"copy-static\", \"image\": \"${IMAGE}\"}]}}}}"
