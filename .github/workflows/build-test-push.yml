@@ -127,7 +127,7 @@ jobs:
         env:
           TAG: ${{ steps.tags.outputs.tag }}
           VERSION: ${{ steps.tags.outputs.version }}
-          REGISTRY: ${{ steps.tags.outputs.registry }}
+          GHCR_PACKAGE: ${{ steps.tags.outputs.ghcr_package }}
           K8S_CLUSTER_CERT: ${{ secrets.K8S_CLUSTER_CERT }}
           K8S_CLUSTER_NAME: ${{ secrets.K8S_CLUSTER_NAME }}
           K8S_CLUSTER_SERVER: ${{ secrets.K8S_CLUSTER_SERVER }}
@@ -140,6 +140,6 @@ jobs:
           kubectl config set-credentials github-actions --token=${K8S_TOKEN}
           kubectl config set-context ${K8S_CLUSTER_NAME} --cluster=${K8S_CLUSTER_NAME} --user=github-actions --namespace=${K8S_NAMESPACE}
           kubectl config use-context ${K8S_CLUSTER_NAME}
-          IMAGE=${REGISTRY}:${TAG}
+          IMAGE=${GHCR_PACKAGE}:${VERSION}
           kubectl patch configmap app-versions --patch "{\"data\": {\"cashbook\": \"${VERSION}\"}}"
           kubectl patch deployment cashbook --type strategic --patch "{\"metadata\": {\"annotations\": {\"kubernetes.io/change-cause\": \"${VERSION}\"}}, \"spec\": {\"template\": {\"spec\": {\"containers\": [{\"name\": \"app\", \"image\": \"${IMAGE}\"}], \"initContainers\": [{\"name\": \"copy-static\", \"image\": \"${IMAGE}\"}]}}}}"
