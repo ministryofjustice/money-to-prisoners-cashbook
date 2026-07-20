@@ -7,22 +7,11 @@ jobs:
     name: Build, test and push
     runs-on: ubuntu-latest
     permissions:
-      id-token: write
       contents: read
       packages: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
-
-      - name: Assume IAM role to access ECR
-        uses: aws-actions/configure-aws-credentials@v6
-        with:
-          aws-region: ${{ vars.ECR_REGION }}
-          role-to-assume: ${{ secrets.ECR_ROLE_TO_ASSUME }}
-
-      - name: Log docker into ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
 
       - name: Log docker into GHCR
         uses: docker/login-action@v3
@@ -37,13 +26,11 @@ jobs:
           branch_lc=$(echo "${GITHUB_REF_NAME}" | tr '[:upper:]' '[:lower:]')
           version=${branch_lc}.${GITHUB_SHA::7}
           tag=cashbook.${version}
-          registry=${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}
           ghcr_package=ghcr.io/${{ github.repository_owner }}/money-to-prisoners-cashbook
           ghcr_base=ghcr.io/${{ github.repository_owner }}/money-to-prisoners-base
           echo "branch_lc=${branch_lc}"         >> "$GITHUB_OUTPUT"
           echo "version=${version}"             >> "$GITHUB_OUTPUT"
           echo "tag=${tag}"                     >> "$GITHUB_OUTPUT"
-          echo "registry=${registry}"           >> "$GITHUB_OUTPUT"
           echo "ghcr_package=${ghcr_package}"   >> "$GITHUB_OUTPUT"
           echo "ghcr_base=${ghcr_base}"         >> "$GITHUB_OUTPUT"
           echo "Building ${tag}"
@@ -97,20 +84,13 @@ jobs:
         env:
           TAG: ${{ steps.tags.outputs.tag }}
           VERSION: ${{ steps.tags.outputs.version }}
-          REGISTRY: ${{ steps.tags.outputs.registry }}
           GHCR_PACKAGE: ${{ steps.tags.outputs.ghcr_package }}
         run: |
-          echo "Pushing ${TAG} to ECR"
-          docker tag ${TAG} ${REGISTRY}:${TAG}
-          docker push ${REGISTRY}:${TAG}
-          echo "Pushing ${VERSION} to GHCR ${GHCR_PACKAGE}"
+          echo "Pushing ${VERSION} to ${GHCR_PACKAGE}"
           docker tag ${TAG} ${GHCR_PACKAGE}:${VERSION}
           docker push ${GHCR_PACKAGE}:${VERSION}
           if [[ "${GITHUB_REF_NAME}" == "main" ]]; then
-            echo "Pushing cashbook to ECR (acts as latest)"
-            docker tag ${TAG} ${REGISTRY}:cashbook
-            docker push ${REGISTRY}:cashbook
-            echo "Pushing latest to GHCR"
+            echo "Pushing latest to ${GHCR_PACKAGE}"
             docker tag ${TAG} ${GHCR_PACKAGE}:latest
             docker push ${GHCR_PACKAGE}:latest
           fi
