@@ -4,11 +4,19 @@ on:
   push:
 jobs:
   build-test-push:
-    name: Build, test and push
-    runs-on: ubuntu-latest
+    name: Build and test (${{ matrix.platform }})
+    runs-on: ${{ matrix.runner }}
     permissions:
       contents: read
       packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: amd64
+            runner: ubuntu-latest
+          - platform: arm64
+            runner: ubuntu-24.04-arm
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
@@ -33,9 +41,9 @@ jobs:
           echo "tag=${tag}"                     >> "$GITHUB_OUTPUT"
           echo "ghcr_package=${ghcr_package}"   >> "$GITHUB_OUTPUT"
           echo "ghcr_base=${ghcr_base}"         >> "$GITHUB_OUTPUT"
-          echo "Building ${tag}"
+          echo "Building ${tag} for linux/${{ matrix.platform }}"
 
-      # base images come from the public GHCR package, so this needs no credentials
+      
       - name: Pull base image
         env:
           GHCR_BASE: ${{ steps.tags.outputs.ghcr_base }}
@@ -56,6 +64,7 @@ jobs:
             --tag ${TAG} \
             .
 
+      
       - name: Test docker image
         env:
           TAG: ${{ steps.tags.outputs.tag }}
@@ -76,23 +85,61 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-reports
+          name: test-reports-${{ matrix.platform }}
           path: /tmp/reports
           if-no-files-found: warn
 
+      
       - name: Push docker image
         env:
           TAG: ${{ steps.tags.outputs.tag }}
           VERSION: ${{ steps.tags.outputs.version }}
+          PLATFORM: ${{ matrix.platform }}
           GHCR_PACKAGE: ${{ steps.tags.outputs.ghcr_package }}
         run: |
-          echo "Pushing ${VERSION} to ${GHCR_PACKAGE}"
-          docker tag ${TAG} ${GHCR_PACKAGE}:${VERSION}
-          docker push ${GHCR_PACKAGE}:${VERSION}
+          echo "Pushing ${VERSION}-${PLATFORM} to ${GHCR_PACKAGE}"
+          docker tag ${TAG} ${GHCR_PACKAGE}:${VERSION}-${PLATFORM}
+          docker push ${GHCR_PACKAGE}:${VERSION}-${PLATFORM}
+
+  merge-and-deploy:
+    name: Merge platforms and deploy to test
+    needs: build-test-push
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Log docker into GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Compute image tags
+        id: tags
+        run: |
+          branch_lc=$(echo "${GITHUB_REF_NAME}" | tr '[:upper:]' '[:lower:]')
+          version=${branch_lc}.${GITHUB_SHA::7}
+          ghcr_package=ghcr.io/${{ github.repository_owner }}/money-to-prisoners-cashbook
+          echo "version=${version}"           >> "$GITHUB_OUTPUT"
+          echo "ghcr_package=${ghcr_package}" >> "$GITHUB_OUTPUT"
+
+      - name: Merge into a multi-arch manifest
+        env:
+          VERSION: ${{ steps.tags.outputs.version }}
+          GHCR_PACKAGE: ${{ steps.tags.outputs.ghcr_package }}
+        run: |
+          echo "Merging ${VERSION} from amd64 and arm64"
+          docker buildx imagetools create \
+            --tag ${GHCR_PACKAGE}:${VERSION} \
+            ${GHCR_PACKAGE}:${VERSION}-amd64 \
+            ${GHCR_PACKAGE}:${VERSION}-arm64
           if [[ "${GITHUB_REF_NAME}" == "main" ]]; then
-            echo "Pushing latest to ${GHCR_PACKAGE}"
-            docker tag ${TAG} ${GHCR_PACKAGE}:latest
-            docker push ${GHCR_PACKAGE}:latest
+            echo "Pointing latest at ${VERSION}"
+            docker buildx imagetools create \
+              --tag ${GHCR_PACKAGE}:latest \
+              ${GHCR_PACKAGE}:${VERSION}
           fi
 
       
@@ -105,7 +152,6 @@ jobs:
       - name: Deploy to test
         if: ${{ github.ref_name == 'main' && vars.GHA_DEPLOY_ENABLED == 'true' }}
         env:
-          TAG: ${{ steps.tags.outputs.tag }}
           VERSION: ${{ steps.tags.outputs.version }}
           GHCR_PACKAGE: ${{ steps.tags.outputs.ghcr_package }}
           K8S_CLUSTER_CERT: ${{ secrets.K8S_CLUSTER_CERT }}
