@@ -20,12 +20,13 @@ The application interacts with several APIs to fulfill its functionality:
 
 - **MTP API (`money-to-prisoners-api`)**:
   - Central data store and authentication provider.
+  - Staff sign in against it via OAuth2 (`mtp_common.auth.backends.MojBackend`); user accounts live in its database.
   - Used for processing credits, managing disbursements, and tracking transaction history.
 - **HMPPS Prison API (NOMIS)**:
   - Fetches real-time prisoner location and status.
   - Used to verify that money is being sent to or from the correct prisoner.
 - **HMPPS Auth**:
-  - Used for authenticating staff accounts.
+  - Issues a machine-to-machine token so the Prison API can be called. No user signs in through it.
 - **GOV.UK Notify**:
   - Sends email notifications to staff and public users.
 - **Postcode Lookup API**:
