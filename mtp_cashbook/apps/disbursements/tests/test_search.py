@@ -80,6 +80,7 @@ class DisbursementSearchViewTextCase(MTPBaseTestCase):
             url = api_url(
                 '/disbursements/?offset=10&limit=10&ordering=-created&resolution=confirmed'
                 f'&log__action=confirmed&logged_at__gte={one_month_ago}'
+                '&prisoner_name=&prisoner_number=&recipient_name=&nomis_transaction_id=&invoice_number=&method='
             )
             rsps.add(rsps.GET, url,
                      match_querystring=True,
