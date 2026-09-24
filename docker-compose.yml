@@ -1,0 +1,143 @@
+# Local development: runs this app from your checkout, alongside everything it needs.
+#
+#   docker compose up                  # database, API and this app
+#   docker compose --profile full up   # ...plus every other Prisoner Money app
+#
+# Only this app is built from local source (with live reload via browser-sync on port 3001).
+# The database is stock postgres; the API and the other apps are the public images
+# from ghcr.io/ministryofjustice, so no other repository needs to be cloned.
+# The API loads test data on first start; logins are listed in the getting-started guide:
+# https://github.com/ministryofjustice/money-to-prisoners-deploy/blob/main/docs/getting-started.md
+#
+# Keep in step with the same file in send-money, noms-ops, bank-admin and emails:
+# only the block for the app built from source differs.
+# To run every app from source instead, use docker-compose.yml in money-to-prisoners-common.
+
+x-environment: &default-environment
+  PYTHONUNBUFFERED: "1"
+  DEBUG: "True"
+  ENV: local
+  API_URL: http://api:8000
+
+# published images run uWSGI with production settings; run them under Django's dev server instead
+x-published-app: &published-app
+  profiles: [full]
+  depends_on:
+    api:
+      condition: service_healthy
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: mtp_api
+      POSTGRES_USER: mtp_api
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready -U mtp_api -d mtp_api
+      interval: 2s
+      retries: 30
+
+  api:
+    image: ghcr.io/ministryofjustice/money-to-prisoners-api:latest
+    environment:
+      <<: *default-environment
+      DJANGO_SETTINGS_MODULE: mtp_api.settings
+      DB_NAME: mtp_api
+      DB_USERNAME: mtp_api
+      DB_PASSWORD: postgres
+      DB_HOST: db
+      DB_PORT: "5432"
+    # load test data only when the database is empty: load_test_data deletes existing users
+    command:
+      - sh
+      - -c
+      - |
+        venv/bin/python manage.py migrate --no-input &&
+        { venv/bin/python manage.py shell -c "import sys; from django.contrib.auth import get_user_model; sys.exit(0 if get_user_model().objects.exists() else 1)" ||
+          venv/bin/python manage.py load_test_data; } &&
+        exec venv/bin/python manage.py runserver 0:8000
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: venv/bin/python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/ping.json')"
+      interval: 5s
+      start_period: 5m
+      retries: 5
+
+  # the app being worked on, built from this checkout
+  cashbook:
+    build:
+      context: .
+      dockerfile: Dockerfile-dev
+    environment:
+      <<: *default-environment
+    # only the app package is mounted, so node_modules, the venv and built files stay in the image;
+    # mounting the whole checkout with a node_modules volume nested inside it is unreliable on Docker Desktop.
+    # Rebuild (docker compose up --build) after changing requirements or package.json.
+    volumes:
+      - ./mtp_cashbook:/app/mtp_cashbook
+      # a developer's settings/local.py is for running outside docker and would override API_URL
+      - /dev/null:/app/mtp_cashbook/settings/local.py:ro
+    ports:
+      - "8001:8001"
+      - "3001:3001"
+    depends_on:
+      api:
+        condition: service_healthy
+    stdin_open: true
+    tty: true
+
+  bank-admin:
+    <<: *published-app
+    image: ghcr.io/ministryofjustice/money-to-prisoners-bank-admin:latest
+    environment:
+      <<: *default-environment
+      DJANGO_SETTINGS_MODULE: mtp_bank_admin.settings
+    command: venv/bin/python manage.py runserver 0:8002
+    ports:
+      - "8002:8002"
+
+  noms-ops:
+    <<: *published-app
+    image: ghcr.io/ministryofjustice/money-to-prisoners-noms-ops:latest
+    environment:
+      <<: *default-environment
+      DJANGO_SETTINGS_MODULE: mtp_noms_ops.settings
+    command: venv/bin/python manage.py runserver 0:8003
+    ports:
+      - "8003:8003"
+
+  send-money:
+    <<: *published-app
+    image: ghcr.io/ministryofjustice/money-to-prisoners-send-money:latest
+    environment:
+      <<: *default-environment
+      DJANGO_SETTINGS_MODULE: mtp_send_money.settings
+    command: venv/bin/python manage.py runserver 0:8004
+    ports:
+      - "8004:8004"
+
+  start-page:
+    profiles: [full]
+    image: ghcr.io/ministryofjustice/money-to-prisoners-start-page:latest
+    ports:
+      - "8005:8080"
+
+  emails:
+    <<: *published-app
+    image: ghcr.io/ministryofjustice/money-to-prisoners-emails:latest
+    environment:
+      <<: *default-environment
+      DJANGO_SETTINGS_MODULE: mtp_emails.settings
+    command: venv/bin/python manage.py runserver 0:8006
+    ports:
+      - "8006:8006"
+
+volumes:
+  db_data:

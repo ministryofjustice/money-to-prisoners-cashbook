@@ -13,7 +13,6 @@ npm-debug.log
 # app-specific
 eslint.config.cjs
 .sass-lint.yml
-docker-compose.yml
 package.json
 package-lock.json
 webpack.config.js
