@@ -90,7 +90,8 @@ To allow a user to log into the Cashbook, they must be set up in the `money-to-p
 - **Translations**:
   - Update messages with `./run.py make_messages`.
 - **Docker**:
-  - Run with `./run.py local_docker` for a production-like environment.
+  - `docker compose up` runs this app from your checkout with the database and API; add `--profile full` for the other apps.
+    See [Running locally with Docker](README.md#running-locally-with-docker).
 - **Referenced Modules**:
   - `money-to-prisoners-common`: Shared components.
   - `django-zendesk-tickets`: For support ticket integration.
