@@ -910,6 +910,7 @@ class ProcessedCreditsDetailViewTestCase(MTPBaseTestCase):
                     '&logged_at__lt=2017-06-04+00:00:00&user=1'
                     '&log__action=credited&offset=0&ordering=-received_at'
                     f'&received_at__gte={default_start}&page=1'
+                    '&prisoner_number=&search='
                 ),
                 json={
                     'count': 2,
@@ -967,6 +968,7 @@ class ProcessedCreditsDetailViewTestCase(MTPBaseTestCase):
                     '&logged_at__lt=2017-06-04+00:00:00&user=1'
                     '&log__action=credited&offset=0&ordering=-received_at'
                     f'&received_at__gte={default_start}&page=1'
+                    '&prisoner_number=&search='
                 ),
                 json={
                     'count': 0,
