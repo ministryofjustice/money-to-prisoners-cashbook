@@ -101,6 +101,37 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             self.assertContains(response, '52.00')
             self.assertContains(response, '45.00')
 
+    def test_new_credits_form_can_only_be_submitted_once(self):
+        # the guard is on the form rather than a button, because the sticky header copies "Credit to NOMIS" and the
+        # dialogue has its own "Yes" button, all submitting the same credits
+        with responses.RequestsMock() as rsps:
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/batches/'),
+                json=wrap_response_data(),
+                status=200,
+            )
+            # get new credits
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/?ordering=-received_at&offset=0&limit=100&status=credit_pending&resolution=pending'),
+                json=wrap_response_data(CREDIT_1, CREDIT_2),
+                status=200,
+                match_querystring=True,
+            )
+            # get manual credits
+            rsps.add(
+                rsps.GET,
+                api_url('/credits/?resolution=manual&status=credit_pending&offset=0&limit=100&ordering=-received_at'),
+                json=wrap_response_data(),
+                status=200,
+                match_querystring=True,
+            )
+            self.login()
+            response = self.client.get(self.url, follow=True)
+            self.assertContains(response, 'mtp-form--batch-validation mtp-form--submit-once')
+            self.assertContains(response, 'name="submit_new" value="submit"')
+
     @mock.patch(
         'cashbook.tasks.nomis.create_transaction',
         # return {'id' == '<prisoner-number>-1'}
