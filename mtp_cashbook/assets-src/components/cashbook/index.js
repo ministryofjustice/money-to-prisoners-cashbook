@@ -3,12 +3,14 @@
 import {BatchValidation} from './batch-validation';
 import {SelectAll} from './select-all';
 import {StickyHeader} from './sticky-header';
+import {SubmitOnce} from './submit-once';
 
 export var Cashbook = {
   init: function () {
     SelectAll.init();
     StickyHeader.init();
     BatchValidation.init();
+    SubmitOnce.init();
     this.initSelectionCount();
     this.initConfirmManual();
   },

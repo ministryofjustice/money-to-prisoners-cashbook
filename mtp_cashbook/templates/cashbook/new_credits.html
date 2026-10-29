@@ -162,7 +162,7 @@
   <form
     method="post"
     action=""
-    class="mtp-form--before-unload mtp-form--batch-validation"
+    class="mtp-form--before-unload mtp-form--batch-validation mtp-form--submit-once"
     data-credits-name="{{ form.new.credits.html_name }}"
     data-unload-msg="{% trans 'You haven’t submitted selected credits to NOMIS' %}">
     {% csrf_token %}
