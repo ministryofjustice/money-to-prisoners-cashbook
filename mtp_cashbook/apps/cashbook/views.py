@@ -9,7 +9,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView, TemplateView
 from mtp_common.analytics import genericised_pageview
 from mtp_common.auth import api_client
-from mtp_common import nomis
+from mtp_common import prisoner_search
 from requests.exceptions import RequestException
 
 from cashbook.forms import (
@@ -148,7 +148,7 @@ class NewCreditsView(CashbookView, FormView):
         unowned_oldest_date = None
         for credit_id, manual_credit in manual_credit_choices:
             try:
-                location = nomis.get_location(manual_credit['prisoner_number'])
+                location = prisoner_search.get_location(manual_credit['prisoner_number'])
                 manual_credit['new_location'] = location
             except RequestException:
                 pass

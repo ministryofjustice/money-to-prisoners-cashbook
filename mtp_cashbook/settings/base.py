@@ -295,6 +295,7 @@ HMPPS_CLIENT_ID = os.environ.get('HMPPS_CLIENT_ID', 'prisoner-money')
 HMPPS_CLIENT_SECRET = os.environ.get('HMPPS_CLIENT_SECRET', '')
 HMPPS_AUTH_BASE_URL = os.environ.get('HMPPS_AUTH_BASE_URL', '')
 HMPPS_PRISON_API_BASE_URL = os.environ.get('HMPPS_PRISON_API_BASE_URL', '')
+HMPPS_OFFENDER_SEARCH_BASE_URL = os.environ.get('HMPPS_OFFENDER_SEARCH_BASE_URL', '')
 
 TOKEN_RETRIEVAL_USERNAME = os.environ.get('TOKEN_RETRIEVAL_USERNAME', '_token_retrieval')
 TOKEN_RETRIEVAL_PASSWORD = os.environ.get('TOKEN_RETRIEVAL_PASSWORD', '_token_retrieval')
