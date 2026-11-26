@@ -145,7 +145,7 @@ jobs:
       
       - name: Install kubectl
         if: ${{ github.ref_name == 'main' && vars.GHA_DEPLOY_ENABLED == 'true' }}
-        uses: azure/setup-kubectl@v4
+        uses: azure/setup-kubectl@v5
         with:
           version: v1.32.9
 
