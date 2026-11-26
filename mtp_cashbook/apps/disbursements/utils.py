@@ -1,5 +1,5 @@
 from django.conf import settings
-from mtp_common import nomis
+from mtp_common import nomis, prisoner_search
 import requests
 from requests.exceptions import RequestException
 
@@ -21,7 +21,7 @@ def get_disbursement_viability(request, disbursement):
         pass
 
     try:
-        location = nomis.get_location(disbursement['prisoner_number'])
+        location = prisoner_search.get_location(disbursement['prisoner_number'])
 
         viability['prisoner_moved'] = (
             disbursement['prison'] != location['nomis_id']

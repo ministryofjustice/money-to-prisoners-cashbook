@@ -319,7 +319,7 @@ def mock_pending_list(func):
             )
 
     @responses.activate
-    @mock.patch('disbursements.utils.nomis.get_location')
+    @mock.patch('disbursements.utils.prisoner_search.get_location')
     @mock.patch('disbursements.utils.nomis.get_account_balances')
     def wrapper(self, mock_nomis_get_account_balances, mock_nomis_get_location, *args, **kwargs):
         func(
@@ -343,7 +343,7 @@ def mock_pending_detail(func):
         mock_nomis_responses_for_disbursement(mock_nomis_get_account_balances, mock_nomis_get_location, disbursement)
 
     @responses.activate
-    @mock.patch('disbursements.utils.nomis.get_location')
+    @mock.patch('disbursements.utils.prisoner_search.get_location')
     @mock.patch('disbursements.utils.nomis.get_account_balances')
     def wrapper(self, mock_nomis_get_account_balances, mock_nomis_get_location, *args, **kwargs):
         func(

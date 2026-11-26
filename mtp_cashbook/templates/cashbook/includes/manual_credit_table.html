@@ -105,7 +105,7 @@
             {% endif %}
             {% if credit.new_location.nomis_id == 'TRN' %}
               {% trans 'Prisoner in transit' %}
-            {% elif credit.new_location.nomis_id %}
+            {% elif credit.new_location.nomis_id and credit.new_location.nomis_id != 'OUT' %}
               {% blocktrans trimmed with new_prison=credit.new_location.name %}
                 Prisoner transferred to {{ new_prison }}
               {% endblocktrans %}

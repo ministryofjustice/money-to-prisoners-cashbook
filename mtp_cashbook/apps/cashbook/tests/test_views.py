@@ -101,6 +101,53 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             self.assertContains(response, '52.00')
             self.assertContains(response, '45.00')
 
+    def test_manual_credits_show_prisoner_location(self):
+        scenarios = [
+            ({'nomis_id': 'LEI', 'name': 'Leeds (HMP)'}, 'Prisoner transferred to Leeds (HMP)'),
+            ({'nomis_id': 'TRN', 'name': 'Transfer'}, 'Prisoner in transit'),
+            ({'nomis_id': 'OUT', 'name': 'Outside'}, 'Prisoner left this prison'),
+            (HTTPError(response=mock.Mock(status_code=404)), 'Prisoner left this prison'),
+        ]
+        self.login()
+        for location, expected_message in scenarios:
+            with self.subTest(expected_message=expected_message, location=location), \
+                    mock.patch('cashbook.views.prisoner_search.get_location') as mock_get_location, \
+                    responses.RequestsMock() as rsps:
+                if isinstance(location, Exception):
+                    mock_get_location.side_effect = location
+                else:
+                    mock_get_location.return_value = location
+                rsps.add(
+                    rsps.GET,
+                    api_url('/credits/batches/'),
+                    json=wrap_response_data(),
+                    status=200,
+                )
+                # get new credits
+                rsps.add(
+                    rsps.GET,
+                    api_url(
+                        '/credits/?ordering=-received_at&offset=0&limit=100&status=credit_pending&resolution=pending'
+                    ),
+                    json=wrap_response_data(),
+                    status=200,
+                    match_querystring=True,
+                )
+                # get manual credits
+                rsps.add(
+                    rsps.GET,
+                    api_url(
+                        '/credits/?resolution=manual&status=credit_pending&offset=0&limit=100&ordering=-received_at'
+                    ),
+                    json=wrap_response_data(CREDIT_1),
+                    status=200,
+                    match_querystring=True,
+                )
+                response = self.client.get(self.url, follow=True)
+                mock_get_location.assert_called_once_with(CREDIT_1['prisoner_number'])
+                self.assertContains(response, expected_message)
+                self.assertNotContains(response, 'Prisoner transferred to Outside')
+
     def test_new_credits_form_can_only_be_submitted_once(self):
         # the guard is on the form rather than a button, because the sticky header copies "Credit to NOMIS" and the
         # dialogue has its own "Yes" button, all submitting the same credits
@@ -519,13 +566,6 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             {'id': 'A1234GG-1'},
         ],
     )
-    @mock.patch(
-        'cashbook.tasks.nomis.get_location',
-        return_value={
-            'nomis_id': 'LEI',
-            'name': 'LEEDS (HMP)',
-        },
-    )
     def test_new_credits_submit_with_uncreditable(self, *_):
         with NotifyMock() as rsps:
             # get new credits
@@ -622,7 +662,7 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
             self.assertEqual(len(rsps.send_email_calls), 1)
 
     @mock.patch(
-        'cashbook.views.nomis.get_location',
+        'cashbook.views.prisoner_search.get_location',
         return_value={
             'nomis_id': 'LEI',
             'name': 'LEEDS (HMP)',
@@ -693,7 +733,7 @@ class NewCreditsViewTestCase(MTPBaseTestCase):
 
 
 @mock.patch(
-    'cashbook.views.nomis.get_location',
+    'cashbook.views.prisoner_search.get_location',
     mock.Mock(
         return_value={
             'nomis_id': 'LEI',
